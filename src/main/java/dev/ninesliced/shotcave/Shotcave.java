@@ -10,11 +10,13 @@ import dev.ninesliced.shotcave.camera.TopCameraService;
 import dev.ninesliced.shotcave.command.ShotcaveCommand;
 import dev.ninesliced.shotcave.hud.AmmoHudRuntime;
 import dev.ninesliced.shotcave.interactions.ChainLightningInteraction;
+import dev.ninesliced.shotcave.interactions.ConsumeAmmoInteraction;
 import dev.ninesliced.shotcave.interactions.GunValidationInteraction;
 import dev.ninesliced.shotcave.interactions.HideAmmoHudInteraction;
 import dev.ninesliced.shotcave.interactions.ModularGunShootInteraction;
 import dev.ninesliced.shotcave.interactions.ReloadCheckInteraction;
 import dev.ninesliced.shotcave.interactions.ReloadInteraction;
+import dev.ninesliced.shotcave.interactions.SpawnNPCAtImpactInteraction;
 import dev.ninesliced.shotcave.interactions.UpdateAmmoHudInteraction;
 import dev.ninesliced.shotcave.systems.ActiveSlotHudUpdateSystem;
 
@@ -37,8 +39,10 @@ public class Shotcave extends JavaPlugin {
                 .register("GunValidate", GunValidationInteraction.class, GunValidationInteraction.CODEC)
                 .register("ReloadCheck", ReloadCheckInteraction.class, ReloadCheckInteraction.CODEC)
                 .register("Reload", ReloadInteraction.class, ReloadInteraction.CODEC)
-                .register("UpdateAmmoHud", UpdateAmmoHudInteraction.class, UpdateAmmoHudInteraction.CODEC)
-                .register("HideAmmoHud", HideAmmoHudInteraction.class, HideAmmoHudInteraction.CODEC);
+            .register("UpdateAmmoHud", UpdateAmmoHudInteraction.class, UpdateAmmoHudInteraction.CODEC)
+            .register("HideAmmoHud", HideAmmoHudInteraction.class, HideAmmoHudInteraction.CODEC)
+            .register("ConsumeAmmo", ConsumeAmmoInteraction.class, ConsumeAmmoInteraction.CODEC)
+            .register("SpawnNPCAtImpact", SpawnNPCAtImpactInteraction.class, SpawnNPCAtImpactInteraction.CODEC);
 
         try {
             this.getEntityStoreRegistry().registerEntityEventType(SwitchActiveSlotEvent.class);
