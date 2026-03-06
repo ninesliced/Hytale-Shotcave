@@ -1,5 +1,5 @@
 {
-  "Model": "Ice_Ball",
+  "Model": "Kweebec_Seedling_Projectile",
   "LaunchForce": 22,
   "Physics": {
     "Type": "Standard",
@@ -58,7 +58,7 @@
       "Interactions": [
         {
           "Type": "SpawnNPCAtImpact",
-          "EntityId": "Spirit_Root",
+          "EntityId": "Kweebec_Seedling",
           "SpawnOffset": {
             "X": 0,
             "Y": 1,
