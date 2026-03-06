@@ -10,7 +10,7 @@
       "BeamParticleId": "Shotcave_ElectricBeam",
       "BeamStepDistance": 0.6,
       "BeamHeightOffset": 1.35,
-      "BeamForwardOffset": 1.0,
+      "BeamForwardOffset": -2.3,
       "BeamRightOffset": 0.35,
       "BeamParticleScale": 0.35,
       "MaxDistance": 30,
