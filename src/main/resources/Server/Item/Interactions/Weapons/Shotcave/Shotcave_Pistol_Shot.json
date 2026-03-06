@@ -46,7 +46,7 @@
   "ImpactParticleId": "RifleShooting_Impact",
   "ImpactParticleScale": 0.4,
   "MuzzleHeightOffset": 1.35,
-  "MuzzleForwardOffset": 1.0,
+  "MuzzleForwardOffset": -1.3,
   "MuzzleRightOffset": 0.35,
   "UseAmmo": true,
   "MaxAmmo": 12,
