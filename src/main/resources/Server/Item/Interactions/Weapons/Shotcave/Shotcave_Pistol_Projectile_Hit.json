@@ -10,7 +10,15 @@
       },
       "DamageEffects": {
         "WorldSoundEventId": "SFX_Blunderbuss_Hit",
-        "LocalSoundEventId": "SFX_Blunderbuss_Hit"
+        "LocalSoundEventId": "SFX_Blunderbuss_Hit",
+        "WorldParticles": [
+          {
+            "SystemId": "RifleShooting_Impact",
+            "PositionOffset": {
+              "Y": 0.8
+            }
+          }
+        ]
       }
     }
   ]

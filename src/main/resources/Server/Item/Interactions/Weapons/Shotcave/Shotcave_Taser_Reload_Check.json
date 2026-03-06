@@ -1,0 +1,5 @@
+{
+  "Type": "ReloadCheck",
+  "MaxAmmo": 8,
+  "Next": "Shotcave_Taser_Reload"
+}

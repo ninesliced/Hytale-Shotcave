@@ -1,0 +1,10 @@
+{
+  "Cooldown": {
+    "Id": "Reload",
+    "Cooldown": 1.0
+  },
+  "Interactions": [
+    "Shotcave_Taser_Reload_Check"
+  ]
+}
+

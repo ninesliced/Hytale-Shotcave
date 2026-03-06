@@ -10,7 +10,15 @@
       },
       "DamageEffects": {
         "WorldSoundEventId": "SFX_Rifle_Fire",
-        "LocalSoundEventId": "SFX_Rifle_Fire_Local"
+        "LocalSoundEventId": "SFX_Rifle_Fire_Local",
+        "WorldParticles": [
+          {
+            "SystemId": "RifleShooting_Impact",
+            "PositionOffset": {
+              "Y": 0.8
+            }
+          }
+        ]
       }
     }
   ]

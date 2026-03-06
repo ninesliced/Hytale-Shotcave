@@ -1,0 +1,117 @@
+{
+  "RenderMode": "Erosion",
+  "ParticleRotationInfluence": "BillboardVelocity",
+  "MaxConcurrentParticles": 2,
+  "ParticleLifeSpan": {
+    "Min": 0.15,
+    "Max": 0.15
+  },
+  "Particle": {
+    "Texture": "Particles/Textures/Basic/LightBeam.png",
+    "ScaleRatioConstraint": "None",
+    "Animation": {
+      "0": {
+        "Scale": {
+          "X": {
+            "Min": 1.0,
+            "Max": 1.0
+          },
+          "Y": {
+            "Min": 0.1,
+            "Max": 0.1
+          }
+        },
+        "Opacity": 0.0
+      },
+      "10": {
+        "Scale": {
+          "X": {
+            "Min": 1.0,
+            "Max": 1.0
+          },
+          "Y": {
+            "Min": 1.0,
+            "Max": 1.0
+          }
+        },
+        "Opacity": 1.0
+      },
+      "50": {
+        "Opacity": 0.85,
+        "Scale": {
+          "Y": {
+            "Min": 1.0,
+            "Max": 1.0
+          },
+          "X": {
+            "Min": 1.0,
+            "Max": 1.0
+          }
+        }
+      },
+      "100": {
+        "Opacity": 0.0,
+        "Scale": {
+          "X": {
+            "Min": 1.0,
+            "Max": 1.0
+          },
+          "Y": {
+            "Min": 0.05,
+            "Max": 0.05
+          }
+        }
+      }
+    },
+    "InitialAnimationFrame": {
+      "Scale": {
+        "X": {
+          "Min": 1.0,
+          "Max": 1.0
+        },
+        "Y": {
+          "Min": 0.2,
+          "Max": 0.2
+        }
+      },
+      "Opacity": 0.9,
+      "Rotation": {
+        "Z": {
+          "Min": -90.0,
+          "Max": -90.0
+        }
+      }
+    }
+  },
+  "LinearFiltering": false,
+  "UVMotion": {
+    "Texture": "Particles/Textures/UVMotion/FlowMap3.png",
+    "Scale": 1.0,
+    "StrengthCurveType": "Constant",
+    "Strength": 20.0,
+    "AddRandomUVOffset": true,
+    "SpeedX": -1.44
+  },
+  "SpawnBurst": true,
+  "ParticleRotateWithSpawner": true,
+  "SpawnRate": {
+    "Min": 1.0,
+    "Max": 1.0
+  },
+  "UseEmitDirection": false,
+  "VelocityStretchMultiplier": 20.0,
+  "InitialVelocity": {
+    "Speed": {
+      "Min": 1.0,
+      "Max": 1.0
+    }
+  },
+  "WaveDelay": {
+    "Min": 0.1,
+    "Max": 0.1
+  },
+  "TotalParticles": {
+    "Min": 1,
+    "Max": 1
+  }
+}

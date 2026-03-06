@@ -11,7 +11,7 @@
   "PlayerAnimationsId": "Rifle",
   "Interactions": {
     "Primary": "Root_Shotcave_Taser_Primary",
-    "Secondary": "Gun_Attack"
+    "Secondary": "Root_Shotcave_Taser_Reload"
   },
   "Weapon": {},
   "Tags": {

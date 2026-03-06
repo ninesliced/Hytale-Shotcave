@@ -29,11 +29,13 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Roo
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInstantInteraction;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.selector.Selector;
+import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.world.ParticleUtil;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.TargetUtil;
 import dev.ninesliced.shotcave.guns.AimAssistHelper;
+import dev.ninesliced.shotcave.guns.GunItemMetadata;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 
 import javax.annotation.Nonnull;
@@ -105,6 +107,20 @@ public final class ChainLightningInteraction extends SimpleInstantInteraction {
         ).add();
 
         builder.appendInherited(
+            new KeyedCodec<Double>("BeamForwardOffset", Codec.DOUBLE),
+            (o, v) -> o.beamForwardOffset = v,
+            o -> o.beamForwardOffset,
+            (o, p) -> o.beamForwardOffset = p.beamForwardOffset
+        ).add();
+
+        builder.appendInherited(
+            new KeyedCodec<Double>("BeamRightOffset", Codec.DOUBLE),
+            (o, v) -> o.beamRightOffset = v,
+            o -> o.beamRightOffset,
+            (o, p) -> o.beamRightOffset = p.beamRightOffset
+        ).add();
+
+        builder.appendInherited(
             new KeyedCodec<Double>("BeamParticleScale", Codec.DOUBLE),
             (o, v) -> o.beamParticleScale = v,
             o -> o.beamParticleScale,
@@ -125,6 +141,27 @@ public final class ChainLightningInteraction extends SimpleInstantInteraction {
             (o, p) -> o.aimAssist = p.aimAssist
         ).add();
 
+        builder.appendInherited(
+            new KeyedCodec<Boolean>("UseAmmo", Codec.BOOLEAN),
+            (o, v) -> o.useAmmo = v,
+            o -> o.useAmmo,
+            (o, p) -> o.useAmmo = p.useAmmo
+        ).add();
+
+        builder.appendInherited(
+            new KeyedCodec<Integer>("MaxAmmo", Codec.INTEGER),
+            (o, v) -> o.maxAmmo = v,
+            o -> o.maxAmmo,
+            (o, p) -> o.maxAmmo = p.maxAmmo
+        ).addValidator(Validators.greaterThan(0)).add();
+
+        builder.appendInherited(
+            new KeyedCodec<Integer>("AmmoPerShot", Codec.INTEGER),
+            (o, v) -> o.ammoPerShot = v,
+            o -> o.ammoPerShot,
+            (o, p) -> o.ammoPerShot = p.ammoPerShot
+        ).addValidator(Validators.greaterThan(0)).add();
+
         CODEC = builder.build();
     }
 
@@ -135,9 +172,14 @@ public final class ChainLightningInteraction extends SimpleInstantInteraction {
     private String beamParticleId = "NatureBeam";
     private double beamStepDistance = 0.7;
     private double beamHeightOffset = 1.35;
+    private double beamForwardOffset = 0.0;
+    private double beamRightOffset = 0.0;
     private double beamParticleScale = 0.35;
     private int maxDistance = 30;
     private boolean aimAssist = false;
+    private boolean useAmmo = false;
+    private int maxAmmo = 8;
+    private int ammoPerShot = 1;
     private final Color beamColor = new Color((byte)-1, (byte)-11, (byte)-86);
 
     @Override
@@ -145,6 +187,22 @@ public final class ChainLightningInteraction extends SimpleInstantInteraction {
         CommandBuffer<EntityStore> commandBuffer = context.getCommandBuffer();
         if (commandBuffer == null) {
             return;
+        }
+
+        if (this.useAmmo) {
+            ItemStack heldItem = context.getHeldItem();
+            if (heldItem == null) {
+                return;
+            }
+
+            ItemStack updated = GunItemMetadata.ensureAmmo(heldItem, this.maxAmmo);
+            int ammo = GunItemMetadata.getInt(updated, GunItemMetadata.AMMO_KEY, 0);
+            if (ammo < this.ammoPerShot) {
+                return;
+            }
+
+            updated = GunItemMetadata.setInt(updated, GunItemMetadata.AMMO_KEY, ammo - this.ammoPerShot);
+            GunItemMetadata.applyHeldItem(context, updated);
         }
 
         Vector3d from = getEmitterPosition(commandBuffer, context.getEntity());
@@ -282,7 +340,24 @@ public final class ChainLightningInteraction extends SimpleInstantInteraction {
         if (position == null) {
             return null;
         }
-        return position.clone().add(0.0, this.beamHeightOffset, 0.0);
+        Vector3d pos = position.clone().add(0.0, this.beamHeightOffset, 0.0);
+
+        boolean hasForward = this.beamForwardOffset > 0.001 || this.beamForwardOffset < -0.001;
+        boolean hasRight = this.beamRightOffset > 0.001 || this.beamRightOffset < -0.001;
+
+        if (hasForward || hasRight) {
+            HeadRotation headRotation = commandBuffer.getComponent(ref, HeadRotation.getComponentType());
+            if (headRotation != null) {
+                float yaw = headRotation.getRotation().getYaw();
+                double sinYaw = Math.sin(yaw);
+                double cosYaw = Math.cos(yaw);
+                double offsetX = sinYaw * this.beamForwardOffset + cosYaw * this.beamRightOffset;
+                double offsetZ = cosYaw * this.beamForwardOffset - sinYaw * this.beamRightOffset;
+                pos.add(offsetX, 0.0, offsetZ);
+            }
+        }
+
+        return pos;
     }
 
     @Nonnull

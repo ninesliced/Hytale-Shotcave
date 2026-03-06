@@ -1,5 +1,10 @@
 {
-  "Type": "RemoveEntity",
-  "Entity": "User"
+  "Type": "Simple",
+  "Effects": {
+    "Particles": [
+      {
+        "SystemId": "RifleShooting_Impact"
+      }
+    ]
+  }
 }
-
