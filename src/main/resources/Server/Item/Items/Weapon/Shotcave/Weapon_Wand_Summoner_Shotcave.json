@@ -11,7 +11,7 @@
   "PlayerAnimationsId": "Wand",
   "Interactions": {
     "Primary": "Root_Shotcave_Wand_Summon",
-    "Secondary": "Root_Shotcave_Wand_Summon"
+    "Secondary": "Root_Shotcave_Wand_Reload"
   },
   "Tags": {
     "Type": [

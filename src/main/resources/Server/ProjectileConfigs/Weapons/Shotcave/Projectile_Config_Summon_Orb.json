@@ -1,0 +1,84 @@
+{
+  "Model": "Ice_Ball",
+  "LaunchForce": 22,
+  "Physics": {
+    "Type": "Standard",
+    "Gravity": 12,
+    "TerminalVelocityAir": 40,
+    "TerminalVelocityWater": 10,
+    "RotationMode": "VelocityDamped",
+    "Bounciness": 0,
+    "SticksVertically": true
+  },
+  "SpawnOffset": {
+    "X": 0.0,
+    "Y": -0.3,
+    "Z": -0.8
+  },
+  "SpawnRotationOffset": {
+    "Pitch": 0,
+    "Yaw": 0,
+    "Roll": 0
+  },
+  "LaunchWorldSoundEventId": "SFX_Skeleton_Mage_Spellbook_Impact",
+  "Interactions": {
+    "ProjectileHit": {
+      "Cooldown": {
+        "Cooldown": 0
+      },
+      "Interactions": [
+        {
+          "Type": "SpawnNPCAtImpact",
+          "EntityId": "Kweebec_Seedling",
+          "SpawnOffset": {
+            "X": 0,
+            "Y": 0,
+            "Z": 0
+          }
+        },
+        {
+          "Type": "RemoveEntity",
+          "Entity": "User",
+          "Effects": {
+            "WorldParticles": [
+              {
+                "SystemId": "Effect_Poison",
+                "Scale": 1.5
+              }
+            ],
+            "WorldSoundEventId": "SFX_Skeleton_Mage_Spellbook_Impact"
+          }
+        }
+      ]
+    },
+    "ProjectileMiss": {
+      "Cooldown": {
+        "Cooldown": 0
+      },
+      "Interactions": [
+        {
+          "Type": "SpawnNPCAtImpact",
+          "EntityId": "Spirit_Root",
+          "SpawnOffset": {
+            "X": 0,
+            "Y": 1,
+            "Z": 0
+          }
+        },
+        {
+          "Type": "RemoveEntity",
+          "Entity": "User",
+          "Effects": {
+            "WorldParticles": [
+              {
+                "SystemId": "Effect_Poison",
+                "Scale": 1.5
+              }
+            ],
+            "WorldSoundEventId": "SFX_Skeleton_Mage_Spellbook_Impact"
+          }
+        }
+      ]
+    }
+  }
+}
