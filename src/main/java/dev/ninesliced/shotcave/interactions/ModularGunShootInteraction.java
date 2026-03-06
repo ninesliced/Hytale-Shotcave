@@ -124,6 +124,20 @@ public final class ModularGunShootInteraction extends SimpleInstantInteraction {
         ).add();
 
         builder.appendInherited(
+            new KeyedCodec<Double>("MuzzleForwardOffset", Codec.DOUBLE),
+            (o, v) -> o.muzzleForwardOffset = v,
+            o -> o.muzzleForwardOffset,
+            (o, p) -> o.muzzleForwardOffset = p.muzzleForwardOffset
+        ).add();
+
+        builder.appendInherited(
+            new KeyedCodec<Double>("MuzzleRightOffset", Codec.DOUBLE),
+            (o, v) -> o.muzzleRightOffset = v,
+            o -> o.muzzleRightOffset,
+            (o, p) -> o.muzzleRightOffset = p.muzzleRightOffset
+        ).add();
+
+        builder.appendInherited(
             new KeyedCodec<Boolean>("UseAmmo", Codec.BOOLEAN),
             (o, v) -> o.useAmmo = v,
             o -> o.useAmmo,
@@ -151,6 +165,41 @@ public final class ModularGunShootInteraction extends SimpleInstantInteraction {
             (o, p) -> o.aimAssist = p.aimAssist
         ).add();
 
+        builder.appendInherited(
+            new KeyedCodec<Integer>("TrailColorR", Codec.INTEGER),
+            (o, v) -> o.trailColorR = v,
+            o -> o.trailColorR,
+            (o, p) -> o.trailColorR = p.trailColorR
+        ).add();
+
+        builder.appendInherited(
+            new KeyedCodec<Integer>("TrailColorG", Codec.INTEGER),
+            (o, v) -> o.trailColorG = v,
+            o -> o.trailColorG,
+            (o, p) -> o.trailColorG = p.trailColorG
+        ).add();
+
+        builder.appendInherited(
+            new KeyedCodec<Integer>("TrailColorB", Codec.INTEGER),
+            (o, v) -> o.trailColorB = v,
+            o -> o.trailColorB,
+            (o, p) -> o.trailColorB = p.trailColorB
+        ).add();
+
+        builder.appendInherited(
+            new KeyedCodec<String>("ImpactParticleId", Codec.STRING),
+            (o, v) -> o.impactParticleId = v,
+            o -> o.impactParticleId,
+            (o, p) -> o.impactParticleId = p.impactParticleId
+        ).add();
+
+        builder.appendInherited(
+            new KeyedCodec<Double>("ImpactParticleScale", Codec.DOUBLE),
+            (o, v) -> o.impactParticleScale = v,
+            o -> o.impactParticleScale,
+            (o, p) -> o.impactParticleScale = p.impactParticleScale
+        ).addValidator(Validators.greaterThan(0.0)).add();
+
         CODEC = builder.build();
     }
 
@@ -165,11 +214,18 @@ public final class ModularGunShootInteraction extends SimpleInstantInteraction {
     private double trailStepDistance = 0.8;
     private double trailScale = 0.2;
     private double muzzleHeightOffset = 1.35;
+    private double muzzleForwardOffset = 0.0;
+    private double muzzleRightOffset = 0.0;
     private boolean useAmmo = false;
     private int maxAmmo = 30;
     private int ammoPerShot = 1;
     private boolean aimAssist = false;
-    private final Color trailColor = new Color((byte)-1, (byte)-1, (byte)-1);
+    private int trailColorR = 255;
+    private int trailColorG = 255;
+    private int trailColorB = 255;
+    @Nullable
+    private String impactParticleId;
+    private double impactParticleScale = 0.5;
 
     @Override
     protected void firstRun(@Nonnull InteractionType type, @Nonnull InteractionContext context, @Nonnull CooldownHandler cooldownHandler) {
@@ -238,6 +294,7 @@ public final class ModularGunShootInteraction extends SimpleInstantInteraction {
             }
 
             if (miss != null && hit.block != null) {
+                spawnImpactParticle(hit.position, commandBuffer);
                 forkMissInteraction(context, miss, hit.block, hit.position);
             }
         }
@@ -249,7 +306,25 @@ public final class ModularGunShootInteraction extends SimpleInstantInteraction {
         if (transform == null) {
             return null;
         }
-        return transform.getPosition().clone().add(0.0, this.muzzleHeightOffset, 0.0);
+        Vector3d pos = transform.getPosition().clone().add(0.0, this.muzzleHeightOffset, 0.0);
+
+        boolean hasForward = this.muzzleForwardOffset > 0.001 || this.muzzleForwardOffset < -0.001;
+        boolean hasRight = this.muzzleRightOffset > 0.001 || this.muzzleRightOffset < -0.001;
+
+        if (hasForward || hasRight) {
+            HeadRotation headRotation = commandBuffer.getComponent(ref, HeadRotation.getComponentType());
+            if (headRotation != null) {
+                float yaw = headRotation.getRotation().getYaw();
+                double sinYaw = Math.sin(yaw);
+                double cosYaw = Math.cos(yaw);
+                // Forward: (sinYaw, cosYaw), Right: (cosYaw, -sinYaw)
+                double offsetX = sinYaw * this.muzzleForwardOffset + cosYaw * this.muzzleRightOffset;
+                double offsetZ = cosYaw * this.muzzleForwardOffset - sinYaw * this.muzzleRightOffset;
+                pos.add(offsetX, 0.0, offsetZ);
+            }
+        }
+
+        return pos;
     }
 
     @Nonnull
@@ -421,6 +496,7 @@ public final class ModularGunShootInteraction extends SimpleInstantInteraction {
         ObjectList<Ref<EntityStore>> playerRefs = SpatialResource.getThreadLocalReferenceList();
         playerSpatialResource.getSpatialStructure().collect(point, ParticleUtil.DEFAULT_PARTICLE_DISTANCE, playerRefs);
 
+        Color color = new Color((byte) this.trailColorR, (byte) this.trailColorG, (byte) this.trailColorB);
         ParticleUtil.spawnParticleEffect(
             this.trailParticleId,
             point.x,
@@ -430,7 +506,33 @@ public final class ModularGunShootInteraction extends SimpleInstantInteraction {
             pitch,
             0.0f,
             (float)this.trailScale,
-            this.trailColor,
+            color,
+            null,
+            playerRefs,
+            commandBuffer
+        );
+    }
+
+    private void spawnImpactParticle(@Nonnull Vector3d hitPos,
+                                     @Nonnull CommandBuffer<EntityStore> commandBuffer) {
+        if (!hasText(this.impactParticleId)) {
+            return;
+        }
+        SpatialResource<Ref<EntityStore>, EntityStore> playerSpatialResource =
+            commandBuffer.getResource(EntityModule.get().getPlayerSpatialResourceType());
+        ObjectList<Ref<EntityStore>> playerRefs = SpatialResource.getThreadLocalReferenceList();
+        playerSpatialResource.getSpatialStructure().collect(hitPos, ParticleUtil.DEFAULT_PARTICLE_DISTANCE, playerRefs);
+
+        ParticleUtil.spawnParticleEffect(
+            this.impactParticleId,
+            hitPos.x,
+            hitPos.y,
+            hitPos.z,
+            0.0f,
+            0.0f,
+            0.0f,
+            (float)this.impactParticleScale,
+            new Color((byte)-1, (byte)-1, (byte)-1),
             null,
             playerRefs,
             commandBuffer

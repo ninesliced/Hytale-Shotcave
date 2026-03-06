@@ -5,7 +5,32 @@
     "ItemAnimationId": "Shoot",
     "WorldSoundEventId": "SFX_Blunderbuss_Fire",
     "LocalSoundEventId": "SFX_Blunderbuss_Fire_Local",
-    "Particles": []
+    "FirstPersonParticles": [
+      {
+        "SystemId": "RifleShooting",
+        "PositionOffset": {
+          "X": -0.08,
+          "Z": 1.1,
+          "Y": -0.05
+        },
+        "RotationOffset": {
+          "Yaw": 0,
+          "Pitch": 90
+        }
+      }
+    ],
+    "Particles": [
+      {
+        "SystemId": "RifleShooting",
+        "PositionOffset": {
+          "Z": 0.9,
+          "Y": 0.1
+        },
+        "RotationOffset": {
+          "Pitch": 90
+        }
+      }
+    ]
   },
   "Next": "Shotcave_Taser_Projectile_Hit"
 }

@@ -1,4 +1,7 @@
 {
-  "Type": "Simple",
-  "Next": "Shotcave_Taser_Shot"
+  "Type": "GunValidate",
+  "MaxAmmo": 8,
+  "RequireAmmo": true,
+  "Next": "Shotcave_Taser_Shot",
+  "Failed": "Shotcave_Taser_Reload_Check"
 }

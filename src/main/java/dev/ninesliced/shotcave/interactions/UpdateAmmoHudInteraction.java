@@ -13,10 +13,10 @@ import dev.ninesliced.shotcave.guns.GunItemMetadata;
 import dev.ninesliced.shotcave.hud.ShotcaveHud;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
- * Placeholder for ammo HUD update.
- * The class is intentionally isolated so a UI implementation can be plugged in without touching gun logic.
+ * Updates the custom ammo HUD overlay with the current weapon state.
  */
 public final class UpdateAmmoHudInteraction extends SimpleInstantInteraction {
     @Nonnull
@@ -46,7 +46,27 @@ public final class UpdateAmmoHudInteraction extends SimpleInstantInteraction {
             return;
         }
 
+        String weaponName = extractWeaponName(heldItem);
+
         player.getHudManager().showHudComponents(playerRef, HudComponent.AmmoIndicator);
-        player.getHudManager().setCustomHud(playerRef, new ShotcaveHud(playerRef, ammo, maxAmmo));
+        player.getHudManager().setCustomHud(playerRef, new ShotcaveHud(playerRef, ammo, maxAmmo, weaponName));
+    }
+
+    @Nullable
+    private String extractWeaponName(@Nonnull ItemStack item) {
+        String id = item.getItemId();
+        if (id == null || id.isBlank()) {
+            return null;
+        }
+        // Remove common prefixes like "Weapon_" and suffixes like "_Shotcave"
+        String name = id;
+        if (name.startsWith("Weapon_")) {
+            name = name.substring(7);
+        }
+        if (name.endsWith("_Shotcave")) {
+            name = name.substring(0, name.length() - 9);
+        }
+        // Replace underscores with spaces for display
+        return name.replace('_', ' ').toUpperCase();
     }
 }

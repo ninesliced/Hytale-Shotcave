@@ -10,9 +10,17 @@
       "BeamParticleId": "Shotcave_ElectricBeam",
       "BeamStepDistance": 0.6,
       "BeamHeightOffset": 1.35,
+      "BeamForwardOffset": 1.0,
+      "BeamRightOffset": 0.35,
       "BeamParticleScale": 0.35,
       "MaxDistance": 30,
-      "AimAssist": true
+      "AimAssist": true,
+      "UseAmmo": true,
+      "MaxAmmo": 8,
+      "AmmoPerShot": 1
+    },
+    {
+      "Type": "UpdateAmmoHud"
     }
   ]
 }
