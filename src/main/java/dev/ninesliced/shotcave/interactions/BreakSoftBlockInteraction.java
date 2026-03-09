@@ -20,13 +20,6 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
 
-/**
- * Breaks the target block if it is a "soft" gatherable block (e.g. crates,
- * barrels).
- * <p>
- * Intended for use in projectile miss interaction chains so that shots can
- * destroy soft furniture blocks on impact without affecting normal terrain.
- */
 public final class BreakSoftBlockInteraction extends SimpleInstantInteraction {
 
     @Nonnull
