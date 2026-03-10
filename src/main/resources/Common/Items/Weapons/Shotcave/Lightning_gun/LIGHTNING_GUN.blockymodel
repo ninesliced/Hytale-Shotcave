@@ -196,7 +196,7 @@
                             "unwrapMode": "custom",
                             "visible": true,
                             "doubleSided": false,
-                            "shadingMode": "standard"
+                            "shadingMode": "flat"
                           }
                         },
                         {
@@ -306,11 +306,219 @@
                             "doubleSided": true,
                             "shadingMode": "fullbright"
                           }
+                        },
+                        {
+                          "id": "11",
+                          "name": "Lattice_Detail_TOP--C6",
+                          "position": {"x": 0, "y": 9.4, "z": 25.3},
+                          "orientation": {"x": 0.38268, "y": 0, "z": 0, "w": 0.92388},
+                          "shape": {
+                            "type": "box",
+                            "offset": {"x": 0, "y": 0.5, "z": 0.5},
+                            "stretch": {"x": 1, "y": 1, "z": 1},
+                            "settings": {
+                              "isPiece": false,
+                              "size": {"x": 2, "y": 5, "z": 5},
+                              "isStaticBox": true
+                            },
+                            "textureLayout": {
+                              "back": {
+                                "offset": {"x": 122, "y": 95},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "right": {
+                                "offset": {"x": 117, "y": 100},
+                                "mirror": {"x": false, "y": true},
+                                "angle": 0
+                              },
+                              "front": {
+                                "offset": {"x": 128, "y": 95},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "left": {
+                                "offset": {"x": 122, "y": 100},
+                                "mirror": {"x": true, "y": true},
+                                "angle": 0
+                              },
+                              "top": {
+                                "offset": {"x": 124, "y": 96},
+                                "mirror": {"x": true, "y": true},
+                                "angle": 0
+                              },
+                              "bottom": {
+                                "offset": {"x": 126, "y": 91},
+                                "mirror": {"x": true, "y": false},
+                                "angle": 0
+                              }
+                            },
+                            "unwrapMode": "custom",
+                            "visible": true,
+                            "doubleSided": false,
+                            "shadingMode": "flat"
+                          }
+                        },
+                        {
+                          "id": "12",
+                          "name": "Lattice_Detail_Bottom--C7",
+                          "position": {"x": 0, "y": -9, "z": 26.00711},
+                          "orientation": {"x": -0.38268, "y": 0, "z": 0, "w": 0.92388},
+                          "shape": {
+                            "type": "box",
+                            "offset": {"x": 0, "y": 0, "z": 0},
+                            "stretch": {"x": 1, "y": 1, "z": 1},
+                            "settings": {
+                              "isPiece": false,
+                              "size": {"x": 2, "y": 5, "z": 5},
+                              "isStaticBox": true
+                            },
+                            "textureLayout": {
+                              "back": {
+                                "offset": {"x": 122, "y": 95},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "right": {
+                                "offset": {"x": 117, "y": 100},
+                                "mirror": {"x": false, "y": true},
+                                "angle": 0
+                              },
+                              "front": {
+                                "offset": {"x": 128, "y": 95},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "left": {
+                                "offset": {"x": 122, "y": 100},
+                                "mirror": {"x": true, "y": true},
+                                "angle": 0
+                              },
+                              "top": {
+                                "offset": {"x": 124, "y": 96},
+                                "mirror": {"x": true, "y": true},
+                                "angle": 0
+                              },
+                              "bottom": {
+                                "offset": {"x": 126, "y": 91},
+                                "mirror": {"x": true, "y": false},
+                                "angle": 0
+                              }
+                            },
+                            "unwrapMode": "custom",
+                            "visible": true,
+                            "doubleSided": false,
+                            "shadingMode": "flat"
+                          }
+                        },
+                        {
+                          "id": "13",
+                          "name": "Lattice_Detail_Right--C8",
+                          "position": {"x": -8.2, "y": 0, "z": 29.8},
+                          "orientation": {"x": 0, "y": -0.38268, "z": 0, "w": 0.92388},
+                          "shape": {
+                            "type": "box",
+                            "offset": {"x": 0, "y": 0, "z": 0},
+                            "stretch": {"x": 1, "y": 1, "z": 1},
+                            "settings": {
+                              "isPiece": false,
+                              "size": {"x": 4, "y": 2, "z": 4},
+                              "isStaticBox": true
+                            },
+                            "textureLayout": {
+                              "back": {
+                                "offset": {"x": 109, "y": 98},
+                                "mirror": {"x": true, "y": false},
+                                "angle": 0
+                              },
+                              "right": {
+                                "offset": {"x": 101, "y": 98},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "front": {
+                                "offset": {"x": 113, "y": 98},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "left": {
+                                "offset": {"x": 113, "y": 98},
+                                "mirror": {"x": true, "y": false},
+                                "angle": 0
+                              },
+                              "top": {
+                                "offset": {"x": 109, "y": 98},
+                                "mirror": {"x": true, "y": true},
+                                "angle": 0
+                              },
+                              "bottom": {
+                                "offset": {"x": 113, "y": 94},
+                                "mirror": {"x": true, "y": false},
+                                "angle": 0
+                              }
+                            },
+                            "unwrapMode": "custom",
+                            "visible": true,
+                            "doubleSided": false,
+                            "shadingMode": "flat"
+                          }
+                        },
+                        {
+                          "id": "14",
+                          "name": "Lattice_Detail_Left--C9",
+                          "position": {"x": 8.8, "y": 0, "z": 29.8},
+                          "orientation": {"x": 0, "y": 0.38268, "z": 0, "w": 0.92388},
+                          "shape": {
+                            "type": "box",
+                            "offset": {"x": 0, "y": 0, "z": 0},
+                            "stretch": {"x": 1, "y": 1, "z": 1},
+                            "settings": {
+                              "isPiece": false,
+                              "size": {"x": 4, "y": 2, "z": 4},
+                              "isStaticBox": true
+                            },
+                            "textureLayout": {
+                              "back": {
+                                "offset": {"x": 109, "y": 98},
+                                "mirror": {"x": true, "y": false},
+                                "angle": 0
+                              },
+                              "right": {
+                                "offset": {"x": 113, "y": 98},
+                                "mirror": {"x": true, "y": false},
+                                "angle": 0
+                              },
+                              "front": {
+                                "offset": {"x": 117, "y": 98},
+                                "mirror": {"x": true, "y": false},
+                                "angle": 0
+                              },
+                              "left": {
+                                "offset": {"x": 109, "y": 98},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "top": {
+                                "offset": {"x": 105, "y": 98},
+                                "mirror": {"x": false, "y": true},
+                                "angle": 0
+                              },
+                              "bottom": {
+                                "offset": {"x": 113, "y": 94},
+                                "mirror": {"x": true, "y": false},
+                                "angle": 0
+                              }
+                            },
+                            "unwrapMode": "custom",
+                            "visible": true,
+                            "doubleSided": false,
+                            "shadingMode": "flat"
+                          }
                         }
                       ]
                     },
                     {
-                      "id": "11",
+                      "id": "15",
                       "name": "\"BARREL\"--C1",
                       "position": {"x": -0.52587, "y": 2.29527, "z": 19.90915},
                       "orientation": {"x": 0, "y": 0, "z": -0.29237, "w": 0.9563},
@@ -362,7 +570,7 @@
                       }
                     },
                     {
-                      "id": "12",
+                      "id": "16",
                       "name": "Tesla_Capactor",
                       "position": {"x": 0, "y": 0, "z": -22},
                       "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
@@ -381,7 +589,7 @@
                       },
                       "children": [
                         {
-                          "id": "13",
+                          "id": "17",
                           "name": "Tesla_Capactor_Large_Section_1--C1",
                           "position": {"x": -0.52587, "y": 2.29527, "z": 41.90915},
                           "orientation": {"x": 0, "y": 0, "z": -0.29237, "w": 0.9563},
@@ -429,11 +637,11 @@
                             "unwrapMode": "custom",
                             "visible": true,
                             "doubleSided": false,
-                            "shadingMode": "standard"
+                            "shadingMode": "flat"
                           }
                         },
                         {
-                          "id": "14",
+                          "id": "18",
                           "name": "Tesla_Capactor_Large_Section_2--C2",
                           "position": {"x": -0.52587, "y": 2.29527, "z": 41.90915},
                           "orientation": {"x": 0.05755, "y": -0.02038, "z": -0.24991, "w": 0.96634},
@@ -481,11 +689,11 @@
                             "unwrapMode": "custom",
                             "visible": true,
                             "doubleSided": false,
-                            "shadingMode": "standard"
+                            "shadingMode": "flat"
                           }
                         },
                         {
-                          "id": "15",
+                          "id": "19",
                           "name": "Tesla_Capactor_Large_Section_3--C3",
                           "position": {"x": -0.52587, "y": 2.29527, "z": 41.90915},
                           "orientation": {"x": 0.0166, "y": -0.00539, "z": -0.2756, "w": 0.96112},
@@ -533,11 +741,11 @@
                             "unwrapMode": "custom",
                             "visible": true,
                             "doubleSided": false,
-                            "shadingMode": "standard"
+                            "shadingMode": "flat"
                           }
                         },
                         {
-                          "id": "16",
+                          "id": "20",
                           "name": "Tesla_Capactor_Large_Section_4--C4",
                           "position": {"x": -0.52587, "y": 2.29527, "z": 41.90915},
                           "orientation": {"x": 0.0166, "y": -0.00539, "z": -0.2756, "w": 0.96112},
@@ -585,11 +793,11 @@
                             "unwrapMode": "custom",
                             "visible": true,
                             "doubleSided": false,
-                            "shadingMode": "standard"
+                            "shadingMode": "flat"
                           }
                         },
                         {
-                          "id": "17",
+                          "id": "21",
                           "name": "Tesla_Capactor_Small_Section_1--C5",
                           "position": {"x": -0.52587, "y": 2.29527, "z": 41.90915},
                           "orientation": {"x": -0.02336, "y": -0.03922, "z": -0.36788, "w": 0.92875},
@@ -637,11 +845,11 @@
                             "unwrapMode": "custom",
                             "visible": true,
                             "doubleSided": false,
-                            "shadingMode": "standard"
+                            "shadingMode": "flat"
                           }
                         },
                         {
-                          "id": "18",
+                          "id": "22",
                           "name": "Tesla_Capactor_Small_Section_2--C6",
                           "position": {"x": -0.52587, "y": 2.29527, "z": 41.90915},
                           "orientation": {"x": 0.05043, "y": -0.01399, "z": -0.31687, "w": 0.94702},
@@ -689,11 +897,11 @@
                             "unwrapMode": "custom",
                             "visible": true,
                             "doubleSided": false,
-                            "shadingMode": "standard"
+                            "shadingMode": "flat"
                           }
                         },
                         {
-                          "id": "19",
+                          "id": "23",
                           "name": "Tesla_Capactor_Small_Section_3--C7",
                           "position": {"x": -0.52587, "y": 2.29527, "z": 41.90915},
                           "orientation": {"x": -0.0254, "y": 0.00633, "z": -0.3419, "w": 0.93937},
@@ -741,11 +949,11 @@
                             "unwrapMode": "custom",
                             "visible": true,
                             "doubleSided": false,
-                            "shadingMode": "standard"
+                            "shadingMode": "flat"
                           }
                         },
                         {
-                          "id": "20",
+                          "id": "24",
                           "name": "Tesla_Capactor_Small_Section_4--C8",
                           "position": {"x": -0.52587, "y": 2.29527, "z": 41.90915},
                           "orientation": {"x": 0.01655, "y": -0.00554, "z": -0.2672, "w": 0.96348},
@@ -793,7 +1001,7 @@
                             "unwrapMode": "custom",
                             "visible": true,
                             "doubleSided": false,
-                            "shadingMode": "standard"
+                            "shadingMode": "flat"
                           }
                         }
                       ]
@@ -801,7 +1009,7 @@
                   ]
                 },
                 {
-                  "id": "21",
+                  "id": "25",
                   "name": "Receiver",
                   "position": {"x": 2.8104, "y": -20.32702, "z": -0.56804},
                   "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
@@ -848,73 +1056,254 @@
                     "unwrapMode": "custom",
                     "visible": true,
                     "doubleSided": false,
-                    "shadingMode": "standard"
+                    "shadingMode": "flat"
                   },
                   "children": [
                     {
-                      "id": "22",
-                      "name": "Receiver_Bottom_Plane_Right--C1",
+                      "id": "26",
+                      "name": "Receiver_Lattice",
                       "position": {"x": -0.19982, "y": 0.68969, "z": 33.54449},
-                      "orientation": {"x": -0.11366, "y": 0.69791, "z": 0.11366, "w": 0.69791},
+                      "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
                       "shape": {
-                        "type": "quad",
-                        "offset": {"x": 24.4725, "y": 1.19051, "z": -4.17939},
+                        "type": "none",
+                        "offset": {"x": 0, "y": 0, "z": 0},
                         "stretch": {"x": 1, "y": 1, "z": 1},
                         "settings": {
-                          "isPiece": false,
-                          "size": {"x": 38, "y": 9},
-                          "normal": "+Z",
-                          "isStaticBox": true
+                          "isPiece": false
                         },
-                        "textureLayout": {
-                          "front": {
-                            "offset": {"x": 47, "y": 165},
-                            "mirror": {"x": false, "y": false},
-                            "angle": 0
+                        "textureLayout": {},
+                        "unwrapMode": "custom",
+                        "visible": true,
+                        "doubleSided": false,
+                        "shadingMode": "flat"
+                      },
+                      "children": [
+                        {
+                          "id": "27",
+                          "name": "Receiver_Lattice--C1",
+                          "position": {"x": 0, "y": 0, "z": 0},
+                          "orientation": {"x": 0, "y": 0.70711, "z": 0, "w": 0.70711},
+                          "shape": {
+                            "type": "quad",
+                            "offset": {"x": 2.5205, "y": 3.9106, "z": -0.1228},
+                            "stretch": {"x": 1, "y": 1, "z": 1},
+                            "settings": {
+                              "isPiece": false,
+                              "size": {"x": 102, "y": 35},
+                              "normal": "+Z",
+                              "isStaticBox": true
+                            },
+                            "textureLayout": {
+                              "front": {
+                                "offset": {"x": 239, "y": 126},
+                                "mirror": {"x": true, "y": false},
+                                "angle": 0
+                              }
+                            },
+                            "unwrapMode": "custom",
+                            "visible": true,
+                            "doubleSided": true,
+                            "shadingMode": "flat"
                           }
                         },
-                        "unwrapMode": "custom",
-                        "visible": false,
-                        "doubleSided": true,
-                        "shadingMode": "standard"
-                      }
-                    },
-                    {
-                      "id": "23",
-                      "name": "Receiver_Bottom_Plane_Left--C2",
-                      "position": {"x": -0.19982, "y": 0.68969, "z": 33.54449},
-                      "orientation": {"x": 0.09535, "y": 0.70065, "z": -0.09535, "w": 0.70065},
-                      "shape": {
-                        "type": "quad",
-                        "offset": {"x": 24.4725, "y": 0.90413, "z": 4.25428},
-                        "stretch": {"x": 1, "y": 1, "z": 1},
-                        "settings": {
-                          "isPiece": false,
-                          "size": {"x": 38, "y": 9},
-                          "normal": "+Z",
-                          "isStaticBox": true
-                        },
-                        "textureLayout": {
-                          "front": {
-                            "offset": {"x": 47, "y": 165},
-                            "mirror": {"x": false, "y": false},
-                            "angle": 0
+                        {
+                          "id": "28",
+                          "name": "Receiver_Lattice_Horizontal--C2",
+                          "position": {"x": -0.1228, "y": 3.7106, "z": -2.82049},
+                          "orientation": {"x": -0.50434, "y": 0.49562, "z": 0.50434, "w": 0.49562},
+                          "shape": {
+                            "type": "quad",
+                            "offset": {"x": -30, "y": 0, "z": 0},
+                            "stretch": {"x": 1, "y": 1, "z": 1},
+                            "settings": {
+                              "isPiece": false,
+                              "size": {"x": 42, "y": 35},
+                              "normal": "+Z",
+                              "isStaticBox": true
+                            },
+                            "textureLayout": {
+                              "front": {
+                                "offset": {"x": 239, "y": 161},
+                                "mirror": {"x": true, "y": false},
+                                "angle": 0
+                              }
+                            },
+                            "unwrapMode": "custom",
+                            "visible": true,
+                            "doubleSided": true,
+                            "shadingMode": "flat"
                           }
                         },
-                        "unwrapMode": "custom",
-                        "visible": false,
-                        "doubleSided": true,
-                        "shadingMode": "standard"
-                      }
+                        {
+                          "id": "29",
+                          "name": "Receiver_Bottom_Plane_Right--C3",
+                          "position": {"x": 0, "y": 0, "z": 0},
+                          "orientation": {"x": -0.11366, "y": 0.69791, "z": 0.11366, "w": 0.69791},
+                          "shape": {
+                            "type": "quad",
+                            "offset": {"x": 24.4725, "y": 1.19051, "z": -4.17939},
+                            "stretch": {"x": 1, "y": 1, "z": 1},
+                            "settings": {
+                              "isPiece": false,
+                              "size": {"x": 38, "y": 9},
+                              "normal": "+Z",
+                              "isStaticBox": true
+                            },
+                            "textureLayout": {
+                              "front": {
+                                "offset": {"x": 47, "y": 165},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              }
+                            },
+                            "unwrapMode": "custom",
+                            "visible": true,
+                            "doubleSided": true,
+                            "shadingMode": "flat"
+                          }
+                        },
+                        {
+                          "id": "30",
+                          "name": "Receiver_Bottom_Plane_Left--C4",
+                          "position": {"x": 0, "y": 0, "z": 0},
+                          "orientation": {"x": 0.09535, "y": 0.70065, "z": -0.09535, "w": 0.70065},
+                          "shape": {
+                            "type": "quad",
+                            "offset": {"x": 24.4725, "y": 0.90413, "z": 4.25428},
+                            "stretch": {"x": 1, "y": 1, "z": 1},
+                            "settings": {
+                              "isPiece": false,
+                              "size": {"x": 38, "y": 9},
+                              "normal": "+Z",
+                              "isStaticBox": true
+                            },
+                            "textureLayout": {
+                              "front": {
+                                "offset": {"x": 47, "y": 165},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              }
+                            },
+                            "unwrapMode": "custom",
+                            "visible": true,
+                            "doubleSided": true,
+                            "shadingMode": "flat"
+                          }
+                        },
+                        {
+                          "id": "31",
+                          "name": "Receiver_Lattice_Top_Bar--C5",
+                          "position": {"x": -0.1, "y": 15.66327, "z": 1.65089},
+                          "orientation": {"x": -0.1644, "y": 0.0681, "z": 0.37658, "w": 0.90914},
+                          "shape": {
+                            "type": "box",
+                            "offset": {"x": 0, "y": 0, "z": -1.2},
+                            "stretch": {"x": 1, "y": 1, "z": 1},
+                            "settings": {
+                              "isPiece": false,
+                              "size": {"x": 2, "y": 2, "z": 17},
+                              "isStaticBox": true
+                            },
+                            "textureLayout": {
+                              "back": {
+                                "offset": {"x": 53, "y": 141},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "right": {
+                                "offset": {"x": 53, "y": 124},
+                                "mirror": {"x": false, "y": true},
+                                "angle": 90
+                              },
+                              "front": {
+                                "offset": {"x": 72, "y": 141},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "left": {
+                                "offset": {"x": 55, "y": 141},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "top": {
+                                "offset": {"x": 55, "y": 141},
+                                "mirror": {"x": true, "y": true},
+                                "angle": 0
+                              },
+                              "bottom": {
+                                "offset": {"x": 72, "y": 143},
+                                "mirror": {"x": true, "y": false},
+                                "angle": 90
+                              }
+                            },
+                            "unwrapMode": "custom",
+                            "visible": true,
+                            "doubleSided": false,
+                            "shadingMode": "flat"
+                          }
+                        },
+                        {
+                          "id": "32",
+                          "name": "Receiver_Lattice_Top_Bar--C6",
+                          "position": {"x": -0.1, "y": -6.53673, "z": 0.75089},
+                          "orientation": {"x": -0.91121, "y": 0.37744, "z": 0.06316, "w": 0.15248},
+                          "shape": {
+                            "type": "box",
+                            "offset": {"x": 0, "y": 0, "z": 1.1},
+                            "stretch": {"x": 1, "y": 1, "z": 1},
+                            "settings": {
+                              "isPiece": false,
+                              "size": {"x": 2, "y": 2, "z": 17},
+                              "isStaticBox": true
+                            },
+                            "textureLayout": {
+                              "back": {
+                                "offset": {"x": 15, "y": 141},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "right": {
+                                "offset": {"x": 15, "y": 124},
+                                "mirror": {"x": false, "y": true},
+                                "angle": 90
+                              },
+                              "front": {
+                                "offset": {"x": 34, "y": 141},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "left": {
+                                "offset": {"x": 34, "y": 141},
+                                "mirror": {"x": true, "y": false},
+                                "angle": 0
+                              },
+                              "top": {
+                                "offset": {"x": 17, "y": 141},
+                                "mirror": {"x": true, "y": true},
+                                "angle": 0
+                              },
+                              "bottom": {
+                                "offset": {"x": 17, "y": 143},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 270
+                              }
+                            },
+                            "unwrapMode": "custom",
+                            "visible": true,
+                            "doubleSided": false,
+                            "shadingMode": "flat"
+                          }
+                        }
+                      ]
                     },
                     {
-                      "id": "24",
-                      "name": "Emitter_Bottom--C3",
-                      "position": {"x": 0.03738, "y": 5.06648, "z": 55.84529},
-                      "orientation": {"x": -0.2376, "y": 0.00578, "z": -0.02553, "w": 0.97101},
+                      "id": "33",
+                      "name": "Emitter_Bottom--C1",
+                      "position": {"x": 0.038, "y": 5.10461, "z": 57.3465},
+                      "orientation": {"x": -0.23767, "y": 0.00163, "z": -0.00858, "w": 0.97131},
                       "shape": {
                         "type": "box",
-                        "offset": {"x": 0, "y": -9.08301, "z": -2.78055},
+                        "offset": {"x": 0, "y": -8.42367, "z": -4.12975},
                         "stretch": {"x": 1, "y": 1, "z": 1},
                         "settings": {
                           "isPiece": false,
@@ -956,12 +1345,12 @@
                         "unwrapMode": "custom",
                         "visible": true,
                         "doubleSided": false,
-                        "shadingMode": "standard"
+                        "shadingMode": "flat"
                       }
                     },
                     {
-                      "id": "25",
-                      "name": "Emitter_Right--C4",
+                      "id": "34",
+                      "name": "Emitter_Right--C2",
                       "position": {"x": -0.08868, "y": 4.67122, "z": 56.54025},
                       "orientation": {"x": -0.18366, "y": -0.17631, "z": 0.66894, "w": 0.69836},
                       "shape": {
@@ -1008,12 +1397,12 @@
                         "unwrapMode": "custom",
                         "visible": true,
                         "doubleSided": false,
-                        "shadingMode": "standard"
+                        "shadingMode": "flat"
                       }
                     },
                     {
-                      "id": "26",
-                      "name": "Emitter_Left--C5",
+                      "id": "35",
+                      "name": "Emitter_Left--C3",
                       "position": {"x": -0.48868, "y": 4.67122, "z": 56.54025},
                       "orientation": {"x": 0.15359, "y": 0.14641, "z": 0.67584, "w": 0.70585},
                       "shape": {
@@ -1060,17 +1449,17 @@
                         "unwrapMode": "custom",
                         "visible": true,
                         "doubleSided": false,
-                        "shadingMode": "standard"
+                        "shadingMode": "flat"
                       }
                     },
                     {
-                      "id": "27",
-                      "name": "Emitter_Top--C6",
-                      "position": {"x": 0.03738, "y": 5.06648, "z": 55.84529},
-                      "orientation": {"x": 0.2121, "y": -0.006, "z": -0.02548, "w": 0.9769},
+                      "id": "36",
+                      "name": "Emitter_Top--C4",
+                      "position": {"x": 0.038, "y": 5.10461, "z": 57.3465},
+                      "orientation": {"x": 0.21218, "y": -0.0023, "z": -0.00843, "w": 0.97719},
                       "shape": {
                         "type": "box",
-                        "offset": {"x": 0, "y": 9.09766, "z": -2.74519},
+                        "offset": {"x": 0, "y": 8.44041, "z": -4.09542},
                         "stretch": {"x": 1, "y": 1, "z": 1},
                         "settings": {
                           "isPiece": false,
@@ -1112,12 +1501,12 @@
                         "unwrapMode": "custom",
                         "visible": true,
                         "doubleSided": false,
-                        "shadingMode": "standard"
+                        "shadingMode": "flat"
                       }
                     },
                     {
-                      "id": "28",
-                      "name": "Barrel_Emitter--C7",
+                      "id": "37",
+                      "name": "Barrel_Emitter--C5",
                       "position": {"x": 0.03738, "y": 5.06648, "z": 55.84529},
                       "orientation": {"x": -0.00872, "y": -0.00023, "z": -0.02618, "w": 0.99962},
                       "shape": {
@@ -1164,12 +1553,12 @@
                         "unwrapMode": "custom",
                         "visible": true,
                         "doubleSided": false,
-                        "shadingMode": "standard"
+                        "shadingMode": "flat"
                       }
                     },
                     {
-                      "id": "29",
-                      "name": "Reciever_Bar--C8",
+                      "id": "38",
+                      "name": "Reciever_Bar--C6",
                       "position": {"x": 0.2, "y": 2.6, "z": -2.3},
                       "orientation": {"x": -0.06105, "y": 0, "z": 0, "w": 0.99813},
                       "shape": {
@@ -1216,68 +1605,12 @@
                         "unwrapMode": "custom",
                         "visible": true,
                         "doubleSided": false,
-                        "shadingMode": "standard"
+                        "shadingMode": "flat"
                       }
                     },
                     {
-                      "id": "30",
-                      "name": "Receiver_Lattice--C9",
-                      "position": {"x": -0.19982, "y": 0.68969, "z": 33.54449},
-                      "orientation": {"x": 0, "y": 0.70711, "z": 0, "w": 0.70711},
-                      "shape": {
-                        "type": "quad",
-                        "offset": {"x": 2.5205, "y": 3.9106, "z": -0.1228},
-                        "stretch": {"x": 1, "y": 1, "z": 1},
-                        "settings": {
-                          "isPiece": false,
-                          "size": {"x": 102, "y": 35},
-                          "normal": "+Z",
-                          "isStaticBox": true
-                        },
-                        "textureLayout": {
-                          "front": {
-                            "offset": {"x": 239, "y": 126},
-                            "mirror": {"x": true, "y": false},
-                            "angle": 0
-                          }
-                        },
-                        "unwrapMode": "custom",
-                        "visible": true,
-                        "doubleSided": true,
-                        "shadingMode": "standard"
-                      }
-                    },
-                    {
-                      "id": "31",
-                      "name": "Receiver_Lattice_Horizontal--C10",
-                      "position": {"x": -0.32262, "y": 4.40029, "z": 30.724},
-                      "orientation": {"x": -0.50434, "y": 0.49562, "z": 0.50434, "w": 0.49562},
-                      "shape": {
-                        "type": "quad",
-                        "offset": {"x": -30, "y": 0, "z": 0},
-                        "stretch": {"x": 1, "y": 1, "z": 1},
-                        "settings": {
-                          "isPiece": false,
-                          "size": {"x": 42, "y": 35},
-                          "normal": "+Z",
-                          "isStaticBox": true
-                        },
-                        "textureLayout": {
-                          "front": {
-                            "offset": {"x": 239, "y": 161},
-                            "mirror": {"x": true, "y": false},
-                            "angle": 0
-                          }
-                        },
-                        "unwrapMode": "custom",
-                        "visible": true,
-                        "doubleSided": true,
-                        "shadingMode": "standard"
-                      }
-                    },
-                    {
-                      "id": "32",
-                      "name": "Receiver_Rune_Plate--C11",
+                      "id": "39",
+                      "name": "Receiver_Rune_Plate--C7",
                       "position": {"x": -0.8, "y": 6.8, "z": -2.7},
                       "orientation": {"x": -0.42262, "y": 0, "z": 0, "w": 0.90631},
                       "shape": {
@@ -1324,12 +1657,12 @@
                         "unwrapMode": "custom",
                         "visible": true,
                         "doubleSided": false,
-                        "shadingMode": "standard"
+                        "shadingMode": "flat"
                       }
                     },
                     {
-                      "id": "33",
-                      "name": "Receiver_Rune_Plate_Emissive--C12",
+                      "id": "40",
+                      "name": "Receiver_Rune_Plate_Emissive--C8",
                       "position": {"x": -0.8, "y": 6.8, "z": -2.7},
                       "orientation": {"x": -0.42262, "y": 0, "z": 0, "w": 0.90631},
                       "shape": {
@@ -1376,12 +1709,12 @@
                         "unwrapMode": "custom",
                         "visible": true,
                         "doubleSided": false,
-                        "shadingMode": "standard"
+                        "shadingMode": "fullbright"
                       }
                     },
                     {
-                      "id": "34",
-                      "name": "Receiver_Top--C13",
+                      "id": "41",
+                      "name": "Receiver_Top--C9",
                       "position": {"x": -0.012, "y": 4.76, "z": 10.872},
                       "orientation": {"x": 0, "y": 0, "z": 0.38268, "w": 0.92388},
                       "shape": {
@@ -1428,12 +1761,12 @@
                         "unwrapMode": "custom",
                         "visible": true,
                         "doubleSided": true,
-                        "shadingMode": "standard"
+                        "shadingMode": "flat"
                       }
                     },
                     {
-                      "id": "35",
-                      "name": "Receiver_Top_Emissive--C14",
+                      "id": "42",
+                      "name": "Receiver_Top_Emissive--C10",
                       "position": {"x": -0.012, "y": 4.76, "z": 10.872},
                       "orientation": {"x": 0, "y": 0, "z": 0.38268, "w": 0.92388},
                       "shape": {
@@ -1484,7 +1817,7 @@
                       }
                     },
                     {
-                      "id": "36",
+                      "id": "43",
                       "name": "Crystal_Rack",
                       "position": {"x": 1.6, "y": -43.5, "z": 9.6},
                       "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
@@ -1503,7 +1836,7 @@
                       },
                       "children": [
                         {
-                          "id": "37",
+                          "id": "44",
                           "name": "Small_Crystals",
                           "position": {"x": -11.08434, "y": 53.26058, "z": 1},
                           "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
@@ -1526,7 +1859,7 @@
                   ]
                 },
                 {
-                  "id": "38",
+                  "id": "45",
                   "name": "Grip",
                   "position": {"x": 0, "y": 0, "z": 0},
                   "orientation": {"x": 0, "y": -0.70711, "z": 0, "w": 0.70711},
@@ -1545,7 +1878,7 @@
                   },
                   "children": [
                     {
-                      "id": "39",
+                      "id": "46",
                       "name": "Trigger_Guard_Bracket--C1",
                       "position": {"x": -23.81118, "y": -5.38718, "z": 0.7323},
                       "orientation": {"x": 0, "y": 0, "z": 0.27564, "w": 0.96126},
@@ -1593,11 +1926,11 @@
                         "unwrapMode": "custom",
                         "visible": true,
                         "doubleSided": false,
-                        "shadingMode": "standard"
+                        "shadingMode": "flat"
                       }
                     },
                     {
-                      "id": "40",
+                      "id": "47",
                       "name": "Stock--C2",
                       "position": {"x": -38.31118, "y": 5.11282, "z": -1.2677},
                       "orientation": {"x": 0, "y": 0, "z": -0.07846, "w": 0.99692},
@@ -1645,11 +1978,11 @@
                         "unwrapMode": "custom",
                         "visible": true,
                         "doubleSided": false,
-                        "shadingMode": "standard"
+                        "shadingMode": "flat"
                       }
                     },
                     {
-                      "id": "41",
+                      "id": "48",
                       "name": "Grip--C3",
                       "position": {"x": 8.10097, "y": -2.54247, "z": -4.0104},
                       "orientation": {"x": 0, "y": 0, "z": -0.48481, "w": 0.87462},
@@ -1697,11 +2030,11 @@
                         "unwrapMode": "custom",
                         "visible": true,
                         "doubleSided": false,
-                        "shadingMode": "standard"
+                        "shadingMode": "flat"
                       }
                     },
                     {
-                      "id": "42",
+                      "id": "49",
                       "name": "Trigger_Guard",
                       "position": {"x": 58.55487, "y": 8.02395, "z": -2.01555},
                       "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
@@ -1720,7 +2053,7 @@
                       },
                       "children": [
                         {
-                          "id": "43",
+                          "id": "50",
                           "name": "Trigger_Guard--C1",
                           "position": {"x": -35.17842, "y": 15.83872, "z": 1.00497},
                           "orientation": {"x": 0, "y": 0, "z": 0.04362, "w": 0.99905},
@@ -1744,11 +2077,11 @@
                             "unwrapMode": "custom",
                             "visible": true,
                             "doubleSided": true,
-                            "shadingMode": "standard"
+                            "shadingMode": "flat"
                           }
                         },
                         {
-                          "id": "44",
+                          "id": "51",
                           "name": "Trigger--C2",
                           "position": {"x": -75.43161, "y": 4.02462, "z": 0.8529},
                           "orientation": {"x": 0, "y": 0, "z": 0.30486, "w": 0.9524},
@@ -1796,11 +2129,11 @@
                             "unwrapMode": "custom",
                             "visible": true,
                             "doubleSided": false,
-                            "shadingMode": "standard"
+                            "shadingMode": "flat"
                           }
                         },
                         {
-                          "id": "45",
+                          "id": "52",
                           "name": "Trigger_Shoe--C3",
                           "position": {"x": -35.17842, "y": 15.83872, "z": 1.00497},
                           "orientation": {"x": 0, "y": 0, "z": 0.36245, "w": 0.932},
@@ -1824,7 +2157,7 @@
                             "unwrapMode": "custom",
                             "visible": true,
                             "doubleSided": true,
-                            "shadingMode": "standard"
+                            "shadingMode": "flat"
                           }
                         }
                       ]
@@ -1832,7 +2165,7 @@
                   ]
                 },
                 {
-                  "id": "46",
+                  "id": "53",
                   "name": "Striker",
                   "position": {"x": 0.89778, "y": 32.56327, "z": -22.55404},
                   "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
@@ -1851,7 +2184,7 @@
                   },
                   "children": [
                     {
-                      "id": "47",
+                      "id": "54",
                       "name": "Striker_Arm--C1",
                       "position": {"x": 0.3, "y": -9.3, "z": 4},
                       "orientation": {"x": -0.26724, "y": 0, "z": 0, "w": 0.96363},
@@ -1899,11 +2232,11 @@
                         "unwrapMode": "custom",
                         "visible": true,
                         "doubleSided": false,
-                        "shadingMode": "standard"
+                        "shadingMode": "flat"
                       }
                     },
                     {
-                      "id": "48",
+                      "id": "55",
                       "name": "Striker--C2",
                       "position": {"x": 0.3, "y": -9.3, "z": 4},
                       "orientation": {"x": -0.08918, "y": -0.03513, "z": -0.36481, "w": 0.92613},
@@ -1955,7 +2288,7 @@
                       }
                     },
                     {
-                      "id": "49",
+                      "id": "56",
                       "name": "Striker_Knob_2--C3",
                       "position": {"x": 0.3, "y": -9.3, "z": 4},
                       "orientation": {"x": -0.08918, "y": -0.03513, "z": -0.36481, "w": 0.92613},
@@ -2003,11 +2336,11 @@
                         "unwrapMode": "custom",
                         "visible": true,
                         "doubleSided": false,
-                        "shadingMode": "standard"
+                        "shadingMode": "flat"
                       }
                     },
                     {
-                      "id": "50",
+                      "id": "57",
                       "name": "Striker_Knob_1--C4",
                       "position": {"x": 0.3, "y": -9.3, "z": 4},
                       "orientation": {"x": -0.08918, "y": -0.03513, "z": -0.36481, "w": 0.92613},
@@ -2055,7 +2388,7 @@
                         "unwrapMode": "custom",
                         "visible": true,
                         "doubleSided": false,
-                        "shadingMode": "standard"
+                        "shadingMode": "flat"
                       }
                     }
                   ]
