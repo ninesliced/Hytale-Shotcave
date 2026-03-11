@@ -203,28 +203,60 @@ public class DungeonConfig {
         public List<String> getBoss() { return boss; }
 
         private void sanitize() {
-            if (entrance == null) entrance = new ArrayList<>();
-            if (room == null) room = new ArrayList<>();
-            if (wall == null) wall = new ArrayList<>();
-            if (boss == null) boss = new ArrayList<>();
+            entrance = sanitizeGlobList(entrance);
+            room = sanitizeGlobList(room);
+            wall = sanitizeGlobList(wall);
+            boss = sanitizeGlobList(boss);
         }
+    }
+
+    @Nonnull
+    private static List<String> sanitizeGlobList(@Nullable List<String> globs) {
+        List<String> sanitized = new ArrayList<>();
+        if (globs == null) {
+            return sanitized;
+        }
+        for (String glob : globs) {
+            if (glob == null) {
+                continue;
+            }
+            String trimmed = glob.trim();
+            if (!trimmed.isEmpty()) {
+                sanitized.add(trimmed);
+            }
+        }
+        return sanitized;
     }
 
     @Nonnull
     public static List<Path> resolveGlobs(@Nonnull List<String> globs) {
         List<Path> result = new ArrayList<>();
         for (String glob : globs) {
+            if (glob == null || glob.isBlank()) {
+                LOGGER.warning("Skipping empty prefab glob entry");
+                continue;
+            }
             result.addAll(resolveGlob(glob));
         }
         return result;
     }
 
     @Nonnull
-    public static List<Path> resolveGlob(@Nonnull String glob) {
+    public static List<Path> resolveGlob(@Nullable String glob) {
         List<Path> result = new ArrayList<>();
+        if (glob == null) {
+            LOGGER.warning("Skipping null prefab glob entry");
+            return result;
+        }
 
-        if (glob.endsWith(".*")) {
-            String folderPath = glob.substring(0, glob.length() - 2).replace('.', '/');
+        String trimmedGlob = glob.trim();
+        if (trimmedGlob.isEmpty()) {
+            LOGGER.warning("Skipping blank prefab glob entry");
+            return result;
+        }
+
+        if (trimmedGlob.endsWith(".*")) {
+            String folderPath = trimmedGlob.substring(0, trimmedGlob.length() - 2).replace('.', '/');
             Path folder = findPrefabFolder(folderPath);
             if (folder != null && Files.isDirectory(folder)) {
                 collectPrefabFiles(folder, result);
@@ -232,7 +264,7 @@ public class DungeonConfig {
                 LOGGER.warning("Could not resolve prefab folder: " + folderPath);
             }
         } else {
-            String filePath = glob.replace('.', '/') + ".prefab.json";
+            String filePath = trimmedGlob.replace('.', '/') + ".prefab.json";
             Path path = PrefabStore.get().findAssetPrefabPath(filePath);
             if (path != null) {
                 result.add(path);

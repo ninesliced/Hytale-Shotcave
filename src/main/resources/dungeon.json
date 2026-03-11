@@ -2,25 +2,42 @@
   "levels": [
     {
       "id": "shotcave",
-      "name": "Level 1",
+      "name": "Shale",
       "rooms": 25,
       "prefabs": {
         "entrance": [
-          "start"
+          "Shotcave.Shale.Entrance.*"
         ],
         "room": [
-          "front",
-          "left",
-          "right",
-          "front_left",
-          "front_right",
-          "3_branch"
+          "Shotcave.Shale.Corridor.*",
+          "Shotcave.Shale.OffGrid.*",
+          "Shotcave.Shale.Stairs.*",
+          "Shotcave.Shale.Turn.*"
         ],
         "wall": [
-          "wall"
+          "Shotcave.Shale.Wall.*"
         ],
         "boss": [
-          "boss"
+          "Shotcave.Shale.Boss.*"
+        ]
+      }
+    },
+    {
+      "id": "test",
+      "name": "Test",
+      "rooms": 25,
+      "prefabs": {
+        "entrance": [
+          "Shotcave.Test.Entrance.*"
+        ],
+        "room": [
+          "Shotcave.Test.Room.*"
+        ],
+        "wall": [
+          "Shotcave.Test.Wall.*"
+        ],
+        "boss": [
+          "Shotcave.Test.Boss.*"
         ]
       }
     }
