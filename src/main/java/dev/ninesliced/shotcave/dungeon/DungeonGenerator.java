@@ -107,6 +107,10 @@ public class DungeonGenerator {
         int roomsPlaced = 0;
 
         Path entrancePath = DungeonConfig.pickRandom(random, entrancePaths);
+        if (entrancePath == null) {
+            LOGGER.severe("Failed to pick an entrance prefab!");
+            return;
+        }
         PrefabData entranceData = readPrefabData(entrancePath);
         if (entranceData == null) {
             LOGGER.severe("Failed to parse entrance!");
@@ -122,9 +126,11 @@ public class DungeonGenerator {
         while (roomsPlaced < levelConfig.getRooms() && !openExits.isEmpty()) {
             int idx = random.nextInt(openExits.size());
             OpenExit exit = openExits.remove(idx);
+            int nextRoomNumber = roomsPlaced + 1;
+            boolean forceOnFailure = nextRoomNumber == 5;
 
             if (tryPlaceRoom(world, store, random, roomPaths, exit, openExits,
-                    "Room_" + (roomsPlaced + 1))) {
+                    "Room_" + nextRoomNumber, forceOnFailure)) {
                 roomsPlaced++;
             }
         }
@@ -136,7 +142,7 @@ public class DungeonGenerator {
             while (it.hasNext()) {
                 OpenExit exit = it.next();
                 it.remove();
-                if (tryPlaceRoom(world, store, random, bossPaths, exit, openExits, "Boss")) {
+                if (tryPlaceRoom(world, store, random, bossPaths, exit, openExits, "Boss", false)) {
                     bossPlaced = true;
                     roomsPlaced++;
                     break;
@@ -144,9 +150,12 @@ public class DungeonGenerator {
             }
             if (!bossPlaced && !openExits.isEmpty()) {
                 OpenExit forceExit = openExits.remove(random.nextInt(openExits.size()));
-                forcePlaceRoom(world, store, random, bossPaths, forceExit, openExits, "Boss(forced)");
-                bossPlaced = true;
-                roomsPlaced++;
+                if (forcePlaceRoom(world, store, random, bossPaths, forceExit, openExits, "Boss(forced)")) {
+                    bossPlaced = true;
+                    roomsPlaced++;
+                } else {
+                    sealExit(forceExit);
+                }
             }
         }
 
@@ -161,11 +170,13 @@ public class DungeonGenerator {
     private boolean tryPlaceRoom(@Nonnull World world, @Nonnull Store<EntityStore> store,
                                   @Nonnull Random random, @Nonnull List<Path> roomPaths,
                                   @Nonnull OpenExit exit, @Nonnull List<OpenExit> openExits,
-                                  @Nonnull String label) {
+                                  @Nonnull String label, boolean forceOnFailure) {
         List<Path> shuffled = new ArrayList<>(roomPaths);
         Collections.shuffle(shuffled, random);
 
         Vector3i pastePos = new Vector3i(exit.worldX, exit.worldY, exit.worldZ);
+        // Rotate 180° so the room's entrance face connects to the exit and the body extends away
+        int pasteRot = (exit.rotation + 2) & 3;
         int attempts = Math.min(MAX_RETRIES, shuffled.size());
 
         for (int i = 0; i < attempts; i++) {
@@ -174,52 +185,66 @@ public class DungeonGenerator {
             if (data == null) {
                 continue;
             }
-            if (wouldOverlap(data, pastePos, exit.rotation)) {
+            if (wouldOverlap(data, pastePos, pasteRot)) {
                 LOGGER.fine("[" + label + "] overlap retry " + (i + 1) + "/" + attempts
                         + " " + chosen.getFileName()
-                        + " paste=" + pastePos + " rot=" + exit.rotation);
+                        + " paste=" + pastePos + " rot=" + pasteRot);
                 continue;
             }
 
             try {
-                pasteAndRegister(world, store, random, chosen, data, pastePos, exit.rotation);
+                pasteAndRegister(world, store, random, chosen, data, pastePos, pasteRot);
             } catch (Exception e) {
                 LOGGER.log(Level.WARNING, "[" + label + "] paste failed " + chosen.getFileName(), e);
                 continue;
             }
 
-            int newExitCount = collectExits(data, pastePos, exit.rotation, openExits);
+            int newExitCount = collectExits(data, pastePos, pasteRot, openExits);
             LOGGER.info("[" + label + "] " + chosen.getFileName()
-                    + " paste=" + pastePos + " rot=" + exit.rotation
+                    + " paste=" + pastePos + " rot=" + pasteRot
                     + " -> " + newExitCount + " new exit(s)");
             return true;
         }
 
-        LOGGER.info("[" + label + "] " + attempts + " retries failed, sealing exit");
+        if (forceOnFailure) {
+            LOGGER.warning("[" + label + "] retries exhausted, force-placing for inspection");
+            if (forcePlaceRoom(world, store, random, roomPaths, exit, openExits, label + "(forced)")) {
+                return true;
+            }
+            LOGGER.warning("[" + label + "] forced placement also failed, sealing exit");
+        } else {
+            LOGGER.info("[" + label + "] " + attempts + " retries failed, sealing exit");
+        }
         sealExit(exit);
         return false;
     }
 
-    private void forcePlaceRoom(@Nonnull World world, @Nonnull Store<EntityStore> store,
+    private boolean forcePlaceRoom(@Nonnull World world, @Nonnull Store<EntityStore> store,
                                  @Nonnull Random random, @Nonnull List<Path> roomPaths,
                                  @Nonnull OpenExit exit, @Nonnull List<OpenExit> openExits,
                                  @Nonnull String label) {
         Path chosen = DungeonConfig.pickRandom(random, roomPaths);
         if (chosen == null) {
-            return;
+            return false;
         }
         PrefabData data = readPrefabData(chosen);
         if (data == null) {
-            return;
+            return false;
         }
 
         Vector3i pastePos = new Vector3i(exit.worldX, exit.worldY, exit.worldZ);
+        // Rotate 180° so the room's entrance face connects to the exit and the body extends away
+        int pasteRot = (exit.rotation + 2) & 3;
         try {
-            pasteAndRegister(world, store, random, chosen, data, pastePos, exit.rotation);
-            collectExits(data, pastePos, exit.rotation, openExits);
-            LOGGER.info("[" + label + "] " + chosen.getFileName() + " force-placed at " + pastePos);
+            pasteAndRegister(world, store, random, chosen, data, pastePos, pasteRot);
+            int newExitCount = collectExits(data, pastePos, pasteRot, openExits);
+            LOGGER.warning("[" + label + "] " + chosen.getFileName()
+                    + " force-placed at " + pastePos + " rot=" + pasteRot
+                    + " -> " + newExitCount + " new exit(s)");
+            return true;
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, "[" + label + "] force-paste failed", e);
+            return false;
         }
     }
 
