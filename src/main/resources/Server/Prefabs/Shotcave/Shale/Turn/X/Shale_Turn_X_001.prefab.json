@@ -59,12 +59,6 @@
     },
     {
       "x": -10,
-      "y": 5,
-      "z": -15,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -10,
       "y": 0,
       "z": -14,
       "name": "Rock_Shale_Brick_Smooth"
@@ -93,12 +87,6 @@
       "y": 4,
       "z": -14,
       "name": "Rock_Shale_Brick"
-    },
-    {
-      "x": -10,
-      "y": 5,
-      "z": -14,
-      "name": "Rock_Basalt"
     },
     {
       "x": -10,
@@ -133,12 +121,6 @@
     },
     {
       "x": -10,
-      "y": 5,
-      "z": -13,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -10,
       "y": 0,
       "z": -12,
       "name": "Soil_Dirt_Cold"
@@ -166,12 +148,6 @@
       "y": 4,
       "z": -12,
       "name": "Empty"
-    },
-    {
-      "x": -10,
-      "y": 5,
-      "z": -12,
-      "name": "Rock_Basalt"
     },
     {
       "x": -10,
@@ -205,12 +181,6 @@
     },
     {
       "x": -10,
-      "y": 5,
-      "z": -11,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -10,
       "y": 0,
       "z": -10,
       "name": "Rock_Basalt"
@@ -241,12 +211,6 @@
     },
     {
       "x": -10,
-      "y": 5,
-      "z": -10,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -10,
       "y": 0,
       "z": -9,
       "name": "Rock_Basalt"
@@ -274,12 +238,6 @@
       "y": 4,
       "z": -9,
       "name": "Empty"
-    },
-    {
-      "x": -10,
-      "y": 5,
-      "z": -9,
-      "name": "Rock_Basalt"
     },
     {
       "x": -10,
@@ -310,12 +268,6 @@
       "y": 4,
       "z": -8,
       "name": "Empty"
-    },
-    {
-      "x": -10,
-      "y": 5,
-      "z": -8,
-      "name": "Rock_Basalt"
     },
     {
       "x": -10,
@@ -347,12 +299,6 @@
       "z": -7,
       "name": "Rock_Shale_Brick_Stairs",
       "rotation": 8
-    },
-    {
-      "x": -10,
-      "y": 5,
-      "z": -7,
-      "name": "Rock_Basalt"
     },
     {
       "x": -10,
@@ -387,12 +333,6 @@
     },
     {
       "x": -10,
-      "y": 5,
-      "z": -6,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -10,
       "y": 0,
       "z": -5,
       "name": "Rock_Shale_Brick_Smooth"
@@ -420,12 +360,6 @@
       "y": 4,
       "z": -5,
       "name": "Rock_Shale"
-    },
-    {
-      "x": -10,
-      "y": 5,
-      "z": -5,
-      "name": "Rock_Basalt"
     },
     {
       "x": -9,
@@ -456,12 +390,6 @@
       "y": 4,
       "z": -15,
       "name": "Rock_Shale"
-    },
-    {
-      "x": -9,
-      "y": 5,
-      "z": -15,
-      "name": "Rock_Basalt"
     },
     {
       "x": -9,
@@ -496,12 +424,6 @@
     },
     {
       "x": -9,
-      "y": 5,
-      "z": -14,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -9,
       "y": 0,
       "z": -13,
       "name": "Soil_Dirt_Cold"
@@ -529,12 +451,6 @@
       "y": 4,
       "z": -13,
       "name": "Empty"
-    },
-    {
-      "x": -9,
-      "y": 5,
-      "z": -13,
-      "name": "Rock_Basalt"
     },
     {
       "x": -9,
@@ -568,12 +484,6 @@
     },
     {
       "x": -9,
-      "y": 5,
-      "z": -12,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -9,
       "y": 0,
       "z": -11,
       "name": "Soil_Dirt_Cold"
@@ -604,12 +514,6 @@
     },
     {
       "x": -9,
-      "y": 5,
-      "z": -11,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -9,
       "y": 0,
       "z": -10,
       "name": "Rock_Basalt"
@@ -640,12 +544,6 @@
     },
     {
       "x": -9,
-      "y": 5,
-      "z": -10,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -9,
       "y": 0,
       "z": -9,
       "name": "Rock_Basalt"
@@ -673,12 +571,6 @@
       "y": 4,
       "z": -9,
       "name": "Empty"
-    },
-    {
-      "x": -9,
-      "y": 5,
-      "z": -9,
-      "name": "Rock_Basalt"
     },
     {
       "x": -9,
@@ -712,12 +604,6 @@
     },
     {
       "x": -9,
-      "y": 5,
-      "z": -8,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -9,
       "y": 0,
       "z": -7,
       "name": "Rock_Shale"
@@ -745,12 +631,6 @@
       "y": 4,
       "z": -7,
       "name": "Empty"
-    },
-    {
-      "x": -9,
-      "y": 5,
-      "z": -7,
-      "name": "Rock_Basalt"
     },
     {
       "x": -9,
@@ -785,12 +665,6 @@
     },
     {
       "x": -9,
-      "y": 5,
-      "z": -6,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -9,
       "y": 0,
       "z": -5,
       "name": "Rock_Shale_Brick_Smooth"
@@ -818,12 +692,6 @@
       "y": 4,
       "z": -5,
       "name": "Rock_Shale"
-    },
-    {
-      "x": -9,
-      "y": 5,
-      "z": -5,
-      "name": "Rock_Basalt"
     },
     {
       "x": -8,
@@ -854,12 +722,6 @@
       "y": 4,
       "z": -15,
       "name": "Rock_Shale"
-    },
-    {
-      "x": -8,
-      "y": 5,
-      "z": -15,
-      "name": "Rock_Basalt"
     },
     {
       "x": -8,
@@ -894,12 +756,6 @@
     },
     {
       "x": -8,
-      "y": 5,
-      "z": -14,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -8,
       "y": 0,
       "z": -13,
       "name": "Soil_Dirt_Cold"
@@ -930,12 +786,6 @@
     },
     {
       "x": -8,
-      "y": 5,
-      "z": -13,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -8,
       "y": 0,
       "z": -12,
       "name": "Rock_Basalt_Brick_Stairs",
@@ -964,12 +814,6 @@
       "y": 4,
       "z": -12,
       "name": "Empty"
-    },
-    {
-      "x": -8,
-      "y": 5,
-      "z": -12,
-      "name": "Rock_Basalt"
     },
     {
       "x": -8,
@@ -1004,12 +848,6 @@
     },
     {
       "x": -8,
-      "y": 5,
-      "z": -11,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -8,
       "y": 0,
       "z": -10,
       "name": "Rock_Basalt"
@@ -1037,12 +875,6 @@
       "y": 4,
       "z": -10,
       "name": "Empty"
-    },
-    {
-      "x": -8,
-      "y": 5,
-      "z": -10,
-      "name": "Rock_Basalt"
     },
     {
       "x": -8,
@@ -1076,12 +908,6 @@
     },
     {
       "x": -8,
-      "y": 5,
-      "z": -9,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -8,
       "y": 0,
       "z": -8,
       "name": "Rock_Shale"
@@ -1112,12 +938,6 @@
     },
     {
       "x": -8,
-      "y": 5,
-      "z": -8,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -8,
       "y": 0,
       "z": -7,
       "name": "Rock_Shale"
@@ -1145,12 +965,6 @@
       "y": 4,
       "z": -7,
       "name": "Empty"
-    },
-    {
-      "x": -8,
-      "y": 5,
-      "z": -7,
-      "name": "Rock_Basalt"
     },
     {
       "x": -8,
@@ -1185,12 +999,6 @@
     },
     {
       "x": -8,
-      "y": 5,
-      "z": -6,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -8,
       "y": 0,
       "z": -5,
       "name": "Rock_Shale_Brick_Smooth"
@@ -1218,12 +1026,6 @@
       "y": 4,
       "z": -5,
       "name": "Rock_Shale"
-    },
-    {
-      "x": -8,
-      "y": 5,
-      "z": -5,
-      "name": "Rock_Basalt"
     },
     {
       "x": -7,
@@ -1254,12 +1056,6 @@
       "y": 4,
       "z": -15,
       "name": "Rock_Shale"
-    },
-    {
-      "x": -7,
-      "y": 5,
-      "z": -15,
-      "name": "Rock_Basalt"
     },
     {
       "x": -7,
@@ -1294,12 +1090,6 @@
     },
     {
       "x": -7,
-      "y": 5,
-      "z": -14,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -7,
       "y": 0,
       "z": -13,
       "name": "Rock_Shale"
@@ -1327,12 +1117,6 @@
       "y": 4,
       "z": -13,
       "name": "Empty"
-    },
-    {
-      "x": -7,
-      "y": 5,
-      "z": -13,
-      "name": "Rock_Basalt"
     },
     {
       "x": -7,
@@ -1366,12 +1150,6 @@
     },
     {
       "x": -7,
-      "y": 5,
-      "z": -12,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -7,
       "y": 0,
       "z": -11,
       "name": "Rock_Basalt_Brick_Half"
@@ -1402,12 +1180,6 @@
     },
     {
       "x": -7,
-      "y": 5,
-      "z": -11,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -7,
       "y": 0,
       "z": -10,
       "name": "Rock_Shale"
@@ -1438,12 +1210,6 @@
     },
     {
       "x": -7,
-      "y": 5,
-      "z": -10,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -7,
       "y": 0,
       "z": -9,
       "name": "Rock_Shale"
@@ -1471,12 +1237,6 @@
       "y": 4,
       "z": -9,
       "name": "Empty"
-    },
-    {
-      "x": -7,
-      "y": 5,
-      "z": -9,
-      "name": "Rock_Basalt"
     },
     {
       "x": -7,
@@ -1510,12 +1270,6 @@
     },
     {
       "x": -7,
-      "y": 5,
-      "z": -8,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -7,
       "y": 0,
       "z": -7,
       "name": "Rock_Shale"
@@ -1543,12 +1297,6 @@
       "y": 4,
       "z": -7,
       "name": "Empty"
-    },
-    {
-      "x": -7,
-      "y": 5,
-      "z": -7,
-      "name": "Rock_Basalt"
     },
     {
       "x": -7,
@@ -1583,12 +1331,6 @@
     },
     {
       "x": -7,
-      "y": 5,
-      "z": -6,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -7,
       "y": 0,
       "z": -5,
       "name": "Rock_Shale_Brick_Smooth"
@@ -1616,12 +1358,6 @@
       "y": 4,
       "z": -5,
       "name": "Rock_Shale"
-    },
-    {
-      "x": -7,
-      "y": 5,
-      "z": -5,
-      "name": "Rock_Basalt"
     },
     {
       "x": -6,
@@ -1652,12 +1388,6 @@
       "y": 4,
       "z": -15,
       "name": "Rock_Shale"
-    },
-    {
-      "x": -6,
-      "y": 5,
-      "z": -15,
-      "name": "Rock_Basalt"
     },
     {
       "x": -6,
@@ -1692,12 +1422,6 @@
     },
     {
       "x": -6,
-      "y": 5,
-      "z": -14,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -6,
       "y": 0,
       "z": -13,
       "name": "Rock_Shale"
@@ -1726,12 +1450,6 @@
       "z": -13,
       "name": "Rock_Shale_Brick_Stairs",
       "rotation": 10
-    },
-    {
-      "x": -6,
-      "y": 5,
-      "z": -13,
-      "name": "Rock_Basalt"
     },
     {
       "x": -6,
@@ -1765,12 +1483,6 @@
     },
     {
       "x": -6,
-      "y": 5,
-      "z": -12,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -6,
       "y": 0,
       "z": -11,
       "name": "Rock_Shale"
@@ -1798,12 +1510,6 @@
       "y": 4,
       "z": -11,
       "name": "Empty"
-    },
-    {
-      "x": -6,
-      "y": 5,
-      "z": -11,
-      "name": "Rock_Basalt"
     },
     {
       "x": -6,
@@ -1837,12 +1543,6 @@
     },
     {
       "x": -6,
-      "y": 5,
-      "z": -10,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -6,
       "y": 0,
       "z": -9,
       "name": "Rock_Shale"
@@ -1870,12 +1570,6 @@
       "y": 4,
       "z": -9,
       "name": "Empty"
-    },
-    {
-      "x": -6,
-      "y": 5,
-      "z": -9,
-      "name": "Rock_Basalt"
     },
     {
       "x": -6,
@@ -1909,12 +1603,6 @@
     },
     {
       "x": -6,
-      "y": 5,
-      "z": -8,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -6,
       "y": 0,
       "z": -7,
       "name": "Rock_Shale"
@@ -1943,12 +1631,6 @@
       "z": -7,
       "name": "Rock_Shale_Brick_Stairs",
       "rotation": 8
-    },
-    {
-      "x": -6,
-      "y": 5,
-      "z": -7,
-      "name": "Rock_Basalt"
     },
     {
       "x": -6,
@@ -1983,12 +1665,6 @@
     },
     {
       "x": -6,
-      "y": 5,
-      "z": -6,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -6,
       "y": 0,
       "z": -5,
       "name": "Rock_Shale_Brick_Smooth"
@@ -2016,12 +1692,6 @@
       "y": 4,
       "z": -5,
       "name": "Rock_Shale"
-    },
-    {
-      "x": -6,
-      "y": 5,
-      "z": -5,
-      "name": "Rock_Basalt"
     },
     {
       "x": -5,
@@ -2055,12 +1725,6 @@
     },
     {
       "x": -5,
-      "y": 5,
-      "z": -20,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -5,
       "y": 0,
       "z": -19,
       "name": "Rock_Shale_Brick_Smooth"
@@ -2088,12 +1752,6 @@
       "y": 4,
       "z": -19,
       "name": "Rock_Shale"
-    },
-    {
-      "x": -5,
-      "y": 5,
-      "z": -19,
-      "name": "Rock_Basalt"
     },
     {
       "x": -5,
@@ -2127,12 +1785,6 @@
     },
     {
       "x": -5,
-      "y": 5,
-      "z": -18,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -5,
       "y": 0,
       "z": -17,
       "name": "Rock_Shale_Brick_Smooth"
@@ -2160,12 +1812,6 @@
       "y": 4,
       "z": -17,
       "name": "Rock_Shale"
-    },
-    {
-      "x": -5,
-      "y": 5,
-      "z": -17,
-      "name": "Rock_Basalt"
     },
     {
       "x": -5,
@@ -2199,12 +1845,6 @@
     },
     {
       "x": -5,
-      "y": 5,
-      "z": -16,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -5,
       "y": 0,
       "z": -15,
       "name": "Rock_Shale_Brick_Smooth"
@@ -2232,12 +1872,6 @@
       "y": 4,
       "z": -15,
       "name": "Rock_Shale"
-    },
-    {
-      "x": -5,
-      "y": 5,
-      "z": -15,
-      "name": "Rock_Basalt"
     },
     {
       "x": -5,
@@ -2268,12 +1902,6 @@
       "y": 4,
       "z": -14,
       "name": "Rock_Basalt_Brick"
-    },
-    {
-      "x": -5,
-      "y": 5,
-      "z": -14,
-      "name": "Rock_Basalt"
     },
     {
       "x": -5,
@@ -2304,12 +1932,6 @@
       "y": 4,
       "z": -13,
       "name": "Rock_Basalt_Brick"
-    },
-    {
-      "x": -5,
-      "y": 5,
-      "z": -13,
-      "name": "Rock_Basalt"
     },
     {
       "x": -5,
@@ -2345,12 +1967,6 @@
     },
     {
       "x": -5,
-      "y": 5,
-      "z": -12,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -5,
       "y": 0,
       "z": -11,
       "name": "Rock_Shale"
@@ -2378,12 +1994,6 @@
       "y": 4,
       "z": -11,
       "name": "Rock_Basalt_Brick"
-    },
-    {
-      "x": -5,
-      "y": 5,
-      "z": -11,
-      "name": "Rock_Basalt"
     },
     {
       "x": -5,
@@ -2417,12 +2027,6 @@
     },
     {
       "x": -5,
-      "y": 5,
-      "z": -10,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -5,
       "y": 0,
       "z": -9,
       "name": "Rock_Shale"
@@ -2450,12 +2054,6 @@
       "y": 4,
       "z": -9,
       "name": "Rock_Basalt_Brick"
-    },
-    {
-      "x": -5,
-      "y": 5,
-      "z": -9,
-      "name": "Rock_Basalt"
     },
     {
       "x": -5,
@@ -2490,12 +2088,6 @@
     },
     {
       "x": -5,
-      "y": 5,
-      "z": -8,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -5,
       "y": 0,
       "z": -7,
       "name": "Rock_Shale"
@@ -2526,12 +2118,6 @@
     },
     {
       "x": -5,
-      "y": 5,
-      "z": -7,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -5,
       "y": 0,
       "z": -6,
       "name": "Rock_Shale_Brick_Smooth"
@@ -2562,12 +2148,6 @@
     },
     {
       "x": -5,
-      "y": 5,
-      "z": -6,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -5,
       "y": 0,
       "z": -5,
       "name": "Rock_Shale_Brick_Smooth"
@@ -2595,12 +2175,6 @@
       "y": 4,
       "z": -5,
       "name": "Rock_Shale"
-    },
-    {
-      "x": -5,
-      "y": 5,
-      "z": -5,
-      "name": "Rock_Basalt"
     },
     {
       "x": -5,
@@ -2634,12 +2208,6 @@
     },
     {
       "x": -5,
-      "y": 5,
-      "z": -4,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -5,
       "y": 0,
       "z": -3,
       "name": "Rock_Shale_Brick_Smooth"
@@ -2667,12 +2235,6 @@
       "y": 4,
       "z": -3,
       "name": "Rock_Shale"
-    },
-    {
-      "x": -5,
-      "y": 5,
-      "z": -3,
-      "name": "Rock_Basalt"
     },
     {
       "x": -5,
@@ -2706,12 +2268,6 @@
     },
     {
       "x": -5,
-      "y": 5,
-      "z": -2,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -5,
       "y": 0,
       "z": -1,
       "name": "Rock_Shale_Brick_Smooth"
@@ -2742,12 +2298,6 @@
     },
     {
       "x": -5,
-      "y": 5,
-      "z": -1,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -5,
       "y": 0,
       "z": 0,
       "name": "Rock_Shale_Brick_Smooth"
@@ -2775,12 +2325,6 @@
       "y": 4,
       "z": 0,
       "name": "Rock_Shale"
-    },
-    {
-      "x": -5,
-      "y": 5,
-      "z": 0,
-      "name": "Rock_Basalt"
     },
     {
       "x": -4,
@@ -2815,12 +2359,6 @@
     },
     {
       "x": -4,
-      "y": 5,
-      "z": -20,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -4,
       "y": 0,
       "z": -19,
       "name": "Rock_Shale_Brick_Smooth"
@@ -2852,12 +2390,6 @@
     },
     {
       "x": -4,
-      "y": 5,
-      "z": -19,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -4,
       "y": 0,
       "z": -18,
       "name": "Rock_Shale_Brick_Smooth"
@@ -2886,12 +2418,6 @@
       "y": 4,
       "z": -18,
       "name": "Rock_Shale_Brick"
-    },
-    {
-      "x": -4,
-      "y": 5,
-      "z": -18,
-      "name": "Rock_Basalt"
     },
     {
       "x": -4,
@@ -2926,12 +2452,6 @@
     },
     {
       "x": -4,
-      "y": 5,
-      "z": -17,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -4,
       "y": 0,
       "z": -16,
       "name": "Rock_Shale_Brick_Smooth"
@@ -2963,12 +2483,6 @@
     },
     {
       "x": -4,
-      "y": 5,
-      "z": -16,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -4,
       "y": 0,
       "z": -15,
       "name": "Rock_Shale_Brick_Smooth"
@@ -2999,12 +2513,6 @@
     },
     {
       "x": -4,
-      "y": 5,
-      "z": -15,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -4,
       "y": 0,
       "z": -14,
       "name": "Rock_Shale_Brick_Smooth"
@@ -3032,12 +2540,6 @@
       "y": 4,
       "z": -14,
       "name": "Rock_Basalt_Brick"
-    },
-    {
-      "x": -4,
-      "y": 5,
-      "z": -14,
-      "name": "Rock_Basalt"
     },
     {
       "x": -4,
@@ -3068,12 +2570,6 @@
       "y": 4,
       "z": -13,
       "name": "Rock_Basalt_Brick"
-    },
-    {
-      "x": -4,
-      "y": 5,
-      "z": -13,
-      "name": "Rock_Basalt"
     },
     {
       "x": -4,
@@ -3108,12 +2604,6 @@
     },
     {
       "x": -4,
-      "y": 5,
-      "z": -12,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -4,
       "y": 0,
       "z": -11,
       "name": "Rock_Shale_Brick_Smooth"
@@ -3144,12 +2634,6 @@
     },
     {
       "x": -4,
-      "y": 5,
-      "z": -11,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -4,
       "y": 0,
       "z": -10,
       "name": "Rock_Shale_Brick_Smooth"
@@ -3177,12 +2661,6 @@
       "y": 4,
       "z": -10,
       "name": "Rock_Basalt_Brick"
-    },
-    {
-      "x": -4,
-      "y": 5,
-      "z": -10,
-      "name": "Rock_Basalt"
     },
     {
       "x": -4,
@@ -3213,12 +2691,6 @@
       "y": 4,
       "z": -9,
       "name": "Rock_Basalt_Brick"
-    },
-    {
-      "x": -4,
-      "y": 5,
-      "z": -9,
-      "name": "Rock_Basalt"
     },
     {
       "x": -4,
@@ -3253,12 +2725,6 @@
     },
     {
       "x": -4,
-      "y": 5,
-      "z": -8,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -4,
       "y": 0,
       "z": -7,
       "name": "Rock_Shale_Brick_Smooth"
@@ -3289,12 +2755,6 @@
     },
     {
       "x": -4,
-      "y": 5,
-      "z": -7,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -4,
       "y": 0,
       "z": -6,
       "name": "Rock_Shale_Brick_Smooth"
@@ -3325,12 +2785,6 @@
     },
     {
       "x": -4,
-      "y": 5,
-      "z": -6,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -4,
       "y": 0,
       "z": -5,
       "name": "Rock_Shale_Brick_Smooth"
@@ -3358,12 +2812,6 @@
       "y": 4,
       "z": -5,
       "name": "Rock_Basalt_Brick"
-    },
-    {
-      "x": -4,
-      "y": 5,
-      "z": -5,
-      "name": "Rock_Basalt"
     },
     {
       "x": -4,
@@ -3398,12 +2846,6 @@
     },
     {
       "x": -4,
-      "y": 5,
-      "z": -4,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -4,
       "y": 0,
       "z": -3,
       "name": "Rock_Shale_Brick_Smooth"
@@ -3435,12 +2877,6 @@
     },
     {
       "x": -4,
-      "y": 5,
-      "z": -3,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -4,
       "y": 0,
       "z": -2,
       "name": "Rock_Shale_Brick_Smooth"
@@ -3469,12 +2905,6 @@
       "y": 4,
       "z": -2,
       "name": "Rock_Shale_Brick"
-    },
-    {
-      "x": -4,
-      "y": 5,
-      "z": -2,
-      "name": "Rock_Basalt"
     },
     {
       "x": -4,
@@ -3509,12 +2939,6 @@
     },
     {
       "x": -4,
-      "y": 5,
-      "z": -1,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -4,
       "y": 0,
       "z": 0,
       "name": "Rock_Shale_Brick_Smooth"
@@ -3543,12 +2967,6 @@
       "y": 4,
       "z": 0,
       "name": "Rock_Shale_Brick"
-    },
-    {
-      "x": -4,
-      "y": 5,
-      "z": 0,
-      "name": "Rock_Basalt"
     },
     {
       "x": -3,
@@ -3583,12 +3001,6 @@
     },
     {
       "x": -3,
-      "y": 5,
-      "z": -20,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -3,
       "y": 0,
       "z": -19,
       "name": "Soil_Dirt_Cold"
@@ -3616,12 +3028,6 @@
       "y": 4,
       "z": -19,
       "name": "Wood_Redwood_Beam"
-    },
-    {
-      "x": -3,
-      "y": 5,
-      "z": -19,
-      "name": "Rock_Basalt"
     },
     {
       "x": -3,
@@ -3655,12 +3061,6 @@
     },
     {
       "x": -3,
-      "y": 5,
-      "z": -18,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -3,
       "y": 0,
       "z": -17,
       "name": "Rock_Shale"
@@ -3688,12 +3088,6 @@
       "y": 4,
       "z": -17,
       "name": "Empty"
-    },
-    {
-      "x": -3,
-      "y": 5,
-      "z": -17,
-      "name": "Rock_Basalt"
     },
     {
       "x": -3,
@@ -3728,12 +3122,6 @@
     },
     {
       "x": -3,
-      "y": 5,
-      "z": -16,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -3,
       "y": 0,
       "z": -15,
       "name": "Rock_Shale"
@@ -3761,12 +3149,6 @@
       "y": 4,
       "z": -15,
       "name": "Rock_Basalt_Brick"
-    },
-    {
-      "x": -3,
-      "y": 5,
-      "z": -15,
-      "name": "Rock_Basalt"
     },
     {
       "x": -3,
@@ -3800,12 +3182,6 @@
     },
     {
       "x": -3,
-      "y": 5,
-      "z": -14,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -3,
       "y": 0,
       "z": -13,
       "name": "Rock_Shale"
@@ -3833,12 +3209,6 @@
       "y": 4,
       "z": -13,
       "name": "Empty"
-    },
-    {
-      "x": -3,
-      "y": 5,
-      "z": -13,
-      "name": "Rock_Basalt"
     },
     {
       "x": -3,
@@ -3873,12 +3243,6 @@
     },
     {
       "x": -3,
-      "y": 5,
-      "z": -12,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -3,
       "y": 0,
       "z": -11,
       "name": "Rock_Shale"
@@ -3909,12 +3273,6 @@
     },
     {
       "x": -3,
-      "y": 5,
-      "z": -11,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -3,
       "y": 0,
       "z": -10,
       "name": "Rock_Shale"
@@ -3942,12 +3300,6 @@
       "y": 4,
       "z": -10,
       "name": "Empty"
-    },
-    {
-      "x": -3,
-      "y": 5,
-      "z": -10,
-      "name": "Rock_Basalt"
     },
     {
       "x": -3,
@@ -3978,12 +3330,6 @@
       "y": 4,
       "z": -9,
       "name": "Empty"
-    },
-    {
-      "x": -3,
-      "y": 5,
-      "z": -9,
-      "name": "Rock_Basalt"
     },
     {
       "x": -3,
@@ -4017,12 +3363,6 @@
     },
     {
       "x": -3,
-      "y": 5,
-      "z": -8,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -3,
       "y": 0,
       "z": -7,
       "name": "Rock_Shale"
@@ -4050,12 +3390,6 @@
       "y": 4,
       "z": -7,
       "name": "Empty"
-    },
-    {
-      "x": -3,
-      "y": 5,
-      "z": -7,
-      "name": "Rock_Basalt"
     },
     {
       "x": -3,
@@ -4089,12 +3423,6 @@
     },
     {
       "x": -3,
-      "y": 5,
-      "z": -6,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -3,
       "y": 0,
       "z": -5,
       "name": "Rock_Shale"
@@ -4122,12 +3450,6 @@
       "y": 4,
       "z": -5,
       "name": "Rock_Basalt_Brick"
-    },
-    {
-      "x": -3,
-      "y": 5,
-      "z": -5,
-      "name": "Rock_Basalt"
     },
     {
       "x": -3,
@@ -4162,12 +3484,6 @@
     },
     {
       "x": -3,
-      "y": 5,
-      "z": -4,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -3,
       "y": 0,
       "z": -3,
       "name": "Rock_Shale"
@@ -4198,12 +3514,6 @@
     },
     {
       "x": -3,
-      "y": 5,
-      "z": -3,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -3,
       "y": 0,
       "z": -2,
       "name": "Rock_Shale"
@@ -4234,12 +3544,6 @@
     },
     {
       "x": -3,
-      "y": 5,
-      "z": -2,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -3,
       "y": 0,
       "z": -1,
       "name": "Rock_Shale"
@@ -4267,12 +3571,6 @@
       "y": 4,
       "z": -1,
       "name": "Empty"
-    },
-    {
-      "x": -3,
-      "y": 5,
-      "z": -1,
-      "name": "Rock_Basalt"
     },
     {
       "x": -3,
@@ -4306,12 +3604,6 @@
       "rotation": 11
     },
     {
-      "x": -3,
-      "y": 5,
-      "z": 0,
-      "name": "Rock_Basalt"
-    },
-    {
       "x": -2,
       "y": 0,
       "z": -20,
@@ -4343,12 +3635,6 @@
     },
     {
       "x": -2,
-      "y": 5,
-      "z": -20,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -2,
       "y": 0,
       "z": -19,
       "name": "Soil_Dirt_Cold"
@@ -4379,12 +3665,6 @@
     },
     {
       "x": -2,
-      "y": 5,
-      "z": -19,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -2,
       "y": 0,
       "z": -18,
       "name": "Soil_Dirt_Cold"
@@ -4412,12 +3692,6 @@
       "y": 4,
       "z": -18,
       "name": "Empty"
-    },
-    {
-      "x": -2,
-      "y": 5,
-      "z": -18,
-      "name": "Rock_Basalt"
     },
     {
       "x": -2,
@@ -4451,12 +3725,6 @@
     },
     {
       "x": -2,
-      "y": 5,
-      "z": -17,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -2,
       "y": 0,
       "z": -16,
       "name": "Rock_Basalt"
@@ -4484,12 +3752,6 @@
       "y": 4,
       "z": -16,
       "name": "Empty"
-    },
-    {
-      "x": -2,
-      "y": 5,
-      "z": -16,
-      "name": "Rock_Basalt"
     },
     {
       "x": -2,
@@ -4524,12 +3786,6 @@
     },
     {
       "x": -2,
-      "y": 5,
-      "z": -15,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -2,
       "y": 0,
       "z": -14,
       "name": "Rock_Shale_Brick_Smooth"
@@ -4561,12 +3817,6 @@
     },
     {
       "x": -2,
-      "y": 5,
-      "z": -14,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -2,
       "y": 0,
       "z": -13,
       "name": "Rock_Shale"
@@ -4594,12 +3844,6 @@
       "y": 4,
       "z": -13,
       "name": "Empty"
-    },
-    {
-      "x": -2,
-      "y": 5,
-      "z": -13,
-      "name": "Rock_Basalt"
     },
     {
       "x": -2,
@@ -4634,12 +3878,6 @@
     },
     {
       "x": -2,
-      "y": 5,
-      "z": -12,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -2,
       "y": 0,
       "z": -11,
       "name": "Rock_Shale"
@@ -4667,12 +3905,6 @@
       "y": 4,
       "z": -11,
       "name": "Empty"
-    },
-    {
-      "x": -2,
-      "y": 5,
-      "z": -11,
-      "name": "Rock_Basalt"
     },
     {
       "x": -2,
@@ -4706,12 +3938,6 @@
     },
     {
       "x": -2,
-      "y": 5,
-      "z": -10,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -2,
       "y": 0,
       "z": -9,
       "name": "Rock_Shale"
@@ -4739,12 +3965,6 @@
       "y": 4,
       "z": -9,
       "name": "Empty"
-    },
-    {
-      "x": -2,
-      "y": 5,
-      "z": -9,
-      "name": "Rock_Basalt"
     },
     {
       "x": -2,
@@ -4778,12 +3998,6 @@
     },
     {
       "x": -2,
-      "y": 5,
-      "z": -8,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -2,
       "y": 0,
       "z": -7,
       "name": "Rock_Shale"
@@ -4811,12 +4025,6 @@
       "y": 4,
       "z": -7,
       "name": "Empty"
-    },
-    {
-      "x": -2,
-      "y": 5,
-      "z": -7,
-      "name": "Rock_Basalt"
     },
     {
       "x": -2,
@@ -4848,12 +4056,6 @@
       "y": 4,
       "z": -6,
       "name": "Rock_Basalt_Brick"
-    },
-    {
-      "x": -2,
-      "y": 5,
-      "z": -6,
-      "name": "Rock_Basalt"
     },
     {
       "x": -2,
@@ -4888,12 +4090,6 @@
     },
     {
       "x": -2,
-      "y": 5,
-      "z": -5,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -2,
       "y": 0,
       "z": -4,
       "name": "Soil_Dirt_Cold"
@@ -4924,12 +4120,6 @@
     },
     {
       "x": -2,
-      "y": 5,
-      "z": -4,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -2,
       "y": 0,
       "z": -3,
       "name": "Rock_Shale"
@@ -4957,12 +4147,6 @@
       "y": 4,
       "z": -3,
       "name": "Empty"
-    },
-    {
-      "x": -2,
-      "y": 5,
-      "z": -3,
-      "name": "Rock_Basalt"
     },
     {
       "x": -2,
@@ -4996,12 +4180,6 @@
     },
     {
       "x": -2,
-      "y": 5,
-      "z": -2,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -2,
       "y": 0,
       "z": -1,
       "name": "Rock_Shale"
@@ -5029,12 +4207,6 @@
       "y": 4,
       "z": -1,
       "name": "Empty"
-    },
-    {
-      "x": -2,
-      "y": 5,
-      "z": -1,
-      "name": "Rock_Basalt"
     },
     {
       "x": -2,
@@ -5065,12 +4237,6 @@
       "y": 4,
       "z": 0,
       "name": "Empty"
-    },
-    {
-      "x": -2,
-      "y": 5,
-      "z": 0,
-      "name": "Rock_Basalt"
     },
     {
       "x": -1,
@@ -5104,12 +4270,6 @@
     },
     {
       "x": -1,
-      "y": 5,
-      "z": -20,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -1,
       "y": 0,
       "z": -19,
       "name": "Rock_Shale"
@@ -5137,12 +4297,6 @@
       "y": 4,
       "z": -19,
       "name": "Empty"
-    },
-    {
-      "x": -1,
-      "y": 5,
-      "z": -19,
-      "name": "Rock_Basalt"
     },
     {
       "x": -1,
@@ -5176,12 +4330,6 @@
     },
     {
       "x": -1,
-      "y": 5,
-      "z": -18,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -1,
       "y": 0,
       "z": -17,
       "name": "Rock_Shale"
@@ -5212,12 +4360,6 @@
     },
     {
       "x": -1,
-      "y": 5,
-      "z": -17,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -1,
       "y": 0,
       "z": -16,
       "name": "Rock_Basalt"
@@ -5245,12 +4387,6 @@
       "y": 4,
       "z": -16,
       "name": "Empty"
-    },
-    {
-      "x": -1,
-      "y": 5,
-      "z": -16,
-      "name": "Rock_Basalt"
     },
     {
       "x": -1,
@@ -5284,12 +4420,6 @@
     },
     {
       "x": -1,
-      "y": 5,
-      "z": -15,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -1,
       "y": 0,
       "z": -14,
       "name": "Rock_Basalt_Brick_Half"
@@ -5320,12 +4450,6 @@
     },
     {
       "x": -1,
-      "y": 5,
-      "z": -14,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -1,
       "y": 0,
       "z": -13,
       "name": "Rock_Basalt_Brick_Half"
@@ -5353,12 +4477,6 @@
       "y": 4,
       "z": -13,
       "name": "Empty"
-    },
-    {
-      "x": -1,
-      "y": 5,
-      "z": -13,
-      "name": "Rock_Basalt"
     },
     {
       "x": -1,
@@ -5394,12 +4512,6 @@
     },
     {
       "x": -1,
-      "y": 5,
-      "z": -12,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -1,
       "y": 0,
       "z": -11,
       "name": "Rock_Basalt"
@@ -5427,12 +4539,6 @@
       "y": 4,
       "z": -11,
       "name": "Empty"
-    },
-    {
-      "x": -1,
-      "y": 5,
-      "z": -11,
-      "name": "Rock_Basalt"
     },
     {
       "x": -1,
@@ -5466,12 +4572,6 @@
     },
     {
       "x": -1,
-      "y": 5,
-      "z": -10,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -1,
       "y": 0,
       "z": -9,
       "name": "Rock_Basalt"
@@ -5502,12 +4602,6 @@
     },
     {
       "x": -1,
-      "y": 5,
-      "z": -9,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -1,
       "y": 0,
       "z": -8,
       "name": "Rock_Basalt"
@@ -5535,12 +4629,6 @@
       "y": 4,
       "z": -8,
       "name": "Empty"
-    },
-    {
-      "x": -1,
-      "y": 5,
-      "z": -8,
-      "name": "Rock_Basalt"
     },
     {
       "x": -1,
@@ -5574,12 +4662,6 @@
     },
     {
       "x": -1,
-      "y": 5,
-      "z": -7,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -1,
       "y": 0,
       "z": -6,
       "name": "Rock_Shale_Brick_Smooth"
@@ -5607,12 +4689,6 @@
       "y": 4,
       "z": -6,
       "name": "Rock_Basalt_Brick"
-    },
-    {
-      "x": -1,
-      "y": 5,
-      "z": -6,
-      "name": "Rock_Basalt"
     },
     {
       "x": -1,
@@ -5646,12 +4722,6 @@
     },
     {
       "x": -1,
-      "y": 5,
-      "z": -5,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -1,
       "y": 0,
       "z": -4,
       "name": "Soil_Dirt_Cold"
@@ -5682,12 +4752,6 @@
     },
     {
       "x": -1,
-      "y": 5,
-      "z": -4,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -1,
       "y": 0,
       "z": -3,
       "name": "Rock_Shale"
@@ -5715,12 +4779,6 @@
       "y": 4,
       "z": -3,
       "name": "Empty"
-    },
-    {
-      "x": -1,
-      "y": 5,
-      "z": -3,
-      "name": "Rock_Basalt"
     },
     {
       "x": -1,
@@ -5754,12 +4812,6 @@
     },
     {
       "x": -1,
-      "y": 5,
-      "z": -2,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": -1,
       "y": 0,
       "z": -1,
       "name": "Rock_Shale"
@@ -5787,12 +4839,6 @@
       "y": 4,
       "z": -1,
       "name": "Empty"
-    },
-    {
-      "x": -1,
-      "y": 5,
-      "z": -1,
-      "name": "Rock_Basalt"
     },
     {
       "x": -1,
@@ -5823,12 +4869,6 @@
       "y": 4,
       "z": 0,
       "name": "Empty"
-    },
-    {
-      "x": -1,
-      "y": 5,
-      "z": 0,
-      "name": "Rock_Basalt"
     },
     {
       "x": 0,
@@ -5884,12 +4924,6 @@
     },
     {
       "x": 0,
-      "y": 5,
-      "z": -20,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 0,
       "y": 0,
       "z": -19,
       "name": "Rock_Shale"
@@ -5920,12 +4954,6 @@
     },
     {
       "x": 0,
-      "y": 5,
-      "z": -19,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 0,
       "y": 0,
       "z": -18,
       "name": "Rock_Shale"
@@ -5953,12 +4981,6 @@
       "y": 4,
       "z": -18,
       "name": "Empty"
-    },
-    {
-      "x": 0,
-      "y": 5,
-      "z": -18,
-      "name": "Rock_Basalt"
     },
     {
       "x": 0,
@@ -5992,12 +5014,6 @@
     },
     {
       "x": 0,
-      "y": 5,
-      "z": -17,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 0,
       "y": 0,
       "z": -16,
       "name": "Rock_Basalt"
@@ -6025,12 +5041,6 @@
       "y": 4,
       "z": -16,
       "name": "Empty"
-    },
-    {
-      "x": 0,
-      "y": 5,
-      "z": -16,
-      "name": "Rock_Basalt"
     },
     {
       "x": 0,
@@ -6064,12 +5074,6 @@
     },
     {
       "x": 0,
-      "y": 5,
-      "z": -15,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 0,
       "y": 0,
       "z": -14,
       "name": "Rock_Basalt_Brick_Half"
@@ -6100,12 +5104,6 @@
     },
     {
       "x": 0,
-      "y": 5,
-      "z": -14,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 0,
       "y": 0,
       "z": -13,
       "name": "Rock_Basalt_Brick_Half"
@@ -6133,12 +5131,6 @@
       "y": 4,
       "z": -13,
       "name": "Empty"
-    },
-    {
-      "x": 0,
-      "y": 5,
-      "z": -13,
-      "name": "Rock_Basalt"
     },
     {
       "x": 0,
@@ -6173,12 +5165,6 @@
     },
     {
       "x": 0,
-      "y": 5,
-      "z": -12,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 0,
       "y": 0,
       "z": -11,
       "name": "Rock_Basalt_Brick_Half"
@@ -6209,12 +5195,6 @@
     },
     {
       "x": 0,
-      "y": 5,
-      "z": -11,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 0,
       "y": 0,
       "z": -10,
       "name": "Rock_Basalt_Brick_Half"
@@ -6242,12 +5222,6 @@
       "y": 4,
       "z": -10,
       "name": "Empty"
-    },
-    {
-      "x": 0,
-      "y": 5,
-      "z": -10,
-      "name": "Rock_Basalt"
     },
     {
       "x": 0,
@@ -6282,12 +5256,6 @@
     },
     {
       "x": 0,
-      "y": 5,
-      "z": -9,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 0,
       "y": 0,
       "z": -8,
       "name": "Rock_Basalt"
@@ -6315,12 +5283,6 @@
       "y": 4,
       "z": -8,
       "name": "Empty"
-    },
-    {
-      "x": 0,
-      "y": 5,
-      "z": -8,
-      "name": "Rock_Basalt"
     },
     {
       "x": 0,
@@ -6351,12 +5313,6 @@
       "y": 4,
       "z": -7,
       "name": "Empty"
-    },
-    {
-      "x": 0,
-      "y": 5,
-      "z": -7,
-      "name": "Rock_Basalt"
     },
     {
       "x": 0,
@@ -6390,12 +5346,6 @@
     },
     {
       "x": 0,
-      "y": 5,
-      "z": -6,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 0,
       "y": 0,
       "z": -5,
       "name": "Rock_Shale"
@@ -6426,12 +5376,6 @@
     },
     {
       "x": 0,
-      "y": 5,
-      "z": -5,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 0,
       "y": 0,
       "z": -4,
       "name": "Rock_Shale"
@@ -6459,12 +5403,6 @@
       "y": 4,
       "z": -4,
       "name": "Empty"
-    },
-    {
-      "x": 0,
-      "y": 5,
-      "z": -4,
-      "name": "Rock_Basalt"
     },
     {
       "x": 0,
@@ -6498,12 +5436,6 @@
     },
     {
       "x": 0,
-      "y": 5,
-      "z": -3,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 0,
       "y": 0,
       "z": -2,
       "name": "Rock_Shale"
@@ -6531,12 +5463,6 @@
       "y": 4,
       "z": -2,
       "name": "Empty"
-    },
-    {
-      "x": 0,
-      "y": 5,
-      "z": -2,
-      "name": "Rock_Basalt"
     },
     {
       "x": 0,
@@ -6570,12 +5496,6 @@
     },
     {
       "x": 0,
-      "y": 5,
-      "z": -1,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 0,
       "y": 0,
       "z": 0,
       "name": "Rock_Shale"
@@ -6603,12 +5523,6 @@
       "y": 4,
       "z": 0,
       "name": "Empty"
-    },
-    {
-      "x": 0,
-      "y": 5,
-      "z": 0,
-      "name": "Rock_Basalt"
     },
     {
       "x": 1,
@@ -6642,12 +5556,6 @@
     },
     {
       "x": 1,
-      "y": 5,
-      "z": -20,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 1,
       "y": 0,
       "z": -19,
       "name": "Rock_Shale"
@@ -6675,12 +5583,6 @@
       "y": 4,
       "z": -19,
       "name": "Empty"
-    },
-    {
-      "x": 1,
-      "y": 5,
-      "z": -19,
-      "name": "Rock_Basalt"
     },
     {
       "x": 1,
@@ -6714,12 +5616,6 @@
     },
     {
       "x": 1,
-      "y": 5,
-      "z": -18,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 1,
       "y": 0,
       "z": -17,
       "name": "Soil_Dirt_Cold"
@@ -6750,12 +5646,6 @@
     },
     {
       "x": 1,
-      "y": 5,
-      "z": -17,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 1,
       "y": 0,
       "z": -16,
       "name": "Soil_Dirt_Cold"
@@ -6783,12 +5673,6 @@
       "y": 4,
       "z": -16,
       "name": "Empty"
-    },
-    {
-      "x": 1,
-      "y": 5,
-      "z": -16,
-      "name": "Rock_Basalt"
     },
     {
       "x": 1,
@@ -6822,12 +5706,6 @@
     },
     {
       "x": 1,
-      "y": 5,
-      "z": -15,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 1,
       "y": 0,
       "z": -14,
       "name": "Rock_Shale_Brick_Smooth"
@@ -6855,12 +5733,6 @@
       "y": 4,
       "z": -14,
       "name": "Rock_Basalt_Brick"
-    },
-    {
-      "x": 1,
-      "y": 5,
-      "z": -14,
-      "name": "Rock_Basalt"
     },
     {
       "x": 1,
@@ -6894,12 +5766,6 @@
     },
     {
       "x": 1,
-      "y": 5,
-      "z": -13,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 1,
       "y": 0,
       "z": -12,
       "name": "Soil_Dirt_Cold"
@@ -6931,12 +5797,6 @@
     },
     {
       "x": 1,
-      "y": 5,
-      "z": -12,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 1,
       "y": 0,
       "z": -11,
       "name": "Rock_Shale"
@@ -6964,12 +5824,6 @@
       "y": 4,
       "z": -11,
       "name": "Empty"
-    },
-    {
-      "x": 1,
-      "y": 5,
-      "z": -11,
-      "name": "Rock_Basalt"
     },
     {
       "x": 1,
@@ -7003,12 +5857,6 @@
     },
     {
       "x": 1,
-      "y": 5,
-      "z": -10,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 1,
       "y": 0,
       "z": -9,
       "name": "Rock_Shale"
@@ -7036,12 +5884,6 @@
       "y": 4,
       "z": -9,
       "name": "Empty"
-    },
-    {
-      "x": 1,
-      "y": 5,
-      "z": -9,
-      "name": "Rock_Basalt"
     },
     {
       "x": 1,
@@ -7075,12 +5917,6 @@
     },
     {
       "x": 1,
-      "y": 5,
-      "z": -8,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 1,
       "y": 0,
       "z": -7,
       "name": "Rock_Shale"
@@ -7108,12 +5944,6 @@
       "y": 4,
       "z": -7,
       "name": "Empty"
-    },
-    {
-      "x": 1,
-      "y": 5,
-      "z": -7,
-      "name": "Rock_Basalt"
     },
     {
       "x": 1,
@@ -7147,12 +5977,6 @@
     },
     {
       "x": 1,
-      "y": 5,
-      "z": -6,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 1,
       "y": 0,
       "z": -5,
       "name": "Rock_Shale"
@@ -7183,12 +6007,6 @@
     },
     {
       "x": 1,
-      "y": 5,
-      "z": -5,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 1,
       "y": 0,
       "z": -4,
       "name": "Rock_Shale"
@@ -7216,12 +6034,6 @@
       "y": 4,
       "z": -4,
       "name": "Empty"
-    },
-    {
-      "x": 1,
-      "y": 5,
-      "z": -4,
-      "name": "Rock_Basalt"
     },
     {
       "x": 1,
@@ -7255,12 +6067,6 @@
     },
     {
       "x": 1,
-      "y": 5,
-      "z": -3,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 1,
       "y": 0,
       "z": -2,
       "name": "Rock_Shale"
@@ -7291,12 +6097,6 @@
     },
     {
       "x": 1,
-      "y": 5,
-      "z": -2,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 1,
       "y": 0,
       "z": -1,
       "name": "Rock_Shale"
@@ -7324,12 +6124,6 @@
       "y": 4,
       "z": -1,
       "name": "Empty"
-    },
-    {
-      "x": 1,
-      "y": 5,
-      "z": -1,
-      "name": "Rock_Basalt"
     },
     {
       "x": 1,
@@ -7362,12 +6156,6 @@
       "name": "Empty"
     },
     {
-      "x": 1,
-      "y": 5,
-      "z": 0,
-      "name": "Rock_Basalt"
-    },
-    {
       "x": 2,
       "y": 0,
       "z": -20,
@@ -7396,12 +6184,6 @@
       "y": 4,
       "z": -20,
       "name": "Empty"
-    },
-    {
-      "x": 2,
-      "y": 5,
-      "z": -20,
-      "name": "Rock_Basalt"
     },
     {
       "x": 2,
@@ -7435,12 +6217,6 @@
     },
     {
       "x": 2,
-      "y": 5,
-      "z": -19,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 2,
       "y": 0,
       "z": -18,
       "name": "Rock_Shale"
@@ -7471,12 +6247,6 @@
     },
     {
       "x": 2,
-      "y": 5,
-      "z": -18,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 2,
       "y": 0,
       "z": -17,
       "name": "Rock_Shale"
@@ -7504,12 +6274,6 @@
       "y": 4,
       "z": -17,
       "name": "Empty"
-    },
-    {
-      "x": 2,
-      "y": 5,
-      "z": -17,
-      "name": "Rock_Basalt"
     },
     {
       "x": 2,
@@ -7543,12 +6307,6 @@
     },
     {
       "x": 2,
-      "y": 5,
-      "z": -16,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 2,
       "y": 0,
       "z": -15,
       "name": "Rock_Shale"
@@ -7577,12 +6335,6 @@
       "y": 4,
       "z": -15,
       "name": "Rock_Basalt_Brick"
-    },
-    {
-      "x": 2,
-      "y": 5,
-      "z": -15,
-      "name": "Rock_Basalt"
     },
     {
       "x": 2,
@@ -7617,12 +6369,6 @@
     },
     {
       "x": 2,
-      "y": 5,
-      "z": -14,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 2,
       "y": 0,
       "z": -13,
       "name": "Rock_Shale"
@@ -7650,12 +6396,6 @@
       "y": 4,
       "z": -13,
       "name": "Empty"
-    },
-    {
-      "x": 2,
-      "y": 5,
-      "z": -13,
-      "name": "Rock_Basalt"
     },
     {
       "x": 2,
@@ -7690,12 +6430,6 @@
     },
     {
       "x": 2,
-      "y": 5,
-      "z": -12,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 2,
       "y": 0,
       "z": -11,
       "name": "Rock_Shale"
@@ -7726,12 +6460,6 @@
     },
     {
       "x": 2,
-      "y": 5,
-      "z": -11,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 2,
       "y": 0,
       "z": -10,
       "name": "Rock_Shale"
@@ -7759,12 +6487,6 @@
       "y": 4,
       "z": -10,
       "name": "Empty"
-    },
-    {
-      "x": 2,
-      "y": 5,
-      "z": -10,
-      "name": "Rock_Basalt"
     },
     {
       "x": 2,
@@ -7798,12 +6520,6 @@
     },
     {
       "x": 2,
-      "y": 5,
-      "z": -9,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 2,
       "y": 0,
       "z": -8,
       "name": "Rock_Shale"
@@ -7831,12 +6547,6 @@
       "y": 4,
       "z": -8,
       "name": "Empty"
-    },
-    {
-      "x": 2,
-      "y": 5,
-      "z": -8,
-      "name": "Rock_Basalt"
     },
     {
       "x": 2,
@@ -7867,12 +6577,6 @@
       "y": 4,
       "z": -7,
       "name": "Empty"
-    },
-    {
-      "x": 2,
-      "y": 5,
-      "z": -7,
-      "name": "Rock_Basalt"
     },
     {
       "x": 2,
@@ -7907,12 +6611,6 @@
     },
     {
       "x": 2,
-      "y": 5,
-      "z": -6,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 2,
       "y": 0,
       "z": -5,
       "name": "Rock_Shale"
@@ -7944,12 +6642,6 @@
     },
     {
       "x": 2,
-      "y": 5,
-      "z": -5,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 2,
       "y": 0,
       "z": -4,
       "name": "Rock_Shale"
@@ -7977,12 +6669,6 @@
       "y": 4,
       "z": -4,
       "name": "Empty"
-    },
-    {
-      "x": 2,
-      "y": 5,
-      "z": -4,
-      "name": "Rock_Basalt"
     },
     {
       "x": 2,
@@ -8016,12 +6702,6 @@
     },
     {
       "x": 2,
-      "y": 5,
-      "z": -3,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 2,
       "y": 0,
       "z": -2,
       "name": "Rock_Shale"
@@ -8049,12 +6729,6 @@
       "y": 4,
       "z": -2,
       "name": "Empty"
-    },
-    {
-      "x": 2,
-      "y": 5,
-      "z": -2,
-      "name": "Rock_Basalt"
     },
     {
       "x": 2,
@@ -8088,12 +6762,6 @@
     },
     {
       "x": 2,
-      "y": 5,
-      "z": -1,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 2,
       "y": 0,
       "z": 0,
       "name": "Soil_Dirt_Cold"
@@ -8121,12 +6789,6 @@
       "y": 4,
       "z": 0,
       "name": "Empty"
-    },
-    {
-      "x": 2,
-      "y": 5,
-      "z": 0,
-      "name": "Rock_Basalt"
     },
     {
       "x": 3,
@@ -8161,12 +6823,6 @@
     },
     {
       "x": 3,
-      "y": 5,
-      "z": -20,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 3,
       "y": 0,
       "z": -19,
       "name": "Rock_Basalt"
@@ -8194,12 +6850,6 @@
       "y": 4,
       "z": -19,
       "name": "Empty"
-    },
-    {
-      "x": 3,
-      "y": 5,
-      "z": -19,
-      "name": "Rock_Basalt"
     },
     {
       "x": 3,
@@ -8233,12 +6883,6 @@
     },
     {
       "x": 3,
-      "y": 5,
-      "z": -18,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 3,
       "y": 0,
       "z": -17,
       "name": "Rock_Shale"
@@ -8266,12 +6910,6 @@
       "y": 4,
       "z": -17,
       "name": "Empty"
-    },
-    {
-      "x": 3,
-      "y": 5,
-      "z": -17,
-      "name": "Rock_Basalt"
     },
     {
       "x": 3,
@@ -8306,12 +6944,6 @@
     },
     {
       "x": 3,
-      "y": 5,
-      "z": -16,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 3,
       "y": 0,
       "z": -15,
       "name": "Rock_Shale"
@@ -8339,12 +6971,6 @@
       "y": 4,
       "z": -15,
       "name": "Rock_Basalt_Brick"
-    },
-    {
-      "x": 3,
-      "y": 5,
-      "z": -15,
-      "name": "Rock_Basalt"
     },
     {
       "x": 3,
@@ -8378,12 +7004,6 @@
     },
     {
       "x": 3,
-      "y": 5,
-      "z": -14,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 3,
       "y": 0,
       "z": -13,
       "name": "Rock_Shale"
@@ -8411,12 +7031,6 @@
       "y": 4,
       "z": -13,
       "name": "Empty"
-    },
-    {
-      "x": 3,
-      "y": 5,
-      "z": -13,
-      "name": "Rock_Basalt"
     },
     {
       "x": 3,
@@ -8451,12 +7065,6 @@
     },
     {
       "x": 3,
-      "y": 5,
-      "z": -12,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 3,
       "y": 0,
       "z": -11,
       "name": "Rock_Shale"
@@ -8484,12 +7092,6 @@
       "y": 4,
       "z": -11,
       "name": "Wood_Redwood_Branch_Long"
-    },
-    {
-      "x": 3,
-      "y": 5,
-      "z": -11,
-      "name": "Rock_Basalt"
     },
     {
       "x": 3,
@@ -8523,12 +7125,6 @@
     },
     {
       "x": 3,
-      "y": 5,
-      "z": -10,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 3,
       "y": 0,
       "z": -9,
       "name": "Soil_Dirt_Cold"
@@ -8559,12 +7155,6 @@
     },
     {
       "x": 3,
-      "y": 5,
-      "z": -9,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 3,
       "y": 0,
       "z": -8,
       "name": "Soil_Dirt_Cold"
@@ -8592,12 +7182,6 @@
       "y": 4,
       "z": -8,
       "name": "Empty"
-    },
-    {
-      "x": 3,
-      "y": 5,
-      "z": -8,
-      "name": "Rock_Basalt"
     },
     {
       "x": 3,
@@ -8632,12 +7216,6 @@
     },
     {
       "x": 3,
-      "y": 5,
-      "z": -7,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 3,
       "y": 0,
       "z": -6,
       "name": "Rock_Shale_Brick_Smooth"
@@ -8668,12 +7246,6 @@
     },
     {
       "x": 3,
-      "y": 5,
-      "z": -6,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 3,
       "y": 0,
       "z": -5,
       "name": "Rock_Shale"
@@ -8701,12 +7273,6 @@
       "y": 4,
       "z": -5,
       "name": "Rock_Basalt_Brick"
-    },
-    {
-      "x": 3,
-      "y": 5,
-      "z": -5,
-      "name": "Rock_Basalt"
     },
     {
       "x": 3,
@@ -8741,12 +7307,6 @@
     },
     {
       "x": 3,
-      "y": 5,
-      "z": -4,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 3,
       "y": 0,
       "z": -3,
       "name": "Rock_Shale"
@@ -8774,12 +7334,6 @@
       "y": 4,
       "z": -3,
       "name": "Empty"
-    },
-    {
-      "x": 3,
-      "y": 5,
-      "z": -3,
-      "name": "Rock_Basalt"
     },
     {
       "x": 3,
@@ -8813,12 +7367,6 @@
     },
     {
       "x": 3,
-      "y": 5,
-      "z": -2,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 3,
       "y": 0,
       "z": -1,
       "name": "Soil_Dirt_Cold"
@@ -8849,12 +7397,6 @@
     },
     {
       "x": 3,
-      "y": 5,
-      "z": -1,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 3,
       "y": 0,
       "z": 0,
       "name": "Soil_Dirt_Cold"
@@ -8885,12 +7427,6 @@
       "rotation": 9
     },
     {
-      "x": 3,
-      "y": 5,
-      "z": 0,
-      "name": "Rock_Basalt"
-    },
-    {
       "x": 4,
       "y": 0,
       "z": -20,
@@ -8920,12 +7456,6 @@
       "y": 4,
       "z": -20,
       "name": "Rock_Shale_Brick"
-    },
-    {
-      "x": 4,
-      "y": 5,
-      "z": -20,
-      "name": "Rock_Basalt"
     },
     {
       "x": 4,
@@ -8960,12 +7490,6 @@
     },
     {
       "x": 4,
-      "y": 5,
-      "z": -19,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 4,
       "y": 0,
       "z": -18,
       "name": "Rock_Shale_Brick_Smooth"
@@ -8994,12 +7518,6 @@
       "y": 4,
       "z": -18,
       "name": "Rock_Shale_Brick"
-    },
-    {
-      "x": 4,
-      "y": 5,
-      "z": -18,
-      "name": "Rock_Basalt"
     },
     {
       "x": 4,
@@ -9034,12 +7552,6 @@
     },
     {
       "x": 4,
-      "y": 5,
-      "z": -17,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 4,
       "y": 0,
       "z": -16,
       "name": "Rock_Shale_Brick_Smooth"
@@ -9071,12 +7583,6 @@
     },
     {
       "x": 4,
-      "y": 5,
-      "z": -16,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 4,
       "y": 0,
       "z": -15,
       "name": "Rock_Shale_Brick_Smooth"
@@ -9107,12 +7613,6 @@
     },
     {
       "x": 4,
-      "y": 5,
-      "z": -15,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 4,
       "y": 0,
       "z": -14,
       "name": "Rock_Shale_Brick_Smooth"
@@ -9140,12 +7640,6 @@
       "y": 4,
       "z": -14,
       "name": "Rock_Basalt_Brick"
-    },
-    {
-      "x": 4,
-      "y": 5,
-      "z": -14,
-      "name": "Rock_Basalt"
     },
     {
       "x": 4,
@@ -9176,12 +7670,6 @@
       "y": 4,
       "z": -13,
       "name": "Rock_Basalt_Brick"
-    },
-    {
-      "x": 4,
-      "y": 5,
-      "z": -13,
-      "name": "Rock_Basalt"
     },
     {
       "x": 4,
@@ -9216,12 +7704,6 @@
     },
     {
       "x": 4,
-      "y": 5,
-      "z": -12,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 4,
       "y": 0,
       "z": -11,
       "name": "Rock_Shale_Brick_Smooth"
@@ -9249,12 +7731,6 @@
       "y": 4,
       "z": -11,
       "name": "Rock_Basalt_Brick"
-    },
-    {
-      "x": 4,
-      "y": 5,
-      "z": -11,
-      "name": "Rock_Basalt"
     },
     {
       "x": 4,
@@ -9288,12 +7764,6 @@
     },
     {
       "x": 4,
-      "y": 5,
-      "z": -10,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 4,
       "y": 0,
       "z": -9,
       "name": "Rock_Shale_Brick_Smooth"
@@ -9321,12 +7791,6 @@
       "y": 4,
       "z": -9,
       "name": "Rock_Basalt_Brick"
-    },
-    {
-      "x": 4,
-      "y": 5,
-      "z": -9,
-      "name": "Rock_Basalt"
     },
     {
       "x": 4,
@@ -9361,12 +7825,6 @@
     },
     {
       "x": 4,
-      "y": 5,
-      "z": -8,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 4,
       "y": 0,
       "z": -7,
       "name": "Rock_Shale_Brick_Smooth"
@@ -9397,12 +7855,6 @@
     },
     {
       "x": 4,
-      "y": 5,
-      "z": -7,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 4,
       "y": 0,
       "z": -6,
       "name": "Rock_Shale_Brick_Smooth"
@@ -9433,12 +7885,6 @@
     },
     {
       "x": 4,
-      "y": 5,
-      "z": -6,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 4,
       "y": 0,
       "z": -5,
       "name": "Rock_Shale_Brick_Smooth"
@@ -9466,12 +7912,6 @@
       "y": 4,
       "z": -5,
       "name": "Rock_Basalt_Brick"
-    },
-    {
-      "x": 4,
-      "y": 5,
-      "z": -5,
-      "name": "Rock_Basalt"
     },
     {
       "x": 4,
@@ -9506,12 +7946,6 @@
     },
     {
       "x": 4,
-      "y": 5,
-      "z": -4,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 4,
       "y": 0,
       "z": -3,
       "name": "Rock_Shale_Brick_Smooth"
@@ -9540,12 +7974,6 @@
       "y": 4,
       "z": -3,
       "name": "Rock_Shale_Brick"
-    },
-    {
-      "x": 4,
-      "y": 5,
-      "z": -3,
-      "name": "Rock_Basalt"
     },
     {
       "x": 4,
@@ -9580,12 +8008,6 @@
     },
     {
       "x": 4,
-      "y": 5,
-      "z": -2,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 4,
       "y": 0,
       "z": -1,
       "name": "Rock_Shale_Brick_Smooth"
@@ -9617,12 +8039,6 @@
     },
     {
       "x": 4,
-      "y": 5,
-      "z": -1,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 4,
       "y": 0,
       "z": 0,
       "name": "Rock_Shale_Brick_Smooth"
@@ -9653,12 +8069,6 @@
       "name": "Rock_Shale_Brick"
     },
     {
-      "x": 4,
-      "y": 5,
-      "z": 0,
-      "name": "Rock_Basalt"
-    },
-    {
       "x": 5,
       "y": 0,
       "z": -20,
@@ -9687,12 +8097,6 @@
       "y": 4,
       "z": -20,
       "name": "Rock_Shale"
-    },
-    {
-      "x": 5,
-      "y": 5,
-      "z": -20,
-      "name": "Rock_Basalt"
     },
     {
       "x": 5,
@@ -9726,12 +8130,6 @@
     },
     {
       "x": 5,
-      "y": 5,
-      "z": -19,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 5,
       "y": 0,
       "z": -18,
       "name": "Rock_Shale_Brick_Smooth"
@@ -9759,12 +8157,6 @@
       "y": 4,
       "z": -18,
       "name": "Rock_Shale"
-    },
-    {
-      "x": 5,
-      "y": 5,
-      "z": -18,
-      "name": "Rock_Basalt"
     },
     {
       "x": 5,
@@ -9798,12 +8190,6 @@
     },
     {
       "x": 5,
-      "y": 5,
-      "z": -17,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 5,
       "y": 0,
       "z": -16,
       "name": "Rock_Shale_Brick_Smooth"
@@ -9834,12 +8220,6 @@
     },
     {
       "x": 5,
-      "y": 5,
-      "z": -16,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 5,
       "y": 0,
       "z": -15,
       "name": "Rock_Shale_Brick_Smooth"
@@ -9867,12 +8247,6 @@
       "y": 4,
       "z": -15,
       "name": "Rock_Shale"
-    },
-    {
-      "x": 5,
-      "y": 5,
-      "z": -15,
-      "name": "Rock_Basalt"
     },
     {
       "x": 5,
@@ -9903,12 +8277,6 @@
       "y": 4,
       "z": -14,
       "name": "Rock_Basalt_Brick"
-    },
-    {
-      "x": 5,
-      "y": 5,
-      "z": -14,
-      "name": "Rock_Basalt"
     },
     {
       "x": 5,
@@ -9939,12 +8307,6 @@
       "y": 4,
       "z": -13,
       "name": "Rock_Basalt_Brick"
-    },
-    {
-      "x": 5,
-      "y": 5,
-      "z": -13,
-      "name": "Rock_Basalt"
     },
     {
       "x": 5,
@@ -9979,12 +8341,6 @@
     },
     {
       "x": 5,
-      "y": 5,
-      "z": -12,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 5,
       "y": 0,
       "z": -11,
       "name": "Rock_Shale"
@@ -10012,12 +8368,6 @@
       "y": 4,
       "z": -11,
       "name": "Rock_Basalt_Brick"
-    },
-    {
-      "x": 5,
-      "y": 5,
-      "z": -11,
-      "name": "Rock_Basalt"
     },
     {
       "x": 5,
@@ -10051,12 +8401,6 @@
     },
     {
       "x": 5,
-      "y": 5,
-      "z": -10,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 5,
       "y": 0,
       "z": -9,
       "name": "Rock_Shale"
@@ -10084,12 +8428,6 @@
       "y": 4,
       "z": -9,
       "name": "Rock_Basalt_Brick"
-    },
-    {
-      "x": 5,
-      "y": 5,
-      "z": -9,
-      "name": "Rock_Basalt"
     },
     {
       "x": 5,
@@ -10124,12 +8462,6 @@
     },
     {
       "x": 5,
-      "y": 5,
-      "z": -8,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 5,
       "y": 0,
       "z": -7,
       "name": "Rock_Shale"
@@ -10160,12 +8492,6 @@
     },
     {
       "x": 5,
-      "y": 5,
-      "z": -7,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 5,
       "y": 0,
       "z": -6,
       "name": "Rock_Shale_Brick_Smooth"
@@ -10196,12 +8522,6 @@
     },
     {
       "x": 5,
-      "y": 5,
-      "z": -6,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 5,
       "y": 0,
       "z": -5,
       "name": "Rock_Shale_Brick_Smooth"
@@ -10229,12 +8549,6 @@
       "y": 4,
       "z": -5,
       "name": "Rock_Shale"
-    },
-    {
-      "x": 5,
-      "y": 5,
-      "z": -5,
-      "name": "Rock_Basalt"
     },
     {
       "x": 5,
@@ -10268,12 +8582,6 @@
     },
     {
       "x": 5,
-      "y": 5,
-      "z": -4,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 5,
       "y": 0,
       "z": -3,
       "name": "Rock_Shale_Brick_Smooth"
@@ -10301,12 +8609,6 @@
       "y": 4,
       "z": -3,
       "name": "Rock_Shale"
-    },
-    {
-      "x": 5,
-      "y": 5,
-      "z": -3,
-      "name": "Rock_Basalt"
     },
     {
       "x": 5,
@@ -10340,12 +8642,6 @@
     },
     {
       "x": 5,
-      "y": 5,
-      "z": -2,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 5,
       "y": 0,
       "z": -1,
       "name": "Rock_Shale_Brick_Smooth"
@@ -10373,12 +8669,6 @@
       "y": 4,
       "z": -1,
       "name": "Rock_Shale"
-    },
-    {
-      "x": 5,
-      "y": 5,
-      "z": -1,
-      "name": "Rock_Basalt"
     },
     {
       "x": 5,
@@ -10411,12 +8701,6 @@
       "name": "Rock_Shale"
     },
     {
-      "x": 5,
-      "y": 5,
-      "z": 0,
-      "name": "Rock_Basalt"
-    },
-    {
       "x": 6,
       "y": 0,
       "z": -15,
@@ -10445,12 +8729,6 @@
       "y": 4,
       "z": -15,
       "name": "Rock_Shale"
-    },
-    {
-      "x": 6,
-      "y": 5,
-      "z": -15,
-      "name": "Rock_Basalt"
     },
     {
       "x": 6,
@@ -10482,12 +8760,6 @@
       "y": 4,
       "z": -14,
       "name": "Rock_Shale_Brick"
-    },
-    {
-      "x": 6,
-      "y": 5,
-      "z": -14,
-      "name": "Rock_Basalt"
     },
     {
       "x": 6,
@@ -10522,12 +8794,6 @@
     },
     {
       "x": 6,
-      "y": 5,
-      "z": -13,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 6,
       "y": 0,
       "z": -12,
       "name": "Rock_Shale"
@@ -10558,12 +8824,6 @@
     },
     {
       "x": 6,
-      "y": 5,
-      "z": -12,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 6,
       "y": 0,
       "z": -11,
       "name": "Rock_Basalt"
@@ -10591,12 +8851,6 @@
       "y": 4,
       "z": -11,
       "name": "Empty"
-    },
-    {
-      "x": 6,
-      "y": 5,
-      "z": -11,
-      "name": "Rock_Basalt"
     },
     {
       "x": 6,
@@ -10630,12 +8884,6 @@
     },
     {
       "x": 6,
-      "y": 5,
-      "z": -10,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 6,
       "y": 0,
       "z": -9,
       "name": "Rock_Shale"
@@ -10663,12 +8911,6 @@
       "y": 4,
       "z": -9,
       "name": "Empty"
-    },
-    {
-      "x": 6,
-      "y": 5,
-      "z": -9,
-      "name": "Rock_Basalt"
     },
     {
       "x": 6,
@@ -10699,12 +8941,6 @@
       "y": 4,
       "z": -8,
       "name": "Empty"
-    },
-    {
-      "x": 6,
-      "y": 5,
-      "z": -8,
-      "name": "Rock_Basalt"
     },
     {
       "x": 6,
@@ -10739,12 +8975,6 @@
     },
     {
       "x": 6,
-      "y": 5,
-      "z": -7,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 6,
       "y": 0,
       "z": -6,
       "name": "Rock_Shale_Brick_Smooth"
@@ -10776,12 +9006,6 @@
     },
     {
       "x": 6,
-      "y": 5,
-      "z": -6,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 6,
       "y": 0,
       "z": -5,
       "name": "Rock_Shale_Brick_Smooth"
@@ -10809,12 +9033,6 @@
       "y": 4,
       "z": -5,
       "name": "Rock_Shale"
-    },
-    {
-      "x": 6,
-      "y": 5,
-      "z": -5,
-      "name": "Rock_Basalt"
     },
     {
       "x": 7,
@@ -10845,12 +9063,6 @@
       "y": 4,
       "z": -15,
       "name": "Rock_Shale"
-    },
-    {
-      "x": 7,
-      "y": 5,
-      "z": -15,
-      "name": "Rock_Basalt"
     },
     {
       "x": 7,
@@ -10882,12 +9094,6 @@
       "y": 4,
       "z": -14,
       "name": "Rock_Shale_Brick"
-    },
-    {
-      "x": 7,
-      "y": 5,
-      "z": -14,
-      "name": "Rock_Basalt"
     },
     {
       "x": 7,
@@ -10921,12 +9127,6 @@
     },
     {
       "x": 7,
-      "y": 5,
-      "z": -13,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 7,
       "y": 0,
       "z": -12,
       "name": "Rock_Shale"
@@ -10957,12 +9157,6 @@
     },
     {
       "x": 7,
-      "y": 5,
-      "z": -12,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 7,
       "y": 0,
       "z": -11,
       "name": "Rock_Basalt"
@@ -10990,12 +9184,6 @@
       "y": 4,
       "z": -11,
       "name": "Empty"
-    },
-    {
-      "x": 7,
-      "y": 5,
-      "z": -11,
-      "name": "Rock_Basalt"
     },
     {
       "x": 7,
@@ -11029,12 +9217,6 @@
     },
     {
       "x": 7,
-      "y": 5,
-      "z": -10,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 7,
       "y": 0,
       "z": -9,
       "name": "Rock_Shale"
@@ -11065,12 +9247,6 @@
     },
     {
       "x": 7,
-      "y": 5,
-      "z": -9,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 7,
       "y": 0,
       "z": -8,
       "name": "Rock_Shale"
@@ -11098,12 +9274,6 @@
       "y": 4,
       "z": -8,
       "name": "Empty"
-    },
-    {
-      "x": 7,
-      "y": 5,
-      "z": -8,
-      "name": "Rock_Basalt"
     },
     {
       "x": 7,
@@ -11137,12 +9307,6 @@
     },
     {
       "x": 7,
-      "y": 5,
-      "z": -7,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 7,
       "y": 0,
       "z": -6,
       "name": "Rock_Shale_Brick_Smooth"
@@ -11174,12 +9338,6 @@
     },
     {
       "x": 7,
-      "y": 5,
-      "z": -6,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 7,
       "y": 0,
       "z": -5,
       "name": "Rock_Shale_Brick_Smooth"
@@ -11207,12 +9365,6 @@
       "y": 4,
       "z": -5,
       "name": "Rock_Shale"
-    },
-    {
-      "x": 7,
-      "y": 5,
-      "z": -5,
-      "name": "Rock_Basalt"
     },
     {
       "x": 8,
@@ -11243,12 +9395,6 @@
       "y": 4,
       "z": -15,
       "name": "Rock_Shale"
-    },
-    {
-      "x": 8,
-      "y": 5,
-      "z": -15,
-      "name": "Rock_Basalt"
     },
     {
       "x": 8,
@@ -11280,12 +9426,6 @@
       "y": 4,
       "z": -14,
       "name": "Rock_Shale_Brick"
-    },
-    {
-      "x": 8,
-      "y": 5,
-      "z": -14,
-      "name": "Rock_Basalt"
     },
     {
       "x": 8,
@@ -11319,12 +9459,6 @@
     },
     {
       "x": 8,
-      "y": 5,
-      "z": -13,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 8,
       "y": 0,
       "z": -12,
       "name": "Soil_Dirt_Cold"
@@ -11355,12 +9489,6 @@
     },
     {
       "x": 8,
-      "y": 5,
-      "z": -12,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 8,
       "y": 0,
       "z": -11,
       "name": "Rock_Basalt"
@@ -11391,12 +9519,6 @@
     },
     {
       "x": 8,
-      "y": 5,
-      "z": -11,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 8,
       "y": 0,
       "z": -10,
       "name": "Rock_Basalt"
@@ -11424,12 +9546,6 @@
       "y": 4,
       "z": -10,
       "name": "Empty"
-    },
-    {
-      "x": 8,
-      "y": 5,
-      "z": -10,
-      "name": "Rock_Basalt"
     },
     {
       "x": 8,
@@ -11463,12 +9579,6 @@
     },
     {
       "x": 8,
-      "y": 5,
-      "z": -9,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 8,
       "y": 0,
       "z": -8,
       "name": "Rock_Shale"
@@ -11499,12 +9609,6 @@
     },
     {
       "x": 8,
-      "y": 5,
-      "z": -8,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 8,
       "y": 0,
       "z": -7,
       "name": "Soil_Dirt_Cold"
@@ -11532,12 +9636,6 @@
       "y": 4,
       "z": -7,
       "name": "Empty"
-    },
-    {
-      "x": 8,
-      "y": 5,
-      "z": -7,
-      "name": "Rock_Basalt"
     },
     {
       "x": 8,
@@ -11572,12 +9670,6 @@
     },
     {
       "x": 8,
-      "y": 5,
-      "z": -6,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 8,
       "y": 0,
       "z": -5,
       "name": "Rock_Shale_Brick_Smooth"
@@ -11605,12 +9697,6 @@
       "y": 4,
       "z": -5,
       "name": "Rock_Shale"
-    },
-    {
-      "x": 8,
-      "y": 5,
-      "z": -5,
-      "name": "Rock_Basalt"
     },
     {
       "x": 9,
@@ -11641,12 +9727,6 @@
       "y": 4,
       "z": -15,
       "name": "Rock_Shale"
-    },
-    {
-      "x": 9,
-      "y": 5,
-      "z": -15,
-      "name": "Rock_Basalt"
     },
     {
       "x": 9,
@@ -11681,12 +9761,6 @@
     },
     {
       "x": 9,
-      "y": 5,
-      "z": -14,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 9,
       "y": 0,
       "z": -13,
       "name": "Soil_Dirt_Cold"
@@ -11714,12 +9788,6 @@
       "y": 4,
       "z": -13,
       "name": "Empty"
-    },
-    {
-      "x": 9,
-      "y": 5,
-      "z": -13,
-      "name": "Rock_Basalt"
     },
     {
       "x": 9,
@@ -11753,12 +9821,6 @@
     },
     {
       "x": 9,
-      "y": 5,
-      "z": -12,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 9,
       "y": 0,
       "z": -11,
       "name": "Rock_Basalt"
@@ -11789,12 +9851,6 @@
     },
     {
       "x": 9,
-      "y": 5,
-      "z": -11,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 9,
       "y": 0,
       "z": -10,
       "name": "Rock_Basalt"
@@ -11822,12 +9878,6 @@
       "y": 4,
       "z": -10,
       "name": "Empty"
-    },
-    {
-      "x": 9,
-      "y": 5,
-      "z": -10,
-      "name": "Rock_Basalt"
     },
     {
       "x": 9,
@@ -11861,12 +9911,6 @@
     },
     {
       "x": 9,
-      "y": 5,
-      "z": -9,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 9,
       "y": 0,
       "z": -8,
       "name": "Rock_Shale"
@@ -11897,12 +9941,6 @@
     },
     {
       "x": 9,
-      "y": 5,
-      "z": -8,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 9,
       "y": 0,
       "z": -7,
       "name": "Soil_Dirt_Cold"
@@ -11930,12 +9968,6 @@
       "y": 4,
       "z": -7,
       "name": "Empty"
-    },
-    {
-      "x": 9,
-      "y": 5,
-      "z": -7,
-      "name": "Rock_Basalt"
     },
     {
       "x": 9,
@@ -11970,12 +10002,6 @@
     },
     {
       "x": 9,
-      "y": 5,
-      "z": -6,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 9,
       "y": 0,
       "z": -5,
       "name": "Rock_Shale_Brick_Smooth"
@@ -12003,12 +10029,6 @@
       "y": 4,
       "z": -5,
       "name": "Rock_Shale"
-    },
-    {
-      "x": 9,
-      "y": 5,
-      "z": -5,
-      "name": "Rock_Basalt"
     },
     {
       "x": 10,
@@ -12039,12 +10059,6 @@
       "y": 4,
       "z": -15,
       "name": "Rock_Shale"
-    },
-    {
-      "x": 10,
-      "y": 5,
-      "z": -15,
-      "name": "Rock_Basalt"
     },
     {
       "x": 10,
@@ -12076,12 +10090,6 @@
       "y": 4,
       "z": -14,
       "name": "Rock_Shale_Brick"
-    },
-    {
-      "x": 10,
-      "y": 5,
-      "z": -14,
-      "name": "Rock_Basalt"
     },
     {
       "x": 10,
@@ -12116,12 +10124,6 @@
     },
     {
       "x": 10,
-      "y": 5,
-      "z": -13,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 10,
       "y": 0,
       "z": -12,
       "name": "Soil_Dirt_Cold"
@@ -12152,12 +10154,6 @@
     },
     {
       "x": 10,
-      "y": 5,
-      "z": -12,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 10,
       "y": 0,
       "z": -11,
       "name": "Soil_Dirt_Cold"
@@ -12188,12 +10184,6 @@
     },
     {
       "x": 10,
-      "y": 5,
-      "z": -11,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 10,
       "y": 0,
       "z": -10,
       "name": "Rock_Shale_Brick_Smooth"
@@ -12221,12 +10211,6 @@
       "y": 4,
       "z": -10,
       "name": "Empty"
-    },
-    {
-      "x": 10,
-      "y": 5,
-      "z": -10,
-      "name": "Rock_Basalt"
     },
     {
       "x": 10,
@@ -12260,12 +10244,6 @@
     },
     {
       "x": 10,
-      "y": 5,
-      "z": -9,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 10,
       "y": 0,
       "z": -8,
       "name": "Rock_Shale_Brick_Smooth"
@@ -12293,12 +10271,6 @@
       "y": 4,
       "z": -8,
       "name": "Empty"
-    },
-    {
-      "x": 10,
-      "y": 5,
-      "z": -8,
-      "name": "Rock_Basalt"
     },
     {
       "x": 10,
@@ -12333,12 +10305,6 @@
     },
     {
       "x": 10,
-      "y": 5,
-      "z": -7,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 10,
       "y": 0,
       "z": -6,
       "name": "Rock_Shale_Brick_Smooth"
@@ -12370,12 +10336,6 @@
     },
     {
       "x": 10,
-      "y": 5,
-      "z": -6,
-      "name": "Rock_Basalt"
-    },
-    {
-      "x": 10,
       "y": 0,
       "z": -5,
       "name": "Rock_Shale_Brick_Smooth"
@@ -12403,12 +10363,6 @@
       "y": 4,
       "z": -5,
       "name": "Rock_Shale"
-    },
-    {
-      "x": 10,
-      "y": 5,
-      "z": -5,
-      "name": "Rock_Basalt"
     },
     {
       "x": 11,
