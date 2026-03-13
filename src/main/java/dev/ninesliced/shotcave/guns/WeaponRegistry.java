@@ -78,6 +78,7 @@ public final class WeaponRegistry {
         @SerializedName("worldSfx") String worldSfx;
         @SerializedName("localSfx") String localSfx;
         @SerializedName("animationId") String animationId;
+        @SerializedName("maxAmmo") @Nullable Integer maxAmmo;
     }
 
     private static final class DamageDef {
@@ -141,7 +142,8 @@ public final class WeaponRegistry {
         ReloadDef r = wc.reload;
         if (r != null && registeredIds.add(r.id)) {
             interactions.add(new ReloadInteraction(r.id, r.amount, r.runTime,
-                    r.nextId, r.worldSfx, r.localSfx, r.animationId));
+                    r.nextId, r.worldSfx, r.localSfx, r.animationId,
+                    r.maxAmmo != null ? r.maxAmmo : 0));
             roots.add(new RootInteraction("Root_" + r.id,
                     new InteractionCooldown("Reload", r.cooldown, false, null, false, false),
                     r.id));

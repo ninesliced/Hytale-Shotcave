@@ -13,7 +13,8 @@
     "amount": 0,
     "nextId": "Shotcave_Update_Hud",
     "worldSfx": "SFX_Blunderbuss_Fire",
-    "localSfx": "SFX_Blunderbuss_Fire_Local"
+    "localSfx": "SFX_Blunderbuss_Fire_Local",
+    "maxAmmo": 12
   },
   "damage": {
     "id": "Shotcave_Pistol_Projectile_Hit",
