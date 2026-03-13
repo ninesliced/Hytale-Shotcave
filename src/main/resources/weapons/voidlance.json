@@ -14,14 +14,5 @@
     "nextId": "Shotcave_Update_Hud",
     "worldSfx": "SFX_Rifle_Fire",
     "localSfx": "SFX_Rifle_Fire_Local"
-  },
-  "damage": {
-    "id": "Shotcave_Voidlance_Projectile_Hit",
-    "amount": 68,
-    "type": "Projectile",
-    "worldSfx": "SFX_Rifle_Fire",
-    "localSfx": "SFX_Rifle_Fire_Local",
-    "particleId": "RifleShooting_Impact",
-    "particleYOffset": 0.8
   }
 }
