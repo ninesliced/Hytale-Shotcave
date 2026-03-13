@@ -33,19 +33,28 @@ public final class ReloadInteraction extends SimpleInstantInteraction {
                 (o, p) -> o.reloadAmount = p.reloadAmount
         ).add();
 
+        builder.appendInherited(
+                new KeyedCodec<Integer>("MaxAmmo", Codec.INTEGER),
+                (o, v) -> o.maxAmmo = v,
+                o -> o.maxAmmo,
+                (o, p) -> o.maxAmmo = p.maxAmmo
+        ).add();
+
         CODEC = builder.build();
     }
 
     private int reloadAmount = 0;
+    private int maxAmmo = 0;
 
     public ReloadInteraction() {}
 
     public ReloadInteraction(@Nonnull String id, int reloadAmount, float reloadRunTime,
                               @Nonnull String nextId,
                               @Nullable String worldSfx, @Nullable String localSfx,
-                              @Nullable String itemAnimationId) {
+                              @Nullable String itemAnimationId, int maxAmmo) {
         super(id);
         this.reloadAmount = reloadAmount;
+        this.maxAmmo = maxAmmo;
         this.runTime = reloadRunTime;
         this.next = nextId;
         this.effects = new ReloadEffects(worldSfx, localSfx, itemAnimationId);
@@ -70,9 +79,10 @@ public final class ReloadInteraction extends SimpleInstantInteraction {
         }
 
         int maxAmmo = GunItemMetadata.getInt(heldItem, GunItemMetadata.MAX_AMMO_KEY, -1);
+
         if (maxAmmo <= 0) {
-            context.getState().state = InteractionState.Failed;
-            return;
+            maxAmmo = (this.maxAmmo > 0) ? this.maxAmmo : 30;
+            heldItem = GunItemMetadata.setInt(heldItem, GunItemMetadata.MAX_AMMO_KEY, maxAmmo);
         }
 
         int ammo = GunItemMetadata.getInt(heldItem, GunItemMetadata.AMMO_KEY, maxAmmo);

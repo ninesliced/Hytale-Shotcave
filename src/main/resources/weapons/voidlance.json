@@ -13,6 +13,7 @@
     "amount": 0,
     "nextId": "Shotcave_Update_Hud",
     "worldSfx": "SFX_Rifle_Fire",
-    "localSfx": "SFX_Rifle_Fire_Local"
+    "localSfx": "SFX_Rifle_Fire_Local",
+    "maxAmmo": 10
   }
 }
