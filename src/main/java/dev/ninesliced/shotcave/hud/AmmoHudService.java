@@ -102,7 +102,7 @@ public final class AmmoHudService {
             case "Weapon_Sniper_Shotcave" -> 5;
             case "Weapon_Taser_Shotcave" -> 8;
             case "Weapon_Voidlance_Shotcave" -> 10;
-            case "Weapon_Wand_Summoner_Shotcave" -> 5;
+            case "Weapon_Kweebec_Launcher_Shotcave" -> 5;
             default -> -1;
         };
     }

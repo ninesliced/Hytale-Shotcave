@@ -3,8 +3,8 @@
     {
       "id": "1",
       "name": "R-Attachment2",
-      "position": {"x": -2.8104, "y": 69.02702, "z": 50.96804},
-      "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
+      "position": {"x": -7.94523, "y": 72.72702, "z": 54.28955},
+      "orientation": {"x": 0, "y": 0.04362, "z": 0, "w": 0.99905},
       "shape": {
         "type": "none",
         "offset": {"x": 0, "y": 0, "z": 0},
@@ -22,7 +22,7 @@
         {
           "id": "2",
           "name": "Origin_Projectile2",
-          "position": {"x": 0, "y": -48.7, "z": -50.4},
+          "position": {"x": 4.9, "y": -52.4, "z": -53.1},
           "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
           "shape": {
             "type": "none",
@@ -83,7 +83,7 @@
                       "orientation": {"x": 0, "y": 0, "z": 0.27564, "w": 0.96126},
                       "shape": {
                         "type": "box",
-                        "offset": {"x": 84.74317, "y": -6.08329, "z": -2.49},
+                        "offset": {"x": 84.74317, "y": -6.08329, "z": -1.59},
                         "stretch": {"x": 1, "y": 1, "z": 1},
                         "settings": {
                           "isPiece": false,
@@ -135,7 +135,7 @@
                       "orientation": {"x": 0, "y": 0, "z": -0.07846, "w": 0.99692},
                       "shape": {
                         "type": "box",
-                        "offset": {"x": 76.1547, "y": 46.8578, "z": -0.04},
+                        "offset": {"x": 76.1547, "y": 46.8578, "z": 0.86},
                         "stretch": {"x": 1, "y": 1, "z": 1},
                         "settings": {
                           "isPiece": false,
@@ -187,7 +187,7 @@
                       "orientation": {"x": 0, "y": 0, "z": -0.41469, "w": 0.90996},
                       "shape": {
                         "type": "box",
-                        "offset": {"x": -3.01884, "y": 2.62424, "z": 5.3},
+                        "offset": {"x": -3.01884, "y": 2.62424, "z": 5.6},
                         "stretch": {"x": 1, "y": 1, "z": 1},
                         "settings": {
                           "isPiece": false,
@@ -196,8 +196,8 @@
                         },
                         "textureLayout": {
                           "back": {
-                            "offset": {"x": 80, "y": 126},
-                            "mirror": {"x": false, "y": false},
+                            "offset": {"x": 155, "y": 93},
+                            "mirror": {"x": true, "y": false},
                             "angle": 0
                           },
                           "right": {
@@ -253,40 +253,12 @@
                       "children": [
                         {
                           "id": "9",
-                          "name": "Hammer--C1",
-                          "position": {"x": -6.12026, "y": 66.5917, "z": -0.18539},
-                          "orientation": {"x": 0, "y": 0, "z": -0.51129, "w": 0.85941},
-                          "shape": {
-                            "type": "quad",
-                            "offset": {"x": 3.30698, "y": 4.16002, "z": 1.2882},
-                            "stretch": {"x": 1, "y": 1, "z": 1},
-                            "settings": {
-                              "isPiece": false,
-                              "size": {"x": 26, "y": 12},
-                              "normal": "+Z",
-                              "isStaticBox": true
-                            },
-                            "textureLayout": {
-                              "front": {
-                                "offset": {"x": 230, "y": 51},
-                                "mirror": {"x": false, "y": false},
-                                "angle": 0
-                              }
-                            },
-                            "unwrapMode": "custom",
-                            "visible": true,
-                            "doubleSided": true,
-                            "shadingMode": "reflective"
-                          }
-                        },
-                        {
-                          "id": "10",
-                          "name": "Trigger--C2",
+                          "name": "Trigger--C1",
                           "position": {"x": -75.43161, "y": 4.02462, "z": 0.8529},
                           "orientation": {"x": 0, "y": 0, "z": 0.30486, "w": 0.9524},
                           "shape": {
                             "type": "box",
-                            "offset": {"x": 92.7492, "y": -15.04435, "z": -0.05103},
+                            "offset": {"x": 92.7492, "y": -15.04435, "z": 0.24897},
                             "stretch": {"x": 1, "y": 1, "z": 1},
                             "settings": {
                               "isPiece": false,
@@ -332,13 +304,13 @@
                           }
                         },
                         {
-                          "id": "11",
-                          "name": "Trigger_Shoe--C3",
+                          "id": "10",
+                          "name": "Trigger_Shoe--C2",
                           "position": {"x": -75.43161, "y": 4.02462, "z": 0.8529},
                           "orientation": {"x": 0, "y": 0, "z": 0.36245, "w": 0.932},
                           "shape": {
                             "type": "quad",
-                            "offset": {"x": 86.33369, "y": -29.75754, "z": 0.05102},
+                            "offset": {"x": 86.33369, "y": -29.75754, "z": 0.35102},
                             "stretch": {"x": 1, "y": 1, "z": 1},
                             "settings": {
                               "isPiece": false,
@@ -364,7 +336,7 @@
                   ]
                 },
                 {
-                  "id": "12",
+                  "id": "11",
                   "name": "Receiver",
                   "position": {"x": 2.8104, "y": -20.32702, "z": -0.56804},
                   "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
@@ -383,7 +355,7 @@
                   },
                   "children": [
                     {
-                      "id": "13",
+                      "id": "12",
                       "name": "Leaf--C1",
                       "position": {"x": 12.56213, "y": 91.22225, "z": 97.72277},
                       "orientation": {"x": -0.41563, "y": 0.84688, "z": -0.01437, "w": 0.33141},
@@ -411,10 +383,10 @@
                       }
                     },
                     {
-                      "id": "14",
+                      "id": "13",
                       "name": "Hammer",
-                      "position": {"x": 52.56888, "y": 74.85226, "z": -0.7447},
-                      "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
+                      "position": {"x": -2.30735, "y": 87.8276, "z": 61.53216},
+                      "orientation": {"x": -0.12187, "y": 0, "z": 0, "w": 0.99255},
                       "shape": {
                         "type": "none",
                         "offset": {"x": 0, "y": 0, "z": 0},
@@ -430,9 +402,37 @@
                       },
                       "children": [
                         {
+                          "id": "14",
+                          "name": "Hammer--C1",
+                          "position": {"x": 0.11389, "y": 1.09078, "z": -0.4737},
+                          "orientation": {"x": 0.36154, "y": -0.60769, "z": -0.36154, "w": 0.60769},
+                          "shape": {
+                            "type": "quad",
+                            "offset": {"x": -6, "y": 0, "z": 0},
+                            "stretch": {"x": 1, "y": 1, "z": 1},
+                            "settings": {
+                              "isPiece": false,
+                              "size": {"x": 26, "y": 12},
+                              "normal": "+Z",
+                              "isStaticBox": true
+                            },
+                            "textureLayout": {
+                              "front": {
+                                "offset": {"x": 230, "y": 51},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              }
+                            },
+                            "unwrapMode": "custom",
+                            "visible": true,
+                            "doubleSided": true,
+                            "shadingMode": "reflective"
+                          }
+                        },
+                        {
                           "id": "15",
-                          "name": "Hammer_Leaf--C1",
-                          "position": {"x": -53.57834, "y": 20.79041, "z": 54.14735},
+                          "name": "Hammer_Leaf--C2",
+                          "position": {"x": 0.99789, "y": 8.01507, "z": -7.82951},
                           "orientation": {"x": -0.04317, "y": -0.70579, "z": -0.4206, "w": 0.56841},
                           "shape": {
                             "type": "quad",
@@ -456,13 +456,65 @@
                             "doubleSided": true,
                             "shadingMode": "reflective"
                           }
+                        },
+                        {
+                          "id": "16",
+                          "name": "cube--C3",
+                          "position": {"x": 0, "y": 9.92437, "z": -1.48512},
+                          "orientation": {"x": -0.37903, "y": -0.27834, "z": 0.34372, "w": 0.81284},
+                          "shape": {
+                            "type": "box",
+                            "offset": {"x": 0, "y": 0.00441, "z": -0.44719},
+                            "stretch": {"x": 1, "y": 1, "z": 1},
+                            "settings": {
+                              "isPiece": false,
+                              "size": {"x": 2, "y": 4, "z": 2},
+                              "isStaticBox": true
+                            },
+                            "textureLayout": {
+                              "back": {
+                                "offset": {"x": 125, "y": 54},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "right": {
+                                "offset": {"x": 123, "y": 54},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "front": {
+                                "offset": {"x": 129, "y": 54},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "left": {
+                                "offset": {"x": 127, "y": 54},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "top": {
+                                "offset": {"x": 127, "y": 54},
+                                "mirror": {"x": true, "y": true},
+                                "angle": 0
+                              },
+                              "bottom": {
+                                "offset": {"x": 129, "y": 52},
+                                "mirror": {"x": true, "y": false},
+                                "angle": 0
+                              }
+                            },
+                            "unwrapMode": "custom",
+                            "visible": true,
+                            "doubleSided": false,
+                            "shadingMode": "fullbright"
+                          }
                         }
                       ]
                     },
                     {
-                      "id": "16",
+                      "id": "17",
                       "name": "Receiver--C2",
-                      "position": {"x": -1.9633, "y": 82.85862, "z": 65.58209},
+                      "position": {"x": -2.2633, "y": 82.85862, "z": 65.58209},
                       "orientation": {"x": 0.50318, "y": -0.32095, "z": -0.20842, "w": 0.77483},
                       "shape": {
                         "type": "box",
@@ -512,7 +564,7 @@
                       }
                     },
                     {
-                      "id": "17",
+                      "id": "18",
                       "name": "Barrel",
                       "position": {"x": -1.4, "y": 46.5, "z": 5.1},
                       "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
@@ -531,113 +583,9 @@
                       },
                       "children": [
                         {
-                          "id": "18",
-                          "name": "Rune_PLate--C1",
-                          "position": {"x": -0.4453, "y": 117.26806, "z": 65.48294},
-                          "orientation": {"x": 0.61566, "y": 0, "z": 0, "w": 0.78801},
-                          "shape": {
-                            "type": "box",
-                            "offset": {"x": -0.22, "y": -0.78, "z": 0.82},
-                            "stretch": {"x": 1, "y": 1, "z": 1},
-                            "settings": {
-                              "isPiece": false,
-                              "size": {"x": 9, "y": 15, "z": 4},
-                              "isStaticBox": true
-                            },
-                            "textureLayout": {
-                              "back": {
-                                "offset": {"x": 33, "y": 165},
-                                "mirror": {"x": false, "y": false},
-                                "angle": 0
-                              },
-                              "right": {
-                                "offset": {"x": 83, "y": 157},
-                                "mirror": {"x": true, "y": false},
-                                "angle": 0
-                              },
-                              "front": {
-                                "offset": {"x": 168, "y": 36},
-                                "mirror": {"x": false, "y": false},
-                                "angle": 0
-                              },
-                              "left": {
-                                "offset": {"x": 79, "y": 157},
-                                "mirror": {"x": false, "y": false},
-                                "angle": 0
-                              },
-                              "top": {
-                                "offset": {"x": 9, "y": 126},
-                                "mirror": {"x": true, "y": false},
-                                "angle": 0
-                              },
-                              "bottom": {
-                                "offset": {"x": 18, "y": 126},
-                                "mirror": {"x": true, "y": false},
-                                "angle": 0
-                              }
-                            },
-                            "unwrapMode": "custom",
-                            "visible": false,
-                            "doubleSided": true,
-                            "shadingMode": "flat"
-                          }
-                        },
-                        {
                           "id": "19",
-                          "name": "Rune_PLate_Emissive--C2",
-                          "position": {"x": -0.4453, "y": 117.26806, "z": 65.48294},
-                          "orientation": {"x": 0.61566, "y": 0, "z": 0, "w": 0.78801},
-                          "shape": {
-                            "type": "box",
-                            "offset": {"x": -0.22, "y": -0.78, "z": 0.82},
-                            "stretch": {"x": 1, "y": 1, "z": 1},
-                            "settings": {
-                              "isPiece": false,
-                              "size": {"x": 9, "y": 15, "z": 4},
-                              "isStaticBox": true
-                            },
-                            "textureLayout": {
-                              "back": {
-                                "offset": {"x": 4, "y": 150},
-                                "mirror": {"x": false, "y": false},
-                                "angle": 0
-                              },
-                              "right": {
-                                "offset": {"x": 0, "y": 150},
-                                "mirror": {"x": false, "y": false},
-                                "angle": 0
-                              },
-                              "front": {
-                                "offset": {"x": 17, "y": 150},
-                                "mirror": {"x": false, "y": false},
-                                "angle": 0
-                              },
-                              "left": {
-                                "offset": {"x": 13, "y": 150},
-                                "mirror": {"x": false, "y": false},
-                                "angle": 0
-                              },
-                              "top": {
-                                "offset": {"x": 13, "y": 150},
-                                "mirror": {"x": true, "y": true},
-                                "angle": 0
-                              },
-                              "bottom": {
-                                "offset": {"x": 22, "y": 146},
-                                "mirror": {"x": true, "y": false},
-                                "angle": 0
-                              }
-                            },
-                            "unwrapMode": "custom",
-                            "visible": true,
-                            "doubleSided": true,
-                            "shadingMode": "flat"
-                          }
-                        },
-                        {
-                          "id": "20",
-                          "name": "Barrel_Band_1_Top--C3",
-                          "position": {"x": -0.98049, "y": 46.54209, "z": 69.30294},
+                          "name": "Barrel_Band_1_Top--C1",
+                          "position": {"x": -1.28049, "y": 46.54209, "z": 69.30294},
                           "orientation": {"x": 0, "y": 0, "z": 0.38268, "w": 0.92388},
                           "shape": {
                             "type": "box",
@@ -687,9 +635,9 @@
                           }
                         },
                         {
-                          "id": "21",
-                          "name": "Barrel_Band_1_Bottom_Right--C4",
-                          "position": {"x": -3.94, "y": 42.868, "z": 68.198},
+                          "id": "20",
+                          "name": "Barrel_Band_1_Bottom_Right--C2",
+                          "position": {"x": -4.24, "y": 42.868, "z": 68.198},
                           "orientation": {"x": 0, "y": 0, "z": 0.38268, "w": 0.92388},
                           "shape": {
                             "type": "box",
@@ -739,9 +687,9 @@
                           }
                         },
                         {
-                          "id": "22",
-                          "name": "Barrel_Band_1_Bottom_Left--C5",
-                          "position": {"x": 1.636, "y": 41.568, "z": 68.198},
+                          "id": "21",
+                          "name": "Barrel_Band_1_Bottom_Left--C3",
+                          "position": {"x": 1.336, "y": 41.568, "z": 68.198},
                           "orientation": {"x": 0, "y": 0, "z": 0.38268, "w": 0.92388},
                           "shape": {
                             "type": "box",
@@ -791,8 +739,8 @@
                           }
                         },
                         {
-                          "id": "23",
-                          "name": "Barrel--C6",
+                          "id": "22",
+                          "name": "Barrel--C4",
                           "position": {"x": -0.72627, "y": 34.32933, "z": 85.78471},
                           "orientation": {"x": -0.02418, "y": 0.01002, "z": 0.38255, "w": 0.92356},
                           "shape": {
@@ -843,8 +791,60 @@
                           }
                         },
                         {
+                          "id": "23",
+                          "name": "Barrel_Emissive--C5",
+                          "position": {"x": -0.72627, "y": 34.32933, "z": 85.78471},
+                          "orientation": {"x": -0.02418, "y": 0.01002, "z": 0.38255, "w": 0.92356},
+                          "shape": {
+                            "type": "box",
+                            "offset": {"x": 5.0822, "y": 5.0822, "z": 4.692},
+                            "stretch": {"x": 1, "y": 1, "z": 1},
+                            "settings": {
+                              "isPiece": false,
+                              "size": {"x": 25, "y": 25, "z": 34},
+                              "isStaticBox": true
+                            },
+                            "textureLayout": {
+                              "back": {
+                                "offset": {"x": 151, "y": 160},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "right": {
+                                "offset": {"x": 210, "y": 150},
+                                "mirror": {"x": false, "y": true},
+                                "angle": 180
+                              },
+                              "front": {
+                                "offset": {"x": 189, "y": 31},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "left": {
+                                "offset": {"x": 176, "y": 175},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "top": {
+                                "offset": {"x": 176, "y": 175},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 270
+                              },
+                              "bottom": {
+                                "offset": {"x": 210, "y": 200},
+                                "mirror": {"x": true, "y": false},
+                                "angle": 90
+                              }
+                            },
+                            "unwrapMode": "custom",
+                            "visible": true,
+                            "doubleSided": false,
+                            "shadingMode": "fullbright"
+                          }
+                        },
+                        {
                           "id": "24",
-                          "name": "Muzzle--C7",
+                          "name": "Muzzle--C6",
                           "position": {"x": -0.72627, "y": 34.32933, "z": 85.78471},
                           "orientation": {"x": -0.02418, "y": 0.01002, "z": 0.38255, "w": 0.92356},
                           "shape": {
@@ -896,7 +896,7 @@
                         },
                         {
                           "id": "25",
-                          "name": "Barrel_Inner--C8",
+                          "name": "Barrel_Inner--C7",
                           "position": {"x": -0.72627, "y": 34.52933, "z": 85.68471},
                           "orientation": {"x": -0.02418, "y": 0.01002, "z": 0.38255, "w": 0.92356},
                           "shape": {
@@ -948,7 +948,7 @@
                         },
                         {
                           "id": "26",
-                          "name": "Barrel_Band_1--C9",
+                          "name": "Barrel_Band_1--C8",
                           "position": {"x": -0.72627, "y": 31.83953, "z": 80.42867},
                           "orientation": {"x": -0.02418, "y": 0.01002, "z": 0.38255, "w": 0.92356},
                           "shape": {
@@ -1000,7 +1000,7 @@
                         },
                         {
                           "id": "27",
-                          "name": "Barrel_Band_2--C10",
+                          "name": "Barrel_Band_2--C9",
                           "position": {"x": -0.72627, "y": 42.54228, "z": 103.27954},
                           "orientation": {"x": -0.02418, "y": 0.01002, "z": 0.38255, "w": 0.92356},
                           "shape": {
@@ -1053,7 +1053,7 @@
                         {
                           "id": "28",
                           "name": "Crystal",
-                          "position": {"x": 2.43676, "y": 42.36751, "z": 76.46553},
+                          "position": {"x": 2.43676, "y": 42.36751, "z": 76.46552},
                           "orientation": {"x": 0.65216, "y": -0.18513, "z": 0.14817, "w": 0.72004},
                           "shape": {
                             "type": "none",
@@ -1076,7 +1076,7 @@
                               "orientation": {"x": -0.16105, "y": -0.30969, "z": -0.0283, "w": 0.93667},
                               "shape": {
                                 "type": "box",
-                                "offset": {"x": -0.17671, "y": 1.49683, "z": -4.67941},
+                                "offset": {"x": -0.37214, "y": 1.57906, "z": -4.46716},
                                 "stretch": {"x": 1, "y": 0.79487, "z": 0.82005},
                                 "settings": {
                                   "isPiece": false,
@@ -1126,7 +1126,7 @@
                         {
                           "id": "30",
                           "name": "Crystal3",
-                          "position": {"x": 2.43676, "y": 74.06751, "z": 76.46553},
+                          "position": {"x": 2.43676, "y": 74.06751, "z": 76.46552},
                           "orientation": {"x": 0.65216, "y": -0.18513, "z": 0.14817, "w": 0.72004},
                           "shape": {
                             "type": "none",
@@ -1145,11 +1145,11 @@
                             {
                               "id": "31",
                               "name": "Big_Crystal_2--C1",
-                              "position": {"x": -2.91448, "y": -8.59334, "z": 20.7574},
+                              "position": {"x": -2.91448, "y": -8.59334, "z": 20.75741},
                               "orientation": {"x": -0.67104, "y": -0.16926, "z": 0.45747, "w": 0.55837},
                               "shape": {
                                 "type": "box",
-                                "offset": {"x": -2.9936, "y": -0.35511, "z": -0.0503},
+                                "offset": {"x": -3.0418, "y": -0.34301, "z": 0.24555},
                                 "stretch": {"x": 1, "y": 0.79487, "z": 0.82005},
                                 "settings": {
                                   "isPiece": false,
@@ -1199,7 +1199,7 @@
                         {
                           "id": "32",
                           "name": "Crystal2",
-                          "position": {"x": -3.13376, "y": 36.25196, "z": 74.73713},
+                          "position": {"x": -3.13376, "y": 36.25196, "z": 74.73712},
                           "orientation": {"x": -0.10601, "y": 0.42235, "z": -0.89974, "w": -0.02905},
                           "shape": {
                             "type": "none",
@@ -1218,11 +1218,11 @@
                             {
                               "id": "33",
                               "name": "Crystal2--C1",
-                              "position": {"x": -2.61231, "y": -2.43083, "z": -0.65381},
+                              "position": {"x": -2.61231, "y": -2.43083, "z": -0.6538},
                               "orientation": {"x": -0.0754, "y": 0.26401, "z": -0.2174, "w": 0.93667},
                               "shape": {
                                 "type": "box",
-                                "offset": {"x": 0.61257, "y": 2.96591, "z": 1.99717},
+                                "offset": {"x": 0.84085, "y": 3.12429, "z": 2.11033},
                                 "stretch": {"x": 0.773, "y": 0.35776, "z": 0.70981},
                                 "settings": {
                                   "isPiece": false,
@@ -1272,7 +1272,7 @@
                         {
                           "id": "34",
                           "name": "Crystal4",
-                          "position": {"x": -3.13376, "y": 67.95196, "z": 74.73713},
+                          "position": {"x": -3.13376, "y": 67.95196, "z": 74.73712},
                           "orientation": {"x": -0.10601, "y": 0.42235, "z": -0.89974, "w": -0.02905},
                           "shape": {
                             "type": "none",
@@ -1291,11 +1291,11 @@
                             {
                               "id": "35",
                               "name": "Crystal_2--C1",
-                              "position": {"x": 1.52264, "y": 17.89588, "z": 12.25869},
+                              "position": {"x": 1.52264, "y": 17.89588, "z": 12.2587},
                               "orientation": {"x": 0.4645, "y": 0.66298, "z": 0.1156, "w": 0.57562},
                               "shape": {
                                 "type": "box",
-                                "offset": {"x": 1.3935, "y": -0.08498, "z": -0.22567},
+                                "offset": {"x": 1.48565, "y": 0.04511, "z": 0.02846},
                                 "stretch": {"x": 0.773, "y": 0.35776, "z": 0.70981},
                                 "settings": {
                                   "isPiece": false,
@@ -1339,322 +1339,6 @@
                                 "doubleSided": false,
                                 "shadingMode": "fullbright"
                               }
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "36",
-      "name": "R-Attachment",
-      "position": {"x": -41.3, "y": 0, "z": 0},
-      "orientation": {"x": -0.03535, "y": 0.17519, "z": 0.05049, "w": 0.9826},
-      "shape": {
-        "type": "none",
-        "offset": {"x": 0, "y": 0, "z": 0},
-        "stretch": {"x": 1, "y": 1, "z": 1},
-        "settings": {
-          "isPiece": true
-        },
-        "textureLayout": {},
-        "unwrapMode": "custom",
-        "visible": false,
-        "doubleSided": false,
-        "shadingMode": "flat"
-      },
-      "children": [
-        {
-          "id": "37",
-          "name": "Origin_Projectile",
-          "position": {"x": 0, "y": 13, "z": 0},
-          "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
-          "shape": {
-            "type": "none",
-            "offset": {"x": 0, "y": 0, "z": 0},
-            "stretch": {"x": 1, "y": 1, "z": 1},
-            "settings": {
-              "isPiece": true
-            },
-            "textureLayout": {},
-            "unwrapMode": "custom",
-            "visible": false,
-            "doubleSided": false,
-            "shadingMode": "flat"
-          },
-          "children": [
-            {
-              "id": "38",
-              "name": "Origin_Item",
-              "position": {"x": 0, "y": -5, "z": 0},
-              "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
-              "shape": {
-                "type": "none",
-                "offset": {"x": 0, "y": 0, "z": 0},
-                "stretch": {"x": 1, "y": 1, "z": 1},
-                "settings": {
-                  "isPiece": false
-                },
-                "textureLayout": {},
-                "unwrapMode": "custom",
-                "visible": false,
-                "doubleSided": false,
-                "shadingMode": "flat"
-              },
-              "children": [
-                {
-                  "id": "39",
-                  "name": "Bomb",
-                  "position": {"x": 0, "y": 0, "z": 0},
-                  "orientation": {"x": 0, "y": -0.13053, "z": 0, "w": 0.99144},
-                  "shape": {
-                    "type": "box",
-                    "offset": {"x": 0, "y": 0, "z": 0},
-                    "stretch": {"x": 1.025, "y": 1.012, "z": 1.025},
-                    "settings": {
-                      "isPiece": false,
-                      "size": {"x": 16, "y": 16, "z": 16}
-                    },
-                    "textureLayout": {
-                      "back": {
-                        "offset": {"x": 16, "y": 76},
-                        "mirror": {"x": false, "y": false},
-                        "angle": 0
-                      },
-                      "right": {
-                        "offset": {"x": 0, "y": 76},
-                        "mirror": {"x": false, "y": false},
-                        "angle": 0
-                      },
-                      "front": {
-                        "offset": {"x": 16, "y": 76},
-                        "mirror": {"x": false, "y": false},
-                        "angle": 0
-                      },
-                      "left": {
-                        "offset": {"x": 32, "y": 76},
-                        "mirror": {"x": false, "y": false},
-                        "angle": 0
-                      },
-                      "top": {
-                        "offset": {"x": 32, "y": 76},
-                        "mirror": {"x": false, "y": false},
-                        "angle": 180
-                      },
-                      "bottom": {
-                        "offset": {"x": 48, "y": 76},
-                        "mirror": {"x": false, "y": false},
-                        "angle": 180
-                      }
-                    },
-                    "unwrapMode": "custom",
-                    "visible": false,
-                    "doubleSided": false,
-                    "shadingMode": "flat"
-                  },
-                  "children": [
-                    {
-                      "id": "40",
-                      "name": "Bomb_Top",
-                      "position": {"x": 0, "y": 9, "z": 0},
-                      "orientation": {"x": 0, "y": 1, "z": 0, "w": 0},
-                      "shape": {
-                        "type": "box",
-                        "offset": {"x": 0, "y": 0, "z": 0},
-                        "stretch": {"x": 1, "y": 1, "z": 1},
-                        "settings": {
-                          "isPiece": false,
-                          "size": {"x": 8, "y": 4, "z": 8}
-                        },
-                        "textureLayout": {
-                          "back": {
-                            "offset": {"x": 0, "y": 72},
-                            "mirror": {"x": false, "y": false},
-                            "angle": 0
-                          },
-                          "right": {
-                            "offset": {"x": 1, "y": 72},
-                            "mirror": {"x": false, "y": false},
-                            "angle": 0
-                          },
-                          "front": {
-                            "offset": {"x": 8, "y": 72},
-                            "mirror": {"x": false, "y": false},
-                            "angle": 0
-                          },
-                          "left": {
-                            "offset": {"x": 0, "y": 72},
-                            "mirror": {"x": false, "y": false},
-                            "angle": 0
-                          },
-                          "top": {
-                            "offset": {"x": 8, "y": 64},
-                            "mirror": {"x": false, "y": false},
-                            "angle": 0
-                          }
-                        },
-                        "unwrapMode": "custom",
-                        "visible": false,
-                        "doubleSided": false,
-                        "shadingMode": "flat"
-                      },
-                      "children": [
-                        {
-                          "id": "41",
-                          "name": "Fuse",
-                          "position": {"x": -0.33273, "y": 1.13597, "z": 0.37868},
-                          "orientation": {"x": -0.20339, "y": -0.34169, "z": -0.01492, "w": 0.91742},
-                          "shape": {
-                            "type": "box",
-                            "offset": {"x": 0, "y": 2, "z": 0},
-                            "stretch": {"x": 0.95309, "y": 1, "z": 0.98735},
-                            "settings": {
-                              "isPiece": false,
-                              "size": {"x": 3, "y": 8, "z": 3}
-                            },
-                            "textureLayout": {
-                              "back": {
-                                "offset": {"x": 3, "y": 64},
-                                "mirror": {"x": false, "y": false},
-                                "angle": 0
-                              },
-                              "right": {
-                                "offset": {"x": 0, "y": 64},
-                                "mirror": {"x": false, "y": false},
-                                "angle": 0
-                              },
-                              "front": {
-                                "offset": {"x": 3, "y": 64},
-                                "mirror": {"x": false, "y": false},
-                                "angle": 0
-                              },
-                              "left": {
-                                "offset": {"x": 0, "y": 64},
-                                "mirror": {"x": false, "y": false},
-                                "angle": 0
-                              },
-                              "top": {
-                                "offset": {"x": 3, "y": 62},
-                                "mirror": {"x": false, "y": false},
-                                "angle": 0
-                              },
-                              "bottom": {
-                                "offset": {"x": 0, "y": 62},
-                                "mirror": {"x": false, "y": false},
-                                "angle": 0
-                              }
-                            },
-                            "unwrapMode": "custom",
-                            "visible": false,
-                            "doubleSided": false,
-                            "shadingMode": "flat"
-                          },
-                          "children": [
-                            {
-                              "id": "42",
-                              "name": "Fuse2",
-                              "position": {"x": 0, "y": 3.12711, "z": 0.06539},
-                              "orientation": {"x": -0.37692, "y": 0, "z": 0, "w": 0.92625},
-                              "shape": {
-                                "type": "box",
-                                "offset": {"x": 0, "y": 2, "z": 0},
-                                "stretch": {"x": 0.97446, "y": 1, "z": 1.00301},
-                                "settings": {
-                                  "isPiece": false,
-                                  "size": {"x": 3, "y": 5, "z": 3}
-                                },
-                                "textureLayout": {
-                                  "back": {
-                                    "offset": {"x": 3, "y": 60},
-                                    "mirror": {"x": false, "y": false},
-                                    "angle": 0
-                                  },
-                                  "right": {
-                                    "offset": {"x": 0, "y": 60},
-                                    "mirror": {"x": false, "y": false},
-                                    "angle": 0
-                                  },
-                                  "front": {
-                                    "offset": {"x": 3, "y": 60},
-                                    "mirror": {"x": false, "y": false},
-                                    "angle": 0
-                                  },
-                                  "left": {
-                                    "offset": {"x": 0, "y": 60},
-                                    "mirror": {"x": false, "y": false},
-                                    "angle": 0
-                                  },
-                                  "top": {
-                                    "offset": {"x": 7, "y": 60},
-                                    "mirror": {"x": false, "y": false},
-                                    "angle": 0
-                                  },
-                                  "bottom": {
-                                    "offset": {"x": 3, "y": 65},
-                                    "mirror": {"x": false, "y": false},
-                                    "angle": 0
-                                  }
-                                },
-                                "unwrapMode": "custom",
-                                "visible": false,
-                                "doubleSided": false,
-                                "shadingMode": "fullbright"
-                              },
-                              "children": [
-                                {
-                                  "id": "43",
-                                  "name": "Fuse_Lit",
-                                  "position": {"x": 0, "y": 2.72189, "z": 0},
-                                  "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
-                                  "shape": {
-                                    "type": "box",
-                                    "offset": {"x": 0, "y": 0, "z": 0},
-                                    "stretch": {"x": 0.8665, "y": 1, "z": 0.92751},
-                                    "settings": {
-                                      "isPiece": false,
-                                      "size": {"x": 3, "y": 1, "z": 3}
-                                    },
-                                    "textureLayout": {
-                                      "back": {
-                                        "offset": {"x": 3, "y": 60},
-                                        "mirror": {"x": false, "y": false},
-                                        "angle": 0
-                                      },
-                                      "right": {
-                                        "offset": {"x": 0, "y": 60},
-                                        "mirror": {"x": false, "y": false},
-                                        "angle": 0
-                                      },
-                                      "front": {
-                                        "offset": {"x": 3, "y": 60},
-                                        "mirror": {"x": false, "y": false},
-                                        "angle": 0
-                                      },
-                                      "left": {
-                                        "offset": {"x": 0, "y": 60},
-                                        "mirror": {"x": false, "y": false},
-                                        "angle": 0
-                                      },
-                                      "top": {
-                                        "offset": {"x": 7, "y": 60},
-                                        "mirror": {"x": false, "y": false},
-                                        "angle": 0
-                                      }
-                                    },
-                                    "unwrapMode": "custom",
-                                    "visible": false,
-                                    "doubleSided": false,
-                                    "shadingMode": "fullbright"
-                                  }
-                                }
-                              ]
                             }
                           ]
                         }

@@ -1,6 +1,6 @@
 {
   "TranslationProperties": {
-    "Name": "server.items.Weapon_Wand_Summoner_Shotcave.name"
+    "Name": "server.items.Weapon_Kweebec_Launcher_Shotcave.name"
   },
   "Categories": [
     "Items.Weapons"
@@ -8,17 +8,20 @@
   "Icon": "Icons/ItemsGenerated/Weapon_Wand_Wood.png",
   "Model": "Items/Weapons/Shotcave/Kweebec_crystal_launcher/kweebec_crystal_launcher.blockymodel",
   "Texture": "Items/Weapons/Shotcave/Kweebec_crystal_launcher/kweebec_crystal_launcher.png",
-  "PlayerAnimationsId": "Wand",
+  "PlayerAnimationsId": "Rifle",
   "Interactions": {
-    "Primary": "Root_Shotcave_Wand_Summon",
-    "Secondary": "Root_Shotcave_Wand_Reload"
+    "Primary": "Root_Shotcave_Kweebec_Launcher",
+    "Secondary": "Root_Shotcave_Kweebec_Launcher_Reload"
   },
   "Tags": {
     "Type": [
       "Weapon"
     ],
     "Family": [
-      "Wand"
+      "Gun"
+    ],
+    "Pickup": [
+      "FKey"
     ]
   },
   "Weapon": {}

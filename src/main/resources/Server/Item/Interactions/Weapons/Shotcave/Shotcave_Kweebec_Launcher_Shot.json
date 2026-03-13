@@ -6,7 +6,7 @@
       "RunTime": 0.6,
       "Config": "Projectile_Config_Summon_Orb",
       "Effects": {
-        "ItemAnimationId": "Cast",
+        "ItemAnimationId": "Shoot",
         "WorldSoundEventId": "SFX_Skeleton_Mage_Spellbook_Impact",
         "LocalSoundEventId": "SFX_Skeleton_Mage_Spellbook_Impact",
         "Particles": [
