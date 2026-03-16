@@ -135,7 +135,7 @@ public final class PlayerDeathSystem extends EntityTickingSystem<EntityStore> {
                 ? player.getDisplayName()
                 : playerRef.getUuid().toString();
         gameManager.broadcastToPartyPublic(game.getPartyId(),
-                playerName + " has fallen! Revive them within 30 seconds!", "#ff6b6b");
+            playerName + " has fallen! Hold the interaction key near them within 30 seconds to revive them!", "#ff6b6b");
         return true;
     }
 }

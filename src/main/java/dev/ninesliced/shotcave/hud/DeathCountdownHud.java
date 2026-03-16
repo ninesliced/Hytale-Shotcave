@@ -59,7 +59,7 @@ public final class DeathCountdownHud extends CustomUIHud {
                     Message.raw("Revive window: " + remainingSeconds + "s"));
             ui.set("#DeathCountdownLabel.Style.TextColor", remainingSeconds <= 10 ? "#ef4444" : "#e8ecf0");
             ui.set("#DeathHintLabel.TextSpans",
-                    Message.raw("Teammates can crouch near you to revive"));
+                    Message.raw("Teammates can hold the interaction key near you to revive"));
         }
     }
 }

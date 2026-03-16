@@ -19,7 +19,7 @@ public final class DeathComponent implements Component<EntityStore> {
 
     public static final float REVIVE_DURATION_S = 5.0f;
 
-    public static final long REVIVE_GRACE_MS = 600L;
+    public static final long REVIVE_GRACE_MS = 250L;
 
     private static ComponentType<EntityStore, DeathComponent> componentType;
 

@@ -53,7 +53,7 @@ Group #DeathCountdownRoot {
 
       // ── Hint ──
       Label #DeathHintLabel {
-        Text: "Teammates can crouch near you to revive";
+        Text: "Teammates can hold the interaction key near you to revive";
         Anchor: (Height: 16, Top: 2);
         Style: LabelStyle(
           FontSize: 10,

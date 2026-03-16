@@ -8,9 +8,7 @@ import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Vector3f;
-import com.hypixel.hytale.protocol.MovementStates;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.entity.movement.MovementStatesComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
@@ -40,7 +38,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *   <li>Leaving dead players in a free-moving non-interactive state</li>
  *   <li>Showing a death countdown HUD to dead players</li>
  *   <li>Transitioning dead players to ghost state after 30s</li>
- *   <li>Crouch-to-revive: alive players crouching at the death marker for 5s revive them</li>
+ *   <li>Interaction-key revive: alive players holding the interaction key at the death marker for 5s revive them</li>
  *   <li>Showing a revive progress HUD to the reviver</li>
  * </ul>
  * Runs every tick for smooth countdown and revive progress tracking.
@@ -161,12 +159,7 @@ public final class ReviveTickSystem extends EntityTickingSystem<EntityStore> {
                                     @Nonnull Game game,
                                     @Nonnull GameManager gameManager,
                                     long now) {
-        MovementStatesComponent msc = archetypeChunk.getComponent(index,
-                MovementStatesComponent.getComponentType());
-        if (msc == null) return;
-
-        MovementStates current = msc.getMovementStates();
-        if (!current.crouching) {
+        if (!ReviveInteractionPacketHandler.isInteractionActive(playerRef.getUuid(), now)) {
             boolean cleared = tryExpireReviveProgress(playerRef.getUuid(), game);
             if (cleared) {
                 hideReviveProgressHud(playerRef, archetypeChunk, index, store);
@@ -245,6 +238,7 @@ public final class ReviveTickSystem extends EntityTickingSystem<EntityStore> {
 
         deadInfo.deathComponent.revive();
         game.removeDeadPlayer(deadInfo.uuid);
+        ReviveInteractionPacketHandler.clearInteraction(reviverRef.getUuid());
         gameManager.despawnReviveMarker(commandBuffer, deadInfo.uuid);
         DeathStateController.clear(commandBuffer, deadInfo.ref);
 

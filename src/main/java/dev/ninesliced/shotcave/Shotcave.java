@@ -57,6 +57,8 @@ import dev.ninesliced.shotcave.systems.DeathAggroSuppressionSystem;
 import dev.ninesliced.shotcave.systems.DeathPlayerAddedSystem;
 import dev.ninesliced.shotcave.systems.DungeonLethalDamageSystem;
 import dev.ninesliced.shotcave.systems.PlayerDeathSystem;
+import dev.ninesliced.shotcave.systems.ReviveInteractionPacketHandler;
+import dev.ninesliced.shotcave.systems.RevivePromptHudRuntime;
 import dev.ninesliced.shotcave.systems.ReviveTickSystem;
 import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
@@ -74,6 +76,7 @@ public class Shotcave extends JavaPlugin {
     private final TopCameraService cameraService = new TopCameraService();
     private final AmmoHudRuntime ammoHudRuntime = new AmmoHudRuntime();
     private final ItemPickupHudRuntime itemPickupHudRuntime = new ItemPickupHudRuntime();
+    private final RevivePromptHudRuntime revivePromptHudRuntime = new RevivePromptHudRuntime();
     private final DungeonInstanceService dungeonInstanceService = new DungeonInstanceService(this);
     private final PartyManager partyManager = new PartyManager(this);
     private final GameManager gameManager = new GameManager(this);
@@ -117,6 +120,7 @@ public class Shotcave extends JavaPlugin {
         WeaponRegistry.registerAll();
 
         PacketAdapters.registerInbound(new FKeyPickupPacketHandler());
+        PacketAdapters.registerInbound(new ReviveInteractionPacketHandler());
 
         try {
             this.getEntityStoreRegistry().registerEntityEventType(SwitchActiveSlotEvent.class);
@@ -179,11 +183,13 @@ public class Shotcave extends JavaPlugin {
 
         this.ammoHudRuntime.start(this);
         this.itemPickupHudRuntime.start(this);
+        this.revivePromptHudRuntime.start(this);
     }
 
     @Override
     protected void shutdown() {
         this.itemPickupHudRuntime.stop();
+        this.revivePromptHudRuntime.stop();
         this.ammoHudRuntime.stop();
         this.gameManager.shutdown();
         instance = null;
@@ -195,6 +201,7 @@ public class Shotcave extends JavaPlugin {
         cameraService.registerDisabledByDefault(playerRef);
         ammoHudRuntime.onPlayerConnect(playerRef);
         itemPickupHudRuntime.onPlayerConnect(playerRef);
+        revivePromptHudRuntime.onPlayerConnect(playerRef);
         gameManager.onPlayerConnect(playerRef);
     }
 
