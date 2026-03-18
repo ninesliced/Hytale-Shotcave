@@ -272,12 +272,6 @@ public final class ModularGunShootInteraction extends SimpleInstantInteraction {
                 effectiveKnockback = weaponDefinition.getBaseKnockback() * (1.0 + knockbackBonus);
             }
 
-            LOG.at(Level.INFO).log("[GunShoot] itemId=%s effect=%s pellets=%d(base=%d +%.0f) range=%d(base=%d) spread=%.1f trail=(%d,%d,%d) mods=%d",
-                    heldItem.getItemId(), effect.name(), effectivePellets, this.pellets, pelletBonus,
-                    effectiveRange, this.range, effectiveSpread,
-                    effectiveTrailR, effectiveTrailG, effectiveTrailB,
-                    GunItemMetadata.getModifiers(heldItem).size());
-
             double speedBonus = GunItemMetadata.getModifierBonus(heldItem, WeaponModifierType.ATTACK_SPEED);
             if (speedBonus > 0.001) {
                 CooldownHandler.Cooldown shootCooldown = cooldownHandler.getCooldown("Shoot");

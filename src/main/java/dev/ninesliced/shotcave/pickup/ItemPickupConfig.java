@@ -88,16 +88,11 @@ public final class ItemPickupConfig {
     private static boolean hasItemTag(@Nonnull String itemId, @Nonnull String tagValue) {
         try {
             int tagIndex = AssetRegistry.getTagIndex(tagValue);
-            LOGGER.at(Level.INFO).log("[ItemPickupConfig] hasItemTag('%s', '%s') tagIndex=%d", itemId, tagValue,
-                    tagIndex);
             if (tagIndex < 0) {
-                LOGGER.at(Level.INFO).log("[ItemPickupConfig]   tagIndex < 0 -> false");
                 return false;
             }
             Set<String> keys = Item.getAssetMap().getKeysForTag(tagIndex);
-            boolean found = keys != null && keys.contains(itemId);
-            LOGGER.at(Level.INFO).log("[ItemPickupConfig]   keysForTag=%s -> %s", keys != null ? keys : "null", found);
-            return found;
+            return keys != null && keys.contains(itemId);
         } catch (Exception e) {
             LOGGER.at(Level.WARNING).withCause(e).log("[ItemPickupConfig] hasItemTag exception");
             return false;

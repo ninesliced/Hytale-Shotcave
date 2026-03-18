@@ -21,10 +21,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.NotificationUtil;
 
 import javax.annotation.Nonnull;
-import java.util.logging.Level;
 
-import com.hypixel.hytale.logger.HytaleLogger;
-import dev.ninesliced.shotcave.ShotcaveLog;
 import dev.ninesliced.shotcave.systems.DeathComponent;
 
 /**
@@ -32,8 +29,6 @@ import dev.ninesliced.shotcave.systems.DeathComponent;
  * picks up the closest tracked item on the world thread.
  */
 public final class FKeyPickupPacketHandler implements PlayerPacketWatcher {
-
-    private static final HytaleLogger LOGGER = ShotcaveLog.forModule("Pickup");
 
     private static final int SYNC_INTERACTION_CHAINS_PACKET_ID = 290;
 
@@ -53,14 +48,6 @@ public final class FKeyPickupPacketHandler implements PlayerPacketWatcher {
             return;
         }
 
-        LOGGER.at(Level.INFO).log("[FKeyPickup] handleSyncInteractionChains called, updates=%d", updates.length);
-
-        for (int i = 0; i < updates.length; i++) {
-            SyncInteractionChain chain = updates[i];
-            LOGGER.at(Level.INFO).log("[FKeyPickup]   chain[%d] type=%s initial=%s state=%s itemInHand=%s",
-                    i, chain.interactionType, chain.initial, chain.state, chain.itemInHandId);
-        }
-
         boolean hasUsePress = false;
         for (SyncInteractionChain chain : updates) {
             if (chain.interactionType == InteractionType.Use) {
@@ -70,25 +57,19 @@ public final class FKeyPickupPacketHandler implements PlayerPacketWatcher {
         }
 
         if (!hasUsePress) {
-            LOGGER.at(Level.INFO).log("[FKeyPickup] No Use chain found, skipping");
             return;
         }
 
-        LOGGER.at(Level.INFO).log("[FKeyPickup] Use key press detected! TrackerSize=%d", ItemPickupTracker.size());
-
         if (ItemPickupTracker.size() == 0) {
-            LOGGER.at(Level.INFO).log("[FKeyPickup] No tracked items, skipping");
             return;
         }
 
         if (!playerRef.isValid()) {
-            LOGGER.at(Level.INFO).log("[FKeyPickup] PlayerRef invalid, skipping");
             return;
         }
 
         Ref<EntityStore> playerEntityRef = playerRef.getReference();
         if (playerEntityRef == null || !playerEntityRef.isValid()) {
-            LOGGER.at(Level.INFO).log("[FKeyPickup] PlayerEntityRef not found or invalid");
             return;
         }
 
@@ -97,12 +78,10 @@ public final class FKeyPickupPacketHandler implements PlayerPacketWatcher {
         try {
             world = store.getExternalData().getWorld();
         } catch (Exception e) {
-            LOGGER.at(Level.INFO).log("[FKeyPickup] Could not resolve world: %s", e);
             return;
         }
 
         if (world == null) {
-            LOGGER.at(Level.INFO).log("[FKeyPickup] World is null, skipping");
             return;
         }
 
@@ -115,10 +94,7 @@ public final class FKeyPickupPacketHandler implements PlayerPacketWatcher {
      */
     private static void attemptPickup(@Nonnull PlayerRef playerRef,
             @Nonnull Ref<EntityStore> playerEntityRef) {
-        LOGGER.at(Level.INFO).log("[FKeyPickup] attemptPickup running on world thread");
-
         if (!playerEntityRef.isValid()) {
-            LOGGER.at(Level.INFO).log("[FKeyPickup] playerEntityRef invalid, aborting");
             return;
         }
 
@@ -126,43 +102,33 @@ public final class FKeyPickupPacketHandler implements PlayerPacketWatcher {
 
         Player player = store.getComponent(playerEntityRef, Player.getComponentType());
         if (player == null || player.wasRemoved()) {
-            LOGGER.at(Level.INFO).log("[FKeyPickup] player null or removed, aborting");
             return;
         }
 
         DeathComponent death = store.getComponent(playerEntityRef, DeathComponent.getComponentType());
         if (death != null && death.isDead()) {
-            LOGGER.at(Level.INFO).log("[FKeyPickup] player is dead/ghost, aborting");
             return;
         }
 
         TransformComponent playerTransform = store.getComponent(
                 playerEntityRef, TransformComponent.getComponentType());
         if (playerTransform == null) {
-            LOGGER.at(Level.INFO).log("[FKeyPickup] playerTransform null, aborting");
             return;
         }
 
         Vector3d playerPos = playerTransform.getPosition();
-        LOGGER.at(Level.INFO).log("[FKeyPickup] playerPos=%.2f,%.2f,%.2f", playerPos.x, playerPos.y, playerPos.z);
 
         if (ItemPickupTracker.size() == 0) {
-            LOGGER.at(Level.INFO).log("[FKeyPickup] tracker empty on world thread, aborting");
             return;
         }
 
         double pickupRadiusSq = ItemPickupConfig.ITEM_PICKUP_RADIUS
                 * ItemPickupConfig.ITEM_PICKUP_RADIUS;
 
-        LOGGER.at(Level.INFO).log("[FKeyPickup] scanning %d tracked items, radius=%.2f",
-                ItemPickupTracker.size(), ItemPickupConfig.ITEM_PICKUP_RADIUS);
-
         ItemPickupTracker.TrackedItem closest = null;
         double closestDistSq = Double.MAX_VALUE;
 
         for (ItemPickupTracker.TrackedItem tracked : ItemPickupTracker.getAll()) {
-            LOGGER.at(Level.INFO).log("[FKeyPickup]   item=%s fkey=%s valid=%s",
-                    tracked.getItemId(), tracked.isFKeyPickup(), tracked.getRef().isValid());
             if (!tracked.isFKeyPickup()) {
                 continue;
             }
@@ -172,7 +138,6 @@ public final class FKeyPickupPacketHandler implements PlayerPacketWatcher {
 
             Vector3d itemPos = tracked.getPosition(store);
             if (itemPos == null) {
-                LOGGER.at(Level.INFO).log("[FKeyPickup]   itemPos=null, skipping");
                 continue;
             }
 
@@ -181,9 +146,6 @@ public final class FKeyPickupPacketHandler implements PlayerPacketWatcher {
             double dz = playerPos.z - itemPos.z;
             double distSq = dx * dx + dy * dy + dz * dz;
 
-            LOGGER.at(Level.INFO).log("[FKeyPickup]   itemPos=%.2f,%.2f,%.2f dist=%.2f maxDist=%.2f",
-                    itemPos.x, itemPos.y, itemPos.z, Math.sqrt(distSq), ItemPickupConfig.ITEM_PICKUP_RADIUS);
-
             if (distSq <= pickupRadiusSq && distSq < closestDistSq) {
                 closestDistSq = distSq;
                 closest = tracked;
@@ -191,12 +153,8 @@ public final class FKeyPickupPacketHandler implements PlayerPacketWatcher {
         }
 
         if (closest == null) {
-            LOGGER.at(Level.INFO).log("[FKeyPickup] no F-key item in range, skipping");
             return;
         }
-
-        LOGGER.at(Level.INFO).log("[FKeyPickup] picking up %s at dist=%.2f", closest.getItemId(),
-                Math.sqrt(closestDistSq));
 
         collectItem(closest, player, playerRef, playerEntityRef, store);
     }
@@ -235,10 +193,6 @@ public final class FKeyPickupPacketHandler implements PlayerPacketWatcher {
             return;
         }
 
-        TransformComponent itemTransform = store.getComponent(
-                itemRef, TransformComponent.getComponentType());
-        Vector3d itemPos = (itemTransform != null) ? itemTransform.getPosition() : null;
-
         ItemStackTransaction transaction = player.giveItem(
                 itemStack, playerEntityRef, store);
         ItemStack remainder = transaction.getRemainder();
@@ -248,10 +202,6 @@ public final class FKeyPickupPacketHandler implements PlayerPacketWatcher {
             itemComponent.setRemovedByPlayerPickup(true);
             store.removeEntity(itemRef, RemoveReason.REMOVE);
 
-            if (itemPos != null) {
-                player.notifyPickupItem(playerEntityRef, itemStack, itemPos, store);
-            }
-
             sendPickupNotification(playerRef, tracked, itemStack.getQuantity());
 
         } else if (!remainder.equals(itemStack)) {
@@ -260,14 +210,6 @@ public final class FKeyPickupPacketHandler implements PlayerPacketWatcher {
             itemComponent.setItemStack(remainder);
 
             ItemPickupTracker.track(tracked);
-
-            if (pickedUp > 0 && itemPos != null) {
-                player.notifyPickupItem(
-                        playerEntityRef,
-                        itemStack.withQuantity(pickedUp),
-                        itemPos,
-                        store);
-            }
 
             if (pickedUp > 0) {
                 sendPickupNotification(playerRef, tracked, pickedUp);
