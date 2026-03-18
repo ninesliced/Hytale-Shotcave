@@ -16,7 +16,7 @@
     "id": "Shotcave_Crystal_Blunderbuss_Fire_Primary",
     "cooldown": 1.05,
     "requireAmmo": true,
-    "shotId": "Shotcave_Crystal_Blunderbuss_Fire_Shot",
+    "shotId": "Shotcave_Crystal_Blunderbuss_Shot",
     "reloadId": "Shotcave_Crystal_Blunderbuss_Reload"
   },
   "reload": {

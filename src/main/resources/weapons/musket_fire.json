@@ -1,9 +1,10 @@
 {
-  "itemId": "Weapon_Sniper_Shotcave",
-  "displayName": "Sniper",
+  "itemId": "Weapon_Crystal_Musket_Fire_Shotcave",
+  "displayName": "Musket",
   "category": "LASER",
-  "minRarity": "BASIC",
-  "spawnWeight": 15,
+  "lockedEffect": "FIRE",
+  "minRarity": "RARE",
+  "spawnWeight": 5,
   "baseStats": {
     "range": 60,
     "spread": 0,
@@ -11,14 +12,14 @@
     "knockback": 0
   },
   "primary": {
-    "id": "Shotcave_Sniper_Primary",
+    "id": "Shotcave_Crystal_Musket_Fire_Primary",
     "cooldown": 1.4,
     "requireAmmo": true,
-    "shotId": "Shotcave_Sniper_Shot",
-    "reloadId": "Shotcave_Sniper_Reload"
+    "shotId": "Shotcave_Crystal_Musket_Shot",
+    "reloadId": "Shotcave_Crystal_Musket_Reload"
   },
   "reload": {
-    "id": "Shotcave_Sniper_Reload",
+    "id": "Shotcave_Crystal_Musket_Reload",
     "cooldown": 1.25,
     "runTime": 1.2,
     "amount": 0,
@@ -28,7 +29,7 @@
     "maxAmmo": 5
   },
   "damage": {
-    "id": "Shotcave_Sniper_Projectile_Hit",
+    "id": "Shotcave_Crystal_Musket_Projectile_Hit",
     "amount": 52,
     "type": "Projectile",
     "worldSfx": "SFX_Rifle_Fire",
