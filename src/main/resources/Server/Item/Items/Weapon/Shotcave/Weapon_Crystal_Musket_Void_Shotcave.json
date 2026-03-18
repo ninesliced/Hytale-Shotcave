@@ -5,7 +5,7 @@
   "Categories": [
     "Items.Weapons"
   ],
-  "Icon": "Icons/ItemsGenerated/Weapon_Assault_Rifle.png",
+  "Icon": "Icons/ItemsGenerated/Void_Crystal_Musket.png",
   "Model": "Items/Weapons/Shotcave/Musket/MUSKET_CRYSTAL.blockymodel",
   "Texture": "Items/Weapons/Shotcave/Musket/VOID_MUSKET_TEXTURE.png",
   "PlayerAnimationsId": "Rifle",
