@@ -5,7 +5,7 @@
   "Categories": [
     "Items.Weapons"
   ],
-  "Icon": "Icons/ItemsGenerated/Weapon_Wand_Wood.png",
+  "Icon": "Icons/ItemsGenerated/Kweebec_crystal_launcher.png",
   "Model": "Items/Weapons/Shotcave/Kweebec_crystal_launcher/kweebec_crystal_launcher.blockymodel",
   "Texture": "Items/Weapons/Shotcave/Kweebec_crystal_launcher/kweebec_crystal_launcher.png",
   "PlayerAnimationsId": "Rifle",

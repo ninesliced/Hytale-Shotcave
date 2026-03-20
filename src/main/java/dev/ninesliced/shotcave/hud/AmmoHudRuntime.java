@@ -3,7 +3,6 @@ package dev.ninesliced.shotcave.hud;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.event.events.entity.LivingEntityInventoryChangeEvent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
@@ -23,7 +22,6 @@ public final class AmmoHudRuntime {
 
     public void start(@Nonnull Shotcave plugin) {
         plugin.getEventRegistry().registerGlobal(PlayerDisconnectEvent.class, this::onPlayerDisconnect);
-        plugin.getEventRegistry().registerGlobal(LivingEntityInventoryChangeEvent.class, this::onInventoryChanged);
         startHudPoller();
     }
 
@@ -41,13 +39,6 @@ public final class AmmoHudRuntime {
 
     private void onPlayerDisconnect(@Nonnull PlayerDisconnectEvent event) {
         AmmoHudService.clear(event.getPlayerRef());
-    }
-
-    private void onInventoryChanged(@Nonnull LivingEntityInventoryChangeEvent event) {
-        if (!(event.getEntity() instanceof Player)) {
-            return;
-        }
-        refreshHeldItemHud((Player) event.getEntity());
     }
 
     private void startHudPoller() {

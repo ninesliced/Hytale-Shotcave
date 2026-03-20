@@ -3,13 +3,11 @@ package dev.ninesliced.shotcave.systems;
 import com.hypixel.hytale.component.ArchetypeChunk;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.ComponentType;
-import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.dependency.Dependency;
 import com.hypixel.hytale.component.dependency.Order;
 import com.hypixel.hytale.component.dependency.SystemDependency;
 import com.hypixel.hytale.component.query.Query;
-import com.hypixel.hytale.component.spatial.SpatialResource;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Vector3f;
@@ -164,6 +162,12 @@ public final class DashRollSystem extends EntityTickingSystem<EntityStore> {
             return;
         }
 
+        // Dead players cannot dash
+        DeathComponent death = archetypeChunk.getComponent(index, DeathComponent.getComponentType());
+        if (death != null && death.isDead()) {
+            return;
+        }
+
         MovementStatesComponent msc = archetypeChunk.getComponent(index,
                 this.movementStatesComponentType);
         if (msc == null) {
@@ -176,6 +180,7 @@ public final class DashRollSystem extends EntityTickingSystem<EntityStore> {
         if (!crouchRisingEdge) {
             return;
         }
+
         current.crouching = false;
 
         // TODO: Look for timers within hytale's ECS instead

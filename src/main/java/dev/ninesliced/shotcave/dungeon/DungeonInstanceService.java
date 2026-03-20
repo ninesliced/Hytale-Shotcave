@@ -74,8 +74,7 @@ public final class DungeonInstanceService {
                     DungeonGenerator generator = new DungeonGenerator();
                     generator.generate(world, seed, levelConfig);
                     this.lastGenerator = generator;
-                    LOGGER.at(Level.INFO).log("Dungeon instance created: %s for selector %s", world.getName(),
-                            levelConfig.getSelector());
+                    LOGGER.at(Level.INFO).log("Dungeon instance created: " + world.getName() + " for selector " + levelConfig.getSelector());
                     if (statusConsumer != null) {
                         statusConsumer.accept("Dungeon ready: " + levelConfig.getName());
                     }

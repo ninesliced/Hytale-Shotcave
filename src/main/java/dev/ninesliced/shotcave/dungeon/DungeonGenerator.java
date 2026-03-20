@@ -131,8 +131,8 @@ public class DungeonGenerator {
         // Resolve mob lists from config
         List<String> roomMobs = levelConfig.getMobs() != null ? levelConfig.getMobs() : Collections.emptyList();
 
-        LOGGER.at(Level.INFO).log("Generating dungeon '%s' seed=%d targetRooms=%d",
-                levelConfig.getName(), seed, levelConfig.getRooms());
+        LOGGER.at(Level.INFO).log("Generating dungeon '" + levelConfig.getName()
+                + "' seed=" + seed + " targetRooms=" + levelConfig.getRooms());
 
         List<Path> entrancePaths = DungeonConfig.resolveGlobs(levelConfig.getPrefabs().getEntrance());
         List<Path> roomPaths = DungeonConfig.resolveGlobs(levelConfig.getPrefabs().getRoom());
@@ -223,7 +223,7 @@ public class DungeonGenerator {
         }
         openExits.clear();
 
-        LOGGER.at(Level.INFO).log("Dungeon complete: %d rooms, boss=%s", roomsPlaced, bossPlaced
+        LOGGER.at(Level.INFO).log("Dungeon complete: " + roomsPlaced + " rooms, boss=" + bossPlaced
                 + ", totalRoomData=" + level.getRooms().size());
     }
 
@@ -355,7 +355,8 @@ public class DungeonGenerator {
                     label, chosen.getFileName(), pastePos, pasteRot, newExitCount);
             return true;
         } catch (Exception e) {
-            LOGGER.at(Level.WARNING).withCause(e).log("[%s] force-paste failed", label);
+            LOGGER.at(Level.WARNING).log("[" + label + "] force-paste failed", e);
+            return false;
             return false;
         }
     }

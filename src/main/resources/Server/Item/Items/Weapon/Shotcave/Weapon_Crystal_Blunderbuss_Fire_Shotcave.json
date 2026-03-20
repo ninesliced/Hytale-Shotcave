@@ -5,7 +5,7 @@
   "Categories": [
     "Items.Weapons"
   ],
-  "Icon": "Icons/ItemsGenerated/Weapon_Gun_Blunderbuss.png",
+  "Icon": "Icons/ItemsGenerated/Fire_Crystal_Blunderbuss.png",
   "Model": "Items/Weapons/Shotcave/Crystal_blunderbuss/CRYSTAL_BLUNDERBUSS.blockymodel",
   "Texture": "Items/Weapons/Shotcave/Crystal_blunderbuss/fire/FIRE_BLUNDERBUSS_TEXTURE.png",
   "PlayerAnimationsId": "Rifle",

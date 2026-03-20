@@ -15,10 +15,9 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.logging.Level;
 
-import com.hypixel.hytale.logger.HytaleLogger;
-import dev.ninesliced.shotcave.ShotcaveLog;
+import dev.ninesliced.shotcave.guns.WeaponDefinition;
+import dev.ninesliced.shotcave.guns.WeaponDefinitions;
 
 /**
  * Intercepts item entity creation/removal to apply custom pickup behavior
@@ -26,8 +25,6 @@ import dev.ninesliced.shotcave.ShotcaveLog;
  * in {@link ItemPickupTracker}.
  */
 public final class ItemDropSystem extends RefSystem<EntityStore> {
-
-    private static final HytaleLogger LOGGER = ShotcaveLog.forModule("Pickup");
 
     public ItemDropSystem() {
     }
@@ -54,22 +51,16 @@ public final class ItemDropSystem extends RefSystem<EntityStore> {
             return;
         }
 
-        LOGGER.at(Level.INFO).log("[ItemDrop] onEntityAdded itemId='%s'", itemId);
-
         String displayName = resolveDisplayName(itemId);
         String iconPath = resolveIconPath(itemId);
 
         boolean isFKey = ItemPickupConfig.isFKeyPickup(itemId);
         boolean isScoreCollect = ItemPickupConfig.isScoreCollect(itemId);
 
-        LOGGER.at(Level.INFO).log("[ItemDrop]   isFKey=%s isScoreCollect=%s", isFKey, isScoreCollect);
-
         if (!isFKey && !isScoreCollect) {
-            LOGGER.at(Level.INFO).log("[ItemDrop]   not tracked, skipping");
             return;
         }
 
-        LOGGER.at(Level.INFO).log("[ItemDrop]   TRACKING item, trackerSize=%d", ItemPickupTracker.size() + 1);
         ItemPickupTracker.track(new ItemPickupTracker.TrackedItem(
                 ref, itemId, displayName, iconPath, isFKey, isScoreCollect));
 
@@ -121,15 +112,9 @@ public final class ItemDropSystem extends RefSystem<EntityStore> {
      */
     @Nonnull
     private static String resolveDisplayName(@Nonnull String itemId) {
-        try {
-            Item item = Item.getAssetMap().getAsset(itemId);
-            if (item != null) {
-                String key = item.getTranslationKey();
-                if (key != null && !key.isBlank()) {
-                    return key;
-                }
-            }
-        } catch (Exception ignored) {
+        WeaponDefinition def = WeaponDefinitions.getById(itemId);
+        if (def != null) {
+            return def.getDisplayName();
         }
 
         String name = itemId;

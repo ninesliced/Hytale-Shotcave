@@ -1,17 +1,17 @@
 {
   "Type": "ModularGunShoot",
-  "RunTime": 0.12,
+  "RunTime": 0.1,
   "Effects": {
     "ItemAnimationId": "Shoot",
-    "WorldSoundEventId": "SFX_Blunderbuss_Fire",
-    "LocalSoundEventId": "SFX_Blunderbuss_Fire_Local",
+    "WorldSoundEventId": "SFX_Rifle_Fire",
+    "LocalSoundEventId": "SFX_Rifle_Fire_Local",
     "FirstPersonParticles": [
       {
         "SystemId": "RifleShooting",
         "PositionOffset": {
-          "X": -0.08,
-          "Z": 1.35,
-          "Y": -0.02
+          "X": -0.1,
+          "Z": 1.9,
+          "Y": 0.0
         },
         "RotationOffset": {
           "Yaw": 0,
@@ -23,8 +23,8 @@
       {
         "SystemId": "RifleShooting",
         "PositionOffset": {
-          "Z": 0.95,
-          "Y": 0.12
+          "Z": 1.1,
+          "Y": 0.1
         },
         "RotationOffset": {
           "Pitch": 90
@@ -32,24 +32,24 @@
       }
     ]
   },
-  "DamageRoot": "Root_Shotcave_Crystal_Blunderbuss_Projectile_Hit",
-  "MissRoot": "Root_Shotcave_Crystal_Blunderbuss_Miss",
-  "Range": 24,
-  "Pellets": 8,
-  "SpreadDegrees": 7.5,
+  "DamageRoot": "Root_Shotcave_Crystal_Musket_Projectile_Hit",
+  "MissRoot": "Root_Shotcave_Projectile_Miss",
+  "Range": 120,
+  "Pellets": 1,
+  "SpreadDegrees": 0.05,
   "TrailParticleId": "Shotcave_ElectricBeam",
-  "TrailStepDistance": 0.7,
-  "TrailScale": 0.14,
-  "TrailColorR": 210,
-  "TrailColorG": 90,
+  "TrailStepDistance": 1.2,
+  "TrailScale": 0.22,
+  "TrailColorR": 255,
+  "TrailColorG": 255,
   "TrailColorB": 255,
   "ImpactParticleId": "RifleShooting_Impact",
-  "ImpactParticleScale": 0.45,
-  "MuzzleHeightOffset": 1.35,
-  "MuzzleForwardOffset": -1.35,
+  "ImpactParticleScale": 0.6,
+  "MuzzleHeightOffset": 1.4,
+  "MuzzleForwardOffset": -1.55,
   "MuzzleRightOffset": 0.35,
   "UseAmmo": true,
-  "MaxAmmo": 6,
+  "MaxAmmo": 5,
   "AmmoPerShot": 1,
   "AimAssist": true,
   "Next": "Shotcave_Update_Hud"

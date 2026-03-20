@@ -1,6 +1,7 @@
 package dev.ninesliced.shotcave;
 
 import com.hypixel.hytale.server.core.event.events.ecs.BreakBlockEvent;
+import com.hypixel.hytale.server.core.event.events.ecs.DropItemEvent;
 import com.hypixel.hytale.server.core.event.events.ecs.SwitchActiveSlotEvent;
 import com.hypixel.hytale.server.core.event.events.player.AddPlayerToWorldEvent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerConnectEvent;
@@ -26,6 +27,10 @@ import dev.ninesliced.shotcave.crate.CrateBreakDropSystem;
 import dev.ninesliced.shotcave.dungeon.DungeonConfig;
 import dev.ninesliced.shotcave.dungeon.DungeonInstanceService;
 import dev.ninesliced.shotcave.dungeon.GameManager;
+import dev.ninesliced.shotcave.dungeon.GameManager;
+import dev.ninesliced.shotcave.inventory.InventoryLockService;
+import dev.ninesliced.shotcave.inventory.DropBlockSystem;
+import dev.ninesliced.shotcave.inventory.SlotSwitchBlockSystem;
 import dev.ninesliced.shotcave.guns.WeaponRegistry;
 import dev.ninesliced.shotcave.hud.AmmoHudRuntime;
 import dev.ninesliced.shotcave.interactions.BreakSoftBlockInteraction;
@@ -43,6 +48,8 @@ import dev.ninesliced.shotcave.pickup.ItemDropSystem;
 import dev.ninesliced.shotcave.pickup.ItemPickupConfig;
 import dev.ninesliced.shotcave.pickup.ItemPickupHudRuntime;
 import dev.ninesliced.shotcave.pickup.ItemPickupInteraction;
+import dev.ninesliced.shotcave.tooltip.WeaponTooltipAdapter;
+import dev.ninesliced.shotcave.tooltip.WeaponVirtualItems;
 import dev.ninesliced.shotcave.party.PartyManager;
 import dev.ninesliced.shotcave.party.ShotcavePartyPageSupplier;
 import dev.ninesliced.shotcave.systems.ActiveSlotHudUpdateSystem;
@@ -52,7 +59,23 @@ import dev.ninesliced.shotcave.systems.DashComponent;
 import dev.ninesliced.shotcave.systems.DashPlayerAddedSystem;
 import dev.ninesliced.shotcave.systems.DashRollSystem;
 import dev.ninesliced.shotcave.systems.DashTrailSystem;
+import dev.ninesliced.shotcave.systems.DeathComponent;
+import dev.ninesliced.shotcave.systems.DamageEffectComponent;
+import dev.ninesliced.shotcave.systems.DamageEffectTickSystem;
+import dev.ninesliced.shotcave.systems.DamageEffectVisualCleanupSystem;
+import dev.ninesliced.shotcave.systems.SummonedEffectComponent;
+import dev.ninesliced.shotcave.systems.SummonedNPCDamageEffectSystem;
+import dev.ninesliced.shotcave.systems.VoidSafetySystem;
+import dev.ninesliced.shotcave.systems.DeathAggroSuppressionSystem;
+import dev.ninesliced.shotcave.systems.DeathPlayerAddedSystem;
+import dev.ninesliced.shotcave.systems.DungeonLethalDamageSystem;
+import dev.ninesliced.shotcave.systems.PlayerDeathSystem;
+import dev.ninesliced.shotcave.systems.ReviveInteractionPacketHandler;
+import dev.ninesliced.shotcave.systems.RevivePromptHudRuntime;
+import dev.ninesliced.shotcave.systems.ReviveTickSystem;
 import com.hypixel.hytale.component.ComponentType;
+import com.hypixel.hytale.server.core.entity.UUIDComponent;
+import com.hypixel.hytale.server.core.inventory.Inventory;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
@@ -68,6 +91,8 @@ public class Shotcave extends JavaPlugin {
     private final TopCameraService cameraService = new TopCameraService();
     private final AmmoHudRuntime ammoHudRuntime = new AmmoHudRuntime();
     private final ItemPickupHudRuntime itemPickupHudRuntime = new ItemPickupHudRuntime();
+    private final RevivePromptHudRuntime revivePromptHudRuntime = new RevivePromptHudRuntime();
+    private final InventoryLockService inventoryLockService = new InventoryLockService();
     private final DungeonInstanceService dungeonInstanceService = new DungeonInstanceService(this);
     private final PartyManager partyManager = new PartyManager(this);
     private final GameManager gameManager = new GameManager(this);
@@ -111,6 +136,14 @@ public class Shotcave extends JavaPlugin {
         WeaponRegistry.registerAll();
 
         PacketAdapters.registerInbound(new FKeyPickupPacketHandler());
+        PacketAdapters.registerInbound(new ReviveInteractionPacketHandler());
+
+        // Weapon tooltip adapter — rewrites inventory items to virtual
+        // IDs with per-instance name/description/quality, and translates
+        // inbound interaction packets back to real IDs.
+        WeaponTooltipAdapter tooltipAdapter = new WeaponTooltipAdapter();
+        PacketAdapters.registerOutbound(tooltipAdapter);
+        PacketAdapters.registerInbound(tooltipAdapter);
 
         try {
             this.getEntityStoreRegistry().registerEntityEventType(SwitchActiveSlotEvent.class);
@@ -139,12 +172,47 @@ public class Shotcave extends JavaPlugin {
                 new DashRollSystem(this.cameraService, dashComponentType));
         this.getEntityStoreRegistry().registerSystem(
                 new DashTrailSystem(dashComponentType, transformComponentType, playerRefComponentType));
+// Death system — register component, then the systems that use it.
+        ComponentType<EntityStore, DeathComponent> deathComponentType =
+                this.getEntityStoreRegistry().registerComponent(DeathComponent.class, DeathComponent::new);
+        DeathComponent.setComponentType(deathComponentType);
 
+        this.getEntityStoreRegistry().registerSystem(
+                new DeathPlayerAddedSystem(playerRefComponentType, deathComponentType));
+        this.getEntityStoreRegistry().registerSystem(new DungeonLethalDamageSystem());
+        this.getEntityStoreRegistry().registerSystem(new PlayerDeathSystem());
+        this.getEntityStoreRegistry().registerSystem(new ReviveTickSystem());
+        this.getEntityStoreRegistry().registerSystem(new DeathAggroSuppressionSystem());
+
+        // Damage effect DoT system — register component, then system.
+        ComponentType<EntityStore, DamageEffectComponent> damageEffectComponentType =
+                this.getEntityStoreRegistry().registerComponent(DamageEffectComponent.class, DamageEffectComponent::new);
+        DamageEffectComponent.setComponentType(damageEffectComponentType);
+
+        this.getEntityStoreRegistry().registerSystem(new DamageEffectTickSystem());
+        this.getEntityStoreRegistry().registerSystem(new DamageEffectVisualCleanupSystem());
+
+        // Summoned NPC effect system — marks summoned NPCs with weapon effect, applies DoT on their hits
+        ComponentType<EntityStore, SummonedEffectComponent> summonedEffectComponentType =
+                this.getEntityStoreRegistry().registerComponent(SummonedEffectComponent.class, SummonedEffectComponent::new);
+        SummonedEffectComponent.setComponentType(summonedEffectComponentType);
+
+        this.getEntityStoreRegistry().registerSystem(new SummonedNPCDamageEffectSystem());
+
+        // Inventory lock: block drops and slot switches beyond slot 2 when locked
+        this.getEntityStoreRegistry().registerSystem(new DropBlockSystem(this.inventoryLockService));
+        this.getEntityStoreRegistry().registerSystem(new SlotSwitchBlockSystem(this.inventoryLockService));
+        this.getEntityStoreRegistry().registerSystem(new VoidSafetySystem(this.inventoryLockService));
         // Item pickup: intercept item entity spawns to apply F-key / score-collect
         // behaviour.
         this.getEntityStoreRegistry().registerSystem(new ItemDropSystem());
         this.getEntityStoreRegistry().registerSystem(new CrateBreakDropSystem());
         this.getEntityStoreRegistry().registerSystem(new CoinCollectionSystem());
+
+        try {
+            this.getEntityStoreRegistry().registerEntityEventType(DropItemEvent.PlayerRequest.class);
+        } catch (IllegalArgumentException ignored) {
+        }
 
         this.getEventRegistry().register(PlayerConnectEvent.class, this::onPlayerConnect);
         this.getEventRegistry().registerGlobal(AddPlayerToWorldEvent.class, this::onPlayerAddedToWorld);
@@ -155,17 +223,21 @@ public class Shotcave extends JavaPlugin {
             this.partyManager.handleDisconnect(event.getPlayerRef());
             this.cameraService.clearState(event.getPlayerRef());
             this.gameManager.onPlayerDisconnect(event.getPlayerRef().getUuid());
+            this.gameManager.onPlayerDisconnect(event.getPlayerRef());
+            WeaponVirtualItems.onPlayerDisconnect(event.getPlayerRef().getUuid());
         });
         this.getCommandRegistry().registerCommand(new ShotcaveCommand(this));
         this.getCommandRegistry().registerCommand(new PartyCommand(this));
 
         this.ammoHudRuntime.start(this);
         this.itemPickupHudRuntime.start(this);
+        this.revivePromptHudRuntime.start(this);
     }
 
     @Override
     protected void shutdown() {
         this.itemPickupHudRuntime.stop();
+        this.revivePromptHudRuntime.stop();
         this.ammoHudRuntime.stop();
         this.gameManager.shutdown();
         instance = null;
@@ -177,6 +249,7 @@ public class Shotcave extends JavaPlugin {
         cameraService.registerDisabledByDefault(playerRef);
         ammoHudRuntime.onPlayerConnect(playerRef);
         itemPickupHudRuntime.onPlayerConnect(playerRef);
+        revivePromptHudRuntime.onPlayerConnect(playerRef);
         gameManager.onPlayerConnect(playerRef);
     }
 
@@ -238,6 +311,11 @@ public class Shotcave extends JavaPlugin {
     @Nonnull
     public GameManager getGameManager() {
         return this.gameManager;
+    }
+
+    @Nonnull
+    public InventoryLockService getInventoryLockService() {
+        return this.inventoryLockService;
     }
 
     @NonNullDecl
