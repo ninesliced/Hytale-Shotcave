@@ -16,6 +16,7 @@
     "weapons/blunderbuss_fire.json",
     "weapons/blunderbuss_ice.json",
     "weapons/blunderbuss_lightning.json",
-    "weapons/blunderbuss_void.json"
+    "weapons/blunderbuss_void.json",
+    "weapons/crystal_sword.json"
   ]
 }

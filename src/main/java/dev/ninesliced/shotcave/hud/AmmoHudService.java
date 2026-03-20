@@ -44,24 +44,27 @@ public final class AmmoHudService {
         // Look up weapon definition for base stats
         WeaponDefinition definition = itemId != null ? WeaponDefinitions.getById(itemId) : null;
 
+        WeaponCategory category = definition != null ? definition.getCategory() : null;
+        boolean isMelee = category == WeaponCategory.MELEE;
+
         int baseMaxAmmo = definition != null && definition.getBaseMaxAmmo() > 0
                 ? definition.getBaseMaxAmmo()
                 : GunItemMetadata.getBaseMaxAmmo(heldItem, -1);
-        if (baseMaxAmmo <= 0) {
+        if (baseMaxAmmo <= 0 && !isMelee) {
             hide(player, playerRef);
             return;
         }
 
-        int maxAmmo = GunItemMetadata.getEffectiveMaxAmmo(heldItem, baseMaxAmmo);
+        int maxAmmo = isMelee ? 0 : GunItemMetadata.getEffectiveMaxAmmo(heldItem, baseMaxAmmo);
 
-        int ammo = GunItemMetadata.getInt(heldItem, GunItemMetadata.AMMO_KEY, maxAmmo);
+        int ammo = isMelee ? 0 : GunItemMetadata.getInt(heldItem, GunItemMetadata.AMMO_KEY, maxAmmo);
         ammo = Math.max(0, Math.min(ammo, maxAmmo));
 
         // Read weapon attributes from BSON
         WeaponRarity rarity = GunItemMetadata.getRarity(heldItem);
         DamageEffect effect = GunItemMetadata.getEffect(heldItem);
         List<WeaponModifier> modifiers = GunItemMetadata.getModifiers(heldItem);
-        WeaponCategory category = definition != null ? definition.getCategory() : WeaponCategory.LASER;
+        if (category == null) category = WeaponCategory.LASER;
 
         long state = computeState(itemId, ammo, baseMaxAmmo, maxAmmo, rarity.ordinal(), effect.ordinal(), modifiers.hashCode());
         UUID uuid = playerRef.getUuid();

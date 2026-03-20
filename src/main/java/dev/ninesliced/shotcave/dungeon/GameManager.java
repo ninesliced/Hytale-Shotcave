@@ -742,7 +742,7 @@ public final class GameManager {
                 continue;
             }
 
-            for (UUID deadPlayerId : game.getDeadPlayers()) {
+            for (UUID deadPlayerId : new ArrayList<>(game.getDeadPlayers())) {
                 PlayerRef playerRef = Universe.get().getPlayer(deadPlayerId);
                 if (playerRef == null || !playerRef.isValid()) {
                     continue;
@@ -1012,7 +1012,12 @@ public final class GameManager {
             }
 
             try {
-                hotbar.setItemStackForSlot(targetSlot, InventoryHelper.createItem(itemId));
+                ItemStack item = InventoryHelper.createItem(itemId);
+                if (item == null) {
+                    LOGGER.warning("Start equipment item not found in asset store: " + itemId);
+                    continue;
+                }
+                hotbar.setItemStackForSlot(targetSlot, item);
             } catch (Exception e) {
                 LOGGER.warning("Failed to give start equipment item: " + itemId);
             }

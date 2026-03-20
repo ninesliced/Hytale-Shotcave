@@ -44,6 +44,7 @@ import dev.ninesliced.shotcave.guns.GunItemMetadata;
 import dev.ninesliced.shotcave.guns.WeaponCategory;
 import dev.ninesliced.shotcave.guns.WeaponDefinition;
 import dev.ninesliced.shotcave.guns.WeaponModifierType;
+import dev.ninesliced.shotcave.guns.WeaponRarity;
 import dev.ninesliced.shotcave.guns.WeaponDefinitions;
 import dev.ninesliced.shotcave.ShotcaveLog;
 import com.hypixel.hytale.logger.HytaleLogger;
@@ -285,6 +286,7 @@ public final class ModularGunShootInteraction extends SimpleInstantInteraction {
         }
 
         DamageEffect dotEffect = heldItem != null ? GunItemMetadata.getEffect(heldItem) : DamageEffect.NONE;
+        WeaponRarity weaponRarity = heldItem != null ? GunItemMetadata.getRarity(heldItem) : WeaponRarity.BASIC;
 
         if (this.useAmmo) {
             if (heldItem == null) {
@@ -350,7 +352,7 @@ public final class ModularGunShootInteraction extends SimpleInstantInteraction {
                     applyKnockback(commandBuffer, context.getEntity(), hit.target, effectiveKnockback);
                 }
                 if (effectedTargets != null && effectedTargets.add(hit.target.getIndex())) {
-                    DamageEffectRuntime.apply(commandBuffer, hit.target, dotEffect);
+                    DamageEffectRuntime.apply(commandBuffer, hit.target, dotEffect, weaponRarity);
                 }
                 continue;
             }
