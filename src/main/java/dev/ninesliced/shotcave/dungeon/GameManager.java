@@ -49,6 +49,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.npc.NPCPlugin;
 import com.hypixel.hytale.server.npc.util.InventoryHelper;
 import dev.ninesliced.shotcave.Shotcave;
+import dev.ninesliced.shotcave.inventory.InventoryLockService;
 import dev.ninesliced.shotcave.hud.DungeonInfoHud;
 import dev.ninesliced.shotcave.hud.DeathCountdownHud;
 import dev.ninesliced.shotcave.hud.PartyStatusHud;
@@ -358,6 +359,15 @@ public final class GameManager {
             Transform returnPoint = game.getReturnPoints().get(playerId);
             World trackedReturnWorld = game.getReturnWorlds().get(playerId);
 
+            // Immediately reset death state and remove Invulnerable/Intangible
+            // BEFORE deferring the rest to world.execute(). This prevents
+            // ReviveTickSystem from re-applying them on the next tick.
+            DeathComponent deathComponent = store.getComponent(ref, DeathComponent.getComponentType());
+            if (deathComponent != null) {
+                deathComponent.reset();
+            }
+            DeathStateController.clear(store, ref);
+
             plugin.getCameraService().restoreDefault(playerRef);
 
             store.getExternalData().getWorld().execute(() -> {
@@ -367,18 +377,14 @@ public final class GameManager {
 
                 Player player = store.getComponent(ref, Player.getComponentType());
                 if (player == null) {
+                    plugin.getInventoryLockService().remove(playerId);
                     game.setPlayerInInstance(playerId, false);
                     return;
                 }
 
                 hideDungeonHuds(player, playerRef);
 
-                DeathComponent deathComponent = store.getComponent(ref, DeathComponent.getComponentType());
-                if (deathComponent != null) {
-                    deathComponent.reset();
-                }
-
-                DeathStateController.clear(store, ref);
+                plugin.getInventoryLockService().unlock(player, playerId);
                 if (game.isPlayerInInstance(playerId)) {
                     restorePlayerInventory(playerId, player, true);
                 } else {
@@ -474,6 +480,7 @@ public final class GameManager {
                         }
 
                         DeathStateController.clear(store, ref);
+                        plugin.getInventoryLockService().unlock(player, playerId);
                         restorePlayerInventory(playerId, player, true);
                         resetPlayerStatus(player, ref, store);
 
@@ -507,6 +514,7 @@ public final class GameManager {
     public void onPlayerDisconnect(@Nonnull PlayerRef playerRef) {
         UUID playerId = playerRef.getUuid();
         plugin.getCameraService().restoreDefault(playerRef);
+        plugin.getInventoryLockService().remove(playerId);
         despawnReviveMarker(playerId);
 
         Ref<EntityStore> ref = playerRef.getReference();
@@ -696,6 +704,7 @@ public final class GameManager {
         hideDungeonHuds(player, playerRef);
 
         // Restore inventory using the Player component from the event holder (still valid during this event).
+        plugin.getInventoryLockService().unlock(player, playerRef.getUuid());
         restorePlayerInventory(playerRef.getUuid(), player, false);
 
         // Reset health/stamina only if the entity ref is still valid
@@ -815,7 +824,10 @@ public final class GameManager {
             restoreContainer(inventory.getUtility(), saveData.utilityItems);
 
             if (saveData.activeHotbarSlot >= 0 && saveData.activeHotbarSlot < inventory.getHotbar().getCapacity()) {
-                inventory.setActiveHotbarSlot(saveData.activeHotbarSlot);
+                Ref<EntityStore> ref = player.getReference();
+                if (ref != null) {
+                    inventory.setActiveHotbarSlot(ref, saveData.activeHotbarSlot, ref.getStore());
+                }
             }
 
             syncInventoryAndSelectedSlots(playerRef, inventory);
@@ -843,6 +855,7 @@ public final class GameManager {
         clearPlayerInventory(player);
         resetPlayerStatus(player, ref, store);
         giveStartEquipment(playerRef, player, config);
+        plugin.getInventoryLockService().lock(player, playerId);
         plugin.getCameraService().setEnabled(playerRef, true);
         game.setPlayerInInstance(playerId, true);
     }
@@ -1006,7 +1019,10 @@ public final class GameManager {
         }
 
         if (inventory.getActiveHotbarSlot() != preferredSlot) {
-            inventory.setActiveHotbarSlot(preferredSlot);
+            Ref<EntityStore> ref = player.getReference();
+            if (ref != null) {
+                inventory.setActiveHotbarSlot(ref, preferredSlot, ref.getStore());
+            }
         }
 
         syncInventoryAndSelectedSlots(playerRef, inventory);
@@ -1014,7 +1030,7 @@ public final class GameManager {
 
     private byte getPreferredHotbarSlot(@Nonnull Inventory inventory, @Nonnull ItemContainer hotbar) {
         byte activeSlot = inventory.getActiveHotbarSlot();
-        if (activeSlot >= 0 && activeSlot < hotbar.getCapacity()) {
+        if (activeSlot >= 0 && activeSlot < InventoryLockService.MAX_WEAPON_SLOTS) {
             return activeSlot;
         }
         return 0;
@@ -1278,6 +1294,7 @@ public final class GameManager {
             // Give back start equipment
             clearPlayerInventory(player);
             giveStartEquipment(playerRef, player, config);
+            plugin.getInventoryLockService().lock(player, playerId);
         }
 
         game.clearDeadPlayers();
@@ -1290,6 +1307,7 @@ public final class GameManager {
      * Called by death systems that don't have direct access to private helpers.
      */
     public void clearPlayerInventoryPublic(@Nonnull Player player, @Nonnull PlayerRef playerRef) {
+        plugin.getInventoryLockService().unlock(player, playerRef.getUuid());
         clearPlayerInventory(player);
         if (player.getInventory() != null) {
             syncInventoryAndSelectedSlots(playerRef, player.getInventory());
@@ -1309,6 +1327,7 @@ public final class GameManager {
     public void giveStartEquipmentPublic(@Nonnull PlayerRef playerRef, @Nonnull Player player,
                                           @Nonnull DungeonConfig config) {
         giveStartEquipment(playerRef, player, config);
+        plugin.getInventoryLockService().lock(player, playerRef.getUuid());
     }
 
     public void spawnReviveMarker(@Nonnull CommandBuffer<EntityStore> commandBuffer,

@@ -10,8 +10,12 @@ import com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain;
 import com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChains;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.entity.ItemUtils;
+import com.hypixel.hytale.server.core.inventory.Inventory;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
+import com.hypixel.hytale.server.core.inventory.container.ItemContainer;
 import com.hypixel.hytale.server.core.inventory.transaction.ItemStackTransaction;
+import com.hypixel.hytale.protocol.packets.inventory.UpdatePlayerInventory;
 import com.hypixel.hytale.server.core.io.adapter.PlayerPacketWatcher;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.item.ItemComponent;
@@ -22,6 +26,8 @@ import com.hypixel.hytale.server.core.util.NotificationUtil;
 
 import javax.annotation.Nonnull;
 
+import dev.ninesliced.shotcave.Shotcave;
+import dev.ninesliced.shotcave.inventory.InventoryLockService;
 import dev.ninesliced.shotcave.systems.DeathComponent;
 
 /**
@@ -193,6 +199,13 @@ public final class FKeyPickupPacketHandler implements PlayerPacketWatcher {
             return;
         }
 
+        // When the player's inventory is locked (dungeon), use the 3-slot weapon swap logic.
+        Shotcave shotcave = Shotcave.getInstance();
+        if (shotcave != null && shotcave.getInventoryLockService().isLocked(playerRef.getUuid())) {
+            collectItemLocked(tracked, player, playerRef, playerEntityRef, store, itemRef, itemComponent, itemStack);
+            return;
+        }
+
         ItemStackTransaction transaction = player.giveItem(
                 itemStack, playerEntityRef, store);
         ItemStack remainder = transaction.getRemainder();
@@ -218,6 +231,69 @@ public final class FKeyPickupPacketHandler implements PlayerPacketWatcher {
             // Inventory full — re-track, item stays in world.
             ItemPickupTracker.track(tracked);
         }
+    }
+
+    /**
+     * Locked-inventory pickup: places the weapon in the first empty slot (0-2),
+     * or swaps the held weapon if all 3 slots are full (dropping the old one).
+     */
+    private static void collectItemLocked(@Nonnull ItemPickupTracker.TrackedItem tracked,
+            @Nonnull Player player,
+            @Nonnull PlayerRef playerRef,
+            @Nonnull Ref<EntityStore> playerEntityRef,
+            @Nonnull Store<EntityStore> store,
+            @Nonnull Ref<EntityStore> itemRef,
+            @Nonnull ItemComponent itemComponent,
+            @Nonnull ItemStack newWeapon) {
+
+        Inventory inventory = player.getInventory();
+        if (inventory == null) {
+            ItemPickupTracker.track(tracked);
+            return;
+        }
+
+        ItemContainer hotbar = inventory.getHotbar();
+        if (hotbar == null) {
+            ItemPickupTracker.track(tracked);
+            return;
+        }
+
+        short emptySlot = InventoryLockService.findEmptyWeaponSlot(hotbar);
+
+        if (emptySlot >= 0) {
+            // Free slot available — place directly.
+            hotbar.setItemStackForSlot(emptySlot, newWeapon);
+        } else {
+            // All 3 weapon slots full — swap with held slot.
+            byte activeSlot = inventory.getActiveHotbarSlot();
+            if (activeSlot < 0 || activeSlot >= InventoryLockService.MAX_WEAPON_SLOTS) {
+                activeSlot = 0;
+            }
+
+            ItemStack oldWeapon = hotbar.getItemStack(activeSlot);
+            hotbar.setItemStackForSlot(activeSlot, newWeapon);
+
+            // Drop the old weapon back into the world.
+            if (!ItemStack.isEmpty(oldWeapon)) {
+                ItemUtils.dropItem(playerEntityRef, oldWeapon, store);
+            }
+        }
+
+        // Sync inventory to client.
+        playerRef.getPacketHandler().writeNoCache(new UpdatePlayerInventory(
+                inventory.getStorage() != null ? inventory.getStorage().toPacket() : null,
+                inventory.getArmor() != null ? inventory.getArmor().toPacket() : null,
+                inventory.getHotbar() != null ? inventory.getHotbar().toPacket() : null,
+                inventory.getUtility() != null ? inventory.getUtility().toPacket() : null,
+                inventory.getTools() != null ? inventory.getTools().toPacket() : null,
+                inventory.getBackpack() != null ? inventory.getBackpack().toPacket() : null
+        ));
+
+        // Remove the picked-up entity from the world.
+        itemComponent.setRemovedByPlayerPickup(true);
+        store.removeEntity(itemRef, RemoveReason.REMOVE);
+
+        sendPickupNotification(playerRef, tracked, newWeapon.getQuantity());
     }
 
     private static void sendPickupNotification(@Nonnull PlayerRef playerRef,

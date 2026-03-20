@@ -73,7 +73,7 @@ public final class GivePartyPortalCommand extends AbstractPlayerCommand {
         byte activeSlot = inventory.getActiveHotbarSlot();
         if (activeSlot < 0) {
             activeSlot = 0;
-            inventory.setActiveHotbarSlot(activeSlot);
+            inventory.setActiveHotbarSlot(ref, activeSlot, store);
             playerRef.getPacketHandler().writeNoCache(new SetActiveSlot(-1, activeSlot));
         }
 

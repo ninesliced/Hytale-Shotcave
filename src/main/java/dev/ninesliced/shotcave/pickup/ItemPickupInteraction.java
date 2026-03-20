@@ -8,15 +8,23 @@ import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.protocol.InteractionState;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.server.core.entity.InteractionContext;
+import com.hypixel.hytale.server.core.entity.ItemUtils;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.inventory.Inventory;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
+import com.hypixel.hytale.server.core.inventory.container.ItemContainer;
 import com.hypixel.hytale.server.core.inventory.transaction.ItemStackTransaction;
+import com.hypixel.hytale.protocol.packets.inventory.UpdatePlayerInventory;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.item.ItemComponent;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInstantInteraction;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+
+import dev.ninesliced.shotcave.Shotcave;
+import dev.ninesliced.shotcave.inventory.InventoryLockService;
 
 import javax.annotation.Nonnull;
 
@@ -106,6 +114,46 @@ public final class ItemPickupInteraction extends SimpleInstantInteraction {
                 context.getState().state = InteractionState.Failed;
                 return;
             }
+        }
+
+        // Locked inventory (dungeon) — use 3-slot weapon swap logic.
+        Shotcave shotcave = Shotcave.getInstance();
+        PlayerRef playerRefComp = commandBuffer.getComponent(ref, PlayerRef.getComponentType());
+        if (shotcave != null && playerRefComp != null
+                && shotcave.getInventoryLockService().isLocked(playerRefComp.getUuid())) {
+            Inventory inventory = playerComponent.getInventory();
+            if (inventory == null) return;
+
+            ItemContainer hotbar = inventory.getHotbar();
+            if (hotbar == null) return;
+
+            short emptySlot = InventoryLockService.findEmptyWeaponSlot(hotbar);
+            if (emptySlot >= 0) {
+                hotbar.setItemStackForSlot(emptySlot, itemStack);
+            } else {
+                byte activeSlot = inventory.getActiveHotbarSlot();
+                if (activeSlot < 0 || activeSlot >= InventoryLockService.MAX_WEAPON_SLOTS) {
+                    activeSlot = 0;
+                }
+                ItemStack oldWeapon = hotbar.getItemStack(activeSlot);
+                hotbar.setItemStackForSlot(activeSlot, itemStack);
+                if (!ItemStack.isEmpty(oldWeapon)) {
+                    ItemUtils.dropItem(ref, oldWeapon, commandBuffer);
+                }
+            }
+
+            playerRefComp.getPacketHandler().writeNoCache(new UpdatePlayerInventory(
+                    inventory.getStorage() != null ? inventory.getStorage().toPacket() : null,
+                    inventory.getArmor() != null ? inventory.getArmor().toPacket() : null,
+                    inventory.getHotbar() != null ? inventory.getHotbar().toPacket() : null,
+                    inventory.getUtility() != null ? inventory.getUtility().toPacket() : null,
+                    inventory.getTools() != null ? inventory.getTools().toPacket() : null,
+                    inventory.getBackpack() != null ? inventory.getBackpack().toPacket() : null
+            ));
+            itemComponent.setRemovedByPlayerPickup(true);
+            commandBuffer.removeEntity(targetRef, RemoveReason.REMOVE);
+            playerComponent.notifyPickupItem(ref, itemStack, itemEntityPosition, commandBuffer);
+            return;
         }
 
         // Inventory transaction.

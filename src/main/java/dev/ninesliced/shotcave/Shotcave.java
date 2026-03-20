@@ -1,6 +1,7 @@
 package dev.ninesliced.shotcave;
 
 import com.hypixel.hytale.server.core.event.events.ecs.BreakBlockEvent;
+import com.hypixel.hytale.server.core.event.events.ecs.DropItemEvent;
 import com.hypixel.hytale.server.core.event.events.ecs.SwitchActiveSlotEvent;
 import com.hypixel.hytale.server.core.event.events.player.AddPlayerToWorldEvent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerConnectEvent;
@@ -26,6 +27,9 @@ import dev.ninesliced.shotcave.crate.CrateBreakDropSystem;
 import dev.ninesliced.shotcave.dungeon.DungeonConfig;
 import dev.ninesliced.shotcave.dungeon.DungeonInstanceService;
 import dev.ninesliced.shotcave.dungeon.GameManager;
+import dev.ninesliced.shotcave.inventory.InventoryLockService;
+import dev.ninesliced.shotcave.inventory.DropBlockSystem;
+import dev.ninesliced.shotcave.inventory.SlotSwitchBlockSystem;
 import dev.ninesliced.shotcave.guns.WeaponRegistry;
 import dev.ninesliced.shotcave.hud.AmmoHudRuntime;
 import dev.ninesliced.shotcave.interactions.BreakSoftBlockInteraction;
@@ -60,6 +64,7 @@ import dev.ninesliced.shotcave.systems.DamageEffectTickSystem;
 import dev.ninesliced.shotcave.systems.DamageEffectVisualCleanupSystem;
 import dev.ninesliced.shotcave.systems.SummonedEffectComponent;
 import dev.ninesliced.shotcave.systems.SummonedNPCDamageEffectSystem;
+import dev.ninesliced.shotcave.systems.VoidSafetySystem;
 import dev.ninesliced.shotcave.systems.DeathAggroSuppressionSystem;
 import dev.ninesliced.shotcave.systems.DeathPlayerAddedSystem;
 import dev.ninesliced.shotcave.systems.DungeonLethalDamageSystem;
@@ -68,6 +73,8 @@ import dev.ninesliced.shotcave.systems.ReviveInteractionPacketHandler;
 import dev.ninesliced.shotcave.systems.RevivePromptHudRuntime;
 import dev.ninesliced.shotcave.systems.ReviveTickSystem;
 import com.hypixel.hytale.component.ComponentType;
+import com.hypixel.hytale.server.core.entity.UUIDComponent;
+import com.hypixel.hytale.server.core.inventory.Inventory;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
@@ -84,6 +91,7 @@ public class Shotcave extends JavaPlugin {
     private final AmmoHudRuntime ammoHudRuntime = new AmmoHudRuntime();
     private final ItemPickupHudRuntime itemPickupHudRuntime = new ItemPickupHudRuntime();
     private final RevivePromptHudRuntime revivePromptHudRuntime = new RevivePromptHudRuntime();
+    private final InventoryLockService inventoryLockService = new InventoryLockService();
     private final DungeonInstanceService dungeonInstanceService = new DungeonInstanceService(this);
     private final PartyManager partyManager = new PartyManager(this);
     private final GameManager gameManager = new GameManager(this);
@@ -191,11 +199,21 @@ public class Shotcave extends JavaPlugin {
 
         this.getEntityStoreRegistry().registerSystem(new SummonedNPCDamageEffectSystem());
 
+        // Inventory lock: block drops and slot switches beyond slot 2 when locked
+        this.getEntityStoreRegistry().registerSystem(new DropBlockSystem(this.inventoryLockService));
+        this.getEntityStoreRegistry().registerSystem(new SlotSwitchBlockSystem(this.inventoryLockService));
+        this.getEntityStoreRegistry().registerSystem(new VoidSafetySystem(this.inventoryLockService));
+
         // Item pickup: intercept item entity spawns to apply F-key / score-collect
         // behaviour.
         this.getEntityStoreRegistry().registerSystem(new ItemDropSystem());
         this.getEntityStoreRegistry().registerSystem(new CrateBreakDropSystem());
         this.getEntityStoreRegistry().registerSystem(new CoinCollectionSystem());
+
+        try {
+            this.getEntityStoreRegistry().registerEntityEventType(DropItemEvent.PlayerRequest.class);
+        } catch (IllegalArgumentException ignored) {
+        }
 
         this.getEventRegistry().register(PlayerConnectEvent.class, this::onPlayerConnect);
         this.getEventRegistry().registerGlobal(AddPlayerToWorldEvent.class, this::onPlayerAddedToWorld);
@@ -293,6 +311,11 @@ public class Shotcave extends JavaPlugin {
     @Nonnull
     public GameManager getGameManager() {
         return this.gameManager;
+    }
+
+    @Nonnull
+    public InventoryLockService getInventoryLockService() {
+        return this.inventoryLockService;
     }
 
     @NonNullDecl
