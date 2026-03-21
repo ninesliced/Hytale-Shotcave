@@ -6,6 +6,7 @@
   "weapons": [
     "weapons/pistol.json",
     "weapons/taser.json",
+    "weapons/blitzer_crystal.json",
     "weapons/voidlance.json",
     "weapons/kweebec_launcher.json",
     "weapons/musket_fire.json",

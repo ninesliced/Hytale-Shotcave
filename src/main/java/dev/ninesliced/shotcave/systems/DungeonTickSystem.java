@@ -73,6 +73,7 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
         Game game = gameManager.findGameForPlayer(playerRef.getUuid());
         if (game == null) {
             lastHudUpdateByPlayer.remove(playerRef.getUuid());
+            gameManager.normalizeOutsideDungeonState(playerRef, player, null);
             shotcave.getCameraService().restoreDefault(playerRef);
             DungeonInfoHud.hideHud(player, playerRef);
             PartyStatusHud.hideHud(player, playerRef);
@@ -82,6 +83,7 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
         // Only process if the game is in an active state
         if (game.getState() != GameState.ACTIVE && game.getState() != GameState.BOSS) {
             lastHudUpdateByPlayer.remove(playerRef.getUuid());
+            gameManager.normalizeOutsideDungeonState(playerRef, player, game);
             shotcave.getCameraService().restoreDefault(playerRef);
             DungeonInfoHud.hideHud(player, playerRef);
             PartyStatusHud.hideHud(player, playerRef);
@@ -90,6 +92,7 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
 
         if (game.getInstanceWorld() == null || player.getWorld() != game.getInstanceWorld()) {
             lastHudUpdateByPlayer.remove(playerRef.getUuid());
+            gameManager.normalizeOutsideDungeonState(playerRef, player, game);
             shotcave.getCameraService().restoreDefault(playerRef);
             DungeonInfoHud.hideHud(player, playerRef);
             PartyStatusHud.hideHud(player, playerRef);

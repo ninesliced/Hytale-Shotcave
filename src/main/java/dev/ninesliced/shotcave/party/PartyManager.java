@@ -315,19 +315,10 @@ public final class PartyManager {
             memberEntitiesMap.put(memberId, memberEntity);
             memberStoresMap.put(memberId, memberStore);
 
-            // Only capture return point if the member is in the same world as the
-            // leader — Store.getComponent() must be called from the owning thread.
-            // Members in a different world will use the leader's return point instead.
-            World memberWorld = memberStore.getExternalData().getWorld();
-            Transform memberReturnPoint = (memberWorld == leaderWorld)
-                    ? DungeonInstanceService.captureReturnPoint(memberStore, memberEntity)
-                    : leaderReturnPoint;
-
             membersToTeleport.add(new PendingTeleport(
                     memberRef,
                     memberEntity,
-                    memberStore,
-                    memberReturnPoint
+                    memberStore
             ));
         }
 
@@ -363,11 +354,12 @@ public final class PartyManager {
 
             for (PendingTeleport member : membersToTeleport) {
                 this.plugin.getCameraService().scheduleEnableOnNextReady(member.playerRef());
-                this.plugin.getDungeonInstanceService().sendPlayerToReadyInstance(
+                gameManager.sendPlayerToDungeon(
+                        game,
+                        member.playerRef(),
                         member.entityRef(),
                         member.store(),
                         java.util.concurrent.CompletableFuture.completedFuture(instanceWorld),
-                        member.returnPoint(),
                         status -> {
                             this.plugin.getCameraService().cancelDeferredEnable(member.playerRef());
                             member.playerRef().sendMessage(partyPrefix().insert(Message.raw(status).color("#ffb0b0")));
@@ -708,8 +700,7 @@ public final class PartyManager {
 
     private record PendingTeleport(PlayerRef playerRef,
                                    Ref<EntityStore> entityRef,
-                                   Store<EntityStore> store,
-                                   Transform returnPoint) {
+                                   Store<EntityStore> store) {
     }
 
     public record PartySnapshot(String id,

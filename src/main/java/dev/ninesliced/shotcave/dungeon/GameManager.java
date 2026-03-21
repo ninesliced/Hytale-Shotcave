@@ -31,6 +31,7 @@ import com.hypixel.hytale.server.core.modules.entity.component.ActiveAnimationCo
 import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.PersistentModel;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
+import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.modules.entity.player.PlayerSkinComponent;
 import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
@@ -74,6 +75,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
+import java.util.function.Consumer;
 
 import org.bson.BsonDocument;
 
@@ -135,15 +137,6 @@ public final class GameManager {
 
         for (UUID memberId : memberIds) {
             playerToParty.put(memberId, partyId);
-            PlayerRef ref = memberRefs.get(memberId);
-            if (ref != null) {
-                Ref<EntityStore> entityRef = memberEntities.get(memberId);
-                Store<EntityStore> store = memberStores.get(memberId);
-                if (entityRef != null && store != null) {
-                    game.getReturnPoints().put(memberId, DungeonInstanceService.captureReturnPoint(store, entityRef));
-                    game.getReturnWorlds().put(memberId, store.getExternalData().getWorld());
-                }
-            }
         }
 
         DungeonConfig.LevelConfig firstLevelConfig = config.getLevels().get(0);
@@ -346,6 +339,7 @@ public final class GameManager {
             Store<EntityStore> store = ref.getStore();
             Transform returnPoint = game.getReturnPoints().get(playerId);
             World trackedReturnWorld = game.getReturnWorlds().get(playerId);
+            boolean wasInInstance = game.isPlayerInInstance(playerId);
 
             // Immediately reset death state and remove Invulnerable/Intangible
             // BEFORE deferring the rest to world.execute(). This prevents
@@ -373,7 +367,7 @@ public final class GameManager {
                 hideDungeonHuds(player, playerRef);
 
                 plugin.getInventoryLockService().unlock(player, playerId);
-                if (game.isPlayerInInstance(playerId)) {
+                if (wasInInstance) {
                     restorePlayerInventory(playerId, player, true);
                 } else {
                     deleteSavedInventory(playerId);
@@ -382,11 +376,14 @@ public final class GameManager {
                 resetPlayerStatus(player, ref, store);
                 game.setPlayerInInstance(playerId, false);
 
-                if (returnPoint != null) {
+                if (wasInInstance && returnPoint != null) {
                     try {
-                        World returnWorld = Universe.get().getDefaultWorld();
+                        World returnWorld = trackedReturnWorld;
+                        if (returnWorld == null) {
+                            returnWorld = Universe.get().getDefaultWorld();
+                        }
                         if (returnWorld != null) {
-                            InstancesPlugin.teleportPlayerToInstance(ref, store, returnWorld, returnPoint);
+                            teleportPlayerToReturnPoint(ref, store, returnWorld, returnPoint);
                         }
                     } catch (Exception e) {
                         LOGGER.log(java.util.logging.Level.WARNING, "Failed to teleport player " + playerId + " back", e);
@@ -437,6 +434,7 @@ public final class GameManager {
         }
 
         game.removeDeadPlayer(playerId);
+        boolean wasInInstance = game.isPlayerInInstance(playerId);
         game.setPlayerInInstance(playerId, false);
 
         PlayerRef playerRef = Universe.get().getPlayer(playerId);
@@ -465,17 +463,21 @@ public final class GameManager {
 
                         DeathStateController.clear(store, ref);
                         plugin.getInventoryLockService().unlock(player, playerId);
-                        restorePlayerInventory(playerId, player, true);
+                        if (wasInInstance) {
+                            restorePlayerInventory(playerId, player, true);
+                        } else {
+                            deleteSavedInventory(playerId);
+                        }
                         resetPlayerStatus(player, ref, store);
 
-                        if (returnPoint != null) {
+                        if (wasInInstance && returnPoint != null) {
                             try {
                                 World returnWorld = trackedReturnWorld;
                                 if (returnWorld == null) {
                                     returnWorld = Universe.get().getDefaultWorld();
                                 }
                                 if (returnWorld != null && ref.isValid()) {
-                                    InstancesPlugin.teleportPlayerToInstance(ref, store, returnWorld, returnPoint);
+                                    teleportPlayerToReturnPoint(ref, store, returnWorld, returnPoint);
                                 }
                             } catch (Exception e) {
                                 LOGGER.log(java.util.logging.Level.WARNING, "Failed to teleport player " + playerId + " out of dungeon after leaving party", e);
@@ -565,17 +567,13 @@ public final class GameManager {
             return PartyManager.ActionResult.error("You cannot return to this dungeon because your saved inventory could not be found.");
         }
 
-        Transform returnPoint = game.getReturnPoints().get(playerId);
-        if (returnPoint == null) {
-            returnPoint = DungeonInstanceService.captureReturnPoint(store, ref);
-        }
-
         plugin.getCameraService().scheduleEnableOnNextReady(playerRef);
-        plugin.getDungeonInstanceService().sendPlayerToReadyInstance(
+        sendPlayerToDungeon(
+                game,
+                playerRef,
                 ref,
                 store,
                 CompletableFuture.completedFuture(instanceWorld),
-                returnPoint,
                 status -> {
                     plugin.getCameraService().cancelDeferredEnable(playerRef);
                     playerRef.sendMessage(PartyManager.partyPrefix().insert(Message.raw(status).color("#ffb0b0")));
@@ -619,24 +617,18 @@ public final class GameManager {
     }
 
     public void onPlayerAddedToWorld(@Nonnull PlayerRef playerRef, @Nonnull Player player, @Nonnull World world) {
-        Game game = findGameForPlayer(playerRef.getUuid());
+        UUID playerId = playerRef.getUuid();
+        Game game = findGameForPlayer(playerId);
+        boolean inActiveDungeonWorld = game != null
+                && game.getState() != GameState.COMPLETE
+                && world == game.getInstanceWorld();
 
-        if (game != null && game.getState() != GameState.COMPLETE && world != game.getInstanceWorld()) {
-            if (hasSavedInventory(playerRef.getUuid())) {
-                restorePlayerInventory(playerRef.getUuid(), player, false);
-                Ref<EntityStore> ref = playerRef.getReference();
-                if (ref != null && ref.isValid()) {
-                    resetPlayerStatus(player, ref, ref.getStore());
-                }
-                LOGGER.info("Restored inventory for " + playerRef.getUsername() + " upon arriving in non-dungeon world.");
-            }
+        if (!inActiveDungeonWorld) {
+            normalizeOutsideDungeonState(playerRef, player, game);
             return;
         }
 
-        if (game == null || game.getState() == GameState.COMPLETE || world != game.getInstanceWorld()) {
-            return;
-        }
-        if (game.isPlayerInInstance(playerRef.getUuid()) || !hasSavedInventory(playerRef.getUuid())) {
+        if (game.isPlayerInInstance(playerId) || !hasSavedInventory(playerId)) {
             return;
         }
 
@@ -647,7 +639,7 @@ public final class GameManager {
 
         Store<EntityStore> store = ref.getStore();
         DungeonConfig config = plugin.loadDungeonConfig();
-        preparePlayerForDungeon(game, playerRef.getUuid(), playerRef, player, ref, store, config);
+        preparePlayerForDungeon(game, playerId, playerRef, player, ref, store, config);
         PartyUiPage.refreshOpenPages();
     }
 
@@ -696,6 +688,106 @@ public final class GameManager {
         if (!closeGameIfInstanceEmpty(game)) {
             PartyUiPage.refreshOpenPages();
         }
+    }
+
+    public boolean normalizeOutsideDungeonState(@Nonnull PlayerRef playerRef,
+                                                @Nonnull Player player,
+                                                @Nullable Game game) {
+        UUID playerId = playerRef.getUuid();
+        Ref<EntityStore> ref = playerRef.getReference();
+        Store<EntityStore> store = ref != null && ref.isValid() ? ref.getStore() : null;
+        boolean inventoryLocked = plugin.getInventoryLockService().isLocked(playerId);
+        boolean hasSavedInventory = hasSavedInventory(playerId);
+        boolean shouldNormalize = inventoryLocked || hasSavedInventory;
+
+        if (store != null && ref != null) {
+            DeathComponent deathComponent = store.getComponent(ref, DeathComponent.getComponentType());
+            if (deathComponent != null && deathComponent.isDead()) {
+                shouldNormalize = true;
+            }
+        }
+
+        if (game != null) {
+            shouldNormalize |= game.isPlayerInInstance(playerId) || game.isPlayerDead(playerId);
+        }
+
+        if (!shouldNormalize) {
+            return false;
+        }
+
+        plugin.getCameraService().restoreDefault(playerRef);
+        hideDungeonHuds(player, playerRef);
+        plugin.getInventoryLockService().unlock(player, playerId);
+
+        if (hasSavedInventory) {
+            boolean deleteAfterRestore = game == null || game.getState() == GameState.COMPLETE;
+            restorePlayerInventory(playerId, player, deleteAfterRestore);
+        }
+
+        if (ref != null && ref.isValid() && store != null) {
+            resetPlayerStatus(player, ref, store);
+        }
+
+        if (game != null) {
+            game.removeDeadPlayer(playerId);
+            game.setPlayerInInstance(playerId, false);
+        }
+
+        LOGGER.info("Normalized player state for " + playerRef.getUsername()
+                + " upon arriving in non-dungeon world.");
+        return true;
+    }
+
+    public void sendPlayerToDungeon(@Nonnull Game game,
+                                    @Nonnull PlayerRef playerRef,
+                                    @Nonnull Ref<EntityStore> ref,
+                                    @Nonnull Store<EntityStore> store,
+                                    @Nonnull CompletableFuture<World> readyFuture,
+                                    @Nullable Consumer<String> failureConsumer) {
+        UUID playerId = playerRef.getUuid();
+        World currentWorld = store.getExternalData().getWorld();
+
+        readyFuture.whenComplete((targetWorld, throwable) -> {
+            if (throwable != null) {
+                LOGGER.log(java.util.logging.Level.WARNING, "Failed to prepare dungeon instance", throwable);
+                if (failureConsumer != null) {
+                    failureConsumer.accept("Dungeon creation failed.");
+                }
+                return;
+            }
+
+            currentWorld.execute(() -> {
+                if (!ref.isValid()) {
+                    return;
+                }
+
+                Player currentPlayer = store.getComponent(ref, Player.getComponentType());
+                if (currentPlayer == null) {
+                    return;
+                }
+
+                Transform returnPoint = DungeonInstanceService.captureReturnPoint(store, ref);
+                game.getReturnPoints().put(playerId, returnPoint);
+                game.getReturnWorlds().put(playerId, currentWorld);
+
+                try {
+                    InstancesPlugin.teleportPlayerToInstance(ref, store, targetWorld, returnPoint);
+                } catch (Exception exception) {
+                    LOGGER.log(java.util.logging.Level.WARNING, "Failed to send player to ready dungeon instance", exception);
+                    if (failureConsumer != null) {
+                        failureConsumer.accept("Teleport to dungeon failed.");
+                    }
+                }
+            });
+        });
+    }
+
+    private void teleportPlayerToReturnPoint(@Nonnull Ref<EntityStore> ref,
+                                             @Nonnull Store<EntityStore> store,
+                                             @Nonnull World returnWorld,
+                                             @Nonnull Transform returnPoint) {
+        Teleport teleport = Teleport.createForPlayer(returnWorld, returnPoint);
+        store.putComponent(ref, Teleport.getComponentType(), teleport);
     }
 
     public void onInstanceWorldRemoved(@Nonnull World world) {
@@ -796,6 +888,8 @@ public final class GameManager {
             Ref<EntityStore> ref = player.getReference();
             if (ref == null) return;
             Store<EntityStore> store = ref.getStore();
+
+            plugin.getInventoryLockService().unlock(player, playerId);
 
             clearPlayerInventory(player);
 
@@ -919,7 +1013,7 @@ public final class GameManager {
                             metadata
                     );
                     restored.setOverrideDroppedItemAnimation(saved.overrideDroppedItemAnimation);
-                    container.setItemStackForSlot(i, restored);
+                    container.setItemStackForSlot(i, restored, false);
                 } catch (Exception e) {
                     LOGGER.warning("Failed to restore item '" + saved.itemId + "' at slot " + i);
                 }
@@ -1413,6 +1507,16 @@ public final class GameManager {
         Ref<EntityStore> ref = player.getReference();
         if (ref != null) {
             syncInventoryAndSelectedSlots(playerRef, ref, ref.getStore());
+        }
+    }
+
+    /**
+     * Public accessor for {@link #resetPlayerStatus} used by death/revive systems.
+     */
+    public void resetPlayerStatusPublic(@Nonnull Player player) {
+        Ref<EntityStore> ref = player.getReference();
+        if (ref != null) {
+            resetPlayerStatus(player, ref, ref.getStore());
         }
     }
 

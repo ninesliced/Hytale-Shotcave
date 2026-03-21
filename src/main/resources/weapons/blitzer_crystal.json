@@ -1,0 +1,43 @@
+{
+  "itemId": "Weapon_Blitzer_Crystal_Shotcave",
+  "displayName": "Blitzer Crystal",
+  "category": "LASER",
+  "minRarity": "BASIC",
+  "maxRarity": "UNIQUE",
+  "spawnWeight": 10,
+  "baseStats": {
+    "range": 35,
+    "spread": 0,
+    "pellets": 1,
+    "knockback": 0
+  },
+  "primary": {
+    "id": "Shotcave_Blitzer_Crystal_Primary",
+    "cooldown": 3.0,
+    "requireAmmo": true,
+    "shotId": "Shotcave_Blitzer_Crystal_Shot",
+    "reloadId": "Shotcave_Blitzer_Crystal_Reload"
+  },
+  "reload": {
+    "id": "Shotcave_Blitzer_Crystal_Reload",
+    "cooldown": 1.4,
+    "runTime": 1.25,
+    "amount": 0,
+    "nextId": "Shotcave_Update_Hud",
+    "worldSfx": "SFX_Rifle_Fire",
+    "localSfx": "SFX_Rifle_Fire_Local",
+    "maxAmmo": 5
+  },
+  "damage": {
+    "id": "Shotcave_Blitzer_Crystal_Beam_Damage",
+    "amount": 8,
+    "type": "Projectile",
+    "worldSfx": "SFX_Arrow_FullCharge_Hit",
+    "localSfx": "SFX_Arrow_FullCharge_Hit",
+    "particleId": "Lightning",
+    "particleYOffset": 0
+  },
+  "extraRoots": [
+    "Shotcave_Projectile_Miss"
+  ]
+}

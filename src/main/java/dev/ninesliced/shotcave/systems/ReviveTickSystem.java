@@ -81,10 +81,30 @@ public final class ReviveTickSystem extends EntityTickingSystem<EntityStore> {
         Game game = gameManager.findGameForPlayer(playerRef.getUuid());
         if (game == null) {
             lastHudUpdateByPlayer.remove(playerRef.getUuid());
+            Player player = archetypeChunk.getComponent(index, Player.getComponentType());
+            if (player != null) {
+                gameManager.normalizeOutsideDungeonState(playerRef, player, null);
+            }
             hideAllHuds(playerRef, archetypeChunk, index, store);
             return;
         }
         if (game.getState() != GameState.ACTIVE && game.getState() != GameState.BOSS) {
+            lastHudUpdateByPlayer.remove(playerRef.getUuid());
+            Player player = archetypeChunk.getComponent(index, Player.getComponentType());
+            if (player != null) {
+                gameManager.normalizeOutsideDungeonState(playerRef, player, game);
+            }
+            hideAllHuds(playerRef, archetypeChunk, index, store);
+            return;
+        }
+
+        Ref<EntityStore> ref = archetypeChunk.getReferenceTo(index);
+        if (!ref.isValid()) {
+            return;
+        }
+
+        Player player = store.getComponent(ref, Player.getComponentType());
+        if (player == null || player.getWorld() != game.getInstanceWorld()) {
             lastHudUpdateByPlayer.remove(playerRef.getUuid());
             hideAllHuds(playerRef, archetypeChunk, index, store);
             return;
@@ -260,9 +280,11 @@ public final class ReviveTickSystem extends EntityTickingSystem<EntityStore> {
             Ref<EntityStore> dRef = deadPlayerRef.getReference();
             if (dRef != null && dRef.isValid()) {
                 Store<EntityStore> dStore = dRef.getStore();
-                DeathMovementController.restore(dStore, dRef, deadPlayerRef);
                 Player deadPlayer = dStore.getComponent(dRef, Player.getComponentType());
                 if (deadPlayer != null) {
+                    gameManager.clearPlayerInventoryPublic(deadPlayer, deadPlayerRef);
+                    gameManager.resetPlayerStatusPublic(deadPlayer);
+
                     Shotcave shotcave = Shotcave.getInstance();
                     if (shotcave != null) {
                         DungeonConfig config = shotcave.loadDungeonConfig();

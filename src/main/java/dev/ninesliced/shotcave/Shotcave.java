@@ -17,7 +17,9 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.config.ser
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.events.RemoveWorldEvent;
+import com.hypixel.hytale.component.Ref;
 import dev.ninesliced.shotcave.camera.TopCameraService;
 import dev.ninesliced.shotcave.coin.CoinCollectionSystem;
 import dev.ninesliced.shotcave.command.PartyCommand;
@@ -34,6 +36,7 @@ import dev.ninesliced.shotcave.guns.WeaponRegistry;
 import dev.ninesliced.shotcave.hud.AmmoHudRuntime;
 import dev.ninesliced.shotcave.interactions.BreakSoftBlockInteraction;
 import dev.ninesliced.shotcave.interactions.ChainLightningInteraction;
+import dev.ninesliced.shotcave.interactions.ContinuousBeamInteraction;
 import dev.ninesliced.shotcave.interactions.ConsumeAmmoInteraction;
 import dev.ninesliced.shotcave.interactions.GunValidationInteraction;
 import dev.ninesliced.shotcave.interactions.HideAmmoHudInteraction;
@@ -114,6 +117,7 @@ public class Shotcave extends JavaPlugin {
 
         this.getCodecRegistry(Interaction.CODEC)
                 .register("ChainLightning", ChainLightningInteraction.class, ChainLightningInteraction.CODEC)
+                .register("ContinuousBeam", ContinuousBeamInteraction.class, ContinuousBeamInteraction.CODEC)
                 .register("ModularGunShoot", ModularGunShootInteraction.class, ModularGunShootInteraction.CODEC)
                 .register("GunValidate", GunValidationInteraction.class, GunValidationInteraction.CODEC)
                 .register("Reload", ReloadInteraction.class, ReloadInteraction.CODEC)
@@ -256,7 +260,24 @@ public class Shotcave extends JavaPlugin {
     }
 
     private void onPlayerReady(@Nonnull PlayerReadyEvent event) {
-        this.cameraService.handlePlayerReady(event.getPlayerRef());
+        Ref<EntityStore> ref = event.getPlayerRef();
+        Player player = event.getPlayer();
+        PlayerRef playerRef = ref.getStore().getComponent(ref, PlayerRef.getComponentType());
+        if (playerRef == null || !playerRef.isValid()) {
+            return;
+        }
+
+        this.cameraService.handlePlayerReady(ref);
+
+        World world = player.getWorld();
+        if (world == null) {
+            return;
+        }
+
+        var game = this.gameManager.findGameForPlayer(playerRef.getUuid());
+        if (game == null || game.getInstanceWorld() != world) {
+            this.gameManager.normalizeOutsideDungeonState(playerRef, player, game);
+        }
     }
 
     private void onPlayerAddedToWorld(@Nonnull AddPlayerToWorldEvent event) {
