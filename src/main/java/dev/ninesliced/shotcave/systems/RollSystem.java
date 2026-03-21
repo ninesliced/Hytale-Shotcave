@@ -21,8 +21,9 @@ import com.hypixel.hytale.server.core.entity.movement.MovementStatesSystems;
 import com.hypixel.hytale.server.core.modules.entity.component.Invulnerable;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
-import com.hypixel.hytale.server.core.modules.splitvelocity.VelocityConfig;
+import com.hypixel.hytale.server.core.modules.physics.systems.GenericVelocityInstructionSystem;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.system.PlayerVelocityInstructionSystem;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.ninesliced.shotcave.camera.TopCameraService;
 
@@ -65,7 +66,11 @@ public final class RollSystem extends EntityTickingSystem<EntityStore> {
     private final Query<EntityStore> query;
     private static final Set<Dependency<EntityStore>> DEPENDENCIES = Set.of(
             new SystemDependency<>(Order.BEFORE,
-                    MovementStatesSystems.TickingSystem.class));
+                    MovementStatesSystems.TickingSystem.class),
+            new SystemDependency<>(Order.BEFORE,
+                    PlayerVelocityInstructionSystem.class),
+            new SystemDependency<>(Order.BEFORE,
+                    GenericVelocityInstructionSystem.class));
 
     @Nonnull
     private final TopCameraService cameraService;
@@ -171,7 +176,7 @@ public final class RollSystem extends EntityTickingSystem<EntityStore> {
         if (velocity == null) {
             return;
         }
-        velocity.addInstruction(impulse, new VelocityConfig(), ChangeVelocityType.Set);
+        velocity.addInstruction(impulse, null, ChangeVelocityType.Set);
 
         // Play roll animation on Status slot — avoids conflicting with the Movement
         // state machine which would hold the last frame and fight the built-in roll.

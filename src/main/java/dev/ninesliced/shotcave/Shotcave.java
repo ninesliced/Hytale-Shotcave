@@ -53,10 +53,6 @@ import dev.ninesliced.shotcave.party.ShotcavePartyPageSupplier;
 import dev.ninesliced.shotcave.systems.ActiveSlotHudUpdateSystem;
 import dev.ninesliced.shotcave.systems.DungeonTickSystem;
 import dev.ninesliced.shotcave.systems.PrefabSpawnTrackingSystem;
-import dev.ninesliced.shotcave.systems.DashComponent;
-import dev.ninesliced.shotcave.systems.DashPlayerAddedSystem;
-import dev.ninesliced.shotcave.systems.DashRollSystem;
-import dev.ninesliced.shotcave.systems.DashTrailSystem;
 import dev.ninesliced.shotcave.systems.DeathComponent;
 import dev.ninesliced.shotcave.systems.DamageEffectComponent;
 import dev.ninesliced.shotcave.systems.DamageEffectTickSystem;
@@ -160,20 +156,8 @@ public class Shotcave extends JavaPlugin {
         this.getEntityStoreRegistry().registerSystem(new DungeonTickSystem());
         this.getEntityStoreRegistry().registerSystem(new PrefabSpawnTrackingSystem());
 
-        // Dash system — register component, then the three systems that use it.
-        ComponentType<EntityStore, DashComponent> dashComponentType =
-                this.getEntityStoreRegistry().registerComponent(DashComponent.class, DashComponent::new);
-        DashComponent.setComponentType(dashComponentType);
-
         ComponentType<EntityStore, PlayerRef> playerRefComponentType = PlayerRef.getComponentType();
         ComponentType<EntityStore, TransformComponent> transformComponentType = TransformComponent.getComponentType();
-
-        this.getEntityStoreRegistry().registerSystem(
-                new DashPlayerAddedSystem(playerRefComponentType, dashComponentType));
-        this.getEntityStoreRegistry().registerSystem(
-                new DashRollSystem(this.cameraService, dashComponentType));
-        this.getEntityStoreRegistry().registerSystem(
-                new DashTrailSystem(dashComponentType, transformComponentType, playerRefComponentType));
 
         // Death system — register component, then the systems that use it.
         ComponentType<EntityStore, DeathComponent> deathComponentType =
