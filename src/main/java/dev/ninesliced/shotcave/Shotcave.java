@@ -26,6 +26,7 @@ import dev.ninesliced.shotcave.crate.CrateBreakDropSystem;
 import dev.ninesliced.shotcave.dungeon.DungeonConfig;
 import dev.ninesliced.shotcave.dungeon.DungeonInstanceService;
 import dev.ninesliced.shotcave.dungeon.GameManager;
+import dev.ninesliced.shotcave.dungeon.map.DungeonMapService;
 import dev.ninesliced.shotcave.inventory.InventoryLockService;
 import dev.ninesliced.shotcave.inventory.DropBlockSystem;
 import dev.ninesliced.shotcave.inventory.SlotSwitchBlockSystem;
@@ -96,6 +97,7 @@ public class Shotcave extends JavaPlugin {
     private final DungeonInstanceService dungeonInstanceService = new DungeonInstanceService(this);
     private final PartyManager partyManager = new PartyManager(this);
     private final GameManager gameManager = new GameManager(this);
+    private final DungeonMapService dungeonMapService = new DungeonMapService();
     private Path dungeonConfigPath;
 
     public Shotcave(@Nonnull JavaPluginInit init) {
@@ -332,6 +334,11 @@ public class Shotcave extends JavaPlugin {
     @Nonnull
     public InventoryLockService getInventoryLockService() {
         return this.inventoryLockService;
+    }
+
+    @Nonnull
+    public DungeonMapService getDungeonMapService() {
+        return this.dungeonMapService;
     }
 
     @NonNullDecl
