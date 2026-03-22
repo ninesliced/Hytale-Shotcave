@@ -19,6 +19,7 @@ import dev.ninesliced.shotcave.dungeon.GameState;
 import dev.ninesliced.shotcave.dungeon.Level;
 import dev.ninesliced.shotcave.dungeon.RoomData;
 import dev.ninesliced.shotcave.dungeon.RoomType;
+import dev.ninesliced.shotcave.camera.TopCameraService;
 import dev.ninesliced.shotcave.hud.DungeonInfoHud;
 import dev.ninesliced.shotcave.hud.PartyStatusHud;
 import dev.ninesliced.shotcave.party.PartyManager;
@@ -106,6 +107,9 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
         if (shouldRun(lastHudUpdateByPlayer, playerRef.getUuid(), now, HUD_UPDATE_INTERVAL_MS)) {
             updateHuds(player, playerRef, game, config, shotcave);
         }
+
+        // Smoothly rotate camera to match corridor direction when the player enters a new room.
+        updateCameraForRoom(ref, store, game, shotcave.getCameraService(), playerRef);
 
         // Run shared dungeon logic once per party cadence instead of once per entity.
         if (!shouldRun(lastLogicUpdateByParty, game.getPartyId(), now, LOGIC_UPDATE_INTERVAL_MS)) {
@@ -214,6 +218,25 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
         if (distSq < BOSS_ROOM_ENTER_DISTANCE * BOSS_ROOM_ENTER_DISTANCE) {
             gameManager.enterBossPhase(game);
         }
+    }
+
+    private void updateCameraForRoom(@Nonnull Ref<EntityStore> ref,
+                                      @Nonnull Store<EntityStore> store,
+                                      @Nonnull Game game,
+                                      @Nonnull TopCameraService cameraService,
+                                      @Nonnull PlayerRef playerRef) {
+        Level level = game.getCurrentLevel();
+        if (level == null) return;
+
+        TransformComponent transform = store.getComponent(ref, TransformComponent.getComponentType());
+        if (transform == null) return;
+
+        int px = (int) Math.floor(transform.getPosition().x);
+        int pz = (int) Math.floor(transform.getPosition().z);
+        RoomData room = level.getBlockOwner(px, pz);
+        if (room == null) return;
+
+        cameraService.updateCameraForRoom(playerRef, room.getRotation());
     }
 
     private boolean shouldRun(@Nonnull Map<UUID, Long> lastRunTimes,

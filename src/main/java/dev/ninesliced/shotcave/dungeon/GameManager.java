@@ -401,7 +401,7 @@ public final class GameManager {
 
         World instanceWorld = game.getInstanceWorld();
         if (instanceWorld != null) {
-            InstancesPlugin.safeRemoveInstance(instanceWorld);
+            instanceWorld.execute(() -> InstancesPlugin.safeRemoveInstance(instanceWorld));
         }
 
         playerToParty.entrySet().removeIf(e -> e.getValue().equals(game.getPartyId()));

@@ -108,9 +108,6 @@ public final class DungeonMapService {
     private static MapMarker[] buildMarkers(@Nonnull Level level) {
         List<MapMarker> markers = new ArrayList<>();
         addRoomMarker(markers, level.getEntranceRoom(), "Spawn", (byte) 74, (byte) -34, (byte) -128);
-        addRoomMarker(markers, level.getBossRoom(), "Boss", (byte) -17, (byte) 68, (byte) 68);
-        addRoomMarker(markers, level.getShopRoom(), "Shop", (byte) -89, (byte) -117, (byte) -6);
-        addRoomMarker(markers, level.getTreasureRoom(), "Treasure", (byte) -5, (byte) -65, (byte) 36);
         return markers.toArray(new MapMarker[0]);
     }
 
