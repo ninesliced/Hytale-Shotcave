@@ -8,6 +8,7 @@ import com.hypixel.hytale.protocol.MouseInputTargetType;
 import com.hypixel.hytale.protocol.MouseInputType;
 import com.hypixel.hytale.protocol.MovementForceRotationType;
 import com.hypixel.hytale.protocol.MovementSettings;
+import com.hypixel.hytale.protocol.Position;
 import com.hypixel.hytale.protocol.PositionDistanceOffsetType;
 import com.hypixel.hytale.protocol.RotationType;
 import com.hypixel.hytale.protocol.ServerCameraSettings;
@@ -29,8 +30,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class TopCameraService {
 
+    private static final float HALF_PI = (float) (Math.PI / 2.0);
+
     private final Map<UUID, Boolean> enabled = new ConcurrentHashMap<>();
     private final Set<UUID> pendingEnable = ConcurrentHashMap.newKeySet();
+    private final Map<UUID, Integer> lastRoomRotation = new ConcurrentHashMap<>();
 
     public void registerDisabledByDefault(@Nonnull PlayerRef playerRef) {
         enabled.put(playerRef.getUuid(), false);
@@ -56,6 +60,7 @@ public class TopCameraService {
     public void clearState(@Nonnull PlayerRef playerRef) {
         enabled.remove(playerRef.getUuid());
         pendingEnable.remove(playerRef.getUuid());
+        lastRoomRotation.remove(playerRef.getUuid());
     }
 
     public boolean toggle(@Nonnull PlayerRef playerRef) {
@@ -83,6 +88,7 @@ public class TopCameraService {
         boolean wasEnabled = enabled.getOrDefault(playerId, false);
         boolean hadPending = pendingEnable.remove(playerId);
         enabled.put(playerId, false);
+        lastRoomRotation.remove(playerId);
         if (wasEnabled || hadPending) {
             resetCamera(playerRef);
         }
@@ -119,10 +125,33 @@ public class TopCameraService {
         applyTopCamera(playerRef);
     }
 
+    /**
+     * Called when the player enters a new room. Smoothly rotates the camera
+     * yaw to align with the corridor direction so the camera shifts to the
+     * side on turns instead of clipping through walls.
+     */
+    public void updateCameraForRoom(@Nonnull PlayerRef playerRef, int roomRotation) {
+        if (!enabled.getOrDefault(playerRef.getUuid(), false)) return;
+
+        Integer last = lastRoomRotation.get(playerRef.getUuid());
+        if (last != null && last == roomRotation) return;
+
+        lastRoomRotation.put(playerRef.getUuid(), roomRotation);
+        sendCameraPacket(playerRef, roomRotationToYaw(roomRotation));
+    }
+
     private void applyTopCamera(@Nonnull PlayerRef playerRef) {
+        lastRoomRotation.remove(playerRef.getUuid());
+        sendCameraPacket(playerRef, 0.0F);
+
+        disableSprintForce(playerRef);
+        applyEqualizedMovement(playerRef);
+    }
+
+    private void sendCameraPacket(@Nonnull PlayerRef playerRef, float yaw) {
         ServerCameraSettings cameraSettings = new ServerCameraSettings();
-        cameraSettings.positionLerpSpeed = 0.2F;
-        cameraSettings.rotationLerpSpeed = 0.2F;
+        cameraSettings.positionLerpSpeed = 0.05F;
+        cameraSettings.rotationLerpSpeed = 0.08F;
         cameraSettings.distance = 16.0F;
         cameraSettings.allowPitchControls = false;
         cameraSettings.displayCursor = true;
@@ -133,14 +162,21 @@ public class TopCameraService {
         cameraSettings.movementForceRotationType = MovementForceRotationType.Custom;
         cameraSettings.eyeOffset = true;
         cameraSettings.positionDistanceOffsetType = PositionDistanceOffsetType.DistanceOffsetRaycast;
+        cameraSettings.positionOffset = new Position(0.0, 3.0, 0.0);
         cameraSettings.rotationType = RotationType.Custom;
-        cameraSettings.rotation = new Direction(0.0F, -0.9F, 0.0F);
+        cameraSettings.rotation = new Direction(yaw, -0.9F, 0.0F);
         cameraSettings.mouseInputType = MouseInputType.LookAtPlane;
         cameraSettings.planeNormal = new Vector3f(0.0F, 1.0F, 0.0F);
         playerRef.getPacketHandler().writeNoCache(new SetServerCamera(ClientCameraView.Custom, true, cameraSettings));
+    }
 
-        disableSprintForce(playerRef);
-        applyEqualizedMovement(playerRef);
+    private static float roomRotationToYaw(int roomRotation) {
+        return switch (roomRotation & 3) {
+            case 1 -> HALF_PI;
+            case 2 -> HALF_PI * 2;
+            case 3 -> -HALF_PI;
+            default -> 0.0F;
+        };
     }
 
     private void resetCamera(@Nonnull PlayerRef playerRef) {
