@@ -17,7 +17,7 @@
         "Weapon_Crystal_Musket_Lightning_Shotcave",
         "Weapon_Crystal_Musket_Void_Shotcave"
       ],
-      "armorChance": 100,
+      "armorChance": 0.1,
       "armorMinRarity": "BASIC",
       "armorMaxRarity": "RARE",
       "armorWhitelist": [
