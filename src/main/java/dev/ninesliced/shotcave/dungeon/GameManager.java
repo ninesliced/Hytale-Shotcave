@@ -51,6 +51,7 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.npc.NPCPlugin;
 import dev.ninesliced.shotcave.Shotcave;
+import dev.ninesliced.shotcave.armor.ArmorChargeComponent;
 import dev.ninesliced.shotcave.inventory.InventoryLockService;
 import dev.ninesliced.shotcave.hud.DungeonInfoHud;
 import dev.ninesliced.shotcave.hud.DeathCountdownHud;
@@ -1067,6 +1068,12 @@ public final class GameManager {
                 );
             }
             DeathMovementController.restore(store, ref, playerRef);
+
+            // Reset armor charge if component already present (added by HolderSystem at spawn)
+            ArmorChargeComponent charge = store.getComponent(ref, ArmorChargeComponent.getComponentType());
+            if (charge != null) {
+                charge.reset();
+            }
         } catch (Exception e) {
             LOGGER.log(java.util.logging.Level.WARNING, "Failed to reset player status", e);
         }

@@ -46,11 +46,20 @@ import dev.ninesliced.shotcave.interactions.ModularGunShootInteraction;
 import dev.ninesliced.shotcave.interactions.ReloadInteraction;
 import dev.ninesliced.shotcave.interactions.SpawnNPCAtImpactInteraction;
 import dev.ninesliced.shotcave.interactions.UpdateAmmoHudInteraction;
+import dev.ninesliced.shotcave.armor.ArmorAbilityPacketHandler;
 import dev.ninesliced.shotcave.pickup.FKeyPickupPacketHandler;
 import dev.ninesliced.shotcave.pickup.ItemDropSystem;
 import dev.ninesliced.shotcave.pickup.ItemPickupConfig;
 import dev.ninesliced.shotcave.pickup.ItemPickupHudRuntime;
 import dev.ninesliced.shotcave.pickup.ItemPickupInteraction;
+import dev.ninesliced.shotcave.armor.ArmorAbilityInteraction;
+import dev.ninesliced.shotcave.armor.ArmorChargeComponent;
+import dev.ninesliced.shotcave.armor.ArmorChargePlayerAddedSystem;
+import dev.ninesliced.shotcave.armor.ArmorChargeSystem;
+import dev.ninesliced.shotcave.armor.ArmorRegistry;
+import dev.ninesliced.shotcave.armor.ArmorSetTracker;
+import dev.ninesliced.shotcave.tooltip.ArmorTooltipAdapter;
+import dev.ninesliced.shotcave.tooltip.ArmorVirtualItems;
 import dev.ninesliced.shotcave.tooltip.WeaponTooltipAdapter;
 import dev.ninesliced.shotcave.tooltip.WeaponVirtualItems;
 import dev.ninesliced.shotcave.party.PartyManager;
@@ -97,6 +106,7 @@ public class Shotcave extends JavaPlugin {
     private final InventoryLockService inventoryLockService = new InventoryLockService();
     private final DungeonInstanceService dungeonInstanceService = new DungeonInstanceService(this);
     private final PartyManager partyManager = new PartyManager(this);
+    private final ArmorSetTracker armorSetTracker = new ArmorSetTracker();
     private final GameManager gameManager = new GameManager(this);
     private final DungeonMapService dungeonMapService = new DungeonMapService();
     private Path dungeonConfigPath;
@@ -107,6 +117,10 @@ public class Shotcave extends JavaPlugin {
 
     public static Shotcave getInstance() {
         return instance;
+    }
+
+    public ArmorSetTracker getArmorSetTracker() {
+        return armorSetTracker;
     }
 
     @Override
@@ -129,7 +143,8 @@ public class Shotcave extends JavaPlugin {
                 .register("ConsumeAmmo", ConsumeAmmoInteraction.class, ConsumeAmmoInteraction.CODEC)
                 .register("SpawnNPCAtImpact", SpawnNPCAtImpactInteraction.class, SpawnNPCAtImpactInteraction.CODEC)
                 .register("BreakSoftBlock", BreakSoftBlockInteraction.class, BreakSoftBlockInteraction.CODEC)
-                .register("CratePickup", ItemPickupInteraction.class, ItemPickupInteraction.CODEC);
+                .register("CratePickup", ItemPickupInteraction.class, ItemPickupInteraction.CODEC)
+                .register("ArmorAbility", ArmorAbilityInteraction.class, ArmorAbilityInteraction.CODEC);
 
         Interaction.getAssetStore().loadAssets(
                 "ninesliced:Shotcave",
@@ -139,9 +154,11 @@ public class Shotcave extends JavaPlugin {
                 List.of(ItemPickupInteraction.DEFAULT_ROOT));
 
         WeaponRegistry.registerAll();
+        ArmorRegistry.registerAll();
 
         PacketAdapters.registerInbound(new FKeyPickupPacketHandler());
         PacketAdapters.registerInbound(new ReviveInteractionPacketHandler());
+        PacketAdapters.registerInbound(new ArmorAbilityPacketHandler());
 
         // Weapon tooltip adapter — rewrites inventory items to virtual
         // IDs with per-instance name/description/quality, and translates
@@ -149,6 +166,11 @@ public class Shotcave extends JavaPlugin {
         WeaponTooltipAdapter tooltipAdapter = new WeaponTooltipAdapter();
         PacketAdapters.registerOutbound(tooltipAdapter);
         PacketAdapters.registerInbound(tooltipAdapter);
+
+        // Armor tooltip adapter — same pattern for armor inventory slots.
+        ArmorTooltipAdapter armorTooltipAdapter = new ArmorTooltipAdapter();
+        PacketAdapters.registerOutbound(armorTooltipAdapter);
+        PacketAdapters.registerInbound(armorTooltipAdapter);
 
         try {
             this.getEntityStoreRegistry().registerEntityEventType(SwitchActiveSlotEvent.class);
@@ -223,6 +245,15 @@ public class Shotcave extends JavaPlugin {
         this.getEntityStoreRegistry().registerSystem(new CrateBreakDropSystem());
         this.getEntityStoreRegistry().registerSystem(new CoinCollectionSystem());
 
+        // Armor charge system — passive 30s charge for armor set abilities.
+        ComponentType<EntityStore, ArmorChargeComponent> armorChargeComponentType =
+                this.getEntityStoreRegistry().registerComponent(ArmorChargeComponent.class, ArmorChargeComponent::new);
+        ArmorChargeComponent.setComponentType(armorChargeComponentType);
+
+        this.getEntityStoreRegistry().registerSystem(new ArmorChargeSystem());
+        this.getEntityStoreRegistry().registerSystem(
+                new ArmorChargePlayerAddedSystem(playerRefComponentType, armorChargeComponentType));
+
         try {
             this.getEntityStoreRegistry().registerEntityEventType(DropItemEvent.PlayerRequest.class);
         } catch (IllegalArgumentException e) {
@@ -239,6 +270,8 @@ public class Shotcave extends JavaPlugin {
             this.cameraService.clearState(event.getPlayerRef());
             this.gameManager.onPlayerDisconnect(event.getPlayerRef());
             WeaponVirtualItems.onPlayerDisconnect(event.getPlayerRef().getUuid());
+            ArmorVirtualItems.onPlayerDisconnect(event.getPlayerRef().getUuid());
+            armorSetTracker.removePlayer(event.getPlayerRef().getUuid());
         });
         this.getCommandRegistry().registerCommand(new ShotcaveCommand(this));
         this.getCommandRegistry().registerCommand(new PartyCommand(this));
