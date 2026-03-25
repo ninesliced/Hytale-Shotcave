@@ -1,8 +1,8 @@
 {
   "TranslationProperties": {
-    "Name": "server.items.Ruined_Kweebec_Sign.name"
+    "Name": "items.Shotcave_Ruined_Kweebec_Stool.name"
   },
-  "Icon": "Icons/ItemsGenerated/Ruined_Kweebec_Sign.png",
+  "Icon": "Icons/ItemsGenerated/Ruined_Kweebec_Stool.png",
   "Categories": [
     "Furniture.Containers"
   ],
@@ -11,15 +11,15 @@
     "DrawType": "Model",
     "Opacity": "Transparent",
     "Group": "Props",
-    "CustomModel": "Blocks/kweebec_furniture/Ruined_Kweebec_Sign.blockymodel",
+    "CustomModel": "Blocks/Shotcave_Props/kweebec_furniture/Ruined_Kweebec_Stool.blockymodel",
     "CustomModelTexture": [
       {
-        "Texture": "Blocks/kweebec_furniture/Ruined_Kweebec_Sign_Texture.png",
+        "Texture": "Blocks/Shotcave_Props/kweebec_furniture/Ruined_Kweebec_Stool_Texture.png",
         "Weight": 1
       }
     ],
     "CustomModelScale": 1,
-    "HitboxType": "Ruined_Kweebec_Sign",
+    "HitboxType": "Ruined_Kweebec_Stool",
     "VariantRotation": "NESW",
     "Flags": {},
     "Gathering": {
