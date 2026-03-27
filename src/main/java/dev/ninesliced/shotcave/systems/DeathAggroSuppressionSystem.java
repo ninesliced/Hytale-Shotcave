@@ -21,7 +21,7 @@ import java.util.List;
  */
 public final class DeathAggroSuppressionSystem extends EntityTickingSystem<EntityStore> {
 
-    private static final double AGGRO_OVERRIDE_SECONDS = 0.5d;
+    private static final double AGGRO_OVERRIDE_SECONDS = 2.0d;
 
     @Override
     public Query<EntityStore> getQuery() {

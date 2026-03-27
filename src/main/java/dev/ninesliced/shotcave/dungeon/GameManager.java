@@ -450,6 +450,7 @@ public final class GameManager {
 
         game.setState(GameState.COMPLETE);
         game.clearDeadPlayers();
+        showAllPartyMembers(game.getPartyId());
 
         List<UUID> partyMembers = playerToParty.entrySet().stream()
                 .filter(entry -> entry.getValue().equals(game.getPartyId()))
@@ -671,6 +672,8 @@ public final class GameManager {
 
         UUID partyId = playerToParty.get(playerId);
         if (partyId == null) return;
+
+        showPlayerToParty(playerId, partyId);
 
         Game game = activeGames.get(partyId);
         if (game == null) return;
@@ -1921,6 +1924,10 @@ public final class GameManager {
      * Shutdown: clean up all active games, restore inventories.
      */
     public void shutdown() {
+        for (Game game : activeGames.values()) {
+            showAllPartyMembers(game.getPartyId());
+        }
+
         for (PlayerRef playerRef : OnlinePlayers.snapshot()) {
             if (playerRef == null || !playerRef.isValid()) {
                 continue;
@@ -2011,6 +2018,7 @@ public final class GameManager {
 
         for (UUID playerId : dead) {
             despawnReviveMarker(playerId);
+            showPlayerToParty(playerId, game.getPartyId());
 
             PlayerRef playerRef = Universe.get().getPlayer(playerId);
             if (playerRef == null || !playerRef.isValid()) continue;
@@ -2037,6 +2045,10 @@ public final class GameManager {
             clearPlayerInventory(player);
             giveStartEquipment(playerRef, player, config);
             plugin.getInventoryLockService().lock(player, playerId);
+
+            // Re-apply dungeon movement and camera
+            applyDungeonMovementSettings(ref, store, playerRef);
+            plugin.getCameraService().setEnabled(playerRef, true);
         }
 
         game.clearDeadPlayers();
@@ -2089,6 +2101,70 @@ public final class GameManager {
                                           @Nonnull DungeonConfig config) {
         giveStartEquipment(playerRef, player, config);
         plugin.getInventoryLockService().lock(player, playerRef.getUuid());
+    }
+
+    /**
+     * Public accessor for {@link #applyDungeonMovementSettings} used by revive systems.
+     */
+    public void applyDungeonMovementSettingsPublic(@Nonnull PlayerRef playerRef) {
+        Ref<EntityStore> ref = playerRef.getReference();
+        if (ref == null || !ref.isValid()) return;
+        Store<EntityStore> store = ref.getStore();
+        applyDungeonMovementSettings(ref, store, playerRef);
+        plugin.getCameraService().setEnabled(playerRef, true);
+    }
+
+    /**
+     * Hides a dead player's entity from all other party members so they cannot
+     * see the ghost moving around.
+     */
+    public void hideDeadPlayerFromParty(@Nonnull UUID deadPlayerId, @Nonnull UUID partyId) {
+        for (Map.Entry<UUID, UUID> entry : playerToParty.entrySet()) {
+            if (!entry.getValue().equals(partyId)) continue;
+            UUID otherId = entry.getKey();
+            if (otherId.equals(deadPlayerId)) continue;
+
+            PlayerRef otherRef = Universe.get().getPlayer(otherId);
+            if (otherRef != null && otherRef.isValid()) {
+                otherRef.getHiddenPlayersManager().hidePlayer(deadPlayerId);
+            }
+        }
+    }
+
+    /**
+     * Shows a previously-hidden player to all other party members (e.g. after revive).
+     */
+    public void showPlayerToParty(@Nonnull UUID playerId, @Nonnull UUID partyId) {
+        for (Map.Entry<UUID, UUID> entry : playerToParty.entrySet()) {
+            if (!entry.getValue().equals(partyId)) continue;
+            UUID otherId = entry.getKey();
+            if (otherId.equals(playerId)) continue;
+
+            PlayerRef otherRef = Universe.get().getPlayer(otherId);
+            if (otherRef != null && otherRef.isValid()) {
+                otherRef.getHiddenPlayersManager().showPlayer(playerId);
+            }
+        }
+    }
+
+    /**
+     * Shows all party members to each other — used during game cleanup to
+     * undo any death-related hiding.
+     */
+    private void showAllPartyMembers(@Nonnull UUID partyId) {
+        List<UUID> members = playerToParty.entrySet().stream()
+                .filter(e -> e.getValue().equals(partyId))
+                .map(Map.Entry::getKey)
+                .toList();
+        for (UUID memberId : members) {
+            for (UUID otherId : members) {
+                if (memberId.equals(otherId)) continue;
+                PlayerRef otherRef = Universe.get().getPlayer(otherId);
+                if (otherRef != null && otherRef.isValid()) {
+                    otherRef.getHiddenPlayersManager().showPlayer(memberId);
+                }
+            }
+        }
     }
 
     public void spawnReviveMarker(@Nonnull CommandBuffer<EntityStore> commandBuffer,

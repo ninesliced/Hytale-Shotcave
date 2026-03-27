@@ -265,6 +265,7 @@ public final class ReviveTickSystem extends EntityTickingSystem<EntityStore> {
         game.removeDeadPlayer(deadInfo.uuid);
         ReviveInteractionPacketHandler.clearInteraction(reviverRef.getUuid());
         gameManager.despawnReviveMarker(commandBuffer, deadInfo.uuid);
+        gameManager.showPlayerToParty(deadInfo.uuid, game.getPartyId());
         DeathStateController.clear(commandBuffer, deadInfo.ref);
 
         if (deadInfo.ref != null && deadInfo.ref.isValid()) {
@@ -295,6 +296,8 @@ public final class ReviveTickSystem extends EntityTickingSystem<EntityStore> {
                         DungeonConfig config = shotcave.loadDungeonConfig();
                         gameManager.giveStartEquipmentPublic(deadPlayerRef, deadPlayer, config);
                     }
+
+                    gameManager.applyDungeonMovementSettingsPublic(deadPlayerRef);
                 }
             }
         }
