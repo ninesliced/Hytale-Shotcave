@@ -30,11 +30,9 @@
         {
           "Type": "SpawnNPCAtImpact",
           "EntityId": "Kweebec_Seedling",
-          "SpawnOffset": {
-            "X": 0,
-            "Y": 0,
-            "Z": 0
-          }
+          "SpawnOffsetX": 0,
+          "SpawnOffsetY": 0,
+          "SpawnOffsetZ": 0
         },
         {
           "Type": "RemoveEntity",
@@ -59,11 +57,9 @@
         {
           "Type": "SpawnNPCAtImpact",
           "EntityId": "Kweebec_Seedling",
-          "SpawnOffset": {
-            "X": 0,
-            "Y": 1,
-            "Z": 0
-          }
+          "SpawnOffsetX": 0,
+          "SpawnOffsetY": 1,
+          "SpawnOffsetZ": 0
         },
         {
           "Type": "RemoveEntity",

@@ -3,7 +3,7 @@ package dev.ninesliced.shotcave.pickup;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.math.vector.Vector3d;
+import org.joml.Vector3d;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.protocol.Packet;
 import com.hypixel.hytale.protocol.packets.interaction.SyncInteractionChain;
@@ -19,6 +19,9 @@ import com.hypixel.hytale.protocol.packets.inventory.UpdatePlayerInventory;
 import com.hypixel.hytale.server.core.io.adapter.PlayerPacketWatcher;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.item.ItemComponent;
+import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
+import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
+import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -28,6 +31,15 @@ import javax.annotation.Nonnull;
 
 import dev.ninesliced.shotcave.Shotcave;
 import dev.ninesliced.shotcave.ShotcavePacketIds;
+import dev.ninesliced.shotcave.dungeon.DoorMode;
+import dev.ninesliced.shotcave.dungeon.DungeonConfig;
+import dev.ninesliced.shotcave.dungeon.Game;
+import dev.ninesliced.shotcave.dungeon.Level;
+import dev.ninesliced.shotcave.dungeon.RoomData;
+import dev.ninesliced.shotcave.guns.GunItemMetadata;
+import dev.ninesliced.shotcave.guns.WeaponDefinition;
+import dev.ninesliced.shotcave.guns.WeaponDefinitions;
+import dev.ninesliced.shotcave.hud.AmmoHudService;
 import dev.ninesliced.shotcave.inventory.InventoryLockService;
 import dev.ninesliced.shotcave.systems.DeathComponent;
 
@@ -123,6 +135,11 @@ public final class FKeyPickupPacketHandler implements PlayerPacketWatcher {
 
         Vector3d playerPos = playerTransform.getPosition();
 
+        // Try to unlock a KEY-mode door before item pickup.
+        if (tryUnlockKeyDoor(playerRef, playerPos)) {
+            return;
+        }
+
         if (ItemPickupTracker.size() == 0) {
             return;
         }
@@ -158,6 +175,17 @@ public final class FKeyPickupPacketHandler implements PlayerPacketWatcher {
         }
 
         if (closest == null) {
+            return;
+        }
+
+        // Special item handling — heal and ammo items apply effects instead of going to inventory.
+        String itemId = closest.getItemId();
+        if ("Shotcave_Heal_Item".equals(itemId)) {
+            collectHealItem(closest, player, playerRef, playerEntityRef, store);
+            return;
+        }
+        if ("Shotcave_Ammo_Item".equals(itemId)) {
+            collectAmmoItem(closest, player, playerRef, playerEntityRef, store);
             return;
         }
 
@@ -294,6 +322,223 @@ public final class FKeyPickupPacketHandler implements PlayerPacketWatcher {
         store.removeEntity(itemRef, RemoveReason.REMOVE);
 
         sendPickupNotification(playerRef, tracked, newWeapon.getQuantity());
+    }
+
+    /**
+     * Checks if the player is in a KEY-mode locked room and has keys to unlock it.
+     * Returns true if a door was unlocked (consuming the F-key press).
+     */
+    private static boolean tryUnlockKeyDoor(@Nonnull PlayerRef playerRef, @Nonnull Vector3d playerPos) {
+        Shotcave shotcave = Shotcave.getInstance();
+        if (shotcave == null) return false;
+
+        Game game = shotcave.getGameManager().findGameForPlayer(playerRef.getUuid());
+        if (game == null) return false;
+
+        Level level = game.getCurrentLevel();
+        if (level == null) return false;
+
+        int px = (int) Math.floor(playerPos.x);
+        int pz = (int) Math.floor(playerPos.z);
+        RoomData room = level.getBlockOwner(px, pz);
+        if (room == null) return false;
+
+        if (!room.isLocked() || !room.isDoorsSealed() || room.getDoorMode() != DoorMode.KEY) {
+            return false;
+        }
+
+        if (!game.useKey()) {
+            try {
+                NotificationUtil.sendNotification(
+                        playerRef.getPacketHandler(),
+                        Message.raw("You need a key to unlock this door!"),
+                        null,
+                        "door_locked");
+            } catch (Exception e) {
+                // Best-effort
+            }
+            return true; // Consume the F-key press even if no key.
+        }
+
+        World world = game.getInstanceWorld();
+        if (world != null) {
+            shotcave.getDoorService().onRoomCleared(room, world);
+        }
+
+        try {
+            NotificationUtil.sendNotification(
+                    playerRef.getPacketHandler(),
+                    Message.raw("Door unlocked!"),
+                    null,
+                    "door_unlocked");
+        } catch (Exception e) {
+            // Best-effort
+        }
+
+        // Broadcast to party.
+        shotcave.getGameManager().broadcastToPartyPublic(game.getPartyId(), "A door has been unlocked!", "#a9f5b3");
+        return true;
+    }
+
+    /**
+     * Collects a heal item: restores player HP to max, removes entity.
+     */
+    private static void collectHealItem(@Nonnull ItemPickupTracker.TrackedItem tracked,
+            @Nonnull Player player,
+            @Nonnull PlayerRef playerRef,
+            @Nonnull Ref<EntityStore> playerEntityRef,
+            @Nonnull Store<EntityStore> store) {
+
+        Ref<EntityStore> itemRef = tracked.getRef();
+        if (!itemRef.isValid()) {
+            ItemPickupTracker.untrack(itemRef);
+            return;
+        }
+
+        // Atomic untrack to prevent double-collection.
+        ItemPickupTracker.TrackedItem removed = ItemPickupTracker.entries().remove(itemRef);
+        if (removed == null) {
+            return;
+        }
+
+        // Heal the player to max HP.
+        EntityStatMap statMap = store.getComponent(playerEntityRef, EntityStatMap.getComponentType());
+        if (statMap != null) {
+            int healthIdx = DefaultEntityStatTypes.getHealth();
+            EntityStatValue healthStat = healthIdx >= 0 ? statMap.get(healthIdx) : null;
+            if (healthStat != null) {
+                float before = healthStat.get();
+                statMap.setStatValue(healthIdx, healthStat.getMax());
+                float healed = healthStat.getMax() - before;
+
+                try {
+                    String text = healed > 0
+                            ? "Healed! (+" + (int) healed + " HP)"
+                            : "Already at full health!";
+                    NotificationUtil.sendNotification(
+                            playerRef.getPacketHandler(),
+                            Message.raw(text),
+                            null,
+                            "heal_collected");
+                } catch (Exception e) {
+                    // Best-effort notification
+                }
+            }
+        }
+
+        ItemComponent itemComponent = store.getComponent(itemRef, ItemComponent.getComponentType());
+        if (itemComponent != null) {
+            itemComponent.setRemovedByPlayerPickup(true);
+        }
+        store.removeEntity(itemRef, RemoveReason.REMOVE);
+    }
+
+    /**
+     * Collects an ammo item: refills the held weapon's ammo to max, removes entity.
+     */
+    private static void collectAmmoItem(@Nonnull ItemPickupTracker.TrackedItem tracked,
+            @Nonnull Player player,
+            @Nonnull PlayerRef playerRef,
+            @Nonnull Ref<EntityStore> playerEntityRef,
+            @Nonnull Store<EntityStore> store) {
+
+        Ref<EntityStore> itemRef = tracked.getRef();
+        if (!itemRef.isValid()) {
+            ItemPickupTracker.untrack(itemRef);
+            return;
+        }
+
+        // Check if the player is holding a weapon with ammo.
+        ItemStack heldItem = player.getInventory() != null ? player.getInventory().getItemInHand() : null;
+        if (heldItem == null || ItemStack.isEmpty(heldItem)) {
+            // Re-track, item stays in world.
+            try {
+                NotificationUtil.sendNotification(
+                        playerRef.getPacketHandler(),
+                        Message.raw("Equip a weapon first!"),
+                        null,
+                        "ammo_fail");
+            } catch (Exception e) {
+                // Best-effort
+            }
+            return;
+        }
+
+        String weaponId = heldItem.getItemId();
+        WeaponDefinition definition = weaponId != null ? WeaponDefinitions.getById(weaponId) : null;
+
+        int baseMaxAmmo = definition != null && definition.getBaseMaxAmmo() > 0
+                ? definition.getBaseMaxAmmo()
+                : GunItemMetadata.getBaseMaxAmmo(heldItem, -1);
+        if (baseMaxAmmo <= 0) {
+            // Not a ranged weapon.
+            try {
+                NotificationUtil.sendNotification(
+                        playerRef.getPacketHandler(),
+                        Message.raw("Equip a weapon first!"),
+                        null,
+                        "ammo_fail");
+            } catch (Exception e) {
+                // Best-effort
+            }
+            return;
+        }
+
+        int effectiveMaxAmmo = GunItemMetadata.getEffectiveMaxAmmo(heldItem, baseMaxAmmo);
+        int currentAmmo = GunItemMetadata.getInt(heldItem, GunItemMetadata.AMMO_KEY, effectiveMaxAmmo);
+
+        if (currentAmmo >= effectiveMaxAmmo) {
+            // Already full.
+            try {
+                NotificationUtil.sendNotification(
+                        playerRef.getPacketHandler(),
+                        Message.raw("Ammo already full!"),
+                        null,
+                        "ammo_fail");
+            } catch (Exception e) {
+                // Best-effort
+            }
+            return;
+        }
+
+        // Atomic untrack to prevent double-collection.
+        ItemPickupTracker.TrackedItem removed = ItemPickupTracker.entries().remove(itemRef);
+        if (removed == null) {
+            return;
+        }
+
+        // Refill ammo to max.
+        ItemStack updated = GunItemMetadata.setInt(heldItem, GunItemMetadata.AMMO_KEY, effectiveMaxAmmo);
+        updated = GunItemMetadata.ensureAmmo(updated, baseMaxAmmo, effectiveMaxAmmo);
+
+        // Apply to held slot.
+        InventoryComponent.Hotbar hotbarComp = store.getComponent(playerEntityRef, InventoryComponent.Hotbar.getComponentType());
+        if (hotbarComp != null) {
+            byte activeSlot = hotbarComp.getActiveSlot();
+            ItemContainer hotbar = hotbarComp.getInventory();
+            hotbar.replaceItemStackInSlot(activeSlot, heldItem, updated);
+        }
+
+        // Update ammo HUD.
+        AmmoHudService.clear(playerRef);
+        AmmoHudService.updateForHeldItem(player, playerRef, updated);
+
+        int refilled = effectiveMaxAmmo - currentAmmo;
+        try {
+            NotificationUtil.sendNotification(
+                    playerRef.getPacketHandler(),
+                    Message.raw("Ammo refilled! (+" + refilled + ")"),
+                    null,
+                    "ammo_collected");
+        } catch (Exception e) {
+            // Best-effort notification
+        }
+
+        ItemComponent itemComponent = store.getComponent(itemRef, ItemComponent.getComponentType());
+        if (itemComponent != null) {
+            itemComponent.setRemovedByPlayerPickup(true);
+        }
+        store.removeEntity(itemRef, RemoveReason.REMOVE);
     }
 
     private static void sendPickupNotification(@Nonnull PlayerRef playerRef,

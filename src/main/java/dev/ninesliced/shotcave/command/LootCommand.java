@@ -4,8 +4,8 @@ import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.math.vector.Vector3d;
-import com.hypixel.hytale.math.vector.Vector3f;
+import org.joml.Vector3d;
+import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.AbstractCommand;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
@@ -84,10 +84,10 @@ public class LootCommand extends AbstractCommand {
             TransformComponent transform = store.getComponent(ref, TransformComponent.getComponentType());
             if (transform == null) return;
 
-            Vector3d dropPosition = transform.getPosition().clone();
+            Vector3d dropPosition = new Vector3d(transform.getPosition());
             Store<EntityStore> entityStore = world.getEntityStore().getStore();
             Holder<EntityStore>[] holders = ItemComponent.generateItemDrops(
-                    entityStore, List.of(rolled), dropPosition, Vector3f.ZERO);
+                    entityStore, List.of(rolled), dropPosition, Rotation3f.ZERO);
             if (holders.length > 0) {
                 entityStore.addEntities(holders, AddReason.SPAWN);
             }

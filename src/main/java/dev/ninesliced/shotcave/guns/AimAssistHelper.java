@@ -2,8 +2,8 @@ package dev.ninesliced.shotcave.guns;
 
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.math.vector.Vector3d;
-import com.hypixel.hytale.math.vector.Vector3i;
+import org.joml.Vector3d;
+import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.entity.Entity;
 import com.hypixel.hytale.server.core.entity.EntityUtils;
 import com.hypixel.hytale.server.core.entity.InteractionContext;
@@ -138,7 +138,7 @@ public final class AimAssistHelper {
 
             if (blockingBlock != null) {
                 Vector3d blockCenter = new Vector3d(blockingBlock.x + 0.5, blockingBlock.y + 0.5, blockingBlock.z + 0.5);
-                double blockDistSq = muzzle.distanceSquaredTo(blockCenter);
+                double blockDistSq = dev.ninesliced.shotcave.JomlCompat.distanceSquared(muzzle, blockCenter);
                 double targetDistSq = dist * dist;
                 if (blockDistSq + 1.0E-6 < targetDistSq) {
                     continue;
@@ -164,7 +164,7 @@ public final class AimAssistHelper {
             blendedHorizZ /= blendedHorizLen;
 
             Vector3d out = new Vector3d(blendedHorizX * targetHorizLen, dirY, blendedHorizZ * targetHorizLen);
-            if (out.squaredLength() > 1.0E-8) {
+            if (dev.ninesliced.shotcave.JomlCompat.lengthSquared(out) > 1.0E-8) {
                 out.normalize();
                 return out;
             }

@@ -7,8 +7,8 @@ import com.hypixel.hytale.server.core.entity.movement.MovementStatesComponent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import dev.ninesliced.shotcave.OnlinePlayers;
 import dev.ninesliced.shotcave.Shotcave;
 
 import javax.annotation.Nonnull;
@@ -50,7 +50,7 @@ public final class AmmoHudRuntime {
     }
 
     private void pollPlayersHud() {
-        for (PlayerRef playerRef : Universe.get().getPlayers()) {
+        for (PlayerRef playerRef : OnlinePlayers.snapshot()) {
             refreshHeldItemHud(playerRef);
         }
     }

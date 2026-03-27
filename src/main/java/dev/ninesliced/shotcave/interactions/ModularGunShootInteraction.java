@@ -8,10 +8,10 @@ import com.hypixel.hytale.codec.validation.Validators;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.spatial.SpatialResource;
-import com.hypixel.hytale.math.vector.Vector2d;
-import com.hypixel.hytale.math.vector.Vector3d;
-import com.hypixel.hytale.math.vector.Vector3i;
-import com.hypixel.hytale.math.vector.Vector4d;
+import org.joml.Vector2d;
+import org.joml.Vector3d;
+import org.joml.Vector3i;
+import org.joml.Vector4d;
 import com.hypixel.hytale.protocol.BlockPosition;
 import com.hypixel.hytale.protocol.ChangeVelocityType;
 import com.hypixel.hytale.protocol.Color;
@@ -422,7 +422,7 @@ public final class ModularGunShootInteraction extends SimpleInteraction {
         if (transform == null) {
             return null;
         }
-        Vector3d pos = transform.getPosition().clone().add(0.0, this.muzzleHeightOffset, 0.0);
+        Vector3d pos = new Vector3d(transform.getPosition()).add(0.0, this.muzzleHeightOffset, 0.0);
 
         boolean hasForward = this.muzzleForwardOffset > 0.001 || this.muzzleForwardOffset < -0.001;
         boolean hasRight = this.muzzleRightOffset > 0.001 || this.muzzleRightOffset < -0.001;
@@ -430,7 +430,7 @@ public final class ModularGunShootInteraction extends SimpleInteraction {
         if (hasForward || hasRight) {
             HeadRotation headRotation = commandBuffer.getComponent(ref, HeadRotation.getComponentType());
             if (headRotation != null) {
-                float yaw = headRotation.getRotation().getYaw();
+                float yaw = headRotation.getRotation().yaw();
                 double sinYaw = Math.sin(yaw);
                 double cosYaw = Math.cos(yaw);
                 // Forward: (sinYaw, cosYaw), Right: (cosYaw, -sinYaw)
@@ -457,7 +457,7 @@ public final class ModularGunShootInteraction extends SimpleInteraction {
             return new Vector3d(0.0, 0.0, 1.0);
         }
 
-        Vector3d direction = new Vector3d(headRotation.getRotation().getYaw(), headRotation.getRotation().getPitch());
+        Vector3d direction = dev.ninesliced.shotcave.JomlCompat.lookDirection(headRotation.getRotation().yaw(), headRotation.getRotation().pitch());
         return applySpread(direction, effectiveSpread);
     }
 
@@ -465,12 +465,12 @@ public final class ModularGunShootInteraction extends SimpleInteraction {
     private Vector3d applySpread(@Nonnull Vector3d direction, double effectiveSpread) {
         double spreadRadians = Math.toRadians(effectiveSpread);
         if (spreadRadians > 0.000001) {
-            direction = direction.clone();
+            direction = new Vector3d(direction);
             ThreadLocalRandom random = ThreadLocalRandom.current();
             direction.x += random.nextDouble(-spreadRadians, spreadRadians);
             direction.y += random.nextDouble(-spreadRadians, spreadRadians);
             direction.z += random.nextDouble(-spreadRadians, spreadRadians);
-            if (direction.squaredLength() > 0.000001) {
+            if (dev.ninesliced.shotcave.JomlCompat.lengthSquared(direction) > 0.000001) {
                 direction.normalize();
             }
         }
@@ -488,7 +488,7 @@ public final class ModularGunShootInteraction extends SimpleInteraction {
         final double[] entityHitDistanceSq = new double[] { Double.MAX_VALUE };
 
         Vector2d minMax = new Vector2d();
-        Vector3d searchCenter = from.clone().addScaled(direction, (double) effectiveRange * 0.5);
+        Vector3d searchCenter = dev.ninesliced.shotcave.JomlCompat.addScaled(new Vector3d(from), direction, (double) effectiveRange * 0.5);
         Selector.selectNearbyEntities(commandBuffer, searchCenter, (double) effectiveRange * 0.6, candidate -> {
             if (!candidate.isValid()) {
                 return;
@@ -509,7 +509,7 @@ public final class ModularGunShootInteraction extends SimpleInteraction {
             }
 
             Vector3d ePos = transform.getPosition();
-            if (!CollisionMath.intersectRayAABB(from, direction, ePos.getX(), ePos.getY(), ePos.getZ(),
+            if (!CollisionMath.intersectRayAABB(from, direction, ePos.x, ePos.y, ePos.z,
                     boundingBox.getBoundingBox(), minMax)) {
                 return;
             }
@@ -522,7 +522,7 @@ public final class ModularGunShootInteraction extends SimpleInteraction {
             double hitX = from.x + direction.x * t;
             double hitY = from.y + direction.y * t;
             double hitZ = from.z + direction.z * t;
-            double hitDistanceSq = from.distanceSquaredTo(hitX, hitY, hitZ);
+            double hitDistanceSq = dev.ninesliced.shotcave.JomlCompat.distanceSquared(from, hitX, hitY, hitZ);
             if (hitDistanceSq >= entityHitDistanceSq[0]) {
                 return;
             }
@@ -546,7 +546,7 @@ public final class ModularGunShootInteraction extends SimpleInteraction {
 
         if (block != null) {
             Vector3d blockHitPos = new Vector3d((double) block.x + 0.5, (double) block.y + 0.5, (double) block.z + 0.5);
-            double blockDistanceSq = from.distanceSquaredTo(blockHitPos);
+            double blockDistanceSq = dev.ninesliced.shotcave.JomlCompat.distanceSquared(from, blockHitPos);
             if (entityHitRef[0] == null || blockDistanceSq < entityHitDistanceSq[0]) {
                 BlockPosition raw = new BlockPosition(block.x, block.y, block.z);
                 return new ShotHit(blockHitPos, null, raw);
@@ -557,7 +557,7 @@ public final class ModularGunShootInteraction extends SimpleInteraction {
             return new ShotHit(entityHitPos[0], entityHitRef[0], null);
         }
 
-        Vector3d miss = from.clone().addScaled(direction, (double) effectiveRange);
+        Vector3d miss = dev.ninesliced.shotcave.JomlCompat.addScaled(new Vector3d(from), direction, (double) effectiveRange);
         return new ShotHit(miss, null, null);
     }
 
@@ -595,10 +595,10 @@ public final class ModularGunShootInteraction extends SimpleInteraction {
             @Nonnull Vector3d to,
             @Nonnull CommandBuffer<EntityStore> commandBuffer,
             int trailR, int trailG, int trailB) {
-        Vector3d delta = to.clone().subtract(from);
-        double distance = from.distanceTo(to);
+        Vector3d delta = new Vector3d(to).sub(from);
+        double distance = dev.ninesliced.shotcave.JomlCompat.distance(from, to);
         if (distance <= 0.001) {
-            spawnTrailParticle(from.clone(), 0.0f, 0.0f, commandBuffer, trailR, trailG, trailB);
+            spawnTrailParticle(new Vector3d(from), 0.0f, 0.0f, commandBuffer, trailR, trailG, trailB);
             return;
         }
 
@@ -609,7 +609,7 @@ public final class ModularGunShootInteraction extends SimpleInteraction {
         int steps = Math.max(1, (int) Math.ceil(distance / this.trailStepDistance));
         for (int i = 0; i <= steps; i++) {
             double t = (double) i / (double) steps;
-            Vector3d point = from.clone().addScaled(delta, t);
+            Vector3d point = dev.ninesliced.shotcave.JomlCompat.addScaled(new Vector3d(from), delta, t);
             spawnTrailParticle(point, yaw, pitch, commandBuffer, trailR, trailG, trailB);
         }
     }
@@ -683,21 +683,21 @@ public final class ModularGunShootInteraction extends SimpleInteraction {
             return;
         }
 
-        Vector3d direction = targetTransform.getPosition().clone().subtract(attackerTransform.getPosition());
+        Vector3d direction = new Vector3d(targetTransform.getPosition()).sub(attackerTransform.getPosition());
         direction.y = 0.0;
-        if (direction.squaredLength() <= 0.000001) {
+        if (dev.ninesliced.shotcave.JomlCompat.lengthSquared(direction) <= 0.000001) {
             HeadRotation attackerHeadRotation = commandBuffer.getComponent(attacker, HeadRotation.getComponentType());
             if (attackerHeadRotation == null) {
                 return;
             }
 
             direction = new Vector3d(0.0, 0.0, -1.0);
-            direction.rotateY(attackerHeadRotation.getRotation().getYaw());
+            direction.rotateY(attackerHeadRotation.getRotation().yaw());
         } else {
             direction.normalize();
         }
 
-        direction.scale(force);
+        direction.mul(force);
         direction.y = Math.min(0.45, 0.12 * force + 0.05);
 
         KnockbackComponent knockback = commandBuffer.getComponent(target, KnockbackComponent.getComponentType());

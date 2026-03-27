@@ -3,12 +3,19 @@ package dev.ninesliced.shotcave.interactions;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.component.CommandBuffer;
+import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.protocol.InteractionState;
 import com.hypixel.hytale.protocol.InteractionType;
+import com.hypixel.hytale.protocol.SoundCategory;
+import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
 import com.hypixel.hytale.server.core.entity.InteractionContext;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInstantInteraction;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.world.SoundUtil;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.ninesliced.shotcave.guns.GunItemMetadata;
 
 import javax.annotation.Nonnull;
@@ -60,6 +67,16 @@ public final class GunValidationInteraction extends SimpleInstantInteraction {
         }
 
         if (this.requireAmmo && GunItemMetadata.getInt(heldItem, GunItemMetadata.AMMO_KEY, 0) <= 0) {
+            // Play dry fire click so the player knows the weapon is empty
+            CommandBuffer<EntityStore> commandBuffer = context.getCommandBuffer();
+            if (commandBuffer != null) {
+                Ref<EntityStore> ref = context.getEntity();
+                PlayerRef playerRef = commandBuffer.getComponent(ref, PlayerRef.getComponentType());
+                if (playerRef != null) {
+                    int soundIndex = SoundEvent.getAssetMap().getIndex("SFX_Blunderbuss_Miss");
+                    SoundUtil.playSoundEvent2dToPlayer(playerRef, soundIndex, SoundCategory.SFX);
+                }
+            }
             context.getState().state = InteractionState.Failed;
         }
     }

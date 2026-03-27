@@ -15,102 +15,48 @@
         "corridor":  ["Shotcave.Kweebec.Room.*"],
         "challenge": ["Shotcave.Kweebec.Challenge.*"],
         "shop":      ["Shotcave.Kweebec.Shop.*"],
-        "wall":      ["Shotcave.Shale.Wall.*"],
-        "boss":      ["Shotcave.Kweebec.Boss.*"]
+        "wall":      ["Shotcave.Kweebec.Wall.*"],
+        "boss":      ["Shotcave.Kweebec.Boss.*"],
+        "keyDoor":    ["Shotcave.Kweebec.Doors.Kweebec_Key_Door"],
+        "activationDoor": ["Shotcave.Kweebec.Doors.Kweebec_Activation_Door"],
+        "lockDoor":   ["Shotcave.Kweebec.Doors.Kweebec_Lock_Door"],
+        "branch":     ["Shotcave.Kweebec.Branch.*"]
       },
       "main": {
         "maxRooms": 6,
         "challengeRooms": { "min": 1, "max": 2 },
         "minimumCorridorLength": 1,
-        "mobsToSpawn":     { "min": 4, "max": 8 },
+        "mobsToSpawn":     { "min": 250, "max": 300 },
         "treasureRooms":   { "min": 0, "max": 0 },
         "shopRooms":       { "min": 1, "max": 1 }
       },
       "branch": {
+        "splitterCount": { "min": 1, "max": 2 },
         "spawnProbability": {
           "1": 0.5
         },
         "maxRooms": 3,
         "challengeRooms": { "min": 0, "max": 1 },
         "minimumCorridorLength": 1,
-        "mobsToSpawn":     { "min": 2, "max": 4 }
+        "mobsToSpawn":     { "min": 100, "max": 200 }
       },
       "mobs": {
-        "Skeleton_Warrior": 10,
-        "Skeleton_Archer": 4
+        "Skeleton_Burnt_Knight_Wander": 10,
+        "Skeleton_Burnt_Praetorian_Wander": 4,
+        "Skeleton_Burnt_Archer": 8,
+        "Skeleton_Burnt_Soldier": 8,
+        "Skeleton_Burnt_Lancer": 6,
+        "Skeleton_Burnt_Wizard": 3,
+        "Skeleton_Burnt_Gunner": 4,
+        "Skeleton_Burnt_Alchemist": 2,
+        "Goblin_Scrapper": 5,
+        "Goblin_Lobber": 3,
+        "Spider_Cave": 4,
+        "Scarak_Louse": 3
       },
       "bossMob": "Skeleton_Boss",
+      "nextLevel": null,
       "moneyPerKill": 5
-    },
-    {
-      "id": "shale",
-      "name": "Shale",
-      "rooms": {
-        "spawn":     ["Shotcave.Shale.Entrance.*"],
-        "corridor":  ["Shotcave.Shale.Corridor.*", "Shotcave.Shale.OffGrid.*", "Shotcave.Shale.Stairs.*", "Shotcave.Shale.Turn.*"],
-        "challenge": ["Shotcave.Shale.Corridor.*", "Shotcave.Shale.Turn.*"],
-        "wall":      ["Shotcave.Shale.Wall.*"],
-        "boss":      ["Shotcave.Shale.Boss.*"]
-      },
-      "main": {
-        "maxRooms": 12,
-        "challengeRooms": { "min": 2, "max": 4 },
-        "minimumCorridorLength": 1,
-        "mobsToSpawn":     { "min": 8, "max": 15 },
-        "treasureRooms":   { "min": 0, "max": 1 },
-        "shopRooms":       { "min": 0, "max": 1 }
-      },
-      "branch": {
-        "spawnProbability": {
-          "1": 0.30,
-          "2": 0.15,
-          "3": 0.05
-        },
-        "maxRooms": 5,
-        "challengeRooms": { "min": 1, "max": 2 },
-        "minimumCorridorLength": 1,
-        "mobsToSpawn":     { "min": 3, "max": 8 }
-      },
-      "mobs": {
-        "Skeleton_Warrior": 10,
-        "Skeleton_Archer": 4
-      },
-      "bossMob": "Skeleton_Boss",
-      "moneyPerKill": 10
-    },
-    {
-      "id": "test",
-      "name": "Test",
-      "rooms": {
-        "spawn":     ["Shotcave.Test.Entrance.*"],
-        "corridor":  ["Shotcave.Test.Room.*"],
-        "challenge": ["Shotcave.Test.Room.*"],
-        "wall":      ["Shotcave.Test.Wall.*"],
-        "boss":      ["Shotcave.Test.Boss.*"]
-      },
-      "main": {
-        "maxRooms": 10,
-        "challengeRooms": { "min": 2, "max": 4 },
-        "minimumCorridorLength": 1,
-        "mobsToSpawn":     { "min": 8, "max": 15 },
-        "treasureRooms":   { "min": 0, "max": 0 },
-        "shopRooms":       { "min": 0, "max": 0 }
-      },
-      "branch": {
-        "spawnProbability": {
-          "1": 0.25,
-          "2": 0.10
-        },
-        "maxRooms": 4,
-        "challengeRooms": { "min": 1, "max": 2 },
-        "minimumCorridorLength": 1,
-        "mobsToSpawn":     { "min": 3, "max": 6 }
-      },
-      "mobs": {
-        "Skeleton_Warrior": 10
-      },
-      "bossMob": "Skeleton_Boss",
-      "moneyPerKill": 15
     }
   ]
 }

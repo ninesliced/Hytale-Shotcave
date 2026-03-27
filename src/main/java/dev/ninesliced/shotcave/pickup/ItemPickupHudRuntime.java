@@ -1,7 +1,7 @@
 package dev.ninesliced.shotcave.pickup;
 
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.math.vector.Vector3d;
+import org.joml.Vector3d;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent;
@@ -10,8 +10,8 @@ import com.hypixel.hytale.server.core.modules.entity.component.TransformComponen
 import com.hypixel.hytale.server.core.entity.movement.MovementStatesComponent;
 
 import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import dev.ninesliced.shotcave.OnlinePlayers;
 import dev.ninesliced.shotcave.Shotcave;
 
 import javax.annotation.Nonnull;
@@ -67,7 +67,7 @@ public final class ItemPickupHudRuntime {
         try {
             ItemPickupTracker.pruneInvalid();
 
-            for (PlayerRef playerRef : Universe.get().getPlayers()) {
+            for (PlayerRef playerRef : OnlinePlayers.snapshot()) {
                 pollSinglePlayer(playerRef);
             }
         } catch (Exception e) {

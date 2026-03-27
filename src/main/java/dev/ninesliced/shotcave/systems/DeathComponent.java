@@ -2,7 +2,7 @@ package dev.ninesliced.shotcave.systems;
 
 import com.hypixel.hytale.component.Component;
 import com.hypixel.hytale.component.ComponentType;
-import com.hypixel.hytale.math.vector.Vector3d;
+import org.joml.Vector3d;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
@@ -57,7 +57,7 @@ public final class DeathComponent implements Component<EntityStore> {
         this.deathTime = System.currentTimeMillis();
         this.reviveProgress = 0.0f;
         this.reviverUuid = null;
-        this.deathPosition = position.clone();
+        this.deathPosition = new Vector3d(position);
     }
 
     public void markGhost() {
@@ -181,7 +181,7 @@ public final class DeathComponent implements Component<EntityStore> {
         copy.reviveProgress = this.reviveProgress;
         copy.lastReviveTickTime = this.lastReviveTickTime;
         copy.reviverUuid = this.reviverUuid;
-        copy.deathPosition = this.deathPosition != null ? this.deathPosition.clone() : null;
+        copy.deathPosition = this.deathPosition != null ? new Vector3d(this.deathPosition) : null;
         return copy;
     }
 }

@@ -8,9 +8,9 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.EntityEventSystem;
-import com.hypixel.hytale.math.vector.Vector3d;
-import com.hypixel.hytale.math.vector.Vector3f;
-import com.hypixel.hytale.math.vector.Vector3i;
+import org.joml.Vector3d;
+import com.hypixel.hytale.math.vector.Rotation3f;
+import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.event.events.ecs.BreakBlockEvent;
@@ -92,7 +92,7 @@ public final class CrateBreakDropSystem extends EntityEventSystem<EntityStore, B
         world.execute(() -> {
             Store<EntityStore> entityStore = world.getEntityStore().getStore();
             Holder<EntityStore>[] itemEntityHolders = ItemComponent.generateItemDrops(
-                    entityStore, drops, dropPosition, Vector3f.ZERO);
+                    entityStore, drops, dropPosition, Rotation3f.ZERO);
             if (itemEntityHolders.length > 0) {
                 entityStore.addEntities(itemEntityHolders, AddReason.SPAWN);
             }

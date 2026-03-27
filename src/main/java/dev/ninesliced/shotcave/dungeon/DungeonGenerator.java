@@ -5,13 +5,18 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.math.vector.Vector3d;
-import com.hypixel.hytale.math.vector.Vector3i;
+import org.joml.Vector3d;
+import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.Rotation;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.server.core.asset.type.fluid.Fluid;
+import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
+import com.hypixel.hytale.server.core.prefab.PrefabRotation;
+import com.hypixel.hytale.server.core.prefab.selection.buffer.PrefabBufferCall;
 import com.hypixel.hytale.server.core.prefab.selection.buffer.impl.IPrefabBuffer;
+import com.hypixel.hytale.server.core.prefab.selection.buffer.impl.PrefabBuffer;
+import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.ChunkColumn;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
@@ -178,7 +183,7 @@ public class DungeonGenerator {
             return;
         }
 
-        Vector3i spawnPaste = new Vector3i(0, 65, 0);
+        Vector3i spawnPaste = new Vector3i(0, 128, 0);
         pasteAndRegister(world, store, random, spawnPath, spawnData, spawnPaste, 0);
 
         RoomData spawnRoom = buildRoomData(RoomType.SPAWN, spawnData, spawnPaste, 0,
@@ -260,7 +265,10 @@ public class DungeonGenerator {
         }
         deadEndExits.clear();
 
-        // ── Phase 7: Distribute keys ──
+        // ── Phase 7: Distribute mobs across rooms ──
+        distributeMobs(level, levelConfig, random);
+
+        // ── Phase 8: Distribute keys ──
         if (treasuresPlaced > 0) {
             distributeKeys(level, treasuresPlaced, random);
         }
@@ -360,16 +368,42 @@ public class DungeonGenerator {
         LOGGER.at(Level.INFO).log("[%s] Layout plan: %s (max %d rooms, %d challenges)",
                 branchId, plan, maxRooms, challengeCount);
 
-        // ── Phase 2: Execute the plan ──
+        // ── Phase 2: Pre-roll splitter positions (main branch only) ──
+        int totalCorridors = 0;
+        for (int s = 0; s < segments; s++) totalCorridors += corridorsPerSegment[s];
+
+        Set<Integer> globalSplitterSlots = new HashSet<>();
+        if (branchDepth == 0 && !resolvedPools.branch.isEmpty() && totalCorridors > 0) {
+            int splitterCount = activeLevelConfig.getBranch().getSplitterCount().roll(random);
+            splitterCount = Math.min(splitterCount, totalCorridors);
+            List<Integer> allSlots = new ArrayList<>();
+            for (int i = 0; i < totalCorridors; i++) allSlots.add(i);
+            Collections.shuffle(allSlots, random);
+            for (int i = 0; i < splitterCount; i++) globalSplitterSlots.add(allSlots.get(i));
+        }
+
+        // ── Phase 3: Execute the plan ──
         int roomsPlaced = 0;
         int segmentIndex = 0;
+        int corridorOffset = 0;
+        List<TrackedExit> deferredBranchExits = new ArrayList<>();
 
         for (int c = 0; c < challengeCount; c++) {
             // Place corridors for this segment
             int corridorsToPlace = corridorsPerSegment[segmentIndex++];
             if (corridorsToPlace > 0) {
+                // Extract splitter slots for this segment (re-indexed to 0-based within segment)
+                Set<Integer> segmentSplitters = new HashSet<>();
+                for (int i = 0; i < corridorsToPlace; i++) {
+                    if (globalSplitterSlots.contains(corridorOffset + i)) {
+                        segmentSplitters.add(i);
+                    }
+                }
+                corridorOffset += corridorsToPlace;
+
                 int placed = placeCorridorChainCounted(world, store, random, level, currentExits,
-                        deadEndExits, corridorPaths, corridorsToPlace, branchDepth, branchId);
+                        deadEndExits, corridorPaths, corridorsToPlace, branchDepth, branchId,
+                        deferredBranchExits, segmentSplitters);
                 roomsPlaced += placed;
             }
 
@@ -400,8 +434,17 @@ public class DungeonGenerator {
             if (segmentIndex < segments) {
                 int preBossCorridors = corridorsPerSegment[segmentIndex];
                 if (preBossCorridors > 0) {
+                    Set<Integer> preBossSplitters = new HashSet<>();
+                    for (int i = 0; i < preBossCorridors; i++) {
+                        if (globalSplitterSlots.contains(corridorOffset + i)) {
+                            preBossSplitters.add(i);
+                        }
+                    }
+                    corridorOffset += preBossCorridors;
+
                     int placed = placeCorridorChainCounted(world, store, random, level, currentExits,
-                            deadEndExits, corridorPaths, preBossCorridors, branchDepth, branchId);
+                            deadEndExits, corridorPaths, preBossCorridors, branchDepth, branchId,
+                            deferredBranchExits, preBossSplitters);
                     roomsPlaced += placed;
                 }
             }
@@ -428,6 +471,14 @@ public class DungeonGenerator {
             }
         }
 
+        // ── Deferred branches: spawn side branches from splitter rooms ──
+        if (!deferredBranchExits.isEmpty()) {
+            LOGGER.at(Level.INFO).log("[%s] Spawning %d deferred branch(es) from splitters",
+                    branchId, deferredBranchExits.size());
+            forceSpawnBranches(world, store, random, level, deferredBranchExits, deadEndExits,
+                    branchDepth, branchId);
+        }
+
         LOGGER.at(Level.INFO).log("[%s] Branch complete: %d rooms placed (max %d)",
                 branchId, roomsPlaced, maxRooms);
         deadEndExits.addAll(currentExits);
@@ -442,27 +493,68 @@ public class DungeonGenerator {
                                            @Nonnull List<TrackedExit> currentExits,
                                            @Nonnull List<TrackedExit> deadEndExits,
                                            @Nonnull List<Path> corridorPaths,
-                                           int count, int branchDepth, @Nonnull String branchId) {
+                                           int count, int branchDepth, @Nonnull String branchId,
+                                           @Nonnull List<TrackedExit> deferredBranchExits,
+                                           @Nonnull Set<Integer> splitterSlots) {
         int placed = 0;
+
         for (int i = 0; i < count; i++) {
             if (currentExits.isEmpty()) break;
 
             TrackedExit exit = currentExits.remove(random.nextInt(currentExits.size()));
             List<TrackedExit> newExits = new ArrayList<>();
 
-            if (corridorPaths.isEmpty() || !tryPlaceRoom(world, store, random, corridorPaths, exit, newExits,
-                    branchId + "-Corridor-" + (i + 1), false, RoomType.CORRIDOR, level,
-                    branchDepth, branchId)) {
+            boolean useSplitter = splitterSlots.remove(i)
+                    && !resolvedPools.branch.isEmpty();
+
+            boolean success;
+            if (useSplitter) {
+                success = tryPlaceRoom(world, store, random, resolvedPools.branch, exit, newExits,
+                        branchId + "-Splitter-" + (i + 1), false, RoomType.CORRIDOR, level,
+                        branchDepth, branchId);
+                // Fall back to regular corridor if splitter didn't fit
+                if (!success) {
+                    success = !corridorPaths.isEmpty() && tryPlaceRoom(world, store, random, corridorPaths,
+                            exit, newExits, branchId + "-Corridor-" + (i + 1), false, RoomType.CORRIDOR,
+                            level, branchDepth, branchId);
+                }
+            } else {
+                success = !corridorPaths.isEmpty() && tryPlaceRoom(world, store, random, corridorPaths,
+                        exit, newExits, branchId + "-Corridor-" + (i + 1), false, RoomType.CORRIDOR,
+                        level, branchDepth, branchId);
+            }
+
+            if (!success) {
                 sealExit(exit.exit);
                 continue;
             }
 
             placed++;
             if (!newExits.isEmpty()) {
-                TrackedExit primary = newExits.remove(0);
-                currentExits.add(primary);
-                handleExtraExits(world, store, random, level, newExits, currentExits, deadEndExits,
-                        branchDepth, branchId);
+                if (useSplitter && newExits.size() > 1) {
+                    // Pick the exit most aligned with the incoming direction as main continuation
+                    int incomingRot = exit.exit.rotation();
+                    int bestIdx = 0;
+                    for (int j = 0; j < newExits.size(); j++) {
+                        if (newExits.get(j).exit.rotation() == incomingRot) {
+                            bestIdx = j;
+                            break;
+                        }
+                    }
+                    TrackedExit primary = newExits.remove(bestIdx);
+                    currentExits.add(primary);
+                    // Defer branch exits — build them after the main path is complete
+                    deferredBranchExits.addAll(newExits);
+                } else {
+                    TrackedExit primary = newExits.remove(0);
+                    currentExits.add(primary);
+                    if (useSplitter) {
+                        deferredBranchExits.addAll(newExits);
+                    } else {
+                        handleExtraExits(world, store, random, level, newExits, currentExits, deadEndExits,
+                                branchDepth, branchId);
+                    }
+                }
             }
         }
         return placed;
@@ -501,6 +593,34 @@ public class DungeonGenerator {
             } else {
                 deadEndExits.add(extra);
             }
+        }
+    }
+
+    /**
+     * Force-fork all extra exits into side branches (used by splitter rooms).
+     */
+    private void forceSpawnBranches(@Nonnull World world, @Nonnull Store<EntityStore> store,
+                                    @Nonnull Random random, @Nonnull dev.ninesliced.shotcave.dungeon.Level level,
+                                    @Nonnull List<TrackedExit> extraExits,
+                                    @Nonnull List<TrackedExit> deadEndExits,
+                                    int currentBranchDepth, @Nonnull String currentBranchId) {
+        DungeonConfig.BranchConfig branchConfig = activeLevelConfig.getBranch();
+
+        for (TrackedExit extra : extraExits) {
+            int newDepth = currentBranchDepth + 1;
+            branchCounter++;
+            String newBranchId = "branch-" + branchCounter;
+            LOGGER.at(Level.INFO).log("Splitter forking %s (depth %d) from %s", newBranchId, newDepth, currentBranchId);
+
+            List<TrackedExit> branchStarts = new ArrayList<>();
+            branchStarts.add(new TrackedExit(extra.exit, extra.parent, newDepth, newBranchId));
+
+            buildBranch(world, store, random, level, branchStarts, deadEndExits,
+                    newDepth, newBranchId,
+                    branchConfig.getChallengeRooms(),
+                    branchConfig.getMinimumCorridorLength(),
+                    branchConfig.getMaxRooms(),
+                    false /* not main branch */);
         }
     }
 
@@ -650,22 +770,82 @@ public class DungeonGenerator {
             Vector3i worldPos = new Vector3i(wx, wy, wz);
 
             switch (marker.type) {
-                case MOB_SPAWN_POINT -> roomData.addMobSpawnPoint(worldPos);
+                case MOB_SPAWN_POINT, MOB_SPAWNER -> roomData.addMobSpawnPoint(worldPos);
                 case KEY_SPAWNER -> roomData.addKeySpawnerPosition(worldPos);
                 case PORTAL -> roomData.addPortalPosition(worldPos);
                 case PORTAL_EXIT -> roomData.addPortalExitPosition(worldPos);
+                case DOOR -> roomData.addDoorPosition(worldPos);
+                case DOOR_KEY -> {
+                    roomData.addDoorPosition(worldPos);
+                    roomData.setDoorMode(DoorMode.KEY);
+                }
+                case DOOR_ACTIVATOR -> {
+                    roomData.addDoorPosition(worldPos);
+                    roomData.setDoorMode(DoorMode.ACTIVATOR);
+                }
+                case LOCK_ROOM -> roomData.setLocked(true);
+                case ACTIVATION_ZONE -> roomData.addActivationZonePosition(worldPos);
+                case MOB_ACTIVATOR -> roomData.addMobActivatorPosition(worldPos);
+                case MOB_CLEAR_ACTIVATOR -> roomData.setHasMobClearActivator(true);
                 default -> {}
             }
         }
 
+        // Process configured mob spawners — pinned spawns at exact block positions.
+        for (ConfiguredSpawnerLocal cs : data.configuredSpawners) {
+            int wx = pastePos.x + rotX(cs.x, cs.z, rot);
+            int wy = pastePos.y + cs.y;
+            int wz = pastePos.z + rotZ(cs.x, cs.z, rot);
+            Vector3i pos = new Vector3i(wx, wy, wz);
+
+            // Parse "MobId:Weight;MobId:Weight" and pick mobs by weight
+            List<MobSpawnerData.MobEntryData> entries = MobSpawnerData.parseEntries(cs.mobEntries);
+            if (!entries.isEmpty()) {
+                int totalWeight = 0;
+                for (MobSpawnerData.MobEntryData e : entries) totalWeight += e.weight();
+                if (totalWeight > 0) {
+                    Random rng = new Random();
+                    for (int i = 0; i < cs.spawnCount; i++) {
+                        int roll = rng.nextInt(totalWeight);
+                        for (MobSpawnerData.MobEntryData e : entries) {
+                            roll -= e.weight();
+                            if (roll < 0) {
+                                roomData.addPinnedMobSpawn(pos, e.mobId());
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Build challenge objectives from activator markers (any room type).
+        for (Vector3i pos : roomData.getActivationZonePositions()) {
+            roomData.addChallenge(new ChallengeObjective(ChallengeObjective.Type.ACTIVATION_ZONE, pos));
+        }
+        for (Vector3i pos : roomData.getMobActivatorPositions()) {
+            roomData.addChallenge(new ChallengeObjective(ChallengeObjective.Type.MOB_ACTIVATOR, pos));
+        }
+        if (roomData.hasMobClearActivator()) {
+            roomData.addChallenge(new ChallengeObjective(ChallengeObjective.Type.MOB_CLEAR, roomData.getAnchor()));
+        }
+        // Rooms with challenge objectives are automatically locked.
+        if (!roomData.getChallenges().isEmpty()) {
+            roomData.setLocked(true);
+        }
+
         int minX = Integer.MAX_VALUE, maxX = Integer.MIN_VALUE;
+        int minY = Integer.MAX_VALUE, maxY = Integer.MIN_VALUE;
         int minZ = Integer.MAX_VALUE, maxZ = Integer.MIN_VALUE;
         for (BlockLocal block : data.blocks) {
             if (block.isMarker) continue;
             int wx = pastePos.x + rotX(block.x, block.z, rot);
+            int wy = pastePos.y + block.y;
             int wz = pastePos.z + rotZ(block.x, block.z, rot);
             minX = Math.min(minX, wx);
             maxX = Math.max(maxX, wx);
+            minY = Math.min(minY, wy);
+            maxY = Math.max(maxY, wy);
             minZ = Math.min(minZ, wz);
             maxZ = Math.max(maxZ, wz);
             if (generatedLevel != null) {
@@ -674,6 +854,7 @@ public class DungeonGenerator {
         }
         if (minX <= maxX && minZ <= maxZ) {
             roomData.setBounds(minX, minZ, maxX, maxZ);
+            roomData.setYBounds(minY, maxY);
         }
 
         return roomData;
@@ -761,6 +942,65 @@ public class DungeonGenerator {
     // ════════════════════════════════════════════════
 
     /**
+     * Distribute mobs across eligible rooms using the level's mob pool.
+     * <p>
+     * {@code Shotcave_Mob_Spawn_Point} markers are candidate locations — not every
+     * marker gets a mob. The total mob count is rolled from the config's
+     * {@code mobsToSpawn} range, then distributed proportionally: rooms with more
+     * spawn points receive more mobs.
+     */
+    private void distributeMobs(@Nonnull dev.ninesliced.shotcave.dungeon.Level level,
+                                @Nonnull DungeonConfig.LevelConfig levelConfig,
+                                @Nonnull Random random) {
+        WeightedPool<String> mobPool = levelConfig.getMobPool();
+        if (mobPool == null || mobPool.isEmpty()) {
+            LOGGER.at(Level.WARNING).log("No mob pool configured for level '%s'", levelConfig.getName());
+            return;
+        }
+
+        // Collect eligible rooms and total spawn-point count
+        List<RoomData> eligible = new ArrayList<>();
+        int totalSpawnPoints = 0;
+        for (RoomData room : level.getRooms()) {
+            int points = room.getMobSpawnPoints().size();
+            if (points > 0) {
+                eligible.add(room);
+                totalSpawnPoints += points;
+            }
+        }
+
+        if (eligible.isEmpty() || totalSpawnPoints == 0) {
+            LOGGER.at(Level.WARNING).log("No eligible rooms with spawn points for mob distribution");
+            return;
+        }
+
+        int totalMobs = levelConfig.getMain().getMobsToSpawn().roll(random);
+
+        // Distribute proportionally based on each room's share of spawn points
+        int assigned = 0;
+        for (int r = 0; r < eligible.size(); r++) {
+            RoomData room = eligible.get(r);
+            int points = room.getMobSpawnPoints().size();
+            int roomMobs;
+            if (r == eligible.size() - 1) {
+                roomMobs = totalMobs - assigned;
+            } else {
+                roomMobs = Math.round((float) totalMobs * points / totalSpawnPoints);
+            }
+            // Never exceed the number of spawn points in the room
+            roomMobs = Math.max(0, Math.min(roomMobs, points));
+
+            for (int i = 0; i < roomMobs; i++) {
+                room.addMobToSpawn(mobPool.pick(random));
+            }
+            assigned += roomMobs;
+        }
+
+        LOGGER.at(Level.INFO).log("Distributed %d mobs across %d rooms (%d spawn points available, pool=%d entries)",
+                assigned, eligible.size(), totalSpawnPoints, mobPool.size());
+    }
+
+    /**
      * Find key spawner positions across the level and select N for placement.
      */
     private void distributeKeys(@Nonnull dev.ninesliced.shotcave.dungeon.Level level, int keyCount, @Nonnull Random random) {
@@ -791,7 +1031,7 @@ public class DungeonGenerator {
     // ════════════════════════════════════════════════
 
     @Nullable
-    private PrefabData readPrefabData(@Nonnull Path path) {
+    private static PrefabData readPrefabData(@Nonnull Path path) {
         try (InputStreamReader reader = new InputStreamReader(
                 Files.newInputStream(path), StandardCharsets.UTF_8)) {
             JsonObject root = GSON.fromJson(reader, JsonObject.class);
@@ -803,6 +1043,7 @@ public class DungeonGenerator {
             List<SpawnerLocal> spawners = new ArrayList<>();
             List<MarkerLocal> markers = new ArrayList<>();
             List<PrefabMobMarkerLocal> mobMarkers = new ArrayList<>();
+            List<ConfiguredSpawnerLocal> configuredSpawners = new ArrayList<>();
 
             JsonArray arr = root.getAsJsonArray("blocks");
             if (arr != null) {
@@ -823,6 +1064,27 @@ public class DungeonGenerator {
                     } else if (markerType != null) {
                         isMarker = true;
                         markers.add(new MarkerLocal(x, y, z, markerType));
+                        // Read MobSpawnerData from block components if present
+                        if (markerType == MarkerType.MOB_SPAWNER) {
+                            JsonObject comps = b.getAsJsonObject("components");
+                            if (comps != null) {
+                                JsonObject inner = comps.getAsJsonObject("Components");
+                                if (inner != null) {
+                                    JsonObject msd = inner.getAsJsonObject("MobSpawnerData");
+                                    if (msd != null) {
+                                        String entries = msd.has("MobEntries") ? msd.get("MobEntries").getAsString() : "";
+                                        int count = 1;
+                                        if (msd.has("SpawnCount")) {
+                                            try { count = Integer.parseInt(msd.get("SpawnCount").getAsString()); }
+                                            catch (NumberFormatException ignored) {}
+                                        }
+                                        if (!entries.isEmpty()) {
+                                            configuredSpawners.add(new ConfiguredSpawnerLocal(x, y, z, entries, count));
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     } else {
                         isMarker = "Prefab_Spawner_Block".equals(name);
                         if (isMarker) {
@@ -858,7 +1120,7 @@ public class DungeonGenerator {
                 }
             }
 
-            return new PrefabData(blocks, spawners, markers, mobMarkers);
+            return new PrefabData(blocks, spawners, markers, mobMarkers, configuredSpawners);
         } catch (IOException e) {
             LOGGER.at(Level.WARNING).withCause(e).log("Failed to read prefab: %s", path);
             return null;
@@ -869,11 +1131,12 @@ public class DungeonGenerator {
                                   @Nonnull Random random, @Nonnull Path prefabPath,
                                   @Nonnull PrefabData data, @Nonnull Vector3i pastePos,
                                   int rot) {
-        IPrefabBuffer buffer = DungeonConfig.loadBuffer(prefabPath);
-        if (buffer == null) {
+        IPrefabBuffer rawBuffer = DungeonConfig.loadBuffer(prefabPath);
+        if (rawBuffer == null) {
             throw new RuntimeException("Failed to load buffer: " + prefabPath);
         }
 
+        IPrefabBuffer buffer = new SpawnerFilteredBuffer(rawBuffer, pastePos.y);
         PrefabUtil.paste(buffer, world, pastePos, toEngineRotation(rot),
                 true, random, 0, false, false, true, store);
 
@@ -894,13 +1157,72 @@ public class DungeonGenerator {
                 try {
                     MarkerType mt = MarkerType.fromBlockName(block.name);
                     world.setBlock(wx, wy, wz, "Empty", 0);
-                    if (mt == MarkerType.WATER) {
-                        placeFluid(world, wx, wy, wz, "Water", (byte) 8);
+                    if (mt != null) {
+                        switch (mt) {
+                            case WATER -> placeFluid(world, wx, wy, wz, "Water", (byte) 8);
+                            case TAR -> placeFluid(world, wx, wy, wz, "Tar", (byte) 8);
+                            case POISON -> placeFluid(world, wx, wy, wz, "Poison", (byte) 8);
+                            case LAVA -> placeFluid(world, wx, wy, wz, "Lava", (byte) 8);
+                            case SLIME -> placeFluid(world, wx, wy, wz, "Slime", (byte) 8);
+                            case RED_SLIME -> placeFluid(world, wx, wy, wz, "Red_Slime", (byte) 8);
+                            default -> {}
+                        }
                     }
                 } catch (Exception e) {
                     LOGGER.at(Level.FINE).withCause(e).log("Failed to process marker block at %d,%d,%d", wx, wy, wz);
                 }
             }
+        }
+    }
+
+    /**
+     * Paste a lock door prefab on top of a locked room at the room's anchor position.
+     */
+    /**
+     * Paste a lock door prefab at the given position. Can be called at runtime (room entry).
+     */
+    /**
+     * Paste a lock door prefab at the given position. Can be called at runtime (room entry).
+     * Records all pasted block positions on the RoomData so they can be removed on clear.
+     */
+    public static void pasteLockDoor(@Nonnull World world, @Nonnull DungeonConfig.LevelConfig levelConfig,
+                                     @Nonnull RoomData room, @Nonnull Vector3i pastePos, int rot) {
+        List<Path> lockDoorPaths = DungeonConfig.resolveGlobs(levelConfig.getRoomPools().getLockDoor());
+        if (lockDoorPaths.isEmpty()) {
+            LOGGER.at(Level.WARNING).log("No lockDoor prefabs configured, skipping lock door paste at %s", pastePos);
+            return;
+        }
+        Random random = new Random();
+        Path doorPath = DungeonConfig.pickRandom(random, lockDoorPaths);
+        PrefabData doorData = readPrefabData(doorPath);
+        if (doorData == null) {
+            LOGGER.at(Level.WARNING).log("Failed to read lock door prefab: %s", doorPath);
+            return;
+        }
+        try {
+            IPrefabBuffer rawBuffer = DungeonConfig.loadBuffer(doorPath);
+            if (rawBuffer == null) {
+                LOGGER.at(Level.WARNING).log("Failed to load lock door buffer: %s", doorPath);
+                return;
+            }
+            IPrefabBuffer buffer = new SpawnerFilteredBuffer(rawBuffer, pastePos.y);
+            Store<EntityStore> store = world.getEntityStore().getStore();
+            PrefabUtil.paste(buffer, world, pastePos, toEngineRotation(rot),
+                    true, random, 0, false, false, true, store);
+
+            // Record block positions so we can remove them when the room is cleared.
+            for (BlockLocal block : doorData.blocks) {
+                if (block.isMarker) continue;
+                int wx = pastePos.x + rotX(block.x, block.z, rot);
+                int wy = pastePos.y + block.y;
+                int wz = pastePos.z + rotZ(block.x, block.z, rot);
+                room.addLockDoorBlockPosition(new Vector3i(wx, wy, wz));
+            }
+
+            LOGGER.at(Level.INFO).log("Pasted lock door %s at %s rot=%d (%d blocks tracked)",
+                    doorPath.getFileName(), pastePos, rot, room.getLockDoorBlockPositions().size());
+        } catch (Exception e) {
+            LOGGER.at(Level.WARNING).withCause(e).log("Failed to paste lock door at %s", pastePos);
         }
     }
 
@@ -935,6 +1257,8 @@ public class DungeonGenerator {
         List<Path> boss      = DungeonConfig.resolveGlobs(global.getBoss());
         List<Path> wall      = DungeonConfig.resolveGlobs(global.getWall());
         List<Path> keyDoor   = DungeonConfig.resolveGlobs(global.getKeyDoor());
+        List<Path> lockDoor  = DungeonConfig.resolveGlobs(global.getLockDoor());
+        List<Path> branch    = DungeonConfig.resolveGlobs(global.getBranch());
 
         DungeonConfig.RoomPools mainPools = mainCfg.getRooms();
         List<Path> mainCorridor = new ArrayList<>(corridor);
@@ -952,7 +1276,7 @@ public class DungeonGenerator {
             branchChallenge.addAll(DungeonConfig.resolveGlobs(branchPools.getChallenge()));
         }
 
-        return new ResolvedPools(spawn, corridor, challenge, treasure, shop, boss, wall, keyDoor,
+        return new ResolvedPools(spawn, corridor, challenge, treasure, shop, boss, wall, keyDoor, lockDoor, branch,
                 mainCorridor, mainChallenge, branchCorridor, branchChallenge);
     }
 
@@ -985,8 +1309,13 @@ public class DungeonGenerator {
     private record PrefabMobMarkerLocal(double x, double y, double z, @Nonnull String mobId) {
     }
 
+    private record ConfiguredSpawnerLocal(int x, int y, int z,
+                                           @Nonnull String mobEntries, int spawnCount) {
+    }
+
     private record PrefabData(List<BlockLocal> blocks, List<SpawnerLocal> spawners,
-                              List<MarkerLocal> markers, List<PrefabMobMarkerLocal> mobMarkers) {
+                              List<MarkerLocal> markers, List<PrefabMobMarkerLocal> mobMarkers,
+                              List<ConfiguredSpawnerLocal> configuredSpawners) {
     }
 
     private record OpenExit(int worldX, int worldY, int worldZ, int rotation) {
@@ -998,8 +1327,79 @@ public class DungeonGenerator {
     private record ResolvedPools(
             List<Path> spawn, List<Path> corridor, List<Path> challenge,
             List<Path> treasure, List<Path> shop, List<Path> boss,
-            List<Path> wall, List<Path> keyDoor,
+            List<Path> wall, List<Path> keyDoor, List<Path> lockDoor, List<Path> branch,
             List<Path> mainCorridor, List<Path> mainChallenge,
             List<Path> branchCorridor, List<Path> branchChallenge) {
+    }
+
+    /**
+     * Wraps an IPrefabBuffer to skip Prefab_Spawner_Block entries (handled as exit markers)
+     * and blocks that would land outside valid world Y range (where chunk sections don't exist).
+     */
+    private static final class SpawnerFilteredBuffer implements IPrefabBuffer {
+        private final IPrefabBuffer delegate;
+        private final int spawnerBlockId;
+        private final int pasteY;
+
+        SpawnerFilteredBuffer(@Nonnull IPrefabBuffer delegate, int pasteY) {
+            this.delegate = delegate;
+            this.spawnerBlockId = BlockType.getAssetMap().getIndex("Prefab_Spawner_Block");
+            this.pasteY = pasteY;
+        }
+
+        @Override public int getAnchorX() { return delegate.getAnchorX(); }
+        @Override public int getAnchorY() { return delegate.getAnchorY(); }
+        @Override public int getAnchorZ() { return delegate.getAnchorZ(); }
+        @Override public int getMinX(@Nonnull PrefabRotation r) { return delegate.getMinX(r); }
+        @Override public int getMinY() { return delegate.getMinY(); }
+        @Override public int getMinZ(@Nonnull PrefabRotation r) { return delegate.getMinZ(r); }
+        @Override public int getMaxX(@Nonnull PrefabRotation r) { return delegate.getMaxX(r); }
+        @Override public int getMaxY() { return delegate.getMaxY(); }
+        @Override public int getMaxZ(@Nonnull PrefabRotation r) { return delegate.getMaxZ(r); }
+        @Override public int getMinYAt(@Nonnull PrefabRotation r, int x, int z) { return delegate.getMinYAt(r, x, z); }
+        @Override public int getMaxYAt(@Nonnull PrefabRotation r, int x, int z) { return delegate.getMaxYAt(r, x, z); }
+        @Override public int getColumnCount() { return delegate.getColumnCount(); }
+        @Override @Nonnull public PrefabBuffer.ChildPrefab[] getChildPrefabs() { return delegate.getChildPrefabs(); }
+        @Override public int getBlockId(int x, int y, int z) { return delegate.getBlockId(x, y, z); }
+        @Override public int getFiller(int x, int y, int z) { return delegate.getFiller(x, y, z); }
+        @Override public int getRotationIndex(int x, int y, int z) { return delegate.getRotationIndex(x, y, z); }
+        @Override
+        public <T extends PrefabBufferCall> void forEach(
+                @Nonnull ColumnPredicate<T> columnPredicate,
+                @Nonnull BlockConsumer<T> blockConsumer,
+                @Nullable EntityConsumer<T> entityConsumer,
+                @Nullable ChildConsumer<T> childConsumer,
+                @Nonnull T t) {
+            delegate.forEach(columnPredicate, (x, y, z, blockId, holder, supportValue, rotation, filler, call, fluidId, fluidLevel) -> {
+                if (blockId == spawnerBlockId) {
+                    return; // Skip entirely — replaced with Empty after paste
+                }
+                int worldY = pasteY + y;
+                if (worldY < 0 || worldY >= 256) {
+                    return; // Skip blocks outside world bounds — no chunk section exists
+                }
+                blockConsumer.accept(x, y, z, blockId, holder, supportValue, rotation, filler, call, fluidId, fluidLevel);
+            }, entityConsumer, childConsumer, t);
+        }
+
+        @Override
+        public <T> void forEachRaw(
+                @Nonnull ColumnPredicate<T> columnPredicate,
+                @Nonnull RawBlockConsumer<T> blockConsumer,
+                @Nonnull FluidConsumer<T> fluidConsumer,
+                @Nullable EntityConsumer<T> entityConsumer,
+                @Nullable T t) {
+            delegate.forEachRaw(columnPredicate, blockConsumer, fluidConsumer, entityConsumer, t);
+        }
+
+        @Override
+        public <T> boolean forEachRaw(
+                @Nonnull ColumnPredicate<T> columnPredicate,
+                @Nonnull RawBlockPredicate<T> blockPredicate,
+                @Nonnull FluidPredicate<T> fluidPredicate,
+                @Nullable EntityPredicate<T> entityPredicate,
+                @Nullable T t) {
+            return delegate.forEachRaw(columnPredicate, blockPredicate, fluidPredicate, entityPredicate, t);
+        }
     }
 }

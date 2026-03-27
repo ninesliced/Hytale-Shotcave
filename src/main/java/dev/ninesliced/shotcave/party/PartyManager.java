@@ -12,6 +12,8 @@ import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.spawn.ISpawnProvider;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import dev.ninesliced.shotcave.OnlinePlayers;
+import dev.ninesliced.shotcave.PlayerEventNotifier;
 import dev.ninesliced.shotcave.Shotcave;
 import dev.ninesliced.shotcave.dungeon.DungeonConfig;
 import dev.ninesliced.shotcave.dungeon.DungeonInstanceService;
@@ -123,7 +125,7 @@ public final class PartyManager {
 
         target.members.put(playerRef.getUuid(), playerRef.getUsername());
         this.partyByMember.put(playerRef.getUuid(), target.id);
-        broadcast(target, partyPrefix().insert(Message.raw(playerRef.getUsername() + " joined the party.").color("#dce6ef")));
+        broadcast(target, playerRef.getUsername() + " joined the party.");
         PartyUiPage.refreshOpenPages();
         return ActionResult.success("Joined " + target.name + ".", target);
     }
@@ -200,9 +202,9 @@ public final class PartyManager {
 
         PlayerRef targetRef = Universe.get().getPlayer(targetId);
         if (targetRef != null) {
-            targetRef.sendMessage(partyPrefix().insert(Message.raw("You were removed from " + party.name + ".").color("#ffb0b0")));
+            PlayerEventNotifier.showEventTitle(targetRef, "Removed from " + party.name, true);
         }
-        broadcast(party, partyPrefix().insert(Message.raw(memberName + " was removed from the party.").color("#dce6ef")));
+        broadcast(party, memberName + " was removed from the party.");
         PartyUiPage.refreshOpenPages();
         return ActionResult.success("Removed " + memberName + " from the party.", party);
     }
@@ -218,7 +220,7 @@ public final class PartyManager {
         }
 
         party.privacy = privacy;
-        broadcast(party, partyPrefix().insert(Message.raw("Party privacy set to " + privacy.getDisplayName() + ".").color("#dce6ef")));
+        broadcast(party, "Party privacy set to " + privacy.getDisplayName() + ".");
         PartyUiPage.refreshOpenPages();
         return ActionResult.success("Party privacy set to " + privacy.getDisplayName().toLowerCase(Locale.ROOT) + ".", party);
     }
@@ -237,7 +239,7 @@ public final class PartyManager {
     this.plugin.getGameManager().onPlayerLeftParty(party.id, playerRef.getUuid());
         this.partyByMember.remove(playerRef.getUuid());
         removeInvite(playerRef.getUuid(), party.id);
-        broadcast(party, partyPrefix().insert(Message.raw(name + " left the party.").color("#dce6ef")));
+        broadcast(party, name + " left the party.");
         PartyUiPage.refreshOpenPages();
         return ActionResult.success("You left the party.", party);
     }
@@ -362,7 +364,7 @@ public final class PartyManager {
                         java.util.concurrent.CompletableFuture.completedFuture(instanceWorld),
                         status -> {
                             this.plugin.getCameraService().cancelDeferredEnable(member.playerRef());
-                            member.playerRef().sendMessage(partyPrefix().insert(Message.raw(status).color("#ffb0b0")));
+                            PlayerEventNotifier.showEventTitle(member.playerRef(), status, true);
                         }
                 );
             }
@@ -377,11 +379,11 @@ public final class PartyManager {
                     3, java.util.concurrent.TimeUnit.SECONDS
             );
         }).exceptionally(throwable -> {
-            broadcast(party, partyPrefix().insert(Message.raw("Failed to start dungeon: " + throwable.getMessage()).color("#ffb0b0")));
+            broadcast(party, "Failed to start dungeon: " + throwable.getMessage(), true);
             return null;
         });
 
-        broadcast(party, partyPrefix().insert(Message.raw("Starting a fresh Shotcave dungeon instance...").color("#dce6ef")));
+        broadcast(party, "Starting a fresh Shotcave dungeon instance...");
         return ActionResult.success("Launching a new generated dungeon instance for the party.", party);
     }
 
@@ -410,9 +412,9 @@ public final class PartyManager {
             party.leaderId = nextLeader.getKey();
             party.leaderName = nextLeader.getValue();
             party.name = partyNameFor(nextLeader.getValue());
-            broadcast(party, partyPrefix().insert(Message.raw(memberName + " disconnected. " + party.leaderName + " is now the party leader.").color("#dce6ef")));
+            broadcast(party, memberName + " disconnected. " + party.leaderName + " is now the party leader.");
         } else {
-            broadcast(party, partyPrefix().insert(Message.raw(memberName + " disconnected and left the party.").color("#dce6ef")));
+            broadcast(party, memberName + " disconnected and left the party.");
         }
 
         PartyUiPage.refreshOpenPages();
@@ -470,7 +472,7 @@ public final class PartyManager {
         }
 
         List<InviteCandidateSnapshot> candidates = new ArrayList<>();
-        for (PlayerRef candidate : Universe.get().getPlayers()) {
+        for (PlayerRef candidate : OnlinePlayers.snapshot()) {
             UUID candidateId = candidate.getUuid();
             if (candidateId.equals(playerId)) {
                 continue;
@@ -568,7 +570,7 @@ public final class PartyManager {
             removeInvite(memberId, party.id);
             PlayerRef member = Universe.get().getPlayer(memberId);
             if (member != null) {
-                member.sendMessage(partyPrefix().insert(Message.raw(reason).color("#ffb0b0")));
+                PlayerEventNotifier.showEventTitle(member, reason, true);
             }
         }
         PartyUiPage.refreshOpenPages();
@@ -611,7 +613,7 @@ public final class PartyManager {
         }
 
         PlayerRef startsWithMatch = null;
-        for (PlayerRef candidate : Universe.get().getPlayers()) {
+        for (PlayerRef candidate : OnlinePlayers.snapshot()) {
             String username = candidate.getUsername();
             if (username.equalsIgnoreCase(normalized)) {
                 return candidate;
@@ -659,11 +661,15 @@ public final class PartyManager {
         return new PartySnapshot(party.id.toString(), party.name, party.leaderId.toString(), party.leaderName, party.privacy, members);
     }
 
-    private void broadcast(@Nonnull Party party, @Nonnull Message message) {
+    private void broadcast(@Nonnull Party party, @Nonnull String text) {
+        broadcast(party, text, false);
+    }
+
+    private void broadcast(@Nonnull Party party, @Nonnull String text, boolean major) {
         for (UUID memberId : party.members.keySet()) {
             PlayerRef playerRef = Universe.get().getPlayer(memberId);
             if (playerRef != null) {
-                playerRef.sendMessage(message);
+                PlayerEventNotifier.showEventTitle(playerRef, text, major);
             }
         }
     }
@@ -671,9 +677,8 @@ public final class PartyManager {
     private void sendStatusToPlayers(@Nonnull Collection<PendingTeleport> members,
                                      @Nonnull String text,
                                      @Nonnull String color) {
-        Message message = partyPrefix().insert(Message.raw(text).color(color));
         for (PendingTeleport member : members) {
-            member.playerRef().sendMessage(message);
+            PlayerEventNotifier.showEventTitle(member.playerRef(), text, true);
         }
     }
 

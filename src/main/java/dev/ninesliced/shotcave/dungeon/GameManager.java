@@ -11,9 +11,9 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.vector.Transform;
-import com.hypixel.hytale.math.vector.Vector3d;
-import com.hypixel.hytale.math.vector.Vector3f;
-import com.hypixel.hytale.math.vector.Vector3i;
+import org.joml.Vector3d;
+import com.hypixel.hytale.math.vector.Rotation3f;
+import org.joml.Vector3i;
 import com.hypixel.hytale.protocol.AnimationSlot;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
@@ -50,6 +50,7 @@ import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.npc.NPCPlugin;
+import dev.ninesliced.shotcave.PlayerEventNotifier;
 import dev.ninesliced.shotcave.Shotcave;
 import dev.ninesliced.shotcave.inventory.InventoryLockService;
 import dev.ninesliced.shotcave.hud.DungeonInfoHud;
@@ -69,6 +70,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -102,6 +104,11 @@ public final class GameManager {
      * Revive marker entity refs keyed by the downed player's UUID.
      */
     private final Map<UUID, Ref<EntityStore>> reviveMarkers = new ConcurrentHashMap<>();
+    /**
+     * Players who have already been normalized after landing outside a dungeon world.
+     * Prevents repeated inventory restores if multiple world/ready/tick hooks fire.
+     */
+    private final Set<UUID> outsideDungeonNormalizedPlayers = ConcurrentHashMap.newKeySet();
 
     public GameManager(@Nonnull Shotcave plugin) {
         this.plugin = plugin;
@@ -142,6 +149,7 @@ public final class GameManager {
         DungeonConfig.LevelConfig firstLevelConfig = config.getLevels().get(0);
         Level firstLevel = new Level(firstLevelConfig.getName(), 0);
         game.addLevel(firstLevel);
+        game.setCurrentLevelSelector(firstLevelConfig.getSelector());
 
         CompletableFuture<World> worldFuture = plugin.getDungeonInstanceService().spawnGeneratedInstance(
                 leaderWorld,
@@ -219,6 +227,14 @@ public final class GameManager {
             Level currentLevel = game.getCurrentLevel();
             if (currentLevel != null) {
                 spawnLevelMobs(currentLevel, store);
+                // Spawn portals in unlocked rooms at level start (cosmetic only).
+                for (RoomData room : currentLevel.getRooms()) {
+                    if (room.getType() != RoomType.BOSS
+                            && !room.isLocked()
+                            && !room.getPortalPositions().isEmpty()) {
+                        plugin.getPortalService().spawnPortal(room, world);
+                    }
+                }
             }
 
             broadcastToParty(game.getPartyId(), "The dungeon awaits! Fight your way through!", "#a9f5b3");
@@ -242,71 +258,207 @@ public final class GameManager {
         if (world == null) return;
 
         DungeonConfig config = plugin.loadDungeonConfig();
-        DungeonConfig.LevelConfig levelConfig = resolveLevelConfig(config, game.getCurrentLevelIndex());
+        DungeonConfig.LevelConfig levelConfig = resolveCurrentLevelConfig(config, game);
 
         world.execute(() -> {
             Store<EntityStore> store = world.getEntityStore().getStore();
 
-            sealBossRoom(game, bossRoom, world);
+            // Seal boss room — prefer door positions from prefab, fall back to hardcoded.
+            if (!bossRoom.getDoorPositions().isEmpty()) {
+                String doorBlock = levelConfig != null ? levelConfig.getDoorBlock() : "Stone_Brick_Wall";
+                plugin.getDoorService().sealRoom(bossRoom, world, doorBlock);
+                game.setBossRoomSealed(true);
+            } else {
+                sealBossRoom(game, bossRoom, world);
+            }
 
             if (levelConfig != null && levelConfig.getBossMob() != null && !levelConfig.getBossMob().isBlank()) {
-                Vector3i anchor = bossRoom.getAnchor();
-                Vector3d bossPos = new Vector3d(anchor.x + 5, anchor.y + 1, anchor.z + 5);
-                try {
-                    var bossNpcResult = NPCPlugin.get().spawnNPC(store, levelConfig.getBossMob(), null, bossPos, Vector3f.ZERO);
-                    Ref<EntityStore> bossRef = bossNpcResult != null ? bossNpcResult.first() : null;
-                    if (bossRef != null) {
-                        bossRoom.addSpawnedMob(bossRef);
-                        LOGGER.info("Boss spawned: " + levelConfig.getBossMob() + " at " + bossPos);
-                    }
-                } catch (Exception e) {
-                    LOGGER.log(java.util.logging.Level.WARNING, "Failed to spawn boss", e);
+                // Spawn boss at mob spawn points if available, otherwise use anchor offset.
+                List<Vector3i> spawnPoints = bossRoom.getMobSpawnPoints();
+                if (!spawnPoints.isEmpty()) {
+                    Vector3i sp = spawnPoints.get(0);
+                    Vector3d bossPos = new Vector3d(sp.x + 0.5, sp.y + 1.0, sp.z + 0.5);
+                    spawnBossAt(store, bossRoom, levelConfig.getBossMob(), bossPos);
+                } else {
+                    Vector3i anchor = bossRoom.getAnchor();
+                    Vector3d bossPos = new Vector3d(anchor.x + 5, anchor.y + 1, anchor.z + 5);
+                    spawnBossAt(store, bossRoom, levelConfig.getBossMob(), bossPos);
                 }
             }
 
-            broadcastToParty(game.getPartyId(), "⚔ BOSS FIGHT! Defeat the boss to advance!", "#ff6b6b");
+            broadcastToParty(game.getPartyId(), "BOSS FIGHT! Defeat the boss to advance!", "#ff6b6b");
         });
     }
 
+    private void spawnBossAt(@Nonnull Store<EntityStore> store, @Nonnull RoomData bossRoom,
+                              @Nonnull String bossMobId, @Nonnull Vector3d bossPos) {
+        try {
+            var bossNpcResult = NPCPlugin.get().spawnNPC(store, bossMobId, null, bossPos, Rotation3f.ZERO);
+            Ref<EntityStore> bossRef = bossNpcResult != null ? bossNpcResult.first() : null;
+            if (bossRef != null) {
+                bossRoom.addSpawnedMob(bossRef);
+                bossRoom.setExpectedMobCount(bossRoom.getExpectedMobCount() + 1);
+                LOGGER.info("Boss spawned: " + bossMobId + " at " + bossPos);
+            }
+        } catch (Exception e) {
+            LOGGER.log(java.util.logging.Level.WARNING, "Failed to spawn boss", e);
+        }
+    }
+
     /**
-     * Called when the boss is defeated.
+     * Called when the boss is defeated. Sets TRANSITIONING state and spawns
+     * a portal in the boss room for players to walk into.
      */
     public void onBossDefeated(@Nonnull Game game) {
-        if (game.getState() != GameState.BOSS) return;
+        if (game.getState() != GameState.BOSS && game.getState() != GameState.ACTIVE) return;
 
         Level level = game.getCurrentLevel();
+        RoomData bossRoom = level != null ? level.getBossRoom() : null;
+        LOGGER.info("onBossDefeated start: party=" + game.getPartyId()
+                + " state=" + game.getState()
+                + " levelIndex=" + game.getCurrentLevelIndex()
+                + " level=" + (level != null ? level.getName() : "null")
+                + " playersInInstance=" + game.getPlayersInInstance().size()
+                + " deadPlayers=" + game.getDeadPlayers().size()
+                + " bossRoomAnchor=" + (bossRoom != null ? bossRoom.getAnchor() : "null"));
+        game.setState(GameState.TRANSITIONING);
+
         if (level == null) return;
-        RoomData bossRoom = level.getBossRoom();
 
         World world = game.getInstanceWorld();
         if (world == null) return;
 
         world.execute(() -> {
-            unsealBossRoom(game, bossRoom, world);
+            // Unseal boss room — use onRoomCleared to handle both door markers and lock door prefab blocks.
+            if (bossRoom != null) {
+                plugin.getDoorService().onRoomCleared(bossRoom, world);
+                game.setBossRoomSealed(false);
+            }
 
             // Revive all dead/ghost players on level completion
             reviveAllDeadPlayers(game);
 
-            if (game.hasNextLevel()) {
-                broadcastToParty(game.getPartyId(), "Boss defeated! Advancing to the next level...", "#a9f5b3");
+            // Spawn portal in boss room
+            if (bossRoom != null) {
+                plugin.getPortalService().spawnPortal(bossRoom, world);
+            }
+            game.setPortalsActive(true);
+            game.setPortalsActivatedAt(System.currentTimeMillis());
+            LOGGER.info("Boss portal activated for party " + game.getPartyId()
+                    + " level=" + level.getName()
+                    + " nextLevel=" + hasNextLevelConfig(game)
+                    + " portalPositions=" + (bossRoom != null ? bossRoom.getPortalPositions().size() : 0)
+                    + " activatedAt=" + game.getPortalsActivatedAt()
+                    + " victoryTimestamp=" + game.getVictoryTimestamp());
 
-                int nextIndex = game.getCurrentLevelIndex() + 1;
-                DungeonConfig config = plugin.loadDungeonConfig();
-                if (nextIndex < config.getLevels().size()) {
-                    DungeonConfig.LevelConfig nextLevelConfig = config.getLevels().get(nextIndex);
-                    Level nextLevel = new Level(nextLevelConfig.getName(), nextIndex);
-                    game.addLevel(nextLevel);
-                    game.setCurrentLevelIndex(nextIndex);
-                    game.setState(GameState.ACTIVE);
-
-                    Store<EntityStore> store = world.getEntityStore().getStore();
-                    spawnLevelMobs(nextLevel, store);
-                }
+            if (hasNextLevelConfig(game)) {
+                broadcastToParty(game.getPartyId(), "Boss defeated! Step into the portal to advance!", "#a9f5b3");
             } else {
-                broadcastToParty(game.getPartyId(), "🎉 Dungeon Complete! Congratulations!", "#ffd700");
-                endGame(game, false);
+                broadcastToParty(game.getPartyId(), "Dungeon Complete! Step into the portal to return home!", "#ffd700");
+                game.setVictoryTimestamp(System.currentTimeMillis());
             }
         });
+    }
+
+    /**
+     * Checks if there is a next level configured (not yet generated).
+     */
+    public boolean hasNextLevelConfig(@Nonnull Game game) {
+        DungeonConfig config = plugin.loadDungeonConfig();
+        return resolveNextLevelConfig(config, game) != null;
+    }
+
+    /**
+     * Called when a player walks into the boss room portal.
+     * Advances to the next level or ends the game.
+     */
+    public void onPortalEntered(@Nonnull Game game, @Nonnull UUID playerId) {
+        if (game.getState() != GameState.TRANSITIONING) return;
+        boolean hasNextLevel = hasNextLevelConfig(game);
+        LOGGER.info("onPortalEntered: party=" + game.getPartyId()
+                + " player=" + playerId
+                + " state=" + game.getState()
+                + " hasNextLevel=" + hasNextLevel
+                + " playersInInstanceBefore=" + game.getPlayersInInstance().size()
+                + " victoryTimestamp=" + game.getVictoryTimestamp());
+
+        if (hasNextLevel) {
+            game.setPortalsActive(false);
+            game.setPortalsActivatedAt(0L);
+            advanceToNextLevel(game);
+        } else {
+            PlayerRef playerRef = Universe.get().getPlayer(playerId);
+            if (playerRef != null) {
+                PlayerEventNotifier.showEventTitle(playerRef, "Returning to the surface...", true);
+            }
+            onPlayerLeftParty(game.getPartyId(), playerId);
+        }
+    }
+
+    /**
+     * Generates the next level, teleports all players to its entrance, and starts it.
+     */
+    private void advanceToNextLevel(@Nonnull Game game) {
+        World world = game.getInstanceWorld();
+        if (world == null) return;
+
+        DungeonConfig config = plugin.loadDungeonConfig();
+        DungeonConfig.LevelConfig nextLevelConfig = resolveNextLevelConfig(config, game);
+        if (nextLevelConfig == null) {
+            LOGGER.warning("advanceToNextLevel called for party " + game.getPartyId()
+                    + " but no nextLevel is configured for current selector " + game.getCurrentLevelSelector());
+            return;
+        }
+
+        int nextIndex = game.getCurrentLevelIndex() + 1;
+        Level nextLevel = new Level(nextLevelConfig.getName(), nextIndex);
+        game.addLevel(nextLevel);
+        game.setCurrentLevelIndex(nextIndex);
+        game.setCurrentLevelSelector(nextLevelConfig.getSelector());
+
+        world.execute(() -> {
+            Store<EntityStore> store = world.getEntityStore().getStore();
+            spawnLevelMobs(nextLevel, store);
+
+            // Spawn portals for unlocked rooms in the new level.
+            for (RoomData room : nextLevel.getRooms()) {
+                if (room.getType() != RoomType.BOSS
+                        && !room.isLocked()
+                        && !room.getPortalPositions().isEmpty()) {
+                    plugin.getPortalService().spawnPortal(room, world);
+                }
+            }
+
+            // Teleport all players to the entrance of the new level.
+            RoomData entrance = nextLevel.getEntranceRoom();
+            if (entrance != null) {
+                Vector3i anchor = entrance.getAnchor();
+                Vector3d spawnPos = new Vector3d(anchor.x + 0.5, anchor.y + 1.0, anchor.z + 0.5);
+                teleportAllPlayersToPosition(game, world, store, spawnPos);
+            }
+
+            game.setState(GameState.ACTIVE);
+            broadcastToParty(game.getPartyId(), "Welcome to " + nextLevelConfig.getName() + "!", "#a9f5b3");
+        });
+    }
+
+    /**
+     * Teleports all players currently in the instance to the given position (same world).
+     */
+    private void teleportAllPlayersToPosition(@Nonnull Game game, @Nonnull World world,
+                                               @Nonnull Store<EntityStore> store,
+                                               @Nonnull Vector3d position) {
+        for (UUID playerId : game.getPlayersInInstance()) {
+            PlayerRef playerRef = Universe.get().getPlayer(playerId);
+            if (playerRef == null) continue;
+
+            Ref<EntityStore> ref = playerRef.getReference();
+            if (ref == null || !ref.isValid()) continue;
+
+            Store<EntityStore> playerStore = ref.getStore();
+            Teleport tp = Teleport.createForPlayer(position, new Rotation3f());
+            playerStore.putComponent(ref, Teleport.getComponentType(), tp);
+        }
     }
 
     /**
@@ -436,6 +588,12 @@ public final class GameManager {
         game.removeDeadPlayer(playerId);
         boolean wasInInstance = game.isPlayerInInstance(playerId);
         game.setPlayerInInstance(playerId, false);
+        LOGGER.info("onPlayerLeftParty: party=" + partyId
+                + " player=" + playerId
+                + " state=" + game.getState()
+                + " wasInInstance=" + wasInInstance
+                + " remainingPlayersInInstance=" + game.getPlayersInInstance().size()
+                + " victoryTimestamp=" + game.getVictoryTimestamp());
 
         PlayerRef playerRef = Universe.get().getPlayer(playerId);
         if (playerRef != null) {
@@ -448,6 +606,10 @@ public final class GameManager {
                 if (player != null) {
                     Transform returnPoint = game.getReturnPoints().get(playerId);
                     World trackedReturnWorld = game.getReturnWorlds().get(playerId);
+                    LOGGER.info("Preparing leave-party cleanup for player " + playerId
+                            + " currentWorld=" + (player.getWorld() != null ? player.getWorld().getName() : "null")
+                            + " returnWorld=" + (trackedReturnWorld != null ? trackedReturnWorld.getName() : "null")
+                            + " hasReturnPoint=" + (returnPoint != null));
 
                     hideDungeonHuds(player, playerRef);
 
@@ -576,7 +738,7 @@ public final class GameManager {
                 CompletableFuture.completedFuture(instanceWorld),
                 status -> {
                     plugin.getCameraService().cancelDeferredEnable(playerRef);
-                    playerRef.sendMessage(PartyManager.partyPrefix().insert(Message.raw(status).color("#ffb0b0")));
+                    PlayerEventNotifier.showEventTitle(playerRef, status, true);
                     PartyUiPage.refreshOpenPages();
                 }
         );
@@ -606,9 +768,11 @@ public final class GameManager {
                         if (activeGame != null) {
                             activeGame.setPlayerInInstance(playerId, false);
                         }
-                        playerRef.sendMessage(
-                                PartyManager.partyPrefix()
-                                        .insert(Message.raw("Your inventory has been restored from a previous dungeon run.").color("#a9f5b3"))
+                        PlayerEventNotifier.showEventTitle(
+                                playerRef,
+                                "Inventory Restored",
+                                "Recovered from a previous dungeon run.",
+                                true
                         );
                     }
                 });
@@ -622,11 +786,19 @@ public final class GameManager {
         boolean inActiveDungeonWorld = game != null
                 && game.getState() != GameState.COMPLETE
                 && world == game.getInstanceWorld();
+        LOGGER.info("onPlayerAddedToWorld: player=" + playerId
+                + " world=" + world.getName()
+                + " gameState=" + (game != null ? game.getState() : null)
+                + " inActiveDungeonWorld=" + inActiveDungeonWorld
+                + " isPlayerInInstance=" + (game != null && game.isPlayerInInstance(playerId))
+                + " hasSavedInventory=" + hasSavedInventory(playerId));
 
         if (!inActiveDungeonWorld) {
             normalizeOutsideDungeonState(playerRef, player, game);
             return;
         }
+
+        outsideDungeonNormalizedPlayers.remove(playerId);
 
         if (game.isPlayerInInstance(playerId) || !hasSavedInventory(playerId)) {
             return;
@@ -645,6 +817,11 @@ public final class GameManager {
 
     public void onPlayerRemovedFromWorld(@Nonnull PlayerRef playerRef, @Nonnull Player player, @Nonnull World world) {
         Game game = findGameForPlayer(playerRef.getUuid());
+        LOGGER.info("onPlayerRemovedFromWorld: player=" + playerRef.getUuid()
+                + " world=" + world.getName()
+                + " gameState=" + (game != null ? game.getState() : null)
+                + " isPlayerInInstance=" + (game != null && game.isPlayerInInstance(playerRef.getUuid()))
+                + " playerWorld=" + (player.getWorld() != null ? player.getWorld().getName() : "null"));
         if (game == null || game.getState() == GameState.COMPLETE || world != game.getInstanceWorld()) {
             return;
         }
@@ -693,27 +870,59 @@ public final class GameManager {
     public boolean normalizeOutsideDungeonState(@Nonnull PlayerRef playerRef,
                                                 @Nonnull Player player,
                                                 @Nullable Game game) {
+        return normalizeOutsideDungeonState(playerRef, player, game, null);
+    }
+
+    public boolean normalizeOutsideDungeonState(@Nonnull PlayerRef playerRef,
+                                                @Nonnull Player player,
+                                                @Nullable Game game,
+                                                @Nullable CommandBuffer<EntityStore> commandBuffer) {
         UUID playerId = playerRef.getUuid();
         Ref<EntityStore> ref = playerRef.getReference();
         Store<EntityStore> store = ref != null && ref.isValid() ? ref.getStore() : null;
         boolean inventoryLocked = plugin.getInventoryLockService().isLocked(playerId);
         boolean hasSavedInventory = hasSavedInventory(playerId);
         boolean shouldNormalize = inventoryLocked || hasSavedInventory;
+        boolean deadComponentDead = false;
+        boolean gamePlayerInInstance = game != null && game.isPlayerInInstance(playerId);
+        boolean gamePlayerDead = game != null && game.isPlayerDead(playerId);
 
         if (store != null && ref != null) {
             DeathComponent deathComponent = store.getComponent(ref, DeathComponent.getComponentType());
             if (deathComponent != null && deathComponent.isDead()) {
+                deadComponentDead = true;
                 shouldNormalize = true;
             }
         }
 
         if (game != null) {
-            shouldNormalize |= game.isPlayerInInstance(playerId) || game.isPlayerDead(playerId);
+            shouldNormalize |= gamePlayerInInstance || gamePlayerDead;
         }
 
         if (!shouldNormalize) {
+            outsideDungeonNormalizedPlayers.remove(playerId);
             return false;
         }
+
+        if (!outsideDungeonNormalizedPlayers.add(playerId)) {
+            if (game != null) {
+                game.removeDeadPlayer(playerId);
+                game.setPlayerInInstance(playerId, false);
+            }
+            return false;
+        }
+
+        LOGGER.info("normalizeOutsideDungeonState: player=" + playerId
+                + " username=" + playerRef.getUsername()
+                + " currentWorld=" + (player.getWorld() != null ? player.getWorld().getName() : "null")
+                + " gameState=" + (game != null ? game.getState() : null)
+                + " instanceWorld=" + (game != null && game.getInstanceWorld() != null ? game.getInstanceWorld().getName() : "null")
+                + " inventoryLocked=" + inventoryLocked
+                + " hasSavedInventory=" + hasSavedInventory
+                + " deathComponentDead=" + deadComponentDead
+                + " gamePlayerInInstance=" + gamePlayerInInstance
+                + " gamePlayerDead=" + gamePlayerDead
+                + " deleteAfterRestore=" + (game == null || game.getState() == GameState.COMPLETE));
 
         plugin.getCameraService().restoreDefault(playerRef);
         hideDungeonHuds(player, playerRef);
@@ -725,7 +934,7 @@ public final class GameManager {
         }
 
         if (ref != null && ref.isValid() && store != null) {
-            resetPlayerStatus(player, ref, store);
+            resetPlayerStatus(player, ref, store, commandBuffer);
         }
 
         if (game != null) {
@@ -927,6 +1136,7 @@ public final class GameManager {
                                          @Nonnull Ref<EntityStore> ref,
                                          @Nonnull Store<EntityStore> store,
                                          @Nonnull DungeonConfig config) {
+        outsideDungeonNormalizedPlayers.remove(playerId);
         if (!hasSavedInventory(playerId)) {
             savePlayerInventory(playerId, player);
         }
@@ -1025,14 +1235,23 @@ public final class GameManager {
     //  Player status reset
     // ────────────────────────────────────────────────
 
-    private void resetPlayerStatus(@Nonnull Player player, @Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store) {
+    private void resetPlayerStatus(@Nonnull Player player,
+                                   @Nonnull Ref<EntityStore> ref,
+                                   @Nonnull Store<EntityStore> store) {
+        resetPlayerStatus(player, ref, store, null);
+    }
+
+    private void resetPlayerStatus(@Nonnull Player player,
+                                   @Nonnull Ref<EntityStore> ref,
+                                   @Nonnull Store<EntityStore> store,
+                                   @Nullable CommandBuffer<EntityStore> commandBuffer) {
         try {
             DeathComponent deathComponent = store.getComponent(ref, DeathComponent.getComponentType());
             if (deathComponent != null) {
                 deathComponent.reset();
             }
 
-            DeathStateController.clear(store, ref);
+            DeathStateController.clear(commandBuffer, store, ref);
 
             EntityStatMap statMap = store.getComponent(ref, EntityStatMap.getComponentType());
             if (statMap != null) {
@@ -1052,11 +1271,13 @@ public final class GameManager {
 
             PlayerRef playerRef = store.getComponent(ref, PlayerRef.getComponentType());
             if (playerRef != null) {
-                store.putComponent(
-                        ref,
-                        InteractionModule.get().getInteractionManagerComponent(),
-                        new InteractionManager(player, playerRef, new InteractionSimulationHandler())
-                );
+                InteractionManager im = new InteractionManager(player, playerRef, new InteractionSimulationHandler());
+                var type = InteractionModule.get().getInteractionManagerComponent();
+                if (commandBuffer != null) {
+                    commandBuffer.putComponent(ref, type, im);
+                } else {
+                    store.putComponent(ref, type, im);
+                }
             }
             DeathMovementController.restore(store, ref, playerRef);
         } catch (Exception e) {
@@ -1251,46 +1472,136 @@ public final class GameManager {
     //  Mob spawning
     // ────────────────────────────────────────────────
 
+    /** Max distance (squared) between two spawn points to be in the same cluster. */
+    private static final double CLUSTER_RADIUS_SQ = 10.0 * 10.0;
+    /** Max random XZ offset from the cluster center when spawning a mob. */
+    private static final double CLUSTER_SPREAD = 2.5;
+
     private void spawnLevelMobs(@Nonnull Level level, @Nonnull Store<EntityStore> store) {
         int totalSpawned = 0;
+        Random random = new Random();
+
         for (RoomData room : level.getRooms()) {
-            if (room.getType() == RoomType.BOSS) {
-                continue;
+            // Spawn pinned mobs at their exact block positions (from configured spawners).
+            // Locked rooms defer pinned spawns until room entry.
+            if (!room.isLocked()) {
+                spawnPinnedMobs(room, store);
             }
 
             List<String> mobs = room.getMobsToSpawn();
-            List<Vector3i> spawners = room.getSpawnerPositions();
+            List<Vector3i> allPoints = room.getMobSpawnPoints();
+            if (mobs.isEmpty() || allPoints.isEmpty()) continue;
 
-            for (int i = 0; i < mobs.size(); i++) {
-                String mobId = mobs.get(i);
-                if (mobId == null || mobId.isBlank()) continue;
+            room.setExpectedMobCount(mobs.size());
 
-                Vector3d spawnPos;
-                if (i < spawners.size()) {
-                    Vector3i sp = spawners.get(i);
-                    spawnPos = new Vector3d(sp.x + 0.5, sp.y + 1.0, sp.z + 0.5);
-                } else {
-                    Vector3i anchor = room.getAnchor();
-                    spawnPos = new Vector3d(
-                            anchor.x + 3 + (i % 5) * 2,
-                            anchor.y + 1,
-                            anchor.z + 3 + (i / 5) * 2
-                    );
+            // Randomly pick which spawn points to use (as many as there are mobs)
+            List<Vector3i> chosen = new ArrayList<>(allPoints);
+            java.util.Collections.shuffle(chosen, random);
+            if (chosen.size() > mobs.size()) {
+                chosen = chosen.subList(0, mobs.size());
+            }
+
+            // Group chosen points into spatial clusters so mobs form packs
+            List<List<Integer>> clusters = buildClusters(chosen);
+
+            // Spawn mobs at cluster centers with small offsets
+            int mobIndex = 0;
+            for (List<Integer> cluster : clusters) {
+                // Compute cluster center
+                double cx = 0, cy = 0, cz = 0;
+                for (int idx : cluster) {
+                    Vector3i sp = chosen.get(idx);
+                    cx += sp.x;
+                    cy += sp.y;
+                    cz += sp.z;
                 }
+                cx /= cluster.size();
+                cy /= cluster.size();
+                cz /= cluster.size();
 
-                try {
-                    var mobResult = NPCPlugin.get().spawnNPC(store, mobId, null, spawnPos, Vector3f.ZERO);
-                    Ref<EntityStore> mobRef = mobResult != null ? mobResult.first() : null;
-                    if (mobRef != null) {
-                        room.addSpawnedMob(mobRef);
-                        totalSpawned++;
+                // Spawn one mob per chosen point in this cluster, offset around center
+                for (int k = 0; k < cluster.size() && mobIndex < mobs.size(); k++, mobIndex++) {
+                    String mobId = mobs.get(mobIndex);
+                    if (mobId == null || mobId.isBlank()) continue;
+
+                    double ox = (random.nextDouble() - 0.5) * 2.0 * CLUSTER_SPREAD;
+                    double oz = (random.nextDouble() - 0.5) * 2.0 * CLUSTER_SPREAD;
+                    Vector3d spawnPos = new Vector3d(cx + 0.5 + ox, cy + 1.0, cz + 0.5 + oz);
+
+                    try {
+                        var mobResult = NPCPlugin.get().spawnNPC(store, mobId, null, spawnPos, Rotation3f.ZERO);
+                        Ref<EntityStore> mobRef = mobResult != null ? mobResult.first() : null;
+                        if (mobRef != null) {
+                            room.addSpawnedMob(mobRef);
+                            totalSpawned++;
+                        }
+                    } catch (Exception e) {
+                        LOGGER.log(java.util.logging.Level.WARNING, "Failed to spawn mob: " + mobId, e);
                     }
-                } catch (Exception e) {
-                    LOGGER.log(java.util.logging.Level.WARNING, "Failed to spawn mob: " + mobId, e);
                 }
             }
         }
         LOGGER.info("Spawned " + totalSpawned + " mobs for level " + level.getName());
+    }
+
+    /**
+     * Spawn pinned mobs (from configured Shotcave_Mob_Spawner blocks) at their exact positions.
+     */
+    public void spawnPinnedMobs(@Nonnull RoomData room, @Nonnull Store<EntityStore> store) {
+        List<RoomData.PinnedMobSpawn> pinned = room.getPinnedMobSpawns();
+        if (pinned.isEmpty()) return;
+
+        for (RoomData.PinnedMobSpawn p : pinned) {
+            Vector3d spawnPos = new Vector3d(
+                    p.position().x + 0.5, p.position().y + 1.0, p.position().z + 0.5);
+            try {
+                var mobResult = NPCPlugin.get().spawnNPC(store, p.mobId(), null, spawnPos, Rotation3f.ZERO);
+                Ref<EntityStore> mobRef = mobResult != null ? mobResult.first() : null;
+                if (mobRef != null) {
+                    room.addSpawnedMob(mobRef);
+                }
+            } catch (Exception e) {
+                LOGGER.log(java.util.logging.Level.WARNING, "Failed to spawn pinned mob: " + p.mobId(), e);
+            }
+        }
+        room.setExpectedMobCount(room.getExpectedMobCount() + pinned.size());
+    }
+
+    /**
+     * Groups spawn point indices into spatial clusters. Two points belong to the same
+     * cluster if at least one existing member is within {@link #CLUSTER_RADIUS_SQ}.
+     */
+    @Nonnull
+    private List<List<Integer>> buildClusters(@Nonnull List<Vector3i> points) {
+        List<List<Integer>> clusters = new ArrayList<>();
+        boolean[] assigned = new boolean[points.size()];
+
+        for (int i = 0; i < points.size(); i++) {
+            if (assigned[i]) continue;
+
+            List<Integer> cluster = new ArrayList<>();
+            cluster.add(i);
+            assigned[i] = true;
+
+            // Expand: check all unassigned points against any member of this cluster
+            for (int c = 0; c < cluster.size(); c++) {
+                Vector3i member = points.get(cluster.get(c));
+                for (int j = 0; j < points.size(); j++) {
+                    if (assigned[j]) continue;
+                    Vector3i candidate = points.get(j);
+                    double dx = member.x - candidate.x;
+                    double dy = member.y - candidate.y;
+                    double dz = member.z - candidate.z;
+                    if (dx * dx + dy * dy + dz * dz <= CLUSTER_RADIUS_SQ) {
+                        cluster.add(j);
+                        assigned[j] = true;
+                    }
+                }
+            }
+
+            clusters.add(cluster);
+        }
+        return clusters;
     }
 
     // ────────────────────────────────────────────────
@@ -1393,6 +1704,38 @@ public final class GameManager {
         return levelIndex >= 0 && levelIndex < levels.size() ? levels.get(levelIndex) : null;
     }
 
+    @Nullable
+    private DungeonConfig.LevelConfig resolveCurrentLevelConfig(@Nonnull DungeonConfig config, @Nonnull Game game) {
+        String selector = game.getCurrentLevelSelector();
+        if (selector != null && !selector.isBlank()) {
+            DungeonConfig.LevelConfig levelConfig = config.findLevel(selector);
+            if (levelConfig != null) {
+                return levelConfig;
+            }
+            LOGGER.warning("Could not resolve current level config for selector '" + selector
+                    + "' in party " + game.getPartyId() + ". Falling back to index " + game.getCurrentLevelIndex());
+        }
+        return resolveLevelConfig(config, game.getCurrentLevelIndex());
+    }
+
+    @Nullable
+    private DungeonConfig.LevelConfig resolveNextLevelConfig(@Nonnull DungeonConfig config, @Nonnull Game game) {
+        DungeonConfig.LevelConfig currentLevelConfig = resolveCurrentLevelConfig(config, game);
+        if (currentLevelConfig == null) {
+            return null;
+        }
+        String nextLevelSelector = currentLevelConfig.getNextLevel();
+        if (nextLevelSelector == null) {
+            return null;
+        }
+        DungeonConfig.LevelConfig nextLevelConfig = config.findLevel(nextLevelSelector);
+        if (nextLevelConfig == null) {
+            LOGGER.warning("Level '" + currentLevelConfig.getSelector()
+                    + "' points to unknown nextLevel '" + nextLevelSelector + "'.");
+        }
+        return nextLevelConfig;
+    }
+
     private boolean isDungeonJoinable(@Nonnull Game game) {
         return switch (game.getState()) {
             case READY, ACTIVE, BOSS, TRANSITIONING -> game.getInstanceWorld() != null;
@@ -1405,18 +1748,44 @@ public final class GameManager {
             return false;
         }
 
+        if (game.getVictoryTimestamp() > 0 && !hasNextLevelConfig(game)) {
+            LOGGER.info("All players exited completed dungeon instance for party " + game.getPartyId() + ". Cleaning up finished run.");
+            cleanupCompletedRun(game);
+            return true;
+        }
+
         LOGGER.info("No players remain inside dungeon instance for party " + game.getPartyId() + ". Ending run.");
         endGame(game, true);
         return true;
     }
 
+    private void cleanupCompletedRun(@Nonnull Game game) {
+        if (game.getState() != GameState.COMPLETE) {
+            game.setState(GameState.COMPLETE);
+        }
+        game.clearDeadPlayers();
+
+        plugin.getDungeonMapService().cleanup(game.getPartyId());
+        activeGames.remove(game.getPartyId());
+
+        World instanceWorld = game.getInstanceWorld();
+        if (instanceWorld != null) {
+            instanceWorld.execute(() -> InstancesPlugin.safeRemoveInstance(instanceWorld));
+        }
+
+        playerToParty.entrySet().removeIf(e -> e.getValue().equals(game.getPartyId()));
+        plugin.getPartyManager().closePartyForSystem(game.getPartyId(), "The dungeon run ended, so the party was closed.");
+        PartyUiPage.refreshOpenPages();
+
+        LOGGER.info("Completed game cleaned up for party " + game.getPartyId());
+    }
+
     private void broadcastToParty(@Nonnull UUID partyId, @Nonnull String text, @Nonnull String color) {
-        Message message = PartyManager.partyPrefix().insert(Message.raw(text).color(color));
         for (Map.Entry<UUID, UUID> entry : playerToParty.entrySet()) {
             if (entry.getValue().equals(partyId)) {
                 PlayerRef playerRef = Universe.get().getPlayer(entry.getKey());
                 if (playerRef != null) {
-                    playerRef.sendMessage(message);
+                    PlayerEventNotifier.showEventTitle(playerRef, text, true);
                 }
             }
         }
@@ -1514,9 +1883,17 @@ public final class GameManager {
      * Public accessor for {@link #resetPlayerStatus} used by death/revive systems.
      */
     public void resetPlayerStatusPublic(@Nonnull Player player) {
+        resetPlayerStatusPublic(player, null);
+    }
+
+    /**
+     * Public accessor for {@link #resetPlayerStatus} used by death/revive systems.
+     */
+    public void resetPlayerStatusPublic(@Nonnull Player player,
+                                          @Nullable CommandBuffer<EntityStore> commandBuffer) {
         Ref<EntityStore> ref = player.getReference();
-        if (ref != null) {
-            resetPlayerStatus(player, ref, ref.getStore());
+        if (ref != null && ref.isValid()) {
+            resetPlayerStatus(player, ref, ref.getStore(), commandBuffer);
         }
     }
 
@@ -1547,7 +1924,7 @@ public final class GameManager {
         PlayerSkinComponent playerSkinComponent = store.getComponent(deadPlayerRef, PlayerSkinComponent.getComponentType());
         TransformComponent deadPlayerTransform = store.getComponent(deadPlayerRef, TransformComponent.getComponentType());
         holder.addComponent(TransformComponent.getComponentType(),
-                new TransformComponent(position.clone(), deadPlayerTransform != null ? deadPlayerTransform.getRotation().clone() : Vector3f.ZERO));
+                new TransformComponent(new Vector3d(position), deadPlayerTransform != null ? deadPlayerTransform.getRotation().clone() : Rotation3f.ZERO));
         holder.addComponent(UUIDComponent.getComponentType(), UUIDComponent.randomUUID());
         holder.addComponent(NetworkId.getComponentType(), new NetworkId(store.getExternalData().takeNextNetworkId()));
         holder.addComponent(Nameplate.getComponentType(), new Nameplate("downed"));
@@ -1610,7 +1987,7 @@ public final class GameManager {
             return null;
         }
 
-        return transform.getPosition().clone();
+        return new Vector3d(transform.getPosition());
     }
 
     private void removeReviveMarkerOnOwningWorld(@Nonnull Ref<EntityStore> markerRef) {
@@ -1656,4 +2033,3 @@ public final class GameManager {
         String metadataJson;
     }
 }
-

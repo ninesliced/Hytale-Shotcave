@@ -8,7 +8,6 @@ import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.server.core.entity.InteractionContext;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler;
-import com.hypixel.hytale.server.core.modules.interaction.interaction.config.InteractionEffects;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInstantInteraction;
 import dev.ninesliced.shotcave.guns.GunItemMetadata;
 import javax.annotation.Nonnull;
@@ -54,44 +53,15 @@ public final class ReloadInteraction extends SimpleInstantInteraction {
         super(id);
         this.reloadAmount = reloadAmount;
         this.maxAmmo = maxAmmo;
-        this.runTime = reloadRunTime;
+        this.runTime = 0;
         this.next = nextId;
-        this.effects = new ReloadEffects(worldSfx, localSfx, itemAnimationId);
-    }
-
-    private static final class ReloadEffects extends InteractionEffects {
-        ReloadEffects(@Nullable String worldSfx, @Nullable String localSfx,
-                      @Nullable String itemAnimationId) {
-            this.worldSoundEventId = worldSfx;
-            this.localSoundEventId = localSfx;
-            this.itemAnimationId = itemAnimationId;
-            this.processConfig();
-        }
+        // No effects — auto-reload is disabled, so no animation/sound should play
     }
 
     @Override
     protected void firstRun(@Nonnull InteractionType type, @Nonnull InteractionContext context, @Nonnull CooldownHandler cooldownHandler) {
-        ItemStack heldItem = context.getHeldItem();
-        if (heldItem == null) {
-            context.getState().state = InteractionState.Failed;
-            return;
-        }
-
-        int baseMaxAmmo = (this.maxAmmo > 0) ? this.maxAmmo : GunItemMetadata.getBaseMaxAmmo(heldItem, 30);
-        int effectiveMaxAmmo = GunItemMetadata.getEffectiveMaxAmmo(heldItem, baseMaxAmmo);
-
-        ItemStack updated = GunItemMetadata.ensureAmmo(heldItem, baseMaxAmmo, effectiveMaxAmmo);
-        int ammo = GunItemMetadata.getInt(updated, GunItemMetadata.AMMO_KEY, effectiveMaxAmmo);
-
-        if (ammo >= effectiveMaxAmmo) {
-            context.getState().state = InteractionState.Failed;
-            return;
-        }
-
-        int effectiveReloadAmount = (this.reloadAmount <= 0) ? effectiveMaxAmmo : this.reloadAmount;
-        int newAmmo = Math.min(effectiveMaxAmmo, ammo + effectiveReloadAmount);
-        updated = GunItemMetadata.setInt(updated, GunItemMetadata.AMMO_KEY, newAmmo);
-        GunItemMetadata.applyHeldItem(context, updated);
+        // Auto-reload disabled — ammo can only be refilled via Ammo item pickup.
+        context.getState().state = InteractionState.Failed;
     }
 }
 

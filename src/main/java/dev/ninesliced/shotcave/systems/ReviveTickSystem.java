@@ -6,8 +6,8 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
-import com.hypixel.hytale.math.vector.Vector3d;
-import com.hypixel.hytale.math.vector.Vector3f;
+import org.joml.Vector3d;
+import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
@@ -83,16 +83,18 @@ public final class ReviveTickSystem extends EntityTickingSystem<EntityStore> {
             lastHudUpdateByPlayer.remove(playerRef.getUuid());
             Player player = archetypeChunk.getComponent(index, Player.getComponentType());
             if (player != null) {
-                gameManager.normalizeOutsideDungeonState(playerRef, player, null);
+                gameManager.normalizeOutsideDungeonState(playerRef, player, null, commandBuffer);
             }
             hideAllHuds(playerRef, archetypeChunk, index, store);
             return;
         }
-        if (game.getState() != GameState.ACTIVE && game.getState() != GameState.BOSS) {
+        if (game.getState() != GameState.ACTIVE
+                && game.getState() != GameState.BOSS
+                && game.getState() != GameState.TRANSITIONING) {
             lastHudUpdateByPlayer.remove(playerRef.getUuid());
             Player player = archetypeChunk.getComponent(index, Player.getComponentType());
             if (player != null) {
-                gameManager.normalizeOutsideDungeonState(playerRef, player, game);
+                gameManager.normalizeOutsideDungeonState(playerRef, player, game, commandBuffer);
             }
             hideAllHuds(playerRef, archetypeChunk, index, store);
             return;
@@ -106,6 +108,9 @@ public final class ReviveTickSystem extends EntityTickingSystem<EntityStore> {
         Player player = store.getComponent(ref, Player.getComponentType());
         if (player == null || player.getWorld() != game.getInstanceWorld()) {
             lastHudUpdateByPlayer.remove(playerRef.getUuid());
+            if (player != null) {
+                gameManager.normalizeOutsideDungeonState(playerRef, player, game, commandBuffer);
+            }
             hideAllHuds(playerRef, archetypeChunk, index, store);
             return;
         }
@@ -265,7 +270,7 @@ public final class ReviveTickSystem extends EntityTickingSystem<EntityStore> {
         if (deadInfo.ref != null && deadInfo.ref.isValid()) {
             TransformComponent transform = deadInfo.ref.getStore().getComponent(deadInfo.ref, TransformComponent.getComponentType());
             if (revivePosition != null) {
-                Vector3f rotation = transform != null ? transform.getRotation().clone() : new Vector3f();
+                Rotation3f rotation = transform != null ? transform.getRotation().clone() : new Rotation3f();
                 commandBuffer.addComponent(
                         deadInfo.ref,
                         Teleport.getComponentType(),
@@ -283,7 +288,7 @@ public final class ReviveTickSystem extends EntityTickingSystem<EntityStore> {
                 Player deadPlayer = dStore.getComponent(dRef, Player.getComponentType());
                 if (deadPlayer != null) {
                     gameManager.clearPlayerInventoryPublic(deadPlayer, deadPlayerRef);
-                    gameManager.resetPlayerStatusPublic(deadPlayer);
+                    gameManager.resetPlayerStatusPublic(deadPlayer, commandBuffer);
 
                     Shotcave shotcave = Shotcave.getInstance();
                     if (shotcave != null) {

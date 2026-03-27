@@ -6,8 +6,8 @@ import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
-import com.hypixel.hytale.math.vector.Vector3d;
-import com.hypixel.hytale.math.vector.Vector3f;
+import org.joml.Vector3d;
+import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
@@ -74,13 +74,13 @@ public final class VoidSafetySystem extends EntityTickingSystem<EntityStore> {
         }
 
         Vector3d pos = transform.getPosition();
-        if (pos.getY() >= VOID_THRESHOLD_Y) {
+        if (pos.y >= VOID_THRESHOLD_Y) {
             return;
         }
 
         // Teleport back up, keeping X/Z intact
-        Vector3d safePos = new Vector3d(pos.getX(), SAFE_Y, pos.getZ());
-        Teleport tp = Teleport.createForPlayer(safePos, new Vector3f());
+        Vector3d safePos = new Vector3d(pos.x, SAFE_Y, pos.z);
+        Teleport tp = Teleport.createForPlayer(safePos, new Rotation3f());
         commandBuffer.addComponent(archetypeChunk.getReferenceTo(index),
                 Teleport.getComponentType(), tp);
     }

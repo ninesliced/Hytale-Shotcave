@@ -43,6 +43,8 @@ public final class Game {
      */
     private final Set<UUID> deadPlayers = new HashSet<>();
     private int currentLevelIndex = 0;
+    @Nullable
+    private String currentLevelSelector;
     private long money = 0L;
     private long startTime;
     private long levelStartTime;
@@ -65,6 +67,19 @@ public final class Game {
      * Whether the boss room has been sealed.
      */
     private boolean bossRoomSealed = false;
+    /**
+     * Shared team key counter — keys collected by any party member.
+     */
+    private int teamKeys = 0;
+
+    /** Set when portals are placed and ready for player interaction. */
+    private boolean portalsActive = false;
+
+    /** Timestamp when dungeon progression portals became active. */
+    private long portalsActivatedAt = 0L;
+
+    /** Timestamp when the final boss was killed (0 = no victory yet). Used for 30s auto-close. */
+    private long victoryTimestamp = 0;
 
     public Game(@Nonnull UUID partyId) {
         this.partyId = partyId;
@@ -122,6 +137,15 @@ public final class Game {
     }
 
     @Nullable
+    public String getCurrentLevelSelector() {
+        return currentLevelSelector;
+    }
+
+    public void setCurrentLevelSelector(@Nullable String currentLevelSelector) {
+        this.currentLevelSelector = currentLevelSelector;
+    }
+
+    @Nullable
     public Level getCurrentLevel() {
         if (currentLevelIndex >= 0 && currentLevelIndex < levels.size()) {
             return levels.get(currentLevelIndex);
@@ -143,6 +167,22 @@ public final class Game {
 
     public void addMoney(long amount) {
         this.money += amount;
+    }
+
+    public int getTeamKeys() {
+        return teamKeys;
+    }
+
+    public void addKey() {
+        teamKeys++;
+    }
+
+    public boolean useKey() {
+        if (teamKeys > 0) {
+            teamKeys--;
+            return true;
+        }
+        return false;
     }
 
     public long getStartTime() {
@@ -279,5 +319,30 @@ public final class Game {
     public void clearDeadPlayers() {
         deadPlayers.clear();
     }
-}
 
+    // ── Portal system ──
+
+    public boolean isPortalsActive() {
+        return portalsActive;
+    }
+
+    public void setPortalsActive(boolean portalsActive) {
+        this.portalsActive = portalsActive;
+    }
+
+    public long getPortalsActivatedAt() {
+        return portalsActivatedAt;
+    }
+
+    public void setPortalsActivatedAt(long portalsActivatedAt) {
+        this.portalsActivatedAt = portalsActivatedAt;
+    }
+
+    public long getVictoryTimestamp() {
+        return victoryTimestamp;
+    }
+
+    public void setVictoryTimestamp(long victoryTimestamp) {
+        this.victoryTimestamp = victoryTimestamp;
+    }
+}

@@ -150,14 +150,23 @@ public final class Level {
     }
 
     /**
-     * Total mobs spawned across the level.
+     * Total expected mobs across the level (set during distribution, not affected by chunk loading).
      */
     public int getTotalSpawnedMobs() {
         int count = 0;
         for (RoomData room : rooms) {
-            count += room.getSpawnedMobs().size();
+            count += room.getExpectedMobCount();
         }
         return count;
+    }
+
+    /**
+     * Tick all rooms to update mob kill tracking.
+     */
+    public void updateMobTracking() {
+        for (RoomData room : rooms) {
+            room.updateMobTracking();
+        }
     }
 
     private static long packXZ(int x, int z) {

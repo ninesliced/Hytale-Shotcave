@@ -2,7 +2,7 @@ package dev.ninesliced.shotcave.systems;
 
 import com.hypixel.hytale.component.Component;
 import com.hypixel.hytale.component.ComponentType;
-import com.hypixel.hytale.math.vector.Vector3d;
+import org.joml.Vector3d;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
@@ -85,7 +85,7 @@ public final class RollComponent implements Component<EntityStore> {
         RollComponent copy = new RollComponent();
         copy.lastRollTime = this.lastRollTime;
         copy.rollTicksRemaining = this.rollTicksRemaining;
-        copy.rollDirection = this.rollDirection != null ? this.rollDirection.clone() : null;
+        copy.rollDirection = this.rollDirection != null ? new Vector3d(this.rollDirection) : null;
         return copy;
     }
 }

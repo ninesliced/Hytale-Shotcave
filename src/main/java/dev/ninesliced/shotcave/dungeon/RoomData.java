@@ -1,8 +1,8 @@
 package dev.ninesliced.shotcave.dungeon;
 
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.math.vector.Vector3d;
-import com.hypixel.hytale.math.vector.Vector3i;
+import org.joml.Vector3d;
+import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
@@ -10,7 +10,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -32,13 +34,56 @@ public final class RoomData {
     private String branchId;
 
     private final List<Vector3i> mobSpawnPoints = new ArrayList<>();
+    private final List<PinnedMobSpawn> pinnedMobSpawns = new ArrayList<>();
     private final List<Vector3i> keySpawnerPositions = new ArrayList<>();
     private final List<Vector3i> portalPositions = new ArrayList<>();
     private final List<Vector3i> portalExitPositions = new ArrayList<>();
 
-    // XZ bounding box for map rendering (world coordinates)
+    // ── Door & lock system ──
+    private final List<Vector3i> lockDoorBlockPositions = new ArrayList<>();
+    private final List<Vector3i> doorPositions = new ArrayList<>();
+    private final List<Vector3i> activationZonePositions = new ArrayList<>();
+    private final List<Vector3i> mobActivatorPositions = new ArrayList<>();
+    private boolean hasMobClearActivator = false;
+    private boolean locked = false;
+    private boolean doorsSealed = false;
+    private DoorMode doorMode = DoorMode.NONE;
+
+    // ── Portal ──
+    private boolean portalSpawned = false;
+
+    // ── Challenge system ──
+    private boolean challengeActive = false;
+    private final List<ChallengeObjective> challenges = new ArrayList<>();
+
+    // ── Lock door prefab blocks (pasted at runtime, removed on clear) ──
+
+    @Nonnull
+    public List<Vector3i> getLockDoorBlockPositions() {
+        return lockDoorBlockPositions;
+    }
+
+    public void addLockDoorBlockPosition(@Nonnull Vector3i pos) {
+        lockDoorBlockPositions.add(pos);
+    }
+
+    // ── Boss walk-in tracking ──
+    private boolean playerEnteredRoom = false;
+    private double distanceWalkedInRoom = 0.0;
+    @Nullable
+    private Vector3d lastTrackedPosition = null;
+
+    // Bounding box (world coordinates)
     private int boundsMinX, boundsMinZ, boundsMaxX, boundsMaxZ;
+    private int boundsMinY, boundsMaxY;
     private boolean hasBounds = false;
+
+    /** How many mobs were assigned to this room (set once during distribution). */
+    private int expectedMobCount = 0;
+    /** Mobs confirmed killed: ref was observed valid then became invalid. */
+    private int confirmedKills = 0;
+    /** Refs we have seen as valid at least once (so we can detect valid→invalid transitions). */
+    private final Set<Ref<EntityStore>> seenAlive = new HashSet<>();
 
     @Nullable
     private RoomData parent;
@@ -98,6 +143,10 @@ public final class RoomData {
     @Nonnull
     public List<String> getMobsToSpawn() {
         return Collections.unmodifiableList(mobsToSpawn);
+    }
+
+    public void addMobToSpawn(@Nonnull String mobId) {
+        mobsToSpawn.add(mobId);
     }
 
     @Nonnull
@@ -175,32 +224,44 @@ public final class RoomData {
         this.cleared = cleared;
     }
 
-    /**
-     * Returns true if all spawned mobs in this room are dead (invalid refs).
-     */
-    public boolean areAllMobsDead() {
-        if (spawnedMobs.isEmpty()) {
-            return true;
-        }
-        for (Ref<EntityStore> mob : spawnedMobs) {
-            if (mob.isValid()) {
-                return false;
-            }
-        }
-        return true;
+    public void setExpectedMobCount(int count) {
+        this.expectedMobCount = count;
+    }
+
+    public int getExpectedMobCount() {
+        return expectedMobCount;
     }
 
     /**
-     * Count of mobs still alive in this room.
+     * Tick-level update: detect mobs that transitioned from valid to invalid
+     * (i.e. they died while their chunk was loaded). Mobs in unloaded chunks
+     * are never marked as "seen alive", so they won't be miscounted as dead.
      */
-    public int getAliveMobCount() {
-        int count = 0;
+    public void updateMobTracking() {
         for (Ref<EntityStore> mob : spawnedMobs) {
             if (mob.isValid()) {
-                count++;
+                seenAlive.add(mob);
+            } else if (seenAlive.remove(mob)) {
+                confirmedKills++;
             }
         }
-        return count;
+    }
+
+    /**
+     * Returns true if all expected mobs in this room have been confirmed killed.
+     */
+    public boolean areAllMobsDead() {
+        if (expectedMobCount == 0) {
+            return true;
+        }
+        return confirmedKills >= expectedMobCount;
+    }
+
+    /**
+     * Count of mobs still alive in this room (expected minus confirmed kills).
+     */
+    public int getAliveMobCount() {
+        return Math.max(0, expectedMobCount - confirmedKills);
     }
 
     public int getBranchDepth() {
@@ -260,6 +321,126 @@ public final class RoomData {
         portalExitPositions.add(pos);
     }
 
+    public boolean isPortalSpawned() {
+        return portalSpawned;
+    }
+
+    public void setPortalSpawned(boolean portalSpawned) {
+        this.portalSpawned = portalSpawned;
+    }
+
+    // ── Door & lock system ──
+
+    @Nonnull
+    public List<Vector3i> getDoorPositions() {
+        return doorPositions;
+    }
+
+    public void addDoorPosition(@Nonnull Vector3i pos) {
+        doorPositions.add(pos);
+    }
+
+    @Nonnull
+    public List<Vector3i> getActivationZonePositions() {
+        return activationZonePositions;
+    }
+
+    public void addActivationZonePosition(@Nonnull Vector3i pos) {
+        activationZonePositions.add(pos);
+    }
+
+    @Nonnull
+    public List<Vector3i> getMobActivatorPositions() {
+        return mobActivatorPositions;
+    }
+
+    public void addMobActivatorPosition(@Nonnull Vector3i pos) {
+        mobActivatorPositions.add(pos);
+    }
+
+    public boolean hasMobClearActivator() {
+        return hasMobClearActivator;
+    }
+
+    public void setHasMobClearActivator(boolean hasMobClearActivator) {
+        this.hasMobClearActivator = hasMobClearActivator;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+
+    public boolean isDoorsSealed() {
+        return doorsSealed;
+    }
+
+    public void setDoorsSealed(boolean doorsSealed) {
+        this.doorsSealed = doorsSealed;
+    }
+
+    @Nonnull
+    public DoorMode getDoorMode() {
+        return doorMode;
+    }
+
+    public void setDoorMode(@Nonnull DoorMode doorMode) {
+        this.doorMode = doorMode;
+    }
+
+    // ── Challenge system ──
+
+    public boolean isChallengeActive() {
+        return challengeActive;
+    }
+
+    public void setChallengeActive(boolean challengeActive) {
+        this.challengeActive = challengeActive;
+    }
+
+    @Nonnull
+    public List<ChallengeObjective> getChallenges() {
+        return challenges;
+    }
+
+    public void addChallenge(@Nonnull ChallengeObjective objective) {
+        challenges.add(objective);
+    }
+
+    // ── Boss walk-in tracking ──
+
+    public boolean isPlayerEnteredRoom() {
+        return playerEnteredRoom;
+    }
+
+    public void setPlayerEnteredRoom(boolean playerEnteredRoom) {
+        this.playerEnteredRoom = playerEnteredRoom;
+    }
+
+    public double getDistanceWalkedInRoom() {
+        return distanceWalkedInRoom;
+    }
+
+    public void addDistanceWalked(double distance) {
+        this.distanceWalkedInRoom += distance;
+    }
+
+    public void setDistanceWalkedInRoom(double distance) {
+        this.distanceWalkedInRoom = distance;
+    }
+
+    @Nullable
+    public Vector3d getLastTrackedPosition() {
+        return lastTrackedPosition;
+    }
+
+    public void setLastTrackedPosition(@Nullable Vector3d lastTrackedPosition) {
+        this.lastTrackedPosition = lastTrackedPosition;
+    }
+
     // ── Map bounds ──
 
     public boolean hasBounds() {
@@ -282,12 +463,50 @@ public final class RoomData {
         return boundsMaxZ;
     }
 
+    public int getBoundsMinY() {
+        return boundsMinY;
+    }
+
+    public int getBoundsMaxY() {
+        return boundsMaxY;
+    }
+
     public void setBounds(int minX, int minZ, int maxX, int maxZ) {
         this.boundsMinX = minX;
         this.boundsMinZ = minZ;
         this.boundsMaxX = maxX;
         this.boundsMaxZ = maxZ;
         this.hasBounds = true;
+    }
+
+    public void setYBounds(int minY, int maxY) {
+        this.boundsMinY = minY;
+        this.boundsMaxY = maxY;
+    }
+
+    public boolean containsY(int y) {
+        return hasBounds && y >= boundsMinY && y <= boundsMaxY;
+    }
+
+    /**
+     * Check if a Y coordinate is within the room's Y bounds with a margin.
+     * The margin shrinks the valid range inward (player must be further inside).
+     */
+    public boolean containsY(int y, int margin) {
+        return hasBounds && y >= (boundsMinY + margin) && y <= (boundsMaxY - margin);
+    }
+
+    // ── Pinned mob spawns (from configured Shotcave_Mob_Spawner blocks) ──
+
+    public record PinnedMobSpawn(@Nonnull Vector3i position, @Nonnull String mobId) {}
+
+    public void addPinnedMobSpawn(@Nonnull Vector3i position, @Nonnull String mobId) {
+        pinnedMobSpawns.add(new PinnedMobSpawn(position, mobId));
+    }
+
+    @Nonnull
+    public List<PinnedMobSpawn> getPinnedMobSpawns() {
+        return pinnedMobSpawns;
     }
 
     @Nonnull

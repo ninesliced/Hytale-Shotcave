@@ -6,7 +6,7 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
-import com.hypixel.hytale.math.vector.Vector3d;
+import org.joml.Vector3d;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
@@ -117,7 +117,7 @@ public final class PlayerDeathSystem extends EntityTickingSystem<EntityStore> {
 
         TransformComponent transform = store.getComponent(ref, TransformComponent.getComponentType());
         Vector3d deathPos = transform != null
-                ? transform.getPosition().clone()
+                ? new Vector3d(transform.getPosition())
                 : new Vector3d(0, 0, 0);
 
         death.markDead(deathPos);

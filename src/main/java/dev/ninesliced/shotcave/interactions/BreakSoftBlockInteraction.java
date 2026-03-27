@@ -7,9 +7,9 @@ import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.util.ChunkUtil;
-import com.hypixel.hytale.math.vector.Vector3d;
-import com.hypixel.hytale.math.vector.Vector3f;
-import com.hypixel.hytale.math.vector.Vector3i;
+import org.joml.Vector3d;
+import com.hypixel.hytale.math.vector.Rotation3f;
+import org.joml.Vector3i;
 import com.hypixel.hytale.protocol.BlockPosition;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockGathering;
@@ -116,7 +116,7 @@ public final class BreakSoftBlockInteraction extends SimpleInstantInteraction {
         world.execute(() -> {
             Store<EntityStore> store = world.getEntityStore().getStore();
             Holder<EntityStore>[] itemEntityHolders = ItemComponent.generateItemDrops(
-                    store, drops, dropPosition, Vector3f.ZERO);
+                    store, drops, dropPosition, Rotation3f.ZERO);
             if (itemEntityHolders.length > 0) {
                 store.addEntities(itemEntityHolders, AddReason.SPAWN);
             }

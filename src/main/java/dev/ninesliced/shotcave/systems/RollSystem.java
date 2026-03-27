@@ -10,8 +10,8 @@ import com.hypixel.hytale.component.dependency.Order;
 import com.hypixel.hytale.component.dependency.SystemDependency;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
-import com.hypixel.hytale.math.vector.Vector3d;
-import com.hypixel.hytale.math.vector.Vector3f;
+import org.joml.Vector3d;
+import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.protocol.AnimationSlot;
 import com.hypixel.hytale.protocol.ChangeVelocityType;
 import com.hypixel.hytale.protocol.MovementStates;
@@ -168,8 +168,8 @@ public final class RollSystem extends EntityTickingSystem<EntityStore> {
             return;
         }
         Vector3d direction = directionFromBodyRotation(transform);
-        Vector3d normalizedDir = direction.clone().normalize();
-        Vector3d impulse = normalizedDir.clone().scale(ROLL_FORCE);
+        Vector3d normalizedDir = new Vector3d(direction).normalize();
+        Vector3d impulse = new Vector3d(normalizedDir).mul(ROLL_FORCE);
 
         // Apply velocity
         Velocity velocity = archetypeChunk.getComponent(index, this.velocityComponentType);
@@ -192,8 +192,8 @@ public final class RollSystem extends EntityTickingSystem<EntityStore> {
 
     @Nonnull
     private static Vector3d directionFromBodyRotation(@Nonnull TransformComponent transform) {
-        Vector3f rotation = transform.getRotation();
-        float yaw = rotation.getYaw();
+        Rotation3f rotation = transform.getRotation();
+        float yaw = rotation.yaw();
         double dirX = -Math.sin(yaw);
         double dirZ = -Math.cos(yaw);
         return new Vector3d(dirX, 0.0, dirZ);

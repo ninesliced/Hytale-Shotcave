@@ -11,6 +11,7 @@ import com.hypixel.hytale.server.core.modules.interaction.InteractionModule;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Applies and removes engine-level restrictions for custom dungeon death states.
@@ -80,12 +81,24 @@ public final class DeathStateController {
 
     public static void clear(@Nonnull Store<EntityStore> store,
                              @Nonnull Ref<EntityStore> ref) {
+        clear(null, store, ref);
+    }
+
+    public static void clear(@Nullable CommandBuffer<EntityStore> commandBuffer,
+                             @Nonnull Store<EntityStore> store,
+                             @Nonnull Ref<EntityStore> ref) {
         if (!ref.isValid()) {
             return;
         }
 
-        store.tryRemoveComponent(ref, Frozen.getComponentType());
-        store.tryRemoveComponent(ref, Invulnerable.getComponentType());
-        store.tryRemoveComponent(ref, Intangible.getComponentType());
+        if (commandBuffer != null) {
+            commandBuffer.tryRemoveComponent(ref, Frozen.getComponentType());
+            commandBuffer.tryRemoveComponent(ref, Invulnerable.getComponentType());
+            commandBuffer.tryRemoveComponent(ref, Intangible.getComponentType());
+        } else {
+            store.tryRemoveComponent(ref, Frozen.getComponentType());
+            store.tryRemoveComponent(ref, Invulnerable.getComponentType());
+            store.tryRemoveComponent(ref, Intangible.getComponentType());
+        }
     }
 }

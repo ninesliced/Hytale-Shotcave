@@ -18,25 +18,34 @@ public enum MarkerType {
     PORTAL("Shotcave_Portal"),
     /** Portal exit — destination of a portal teleport. */
     PORTAL_EXIT("Shotcave_Portal_Exit"),
-    /** Key door marker — placed before a treasure room. */
-    KEY_DOOR("Shotcave_Key_Door"),
-    /** Locked door marker — opened by an activator. */
-    LOCKED_DOOR("Shotcave_Locked_Door"),
-    /** Closed door marker — permanently sealed. */
-    CLOSED_DOOR("Shotcave_Closed_Door"),
-    /** Normal door — player can open/close freely. */
+    /** Unified door marker — default, no mode set. */
     DOOR("Shotcave_Door"),
-    /** Trigger activator (lever, pressure plate, etc.). */
-    TRIGGER_ACTIVATOR("Shotcave_Trigger_Activator"),
-    /** Mob activator — kill a specific mob to open a door. */
+    /** Key door variant — requires a key to unlock. */
+    DOOR_KEY("Shotcave_Door_Key"),
+    /** Activator door variant — unlocked by completing challenges. */
+    DOOR_ACTIVATOR("Shotcave_Door_Activator"),
+    /** Mob activator — kill a specific mob to complete a challenge. */
     MOB_ACTIVATOR("Shotcave_Mob_Activator"),
-    /** Mob clear activator — kill all room mobs to open a door. */
+    /** Mob clear activator — kill all room mobs to complete a challenge. */
     MOB_CLEAR_ACTIVATOR("Shotcave_Mob_Clear_Activator"),
-    /** Activation zone — step into a zone to open a door. */
+    /** Activation zone — step into a zone to complete a challenge. */
     ACTIVATION_ZONE("Shotcave_Activation_Zone"),
     /** Possible key spawn location. */
     KEY_SPAWNER("Shotcave_Key_Spawner"),
-    WATER("Shotcave_Water");
+    /** Lock room indicator — room locks on player entry, unlocks on clear. */
+    LOCK_ROOM("Shotcave_Lock_Room"),
+    /** Water block marker. */
+    WATER("Shotcave_Water"),
+    /** Tar block marker. */
+    TAR("Shotcave_Tar"),
+    /** Poison block marker. */
+    POISON("Shotcave_Poison"),
+    /** Lava block marker. */
+    LAVA("Shotcave_Lava"),
+    /** Slime block marker. */
+    SLIME("Shotcave_Slime"),
+    /** Red Slime block marker. */
+    RED_SLIME("Shotcave_Red_Slime");
 
     private final String blockName;
 

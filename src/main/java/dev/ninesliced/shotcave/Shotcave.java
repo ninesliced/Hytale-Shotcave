@@ -25,9 +25,14 @@ import dev.ninesliced.shotcave.coin.CoinCollectionSystem;
 import dev.ninesliced.shotcave.command.PartyCommand;
 import dev.ninesliced.shotcave.command.ShotcaveCommand;
 import dev.ninesliced.shotcave.crate.CrateBreakDropSystem;
+import dev.ninesliced.shotcave.dungeon.DoorConfigPageSupplier;
+import dev.ninesliced.shotcave.dungeon.DoorService;
 import dev.ninesliced.shotcave.dungeon.DungeonConfig;
 import dev.ninesliced.shotcave.dungeon.DungeonInstanceService;
 import dev.ninesliced.shotcave.dungeon.GameManager;
+import dev.ninesliced.shotcave.dungeon.MobSpawnerConfigPageSupplier;
+import dev.ninesliced.shotcave.dungeon.MobSpawnerData;
+import dev.ninesliced.shotcave.dungeon.PortalService;
 import dev.ninesliced.shotcave.dungeon.map.DungeonMapService;
 import dev.ninesliced.shotcave.inventory.InventoryLockService;
 import dev.ninesliced.shotcave.inventory.DropBlockSystem;
@@ -50,6 +55,7 @@ import dev.ninesliced.shotcave.pickup.ItemDropSystem;
 import dev.ninesliced.shotcave.pickup.ItemPickupConfig;
 import dev.ninesliced.shotcave.pickup.ItemPickupHudRuntime;
 import dev.ninesliced.shotcave.pickup.ItemPickupInteraction;
+import dev.ninesliced.shotcave.pickup.KeyItemCollectionSystem;
 import dev.ninesliced.shotcave.tooltip.WeaponTooltipAdapter;
 import dev.ninesliced.shotcave.tooltip.WeaponVirtualItems;
 import dev.ninesliced.shotcave.party.PartyManager;
@@ -77,6 +83,7 @@ import dev.ninesliced.shotcave.systems.RollPlayerAddedSystem;
 import dev.ninesliced.shotcave.systems.RollSystem;
 import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
+import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
@@ -97,6 +104,8 @@ public class Shotcave extends JavaPlugin {
     private final PartyManager partyManager = new PartyManager(this);
     private final GameManager gameManager = new GameManager(this);
     private final DungeonMapService dungeonMapService = new DungeonMapService();
+    private final DoorService doorService = new DoorService();
+    private final PortalService portalService = new PortalService();
     private Path dungeonConfigPath;
 
     public Shotcave(@Nonnull JavaPluginInit init) {
@@ -113,7 +122,9 @@ public class Shotcave extends JavaPlugin {
         this.dungeonConfigPath = DungeonConfig.ensureRuntimeConfig(this.getDataDirectory());
 
         this.getCodecRegistry(OpenCustomUIInteraction.PAGE_CODEC)
-                .register("ShotcavePartyPortal", ShotcavePartyPageSupplier.class, ShotcavePartyPageSupplier.CODEC);
+                .register("ShotcavePartyPortal", ShotcavePartyPageSupplier.class, ShotcavePartyPageSupplier.CODEC)
+                .register("ShotcaveDoorConfig", DoorConfigPageSupplier.class, DoorConfigPageSupplier.CODEC)
+                .register("ShotcaveMobSpawnerConfig", MobSpawnerConfigPageSupplier.class, MobSpawnerConfigPageSupplier.CODEC);
 
         this.getCodecRegistry(Interaction.CODEC)
                 .register("ChainLightning", ChainLightningInteraction.class, ChainLightningInteraction.CODEC)
@@ -134,6 +145,11 @@ public class Shotcave extends JavaPlugin {
         RootInteraction.getAssetStore().loadAssets(
                 "ninesliced:Shotcave",
                 List.of(ItemPickupInteraction.DEFAULT_ROOT));
+
+        // Mob spawner block component — persists spawner config in prefabs
+        ComponentType<ChunkStore, MobSpawnerData> mobSpawnerDataType =
+                this.getChunkStoreRegistry().registerComponent(MobSpawnerData.class, "MobSpawnerData", MobSpawnerData.CODEC);
+        MobSpawnerData.setComponentType(mobSpawnerDataType);
 
         WeaponRegistry.registerAll();
 
@@ -214,6 +230,7 @@ public class Shotcave extends JavaPlugin {
         this.getEntityStoreRegistry().registerSystem(new ItemDropSystem());
         this.getEntityStoreRegistry().registerSystem(new CrateBreakDropSystem());
         this.getEntityStoreRegistry().registerSystem(new CoinCollectionSystem());
+        this.getEntityStoreRegistry().registerSystem(new KeyItemCollectionSystem());
 
         try {
             this.getEntityStoreRegistry().registerEntityEventType(DropItemEvent.PlayerRequest.class);
@@ -344,6 +361,16 @@ public class Shotcave extends JavaPlugin {
     @Nonnull
     public DungeonMapService getDungeonMapService() {
         return this.dungeonMapService;
+    }
+
+    @Nonnull
+    public DoorService getDoorService() {
+        return this.doorService;
+    }
+
+    @Nonnull
+    public PortalService getPortalService() {
+        return this.portalService;
     }
 
     @NonNullDecl

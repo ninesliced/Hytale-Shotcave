@@ -314,8 +314,15 @@ public class DungeonConfig {
         @SerializedName("bossMob")
         private String bossMob;
 
+        @SerializedName("nextLevel")
+        private String nextLevel;
+
         @SerializedName("moneyPerKill")
         private int moneyPerKill = 10;
+
+        /** Block type used for sealed doors. */
+        @SerializedName("doorBlock")
+        private String doorBlock = "Stone_Brick_Wall";
 
         public String getId() {
             return id;
@@ -360,8 +367,18 @@ public class DungeonConfig {
             return bossMob;
         }
 
+        @Nullable
+        public String getNextLevel() {
+            return nextLevel != null && !nextLevel.isBlank() ? nextLevel.trim() : null;
+        }
+
         public int getMoneyPerKill() {
             return moneyPerKill;
+        }
+
+        @Nonnull
+        public String getDoorBlock() {
+            return doorBlock != null ? doorBlock : "Stone_Brick_Wall";
         }
 
         @Nonnull
@@ -406,6 +423,9 @@ public class DungeonConfig {
             if (mobs == null) {
                 mobs = new HashMap<>();
             }
+            if (nextLevel != null && nextLevel.isBlank()) {
+                nextLevel = null;
+            }
         }
     }
 
@@ -438,8 +458,14 @@ public class DungeonConfig {
         @SerializedName("keyDoor")
         private List<String> keyDoor = new ArrayList<>();
 
-        @SerializedName("lockedDoor")
-        private List<String> lockedDoor = new ArrayList<>();
+        @SerializedName("activationDoor")
+        private List<String> activationDoor = new ArrayList<>();
+
+        @SerializedName("lockDoor")
+        private List<String> lockDoor = new ArrayList<>();
+
+        @SerializedName("branch")
+        private List<String> branch = new ArrayList<>();
 
         @Nonnull public List<String> getSpawn()      { return spawn != null ? spawn : Collections.emptyList(); }
         @Nonnull public List<String> getCorridor()    { return corridor != null ? corridor : Collections.emptyList(); }
@@ -449,7 +475,9 @@ public class DungeonConfig {
         @Nonnull public List<String> getBoss()        { return boss != null ? boss : Collections.emptyList(); }
         @Nonnull public List<String> getWall()        { return wall != null ? wall : Collections.emptyList(); }
         @Nonnull public List<String> getKeyDoor()     { return keyDoor != null ? keyDoor : Collections.emptyList(); }
-        @Nonnull public List<String> getLockedDoor()  { return lockedDoor != null ? lockedDoor : Collections.emptyList(); }
+        @Nonnull public List<String> getActivationDoor() { return activationDoor != null ? activationDoor : Collections.emptyList(); }
+        @Nonnull public List<String> getLockDoor()    { return lockDoor != null ? lockDoor : Collections.emptyList(); }
+        @Nonnull public List<String> getBranch()      { return branch != null ? branch : Collections.emptyList(); }
 
         /**
          * Get globs for a specific room type.
@@ -482,7 +510,9 @@ public class DungeonConfig {
             merged.boss      = mergeGlobs(this.getBoss(), other.getBoss());
             merged.wall      = mergeGlobs(this.getWall(), other.getWall());
             merged.keyDoor   = mergeGlobs(this.getKeyDoor(), other.getKeyDoor());
-            merged.lockedDoor = mergeGlobs(this.getLockedDoor(), other.getLockedDoor());
+            merged.activationDoor = mergeGlobs(this.getActivationDoor(), other.getActivationDoor());
+            merged.lockDoor  = mergeGlobs(this.getLockDoor(), other.getLockDoor());
+            merged.branch    = mergeGlobs(this.getBranch(), other.getBranch());
             return merged;
         }
 
@@ -506,7 +536,9 @@ public class DungeonConfig {
             boss      = sanitizeGlobList(boss);
             wall      = sanitizeGlobList(wall);
             keyDoor   = sanitizeGlobList(keyDoor);
-            lockedDoor = sanitizeGlobList(lockedDoor);
+            activationDoor = sanitizeGlobList(activationDoor);
+            lockDoor  = sanitizeGlobList(lockDoor);
+            branch    = sanitizeGlobList(branch);
         }
     }
 
@@ -565,6 +597,10 @@ public class DungeonConfig {
         @SerializedName("spawnProbability")
         private Map<String, Double> spawnProbability = new HashMap<>();
 
+        /** Number of branch splitter rooms to place on the main path. */
+        @SerializedName("splitterCount")
+        private IntRange splitterCount = new IntRange(0, 0);
+
         @SerializedName("maxRooms")
         private int maxRooms = 5;
 
@@ -586,6 +622,7 @@ public class DungeonConfig {
         @Nonnull public IntRange getChallengeRooms() { return challengeRooms != null ? challengeRooms : new IntRange(1, 2); }
         @Nonnull public IntRange getMobsToSpawn()     { return mobsToSpawn != null ? mobsToSpawn : new IntRange(3, 8); }
         @Nullable public RoomPools getRooms()         { return rooms; }
+        @Nonnull public IntRange getSplitterCount() { return splitterCount != null ? splitterCount : new IntRange(0, 0); }
 
         /**
          * Get the fork probability for a given branch depth (1-based).
@@ -599,6 +636,7 @@ public class DungeonConfig {
 
         private void sanitize() {
             if (spawnProbability == null) spawnProbability = new HashMap<>();
+            if (splitterCount == null) splitterCount = new IntRange(0, 0);
             if (maxRooms <= 0) maxRooms = 5;
             if (minimumCorridorLength < 0) minimumCorridorLength = 1;
             if (challengeRooms == null) challengeRooms = new IntRange(1, 2);

@@ -9,7 +9,7 @@ import com.hypixel.hytale.component.dependency.Order;
 import com.hypixel.hytale.component.dependency.SystemDependency;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
-import com.hypixel.hytale.math.vector.Vector3d;
+import org.joml.Vector3d;
 import com.hypixel.hytale.protocol.ChangeVelocityType;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
@@ -105,7 +105,7 @@ public final class DamageEffectTickSystem extends EntityTickingSystem<EntityStor
             return;
         }
 
-        Vector3d adjustedVelocity = velocity.getVelocity().clone();
+        Vector3d adjustedVelocity = new Vector3d(velocity.getVelocity());
         if (effect == DamageEffect.ELECTRICITY) {
             adjustedVelocity.x = 0.0;
             if (adjustedVelocity.y > 0.0) {
