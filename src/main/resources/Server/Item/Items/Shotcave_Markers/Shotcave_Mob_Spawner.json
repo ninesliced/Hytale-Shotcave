@@ -22,7 +22,19 @@
       "Id": "shotcave_mob_spawner"
     },
     "Flags": {
-      "IsUsable": false
+      "IsUsable": true
+    },
+    "Interactions": {
+      "Use": {
+        "Interactions": [
+          {
+            "Type": "OpenCustomUI",
+            "Page": {
+              "Id": "ShotcaveMobSpawnerConfig"
+            }
+          }
+        ]
+      }
     },
     "BlockParticleSetId": "Stone",
     "BlockSoundSetId": "Stone"

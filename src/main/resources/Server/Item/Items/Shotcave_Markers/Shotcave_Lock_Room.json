@@ -1,9 +1,9 @@
 {
   "TranslationProperties": {
-    "Name": "server.items.Shotcave_Door.name",
-    "Description": "server.items.Shotcave_Door.description"
+    "Name": "server.items.Shotcave_Lock_Room.name",
+    "Description": "server.items.Shotcave_Lock_Room.description"
   },
-  "Icon": "Icons/ItemsGenerated/Shotcave_Marker_Door.png",
+  "Icon": "Icons/ItemsGenerated/Shotcave_Marker_Lock_Room.png",
   "Quality": "Technical",
   "Categories": [
     "Tool.Block"
@@ -13,28 +13,16 @@
     "Textures": [
       {
         "Weight": 1,
-        "All": "BlockTextures/Shotcave_Marker_Door.png"
+        "All": "BlockTextures/Shotcave_Marker_Lock_Room.png"
       }
     ],
     "Opacity": "Transparent",
     "Group": "@Tech",
     "State": {
-      "Id": "shotcave_door"
+      "Id": "shotcave_lock_room"
     },
     "Flags": {
-      "IsUsable": true
-    },
-    "Interactions": {
-      "Use": {
-        "Interactions": [
-          {
-            "Type": "OpenCustomUI",
-            "Page": {
-              "Id": "ShotcaveDoorConfig"
-            }
-          }
-        ]
-      }
+      "IsUsable": false
     },
     "BlockParticleSetId": "Stone",
     "BlockSoundSetId": "Stone"
@@ -46,7 +34,7 @@
       "Shotcave"
     ],
     "Marker": [
-      "Door"
+      "LockRoom"
     ]
   },
   "ItemSoundSetId": "ISS_Blocks_Stone"
