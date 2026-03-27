@@ -41,20 +41,18 @@
         "mobsToSpawn":     { "min": 100, "max": 200 }
       },
       "mobs": {
-        "Skeleton_Burnt_Knight_Wander": 10,
-        "Skeleton_Burnt_Praetorian_Wander": 4,
-        "Skeleton_Burnt_Archer": 8,
-        "Skeleton_Burnt_Soldier": 8,
-        "Skeleton_Burnt_Lancer": 6,
-        "Skeleton_Burnt_Wizard": 3,
-        "Skeleton_Burnt_Gunner": 4,
-        "Skeleton_Burnt_Alchemist": 2,
-        "Goblin_Scrapper": 5,
-        "Goblin_Lobber": 3,
-        "Spider_Cave": 4,
-        "Scarak_Louse": 3
+        "Industrial_Nosuit": 3,
+        "Kweebec_DeadWood_Rootling": 10,
+        "Kweebec_DeadWood_Rootling_Sword": 5,
+        "Kweebec_DeadWood_Rootling_Axe": 5,
+        "Kweebec_DeadWood_Rootling_Lance": 5,
+        "Kweebec_DeadWood_Sproutling": 10,
+        "Kweebec_DeadWood_Sproutling_Sword": 5,
+        "Kweebec_DeadWood_Sproutling_Axe": 5,
+        "Kweebec_DeadWood_Sproutling_Lance": 5,
+        "Kweebec_DeadWood_Seedling": 4,
+        "Kweebec_Seedling": 3
       },
-      "bossMob": "Skeleton_Boss",
       "nextLevel": null,
       "moneyPerKill": 5
     }

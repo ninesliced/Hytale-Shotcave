@@ -152,19 +152,39 @@ public final class GunItemMetadata {
         ItemStack out = stack;
         int normalizedBaseMaxAmmo = Math.max(1, baseMaxAmmo);
         int normalizedEffectiveMaxAmmo = Math.max(normalizedBaseMaxAmmo, effectiveMaxAmmo);
+        boolean hadStoredMaxAmmo = hasInt(out, MAX_AMMO_KEY);
+        boolean hadStoredAmmo = hasInt(out, AMMO_KEY);
         int currentMaxAmmo = getInt(out, MAX_AMMO_KEY, normalizedBaseMaxAmmo);
         int currentAmmo = getInt(out, AMMO_KEY, normalizedEffectiveMaxAmmo);
+        boolean refillBecauseCapacityRaised = hadStoredMaxAmmo
+                && hadStoredAmmo
+                && currentMaxAmmo > 0
+                && currentMaxAmmo != normalizedBaseMaxAmmo
+                && currentAmmo >= currentMaxAmmo;
 
-        if (currentMaxAmmo != normalizedBaseMaxAmmo) {
+        if (!hadStoredMaxAmmo || currentMaxAmmo != normalizedBaseMaxAmmo) {
             out = out.withMetadata(MAX_AMMO_KEY, new BsonInt32(normalizedBaseMaxAmmo));
             currentMaxAmmo = normalizedBaseMaxAmmo;
         }
-        if (!hasInt(out, AMMO_KEY) || currentAmmo < 0 || currentAmmo > normalizedEffectiveMaxAmmo) {
-            int clampedAmmo = Math.max(0, Math.min(currentAmmo, normalizedEffectiveMaxAmmo));
+        if (!hadStoredAmmo || currentAmmo < 0 || currentAmmo > normalizedEffectiveMaxAmmo || refillBecauseCapacityRaised) {
+            int clampedAmmo = refillBecauseCapacityRaised
+                    ? normalizedEffectiveMaxAmmo
+                    : Math.max(0, Math.min(currentAmmo, normalizedEffectiveMaxAmmo));
             out = out.withMetadata(AMMO_KEY, new BsonInt32(clampedAmmo));
         }
 
         return out;
+    }
+
+    @Nonnull
+    public static ItemStack initializeFullAmmo(@Nonnull ItemStack stack) {
+        WeaponDefinition definition = WeaponDefinitions.getById(stack.getItemId());
+        if (definition == null || definition.getBaseMaxAmmo() <= 0) {
+            return stack;
+        }
+
+        ItemStack out = stack.withMetadata(MAX_AMMO_KEY, new BsonInt32(definition.getBaseMaxAmmo()));
+        return out.withMetadata(AMMO_KEY, new BsonInt32(definition.getBaseMaxAmmo()));
     }
 
     // ── Low-level helpers ──────────────────────────────────────────────

@@ -488,6 +488,14 @@ public final class RoomData {
         return hasBounds && y >= boundsMinY && y <= boundsMaxY;
     }
 
+    public boolean containsXZ(int x, int z) {
+        return hasBounds && x >= boundsMinX && x <= boundsMaxX && z >= boundsMinZ && z <= boundsMaxZ;
+    }
+
+    public boolean contains(int x, int y, int z) {
+        return containsXZ(x, z) && containsY(y);
+    }
+
     /**
      * Check if a Y coordinate is within the room's Y bounds with a margin.
      * The margin shrinks the valid range inward (player must be further inside).
@@ -518,4 +526,3 @@ public final class RoomData {
                 + ", mobs=" + mobsToSpawn.size() + "}";
     }
 }
-

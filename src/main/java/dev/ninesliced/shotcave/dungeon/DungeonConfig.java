@@ -311,9 +311,6 @@ public class DungeonConfig {
         @SerializedName("mobs")
         private Map<String, Integer> mobs = new HashMap<>();
 
-        @SerializedName("bossMob")
-        private String bossMob;
-
         @SerializedName("nextLevel")
         private String nextLevel;
 
@@ -360,11 +357,6 @@ public class DungeonConfig {
         @Nonnull
         public WeightedPool<String> getMobPool() {
             return WeightedPool.of(getMobs());
-        }
-
-        @Nullable
-        public String getBossMob() {
-            return bossMob;
         }
 
         @Nullable

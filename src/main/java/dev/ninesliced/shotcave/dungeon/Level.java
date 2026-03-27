@@ -182,10 +182,37 @@ public final class Level {
         return blockOwnership.get(packXZ(x, z));
     }
 
+    /**
+     * Resolves the room at a full 3D position.
+     * <p>
+     * The fast ownership map is keyed by X/Z only, so when rooms share columns at
+     * different heights we validate the Y bounds and fall back to a bounded scan.
+     */
+    @Nullable
+    public RoomData findRoomAt(int x, int y, int z) {
+        RoomData owner = getBlockOwner(x, z);
+        if (owner != null && (!owner.hasBounds() || owner.contains(x, y, z))) {
+            return owner;
+        }
+
+        for (RoomData room : rooms) {
+            if (room == owner) {
+                continue;
+            }
+            if (!room.hasBounds()) {
+                continue;
+            }
+            if (room.contains(x, y, z)) {
+                return room;
+            }
+        }
+
+        return owner != null && !owner.hasBounds() ? owner : null;
+    }
+
     @Nonnull
     public Map<Long, RoomData> getBlockOwnership() {
         return Collections.unmodifiableMap(blockOwnership);
     }
 
 }
-

@@ -26,7 +26,7 @@
     "nextId": "Shotcave_Update_Hud",
     "worldSfx": "SFX_Rifle_Fire",
     "localSfx": "SFX_Rifle_Fire_Local",
-    "maxAmmo": 5
+    "maxAmmo": 50
   },
   "damage": {
     "id": "Shotcave_Crystal_Musket_Projectile_Hit",

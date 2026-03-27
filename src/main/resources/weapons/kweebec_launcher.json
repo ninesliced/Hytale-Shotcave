@@ -30,6 +30,6 @@
     "nextId": "Shotcave_Update_Hud",
     "worldSfx": "SFX_Staff_Ice_Shoot",
     "localSfx": "SFX_Staff_Ice_Shoot",
-    "maxAmmo": 5
+    "maxAmmo": 50
   }
 }

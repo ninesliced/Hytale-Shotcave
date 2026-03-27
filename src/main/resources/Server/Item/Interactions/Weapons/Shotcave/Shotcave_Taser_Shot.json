@@ -46,7 +46,7 @@
   "MaxDistance": 30,
   "AimAssist": true,
   "UseAmmo": true,
-  "MaxAmmo": 8,
+  "MaxAmmo": 80,
   "AmmoPerShot": 1,
   "Next": "Shotcave_Update_Hud"
 }

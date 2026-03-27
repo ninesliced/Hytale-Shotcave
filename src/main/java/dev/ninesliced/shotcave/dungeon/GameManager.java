@@ -53,6 +53,7 @@ import com.hypixel.hytale.server.npc.NPCPlugin;
 import dev.ninesliced.shotcave.PlayerEventNotifier;
 import dev.ninesliced.shotcave.Shotcave;
 import dev.ninesliced.shotcave.armor.ArmorChargeComponent;
+import dev.ninesliced.shotcave.guns.GunItemMetadata;
 import dev.ninesliced.shotcave.inventory.InventoryLockService;
 import dev.ninesliced.shotcave.hud.DungeonInfoHud;
 import dev.ninesliced.shotcave.hud.DeathCountdownHud;
@@ -262,8 +263,6 @@ public final class GameManager {
         DungeonConfig.LevelConfig levelConfig = resolveCurrentLevelConfig(config, game);
 
         world.execute(() -> {
-            Store<EntityStore> store = world.getEntityStore().getStore();
-
             // Seal boss room — prefer door positions from prefab, fall back to hardcoded.
             if (!bossRoom.getDoorPositions().isEmpty()) {
                 String doorBlock = levelConfig != null ? levelConfig.getDoorBlock() : "Stone_Brick_Wall";
@@ -273,41 +272,12 @@ public final class GameManager {
                 sealBossRoom(game, bossRoom, world);
             }
 
-            if (levelConfig != null && levelConfig.getBossMob() != null && !levelConfig.getBossMob().isBlank()) {
-                // Spawn boss at mob spawn points if available, otherwise use anchor offset.
-                List<Vector3i> spawnPoints = bossRoom.getMobSpawnPoints();
-                if (!spawnPoints.isEmpty()) {
-                    Vector3i sp = spawnPoints.get(0);
-                    Vector3d bossPos = new Vector3d(sp.x + 0.5, sp.y + 1.0, sp.z + 0.5);
-                    spawnBossAt(store, bossRoom, levelConfig.getBossMob(), bossPos);
-                } else {
-                    Vector3i anchor = bossRoom.getAnchor();
-                    Vector3d bossPos = new Vector3d(anchor.x + 5, anchor.y + 1, anchor.z + 5);
-                    spawnBossAt(store, bossRoom, levelConfig.getBossMob(), bossPos);
-                }
-            }
-
-            broadcastToParty(game.getPartyId(), "BOSS FIGHT! Defeat the boss to advance!", "#ff6b6b");
+            broadcastToParty(game.getPartyId(), "BOSS ROOM! Clear the room to advance!", "#ff6b6b");
         });
     }
 
-    private void spawnBossAt(@Nonnull Store<EntityStore> store, @Nonnull RoomData bossRoom,
-                              @Nonnull String bossMobId, @Nonnull Vector3d bossPos) {
-        try {
-            var bossNpcResult = NPCPlugin.get().spawnNPC(store, bossMobId, null, bossPos, Rotation3f.ZERO);
-            Ref<EntityStore> bossRef = bossNpcResult != null ? bossNpcResult.first() : null;
-            if (bossRef != null) {
-                bossRoom.addSpawnedMob(bossRef);
-                bossRoom.setExpectedMobCount(bossRoom.getExpectedMobCount() + 1);
-                LOGGER.info("Boss spawned: " + bossMobId + " at " + bossPos);
-            }
-        } catch (Exception e) {
-            LOGGER.log(java.util.logging.Level.WARNING, "Failed to spawn boss", e);
-        }
-    }
-
     /**
-     * Called when the boss is defeated. Sets TRANSITIONING state and spawns
+     * Called when the boss room is cleared. Sets TRANSITIONING state and spawns
      * a portal in the boss room for players to walk into.
      */
     public void onBossDefeated(@Nonnull Game game) {
@@ -1444,7 +1414,7 @@ public final class GameManager {
     @Nullable
     private ItemStack createStartEquipmentItem(@Nonnull String itemId) {
         try {
-            return new ItemStack(itemId, 1);
+            return GunItemMetadata.initializeFullAmmo(new ItemStack(itemId, 1));
         } catch (IllegalArgumentException e) {
             LOGGER.warning("Invalid start equipment item id: " + itemId);
             return null;
@@ -1627,13 +1597,16 @@ public final class GameManager {
         if (game.isBossRoomSealed()) return;
 
         Vector3i anchor = bossRoom.getAnchor();
+        int rotation = bossRoom.getRotation();
         DungeonConfig config = plugin.loadDungeonConfig();
         String wallBlock = config.getBossWallBlock();
 
         for (int dx = -2; dx <= 2; dx++) {
             for (int dy = 0; dy < 4; dy++) {
                 try {
-                    world.setBlock(anchor.x + dx, anchor.y + dy, anchor.z - 1, wallBlock, 0);
+                    int wx = anchor.x + rotateLocalX(dx, -1, rotation);
+                    int wz = anchor.z + rotateLocalZ(dx, -1, rotation);
+                    world.setBlock(wx, anchor.y + dy, wz, wallBlock, 0);
                 } catch (Exception e) {
                     LOGGER.log(java.util.logging.Level.FINE, "Failed to seal block at offset " + dx + "," + dy, e);
                 }
@@ -1648,11 +1621,14 @@ public final class GameManager {
         if (!game.isBossRoomSealed() || bossRoom == null) return;
 
         Vector3i anchor = bossRoom.getAnchor();
+        int rotation = bossRoom.getRotation();
 
         for (int dx = -2; dx <= 2; dx++) {
             for (int dy = 0; dy < 4; dy++) {
                 try {
-                    world.setBlock(anchor.x + dx, anchor.y + dy, anchor.z - 1, "Empty", 0);
+                    int wx = anchor.x + rotateLocalX(dx, -1, rotation);
+                    int wz = anchor.z + rotateLocalZ(dx, -1, rotation);
+                    world.setBlock(wx, anchor.y + dy, wz, "Empty", 0);
                 } catch (Exception e) {
                     LOGGER.log(java.util.logging.Level.FINE, "Failed to unseal block at offset " + dx + "," + dy, e);
                 }
@@ -1661,6 +1637,24 @@ public final class GameManager {
 
         game.setBossRoomSealed(false);
         LOGGER.info("Boss room unsealed at " + anchor);
+    }
+
+    private static int rotateLocalX(int x, int z, int rotation) {
+        return switch (rotation & 3) {
+            case 1 -> z;
+            case 2 -> -x;
+            case 3 -> -z;
+            default -> x;
+        };
+    }
+
+    private static int rotateLocalZ(int x, int z, int rotation) {
+        return switch (rotation & 3) {
+            case 1 -> -x;
+            case 2 -> -z;
+            case 3 -> x;
+            default -> z;
+        };
     }
 
     // ────────────────────────────────────────────────

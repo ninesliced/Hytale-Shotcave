@@ -405,8 +405,9 @@ public final class FKeyPickupPacketHandler implements PlayerPacketWatcher {
         if (level == null) return false;
 
         int px = (int) Math.floor(playerPos.x);
+        int py = (int) Math.floor(playerPos.y);
         int pz = (int) Math.floor(playerPos.z);
-        RoomData room = level.getBlockOwner(px, pz);
+        RoomData room = level.findRoomAt(px, py, pz);
         if (room == null) return false;
 
         if (!room.isLocked() || !room.isDoorsSealed() || room.getDoorMode() != DoorMode.KEY) {

@@ -23,7 +23,7 @@
     {
       "Type": "ConsumeAmmo",
       "AmmoPerShot": 1,
-      "MaxAmmo": 5
+      "MaxAmmo": 50
     },
     {
       "Type": "UpdateAmmoHud"

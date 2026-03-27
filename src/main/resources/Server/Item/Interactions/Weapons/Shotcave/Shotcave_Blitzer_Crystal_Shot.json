@@ -47,7 +47,7 @@
   "MuzzleForwardOffset": -0.75,
   "MuzzleRightOffset": 0.08,
   "UseAmmo": true,
-  "MaxAmmo": 5,
+  "MaxAmmo": 50,
   "AmmoPerShot": 1,
   "AimAssist": true
 }

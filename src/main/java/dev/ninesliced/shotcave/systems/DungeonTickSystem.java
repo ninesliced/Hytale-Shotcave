@@ -34,6 +34,7 @@ import dev.ninesliced.shotcave.hud.PartyStatusHud;
 import dev.ninesliced.shotcave.party.PartyManager;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +48,7 @@ import java.util.logging.Logger;
  * <ul>
  *   <li>Updates HUDs (dungeon info + party status)</li>
  *   <li>Detects boss room entry and triggers boss phase</li>
- *   <li>Tracks mob deaths and triggers boss defeat</li>
+ *   <li>Tracks mob deaths and triggers boss-room completion</li>
  *   <li>Awards money for kills</li>
  * </ul>
  */
@@ -64,6 +65,8 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
     private final Map<UUID, Long> lastHudUpdateByPlayer = new ConcurrentHashMap<>();
     /** Tracks which room each player is currently in, for room-enter detection. */
     private final Map<UUID, RoomData> playerCurrentRoom = new ConcurrentHashMap<>();
+    /** Tracks how far each player has walked inside the boss room. */
+    private final Map<UUID, BossEntryProgress> bossEntryProgressByPlayer = new ConcurrentHashMap<>();
     /** Players must step off an active portal once before re-entering can trigger it. */
     private final Set<UUID> playersReadyForPortalEntry = ConcurrentHashMap.newKeySet();
     /** Tracks which portal activation each player has already been reset for. */
@@ -96,6 +99,7 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
         if (game == null) {
             lastHudUpdateByPlayer.remove(playerRef.getUuid());
             playerCurrentRoom.remove(playerRef.getUuid());
+            bossEntryProgressByPlayer.remove(playerRef.getUuid());
             playersReadyForPortalEntry.remove(playerRef.getUuid());
             lastPortalActivationSeenByPlayer.remove(playerRef.getUuid());
             gameManager.normalizeOutsideDungeonState(playerRef, player, null, commandBuffer);
@@ -109,6 +113,7 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
         if (game.getState() != GameState.ACTIVE && game.getState() != GameState.BOSS
                 && game.getState() != GameState.TRANSITIONING) {
             lastHudUpdateByPlayer.remove(playerRef.getUuid());
+            bossEntryProgressByPlayer.remove(playerRef.getUuid());
             playersReadyForPortalEntry.remove(playerRef.getUuid());
             lastPortalActivationSeenByPlayer.remove(playerRef.getUuid());
             gameManager.normalizeOutsideDungeonState(playerRef, player, game, commandBuffer);
@@ -120,6 +125,7 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
 
         if (game.getInstanceWorld() == null || player.getWorld() != game.getInstanceWorld()) {
             lastHudUpdateByPlayer.remove(playerRef.getUuid());
+            bossEntryProgressByPlayer.remove(playerRef.getUuid());
             playersReadyForPortalEntry.remove(playerRef.getUuid());
             lastPortalActivationSeenByPlayer.remove(playerRef.getUuid());
             gameManager.normalizeOutsideDungeonState(playerRef, player, game, commandBuffer);
@@ -131,6 +137,7 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
 
         DungeonConfig config = shotcave.loadDungeonConfig();
         long now = System.currentTimeMillis();
+        Level level = game.getCurrentLevel();
 
         // Update HUDs on a per-player cadence so iteration order does not starve one client.
         if (shouldRun(lastHudUpdateByPlayer, playerRef.getUuid(), now, HUD_UPDATE_INTERVAL_MS)) {
@@ -142,6 +149,14 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
 
         // Detect player entering a locked room -> seal doors.
         detectRoomEntry(ref, store, game, shotcave, config, playerRef);
+
+        // Detect boss room proximity per player so multiplayer iteration order
+        // cannot block or reset boss entry progress.
+        if (game.getState() == GameState.ACTIVE && level != null) {
+            checkBossRoomEntry(ref, store, game, level, gameManager, playerRef.getUuid());
+        } else {
+            bossEntryProgressByPlayer.remove(playerRef.getUuid());
+        }
 
         // Check portal collision when portals are active (TRANSITIONING state).
         if (game.isPortalsActive()) {
@@ -156,7 +171,6 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
             return;
         }
 
-        Level level = game.getCurrentLevel();
         if (level == null) return;
 
         // Track mob deaths and award money
@@ -165,16 +179,11 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
         // Update active challenges
         updateChallenges(game, level, shotcave);
 
-        // Detect boss room proximity
-        if (game.getState() == GameState.ACTIVE) {
-            checkBossRoomEntry(player, ref, store, game, level, gameManager);
-        }
-
-        // Detect boss defeat
+        // Detect boss-room completion
         if (game.getState() == GameState.BOSS || game.getState() == GameState.ACTIVE) {
             RoomData bossRoom = level.getBossRoom();
-            if (bossRoom != null && bossRoom.areAllMobsDead() && !bossRoom.getSpawnedMobs().isEmpty()) {
-                LOGGER.info("Boss defeat detected for party " + game.getPartyId()
+            if (bossRoom != null && bossRoom.getExpectedMobCount() > 0 && bossRoom.areAllMobsDead()) {
+                LOGGER.info("Boss room cleared for party " + game.getPartyId()
                         + " level=" + level.getName()
                         + " state=" + game.getState()
                         + " expected=" + bossRoom.getExpectedMobCount()
@@ -281,10 +290,11 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
         }
     }
 
-    private void checkBossRoomEntry(@Nonnull Player player, @Nonnull Ref<EntityStore> ref,
+    private void checkBossRoomEntry(@Nonnull Ref<EntityStore> ref,
                                     @Nonnull Store<EntityStore> store,
                                     @Nonnull Game game, @Nonnull Level level,
-                                    @Nonnull GameManager gameManager) {
+                                    @Nonnull GameManager gameManager,
+                                    @Nonnull UUID playerId) {
         RoomData bossRoom = level.getBossRoom();
         if (bossRoom == null) return;
 
@@ -293,38 +303,28 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
 
         Vector3d pos = transform.getPosition();
         int px = (int) Math.floor(pos.x);
+        int py = (int) Math.floor(pos.y);
         int pz = (int) Math.floor(pos.z);
-        RoomData currentRoom = level.getBlockOwner(px, pz);
+        RoomData currentRoom = level.findRoomAt(px, py, pz);
 
         if (currentRoom != bossRoom) {
-            // Player left boss room — reset tracking.
-            if (bossRoom.isPlayerEnteredRoom()) {
-                bossRoom.setPlayerEnteredRoom(false);
-                bossRoom.setDistanceWalkedInRoom(0.0);
-                bossRoom.setLastTrackedPosition(null);
-            }
+            bossEntryProgressByPlayer.remove(playerId);
             return;
         }
 
-        // Player is in the boss room — track walk distance.
-        if (!bossRoom.isPlayerEnteredRoom()) {
-            bossRoom.setPlayerEnteredRoom(true);
-            bossRoom.setLastTrackedPosition(pos);
-            bossRoom.setDistanceWalkedInRoom(0.0);
-            return;
-        }
-
-        Vector3d lastPos = bossRoom.getLastTrackedPosition();
+        BossEntryProgress progress = bossEntryProgressByPlayer.computeIfAbsent(playerId, ignored -> new BossEntryProgress());
+        Vector3d lastPos = progress.lastPosition;
         if (lastPos != null) {
             double dx = pos.x - lastPos.x;
             double dy = pos.y - lastPos.y;
             double dz = pos.z - lastPos.z;
             double dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-            bossRoom.addDistanceWalked(dist);
+            progress.distanceWalked += dist;
         }
-        bossRoom.setLastTrackedPosition(pos);
+        progress.lastPosition = new Vector3d(pos);
 
-        if (bossRoom.getDistanceWalkedInRoom() >= BOSS_ROOM_WALK_THRESHOLD) {
+        if (progress.distanceWalked >= BOSS_ROOM_WALK_THRESHOLD) {
+            bossEntryProgressByPlayer.remove(playerId);
             gameManager.enterBossPhase(game);
         }
     }
@@ -406,8 +406,9 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
         if (transform == null) return;
 
         int px = (int) Math.floor(transform.getPosition().x);
+        int py = (int) Math.floor(transform.getPosition().y);
         int pz = (int) Math.floor(transform.getPosition().z);
-        RoomData room = level.getBlockOwner(px, pz);
+        RoomData room = level.findRoomAt(px, py, pz);
         if (room == null) return;
 
         cameraService.updateCameraForRoom(playerRef, room.getRotation());
@@ -428,12 +429,8 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
         int px = (int) Math.floor(transform.getPosition().x);
         int py = (int) Math.floor(transform.getPosition().y);
         int pz = (int) Math.floor(transform.getPosition().z);
-        RoomData room = level.getBlockOwner(px, pz);
+        RoomData room = level.findRoomAt(px, py, pz);
         if (room == null) return;
-
-        // Verify player is within the room's Y bounds (with 5-block margin) to avoid
-        // false positives when rooms overlap vertically and to ensure player is inside the room.
-        if (room.hasBounds() && !room.containsY(py, 5)) return;
 
         UUID playerId = playerRef.getUuid();
         RoomData previousRoom = playerCurrentRoom.put(playerId, room);
@@ -612,5 +609,11 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
         }
         lastRunTimes.put(key, now);
         return true;
+    }
+
+    private static final class BossEntryProgress {
+        @Nullable
+        private Vector3d lastPosition;
+        private double distanceWalked;
     }
 }

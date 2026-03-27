@@ -26,7 +26,7 @@
     "nextId": "Shotcave_Update_Hud",
     "worldSfx": "SFX_Blunderbuss_Fire",
     "localSfx": "SFX_Blunderbuss_Fire_Local",
-    "maxAmmo": 8
+    "maxAmmo": 80
   },
   "damage": {
     "id": "Shotcave_Taser_Chain_Damage",

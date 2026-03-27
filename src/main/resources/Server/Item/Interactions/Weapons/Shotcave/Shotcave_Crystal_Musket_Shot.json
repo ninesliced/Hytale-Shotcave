@@ -49,7 +49,7 @@
   "MuzzleForwardOffset": -1.55,
   "MuzzleRightOffset": 0.35,
   "UseAmmo": true,
-  "MaxAmmo": 5,
+  "MaxAmmo": 50,
   "AmmoPerShot": 1,
   "AimAssist": true,
   "Next": "Shotcave_Update_Hud"
