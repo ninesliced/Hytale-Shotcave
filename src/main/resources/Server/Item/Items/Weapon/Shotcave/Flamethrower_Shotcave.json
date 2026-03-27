@@ -7,7 +7,7 @@
   ],
   "Icon": "Icons/ItemsGenerated/Flamethrower_Goblin.png",
   "ItemLevel": 40,
-  "Model": "Items/Weapons/Shotcave/Flamethrower/Flamethrower_Goblin.blockymodel",
+  "Model": "Items/Weapons/Shotcave/FlameThrower/Flamethrower_Goblin.blockymodel",
   "Texture": "NPC/Intelligent/Goblin/Models/Weapons/Flamethrower/Flamethrower_Goblin_Texture.png",
   "PlayerAnimationsId": "Rifle",
   "Interactions": {
