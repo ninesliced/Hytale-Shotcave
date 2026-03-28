@@ -117,6 +117,11 @@ public final class GameManager {
      * until PlayerReady so the engine does not overwrite restored containers.
      */
     private final Set<UUID> pendingReadyRecoveryPlayers = ConcurrentHashMap.newKeySet();
+    /**
+     * Temporary inventory snapshots saved when a player dies so that ghosts
+     * cannot use weapons.  Restored on player-revive; discarded on level-change revive.
+     */
+    private final Map<UUID, InventorySaveData> deathInventorySnapshots = new ConcurrentHashMap<>();
 
     public GameManager(@Nonnull Shotcave plugin) {
         this.plugin = plugin;
@@ -459,6 +464,7 @@ public final class GameManager {
 
         for (UUID playerId : partyMembers) {
             despawnReviveMarker(playerId);
+            deathInventorySnapshots.remove(playerId);
 
             PlayerRef playerRef = Universe.get().getPlayer(playerId);
             if (playerRef == null) continue;
@@ -650,6 +656,7 @@ public final class GameManager {
     public void onPlayerDisconnect(@Nonnull PlayerRef playerRef) {
         UUID playerId = playerRef.getUuid();
         pendingReadyRecoveryPlayers.remove(playerId);
+        deathInventorySnapshots.remove(playerId);
         plugin.getCameraService().restoreDefault(playerRef);
         plugin.getInventoryLockService().remove(playerId);
         despawnReviveMarker(playerId);
@@ -1924,6 +1931,7 @@ public final class GameManager {
      * Shutdown: clean up all active games, restore inventories.
      */
     public void shutdown() {
+        deathInventorySnapshots.clear();
         for (Game game : activeGames.values()) {
             showAllPartyMembers(game.getPartyId());
         }
@@ -2040,6 +2048,9 @@ public final class GameManager {
             // Restore health/stamina
             resetPlayerStatus(player, ref, store);
 
+            // Discard the death snapshot — level-change revive gives fresh start equipment
+            discardDeathInventory(playerId);
+
             // Give back start equipment
             plugin.getInventoryLockService().unlock(player, playerId);
             clearPlayerInventory(player);
@@ -2067,6 +2078,72 @@ public final class GameManager {
         if (ref != null) {
             syncInventoryAndSelectedSlots(playerRef, ref, ref.getStore());
         }
+    }
+
+    /**
+     * Saves the player's current inventory into a temporary snapshot, then
+     * clears the inventory so the dead/ghost player cannot use weapons.
+     */
+    public void saveAndClearDeathInventory(@Nonnull Player player, @Nonnull PlayerRef playerRef) {
+        UUID playerId = playerRef.getUuid();
+        Ref<EntityStore> ref = player.getReference();
+        if (ref == null || !ref.isValid()) return;
+        Store<EntityStore> store = ref.getStore();
+
+        InventoryComponent.Hotbar hotbarComp = store.getComponent(ref, InventoryComponent.Hotbar.getComponentType());
+        InventoryComponent.Storage storageComp = store.getComponent(ref, InventoryComponent.Storage.getComponentType());
+        InventoryComponent.Armor armorComp = store.getComponent(ref, InventoryComponent.Armor.getComponentType());
+        InventoryComponent.Utility utilityComp = store.getComponent(ref, InventoryComponent.Utility.getComponentType());
+
+        InventorySaveData snapshot = new InventorySaveData();
+        snapshot.hotbarItems  = hotbarComp  != null ? serializeContainer(hotbarComp.getInventory())  : null;
+        snapshot.storageItems = storageComp != null ? serializeContainer(storageComp.getInventory()) : null;
+        snapshot.armorItems   = armorComp   != null ? serializeContainer(armorComp.getInventory())   : null;
+        snapshot.utilityItems = utilityComp != null ? serializeContainer(utilityComp.getInventory()) : null;
+        snapshot.activeHotbarSlot = hotbarComp != null ? hotbarComp.getActiveSlot() : 0;
+
+        deathInventorySnapshots.put(playerId, snapshot);
+
+        plugin.getInventoryLockService().unlock(player, playerId);
+        clearPlayerInventory(player);
+        syncInventoryAndSelectedSlots(playerRef, ref, store);
+    }
+
+    /**
+     * Restores the player's inventory from the death snapshot saved earlier.
+     * Used for player-initiated revives so the player gets their weapons back.
+     */
+    public void restoreDeathInventory(@Nonnull Player player, @Nonnull PlayerRef playerRef) {
+        UUID playerId = playerRef.getUuid();
+        InventorySaveData snapshot = deathInventorySnapshots.remove(playerId);
+        if (snapshot == null) return;
+
+        Ref<EntityStore> ref = player.getReference();
+        if (ref == null || !ref.isValid()) return;
+        Store<EntityStore> store = ref.getStore();
+
+        clearPlayerInventory(player);
+
+        InventoryComponent.Hotbar hotbarComp = store.getComponent(ref, InventoryComponent.Hotbar.getComponentType());
+        InventoryComponent.Storage storageComp = store.getComponent(ref, InventoryComponent.Storage.getComponentType());
+        InventoryComponent.Armor armorComp = store.getComponent(ref, InventoryComponent.Armor.getComponentType());
+        InventoryComponent.Utility utilityComp = store.getComponent(ref, InventoryComponent.Utility.getComponentType());
+
+        if (hotbarComp  != null) restoreContainer(hotbarComp.getInventory(),  snapshot.hotbarItems);
+        if (storageComp != null) restoreContainer(storageComp.getInventory(), snapshot.storageItems);
+        if (armorComp   != null) restoreContainer(armorComp.getInventory(),   snapshot.armorItems);
+        if (utilityComp != null) restoreContainer(utilityComp.getInventory(), snapshot.utilityItems);
+
+        syncInventoryAndSelectedSlots(playerRef, ref, store);
+        plugin.getInventoryLockService().lock(player, playerId);
+    }
+
+    /**
+     * Discards a death inventory snapshot without restoring it.
+     * Called when giving default start equipment on level-change revive.
+     */
+    public void discardDeathInventory(@Nonnull UUID playerId) {
+        deathInventorySnapshots.remove(playerId);
     }
 
     /**

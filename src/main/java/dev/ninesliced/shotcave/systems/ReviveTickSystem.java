@@ -18,7 +18,6 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.ninesliced.shotcave.Shotcave;
-import dev.ninesliced.shotcave.dungeon.DungeonConfig;
 import dev.ninesliced.shotcave.dungeon.Game;
 import dev.ninesliced.shotcave.dungeon.GameManager;
 import dev.ninesliced.shotcave.dungeon.GameState;
@@ -288,15 +287,8 @@ public final class ReviveTickSystem extends EntityTickingSystem<EntityStore> {
                 Store<EntityStore> dStore = dRef.getStore();
                 Player deadPlayer = dStore.getComponent(dRef, Player.getComponentType());
                 if (deadPlayer != null) {
-                    gameManager.clearPlayerInventoryPublic(deadPlayer, deadPlayerRef);
+                    gameManager.restoreDeathInventory(deadPlayer, deadPlayerRef);
                     gameManager.resetPlayerStatusPublic(deadPlayer, commandBuffer);
-
-                    Shotcave shotcave = Shotcave.getInstance();
-                    if (shotcave != null) {
-                        DungeonConfig config = shotcave.loadDungeonConfig();
-                        gameManager.giveStartEquipmentPublic(deadPlayerRef, deadPlayer, config);
-                    }
-
                     gameManager.applyDungeonMovementSettingsPublic(deadPlayerRef);
                 }
             }

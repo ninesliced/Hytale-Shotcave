@@ -125,7 +125,7 @@ public final class PlayerDeathSystem extends EntityTickingSystem<EntityStore> {
         DeathStateController.apply(commandBuffer, store, ref, false);
         game.addDeadPlayer(playerRef.getUuid());
         gameManager.hideDeadPlayerFromParty(playerRef.getUuid(), game.getPartyId());
-        gameManager.clearPlayerInventoryPublic(player, playerRef);
+        gameManager.saveAndClearDeathInventory(player, playerRef);
 
         if (game.areAllPlayersDead()) {
             commandBuffer.run(_store -> gameManager.onAllPlayersDead(game));
