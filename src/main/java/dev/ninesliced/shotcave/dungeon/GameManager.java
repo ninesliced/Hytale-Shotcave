@@ -122,6 +122,11 @@ public final class GameManager {
      * Populated when mobs are spawned; used by MobDeathTrackingSystem to route kill events.
      */
     private final ConcurrentHashMap<UUID, RoomData> dungeonMobRegistry = new ConcurrentHashMap<>();
+    /**
+     * Temporary inventory snapshots saved when a player dies so that ghosts
+     * cannot use weapons. Restored on player-revive; discarded on level-change revive.
+     */
+    private final Map<UUID, InventorySaveData> deathInventorySnapshots = new ConcurrentHashMap<>();
 
     public GameManager(@Nonnull Shotcave plugin) {
         this.plugin = plugin;
@@ -499,8 +504,18 @@ public final class GameManager {
             return;
         }
 
+        // Cancel ongoing generation if the game is still generating
+        if (game.getState() == GameState.GENERATING) {
+            CompletableFuture<World> genFuture = game.getGenerationFuture();
+            if (genFuture != null && !genFuture.isDone()) {
+                genFuture.cancel(true);
+                LOGGER.info("Cancelled generation future for party " + game.getPartyId());
+            }
+        }
+
         game.setState(GameState.COMPLETE);
         game.clearDeadPlayers();
+        showAllPartyMembers(game.getPartyId());
 
         List<UUID> partyMembers = playerToParty.entrySet().stream()
                 .filter(entry -> entry.getValue().equals(game.getPartyId()))
@@ -509,6 +524,7 @@ public final class GameManager {
 
         for (UUID playerId : partyMembers) {
             despawnReviveMarker(playerId);
+            deathInventorySnapshots.remove(playerId);
 
             PlayerRef playerRef = Universe.get().getPlayer(playerId);
             if (playerRef == null) continue;
@@ -706,6 +722,7 @@ public final class GameManager {
     public void onPlayerDisconnect(@Nonnull PlayerRef playerRef) {
         UUID playerId = playerRef.getUuid();
         pendingReadyRecoveryPlayers.remove(playerId);
+        deathInventorySnapshots.remove(playerId);
         plugin.getCameraService().restoreDefault(playerRef);
         plugin.getInventoryLockService().remove(playerId);
         despawnReviveMarker(playerId);
@@ -728,6 +745,8 @@ public final class GameManager {
 
         UUID partyId = playerToParty.get(playerId);
         if (partyId == null) return;
+
+        showPlayerToParty(playerId, partyId);
 
         Game game = activeGames.get(partyId);
         if (game == null) return;
@@ -2011,6 +2030,11 @@ public final class GameManager {
      * Shutdown: clean up all active games, restore inventories.
      */
     public void shutdown() {
+        deathInventorySnapshots.clear();
+        for (Game game : activeGames.values()) {
+            showAllPartyMembers(game.getPartyId());
+        }
+
         for (PlayerRef playerRef : OnlinePlayers.snapshot()) {
             if (playerRef == null || !playerRef.isValid()) {
                 continue;
@@ -2101,6 +2125,7 @@ public final class GameManager {
 
         for (UUID playerId : dead) {
             despawnReviveMarker(playerId);
+            showPlayerToParty(playerId, game.getPartyId());
 
             PlayerRef playerRef = Universe.get().getPlayer(playerId);
             if (playerRef == null || !playerRef.isValid()) continue;
@@ -2122,11 +2147,18 @@ public final class GameManager {
             // Restore health/stamina
             resetPlayerStatus(player, ref, store);
 
+            // Discard the death snapshot — level-change revive gives fresh start equipment
+            discardDeathInventory(playerId);
+
             // Give back start equipment
             plugin.getInventoryLockService().unlock(player, playerId);
             clearPlayerInventory(player);
             giveStartEquipment(playerRef, player, config);
             plugin.getInventoryLockService().lock(player, playerId);
+
+            // Re-apply dungeon movement and camera
+            applyDungeonMovementSettings(ref, store, playerRef);
+            plugin.getCameraService().setEnabled(playerRef, true);
         }
 
         game.clearDeadPlayers();
@@ -2145,6 +2177,72 @@ public final class GameManager {
         if (ref != null) {
             syncInventoryAndSelectedSlots(playerRef, ref, ref.getStore());
         }
+    }
+
+    /**
+     * Saves the player's current inventory into a temporary snapshot, then
+     * clears the inventory so the dead/ghost player cannot use weapons.
+     */
+    public void saveAndClearDeathInventory(@Nonnull Player player, @Nonnull PlayerRef playerRef) {
+        UUID playerId = playerRef.getUuid();
+        Ref<EntityStore> ref = player.getReference();
+        if (ref == null || !ref.isValid()) return;
+        Store<EntityStore> store = ref.getStore();
+
+        InventoryComponent.Hotbar hotbarComp = store.getComponent(ref, InventoryComponent.Hotbar.getComponentType());
+        InventoryComponent.Storage storageComp = store.getComponent(ref, InventoryComponent.Storage.getComponentType());
+        InventoryComponent.Armor armorComp = store.getComponent(ref, InventoryComponent.Armor.getComponentType());
+        InventoryComponent.Utility utilityComp = store.getComponent(ref, InventoryComponent.Utility.getComponentType());
+
+        InventorySaveData snapshot = new InventorySaveData();
+        snapshot.hotbarItems  = hotbarComp  != null ? serializeContainer(hotbarComp.getInventory())  : null;
+        snapshot.storageItems = storageComp != null ? serializeContainer(storageComp.getInventory()) : null;
+        snapshot.armorItems   = armorComp   != null ? serializeContainer(armorComp.getInventory())   : null;
+        snapshot.utilityItems = utilityComp != null ? serializeContainer(utilityComp.getInventory()) : null;
+        snapshot.activeHotbarSlot = hotbarComp != null ? hotbarComp.getActiveSlot() : 0;
+
+        deathInventorySnapshots.put(playerId, snapshot);
+
+        plugin.getInventoryLockService().unlock(player, playerId);
+        clearPlayerInventory(player);
+        syncInventoryAndSelectedSlots(playerRef, ref, store);
+    }
+
+    /**
+     * Restores the player's inventory from the death snapshot saved earlier.
+     * Used for player-initiated revives so the player gets their weapons back.
+     */
+    public void restoreDeathInventory(@Nonnull Player player, @Nonnull PlayerRef playerRef) {
+        UUID playerId = playerRef.getUuid();
+        InventorySaveData snapshot = deathInventorySnapshots.remove(playerId);
+        if (snapshot == null) return;
+
+        Ref<EntityStore> ref = player.getReference();
+        if (ref == null || !ref.isValid()) return;
+        Store<EntityStore> store = ref.getStore();
+
+        clearPlayerInventory(player);
+
+        InventoryComponent.Hotbar hotbarComp = store.getComponent(ref, InventoryComponent.Hotbar.getComponentType());
+        InventoryComponent.Storage storageComp = store.getComponent(ref, InventoryComponent.Storage.getComponentType());
+        InventoryComponent.Armor armorComp = store.getComponent(ref, InventoryComponent.Armor.getComponentType());
+        InventoryComponent.Utility utilityComp = store.getComponent(ref, InventoryComponent.Utility.getComponentType());
+
+        if (hotbarComp  != null) restoreContainer(hotbarComp.getInventory(),  snapshot.hotbarItems);
+        if (storageComp != null) restoreContainer(storageComp.getInventory(), snapshot.storageItems);
+        if (armorComp   != null) restoreContainer(armorComp.getInventory(),   snapshot.armorItems);
+        if (utilityComp != null) restoreContainer(utilityComp.getInventory(), snapshot.utilityItems);
+
+        syncInventoryAndSelectedSlots(playerRef, ref, store);
+        plugin.getInventoryLockService().lock(player, playerId);
+    }
+
+    /**
+     * Discards a death inventory snapshot without restoring it.
+     * Called when giving default start equipment on level-change revive.
+     */
+    public void discardDeathInventory(@Nonnull UUID playerId) {
+        deathInventorySnapshots.remove(playerId);
     }
 
     /**
@@ -2179,6 +2277,70 @@ public final class GameManager {
                                           @Nonnull DungeonConfig config) {
         giveStartEquipment(playerRef, player, config);
         plugin.getInventoryLockService().lock(player, playerRef.getUuid());
+    }
+
+    /**
+     * Public accessor for {@link #applyDungeonMovementSettings} used by revive systems.
+     */
+    public void applyDungeonMovementSettingsPublic(@Nonnull PlayerRef playerRef) {
+        Ref<EntityStore> ref = playerRef.getReference();
+        if (ref == null || !ref.isValid()) return;
+        Store<EntityStore> store = ref.getStore();
+        applyDungeonMovementSettings(ref, store, playerRef);
+        plugin.getCameraService().setEnabled(playerRef, true);
+    }
+
+    /**
+     * Hides a dead player's entity from all other party members so they cannot
+     * see the ghost moving around.
+     */
+    public void hideDeadPlayerFromParty(@Nonnull UUID deadPlayerId, @Nonnull UUID partyId) {
+        for (Map.Entry<UUID, UUID> entry : playerToParty.entrySet()) {
+            if (!entry.getValue().equals(partyId)) continue;
+            UUID otherId = entry.getKey();
+            if (otherId.equals(deadPlayerId)) continue;
+
+            PlayerRef otherRef = Universe.get().getPlayer(otherId);
+            if (otherRef != null && otherRef.isValid()) {
+                otherRef.getHiddenPlayersManager().hidePlayer(deadPlayerId);
+            }
+        }
+    }
+
+    /**
+     * Shows a previously-hidden player to all other party members (e.g. after revive).
+     */
+    public void showPlayerToParty(@Nonnull UUID playerId, @Nonnull UUID partyId) {
+        for (Map.Entry<UUID, UUID> entry : playerToParty.entrySet()) {
+            if (!entry.getValue().equals(partyId)) continue;
+            UUID otherId = entry.getKey();
+            if (otherId.equals(playerId)) continue;
+
+            PlayerRef otherRef = Universe.get().getPlayer(otherId);
+            if (otherRef != null && otherRef.isValid()) {
+                otherRef.getHiddenPlayersManager().showPlayer(playerId);
+            }
+        }
+    }
+
+    /**
+     * Shows all party members to each other — used during game cleanup to
+     * undo any death-related hiding.
+     */
+    private void showAllPartyMembers(@Nonnull UUID partyId) {
+        List<UUID> members = playerToParty.entrySet().stream()
+                .filter(e -> e.getValue().equals(partyId))
+                .map(Map.Entry::getKey)
+                .toList();
+        for (UUID memberId : members) {
+            for (UUID otherId : members) {
+                if (memberId.equals(otherId)) continue;
+                PlayerRef otherRef = Universe.get().getPlayer(otherId);
+                if (otherRef != null && otherRef.isValid()) {
+                    otherRef.getHiddenPlayersManager().showPlayer(memberId);
+                }
+            }
+        }
     }
 
     public void spawnReviveMarker(@Nonnull CommandBuffer<EntityStore> commandBuffer,
