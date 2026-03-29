@@ -60,6 +60,7 @@ import dev.ninesliced.shotcave.hud.DungeonInfoHud;
 import dev.ninesliced.shotcave.hud.DeathCountdownHud;
 import dev.ninesliced.shotcave.hud.PartyStatusHud;
 import dev.ninesliced.shotcave.hud.ReviveProgressHud;
+import dev.ninesliced.shotcave.hud.ChallengeHud;
 import dev.ninesliced.shotcave.party.PartyManager;
 import dev.ninesliced.shotcave.party.PartyUiPage;
 import dev.ninesliced.shotcave.systems.DeathComponent;
@@ -1836,6 +1837,7 @@ public final class GameManager {
     public void hideDungeonHuds(@Nonnull Player player, @Nonnull PlayerRef playerRef) {
         DungeonInfoHud.hideHud(player, playerRef);
         PartyStatusHud.hideHud(player, playerRef);
+        ChallengeHud.hideHud(player, playerRef);
         DeathCountdownHud.hideHud(player, playerRef);
         ReviveProgressHud.hideHud(player, playerRef);
     }
