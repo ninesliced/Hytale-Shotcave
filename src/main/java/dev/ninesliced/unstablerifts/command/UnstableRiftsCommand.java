@@ -12,8 +12,8 @@ import java.util.concurrent.CompletableFuture;
 public class UnstableRiftsCommand extends AbstractCommand {
 
     public UnstableRiftsCommand(@Nonnull UnstableRifts plugin) {
-        super("unstablerifts", "Manage UnstableRifts dungeon, camera, and debug tools");
-        this.addAliases("sc");
+        super("unstablerifts", "Manage UnstableRifts mod");
+        this.addAliases("ur");
         this.addSubCommand(new TopCameraCommand(plugin));
         this.addSubCommand(new DungeonCommand(plugin));
         this.addSubCommand(new CoinCommand());
