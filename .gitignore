@@ -31,7 +31,7 @@ target/*
 .idea/
 .vscode/
 .claude/
-Hytale-UnstableRifts.code-workspace
+UnstableRifts.code-workspace
 
 /server/
 /bin/
