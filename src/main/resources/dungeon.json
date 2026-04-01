@@ -94,6 +94,95 @@
         "Kweebec_DeadWood_Seedling": 4,
         "Kweebec_Seedling": 3
       },
+      "nextLevel": "desert"
+    },
+    {
+      "id": "desert",
+      "name": "Desert",
+      "rooms": {
+        "spawn": [
+          "UnstableRifts.Desert.Entrance.*"
+        ],
+        "corridor": [
+          "UnstableRifts.Desert.Room.*"
+        ],
+        "challenge": [
+          "UnstableRifts.Desert.Challenge.*"
+        ],
+        "shop": [
+          "UnstableRifts.Desert.Shop.*"
+        ],
+        "wall": [
+          "UnstableRifts.Desert.Wall.*"
+        ],
+        "boss": [
+          "UnstableRifts.Desert.Boss.*"
+        ],
+        "keyDoor": [
+          "UnstableRifts.Desert.Doors.Desert_Key_Door"
+        ],
+        "activationDoor": [
+          "UnstableRifts.Desert.Doors.Desert_Activation_Door"
+        ],
+        "lockDoor": [
+          "UnstableRifts.Desert.Doors.Desert_Lock_Door"
+        ],
+        "sealDoor": [
+          "UnstableRifts.Desert.Doors.Desert_Sealed_Door"
+        ],
+        "branch": [
+          "UnstableRifts.Desert.Branch.*"
+        ]
+      },
+      "main": {
+        "maxRooms": 6,
+        "challengeRooms": {
+          "min": 2,
+          "max": 2
+        },
+        "minimumCorridorLength": 1,
+        "mobsToSpawn": {
+          "min": 400,
+          "max": 400
+        },
+        "treasureRooms": {
+          "min": 0,
+          "max": 0
+        },
+        "shopRooms": {
+          "min": 1,
+          "max": 1
+        }
+      },
+      "branch": {
+        "splitterCount": {
+          "min": 1,
+          "max": 1
+        },
+        "maxRooms": 2,
+        "challengeRooms": {
+          "min": 1,
+          "max": 1
+        },
+        "minimumCorridorLength": 1,
+        "mobsToSpawn": {
+          "min": 50,
+          "max": 100
+        }
+      },
+      "mobs": {
+        "Industrial_Nosuit": 3,
+        "Kweebec_DeadWood_Rootling": 10,
+        "Kweebec_DeadWood_Rootling_Sword": 5,
+        "Kweebec_DeadWood_Rootling_Axe": 5,
+        "Kweebec_DeadWood_Rootling_Lance": 5,
+        "Kweebec_DeadWood_Sproutling": 10,
+        "Kweebec_DeadWood_Sproutling_Sword": 5,
+        "Kweebec_DeadWood_Sproutling_Axe": 5,
+        "Kweebec_DeadWood_Sproutling_Lance": 5,
+        "Kweebec_DeadWood_Seedling": 4,
+        "Kweebec_Seedling": 3
+      },
       "nextLevel": null
     }
   ]
