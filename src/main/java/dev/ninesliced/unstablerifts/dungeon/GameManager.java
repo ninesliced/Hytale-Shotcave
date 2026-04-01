@@ -87,7 +87,8 @@ public final class GameManager {
                                              @Nonnull Map<UUID, Ref<EntityStore>> memberEntities,
                                              @Nonnull Map<UUID, Store<EntityStore>> memberStores,
                                              @Nonnull World leaderWorld,
-                                             @Nonnull Transform leaderReturnPoint) {
+                                             @Nonnull Transform leaderReturnPoint,
+                                             @Nullable String levelSelector) {
         if (activeGames.containsKey(partyId)) {
             return CompletableFuture.failedFuture(new IllegalStateException("A game is already active for this party."));
         }
@@ -104,7 +105,10 @@ public final class GameManager {
             playerToParty.put(memberId, partyId);
         }
 
-        DungeonConfig.LevelConfig firstLevelConfig = config.getLevels().get(0);
+        DungeonConfig.LevelConfig firstLevelConfig = plugin.getDungeonInstanceService().resolveLevel(levelSelector);
+        if (firstLevelConfig == null) {
+            firstLevelConfig = config.getLevels().get(0);
+        }
         Level firstLevel = new Level(firstLevelConfig.getName(), 0);
         game.addLevel(firstLevel);
         game.setCurrentLevelSelector(firstLevelConfig.getSelector());

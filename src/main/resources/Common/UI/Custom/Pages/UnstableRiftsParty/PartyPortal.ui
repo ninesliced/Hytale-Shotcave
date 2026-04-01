@@ -162,8 +162,33 @@ $C.@PageOverlay {
                 Text: "MAKE PUBLIC";
                 Style: @ActionButton;
               }
+            }
 
-              Group { Anchor: (Width: 8); }
+            Group #DungeonSelectSection {
+              Visible: true;
+              LayoutMode: Top;
+              Anchor: (Top: 12);
+
+              Label {
+                Text: "Dungeon";
+                Style: @TitleStyle;
+              }
+
+              Label {
+                Anchor: (Top: 4, Bottom: 8);
+                Text: "Select which dungeon to enter when starting the run.";
+                Style: @MutedStyle;
+              }
+
+              $C.@DropdownBox #DungeonDropdown {
+                @Anchor = (Width: 392);
+                Value: "";
+              }
+            }
+
+            Group {
+              LayoutMode: Left;
+              Anchor: (Top: 12, Height: 34);
 
               TextButton #StartButton {
                 FlexWeight: 1;
@@ -186,27 +211,20 @@ $C.@PageOverlay {
               }
             }
 
-            Group {
-              LayoutMode: Left;
-              Anchor: (Top: 8, Height: 34);
+            TextButton #LeaveButton {
+              FlexWeight: 1;
+              Anchor: (Height: 32, Top: 8);
+              Text: "LEAVE PARTY";
+              Style: @ActionButton;
+              Visible: false;
+            }
 
-              TextButton #LeaveButton {
-                FlexWeight: 1;
-                Anchor: (Height: 32);
-                Text: "LEAVE PARTY";
-                Style: @ActionButton;
-                Visible: false;
-              }
-
-              Group { Anchor: (Width: 8); }
-
-              TextButton #DisbandButton {
-                FlexWeight: 1;
-                Anchor: (Height: 32);
-                Text: "DISBAND PARTY";
-                Style: @ActionButton;
-                Visible: false;
-              }
+            TextButton #DisbandButton {
+              FlexWeight: 1;
+              Anchor: (Height: 32, Top: 8);
+              Text: "DISBAND PARTY";
+              Style: @ActionButton;
+              Visible: false;
             }
 
             Group #InviteSection {

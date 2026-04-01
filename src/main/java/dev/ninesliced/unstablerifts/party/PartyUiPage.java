@@ -19,6 +19,7 @@ import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.ninesliced.unstablerifts.UnstableRifts;
+import dev.ninesliced.unstablerifts.dungeon.DungeonConfig;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -120,11 +121,16 @@ public final class PartyUiPage extends InteractiveCustomUIPage<PartyUiPage.UiEve
             ui.set("#PrivacyButton.Text", currentParty.privacy() == PartyPrivacy.PUBLIC ? "MAKE PRIVATE" : "MAKE PUBLIC");
 
             bindClick(events, "#PrivacyButton", Action.TOGGLE_PRIVACY);
-            bindClick(events, "#StartButton", Action.START);
+            bindClickWithValue(events, "#StartButton", Action.START, "#DungeonDropdown.Value");
             bindClick(events, "#TeleportButton", Action.TELEPORT);
             bindClick(events, "#DisbandButton", Action.DISBAND);
             bindClick(events, "#LeaveButton", Action.LEAVE);
             bindClickWithValue(events, "#InviteButton", Action.INVITE, "#InvitePlayerDropdown.Value");
+
+            ui.set("#DungeonSelectSection.Visible", canStart);
+            if (canStart) {
+                buildDungeonDropdown(ui, currentParty.selectedLevelSelector());
+            }
 
             buildInviteCandidates(ui, inviteCandidates);
             buildMembers(ui, events, currentParty, leader);
@@ -176,7 +182,10 @@ public final class PartyUiPage extends InteractiveCustomUIPage<PartyUiPage.UiEve
             case KICK -> result = manager.kick(this.playerRef, safeValue(data.targetId));
             case LEAVE -> result = manager.leave(this.playerRef);
             case DISBAND -> result = manager.disband(this.playerRef);
-            case START -> result = manager.startParty(this.playerRef);
+            case START -> {
+                manager.setSelectedLevel(this.playerRef, safeValue(data.value));
+                result = manager.startParty(this.playerRef);
+            }
             case TELEPORT -> result = this.plugin.getGameManager().teleportPlayerToDungeon(this.playerRef);
             default -> {
             }
@@ -261,6 +270,32 @@ public final class PartyUiPage extends InteractiveCustomUIPage<PartyUiPage.UiEve
         }
         ui.set("#InvitePlayerDropdown.Entries", entries);
         ui.set("#InvitePlayerDropdown.Value", inviteCandidates.get(0).id());
+    }
+
+    private void buildDungeonDropdown(@Nonnull UICommandBuilder ui,
+                                      @Nullable String selectedSelector) {
+        DungeonConfig config = this.plugin.loadDungeonConfig();
+        List<DungeonConfig.LevelConfig> levels = config.getLevels();
+        if (levels.isEmpty()) {
+            ui.set("#DungeonSelectSection.Visible", false);
+            return;
+        }
+
+        List<DropdownEntryInfo> entries = new ArrayList<>();
+        for (DungeonConfig.LevelConfig level : levels) {
+            entries.add(new DropdownEntryInfo(
+                    LocalizableString.fromString(level.getName()),
+                    level.getSelector()
+            ));
+        }
+        ui.set("#DungeonDropdown.Entries", entries);
+
+        String activeSelector = selectedSelector;
+        if (activeSelector == null || activeSelector.isBlank()) {
+            DungeonConfig.LevelConfig defaultLevel = this.plugin.getDungeonInstanceService().resolveLevel(null);
+            activeSelector = defaultLevel != null ? defaultLevel.getSelector() : levels.get(0).getSelector();
+        }
+        ui.set("#DungeonDropdown.Value", activeSelector);
     }
 
     private void buildInvites(@Nonnull UICommandBuilder ui,

@@ -202,6 +202,21 @@ public final class PartyManager {
     }
 
     @Nonnull
+    public synchronized ActionResult setSelectedLevel(@Nonnull PlayerRef leaderRef, @Nonnull String levelSelector) {
+        Party party = getPartyInternal(leaderRef.getUuid());
+        if (party == null) {
+            return ActionResult.error("Create a party first.");
+        }
+        if (!isLeader(party, leaderRef.getUuid())) {
+            return ActionResult.error("Only the party leader can select the dungeon.");
+        }
+
+        party.selectedLevelSelector = levelSelector;
+        PartyUiPage.refreshOpenPages();
+        return ActionResult.success("Dungeon selected.", party);
+    }
+
+    @Nonnull
     public synchronized ActionResult setPrivacy(@Nonnull PlayerRef leaderRef, @Nonnull PartyPrivacy privacy) {
         Party party = getPartyInternal(leaderRef.getUuid());
         if (party == null) {
@@ -278,7 +293,7 @@ public final class PartyManager {
             return ActionResult.error("Could not resolve the leader entity.");
         }
 
-        DungeonConfig.LevelConfig levelConfig = this.plugin.getDungeonInstanceService().resolveLevel(null);
+        DungeonConfig.LevelConfig levelConfig = this.plugin.getDungeonInstanceService().resolveLevel(party.selectedLevelSelector);
         if (levelConfig == null) {
             return ActionResult.error("No procedural dungeon levels are configured.");
         }
@@ -324,7 +339,7 @@ public final class PartyManager {
         var gameManager = this.plugin.getGameManager();
         var gameFuture = gameManager.startGame(
                 party.id, memberIds, memberRefsMap, memberEntitiesMap, memberStoresMap,
-                leaderWorld, leaderReturnPoint
+                leaderWorld, leaderReturnPoint, party.selectedLevelSelector
         );
 
         // When the game is ready, teleport all members and start the game loop
@@ -655,7 +670,7 @@ public final class PartyManager {
             members.add(new PartyMemberSnapshot(entry.getKey().toString(), entry.getValue(), entry.getKey().equals(party.leaderId)));
         }
         members.sort(Comparator.comparing(PartyMemberSnapshot::name, String.CASE_INSENSITIVE_ORDER));
-        return new PartySnapshot(party.id.toString(), party.name, party.leaderId.toString(), party.leaderName, party.privacy, members);
+        return new PartySnapshot(party.id.toString(), party.name, party.leaderId.toString(), party.leaderName, party.privacy, members, party.selectedLevelSelector);
     }
 
     private void broadcast(@Nonnull Party party, @Nonnull String text) {
@@ -686,6 +701,8 @@ public final class PartyManager {
         private String name;
         private String leaderName;
         private PartyPrivacy privacy;
+        @Nullable
+        private String selectedLevelSelector;
 
         private Party(@Nonnull UUID id, @Nonnull UUID leaderId, @Nonnull String name, @Nonnull PartyPrivacy privacy) {
             this.id = id;
@@ -710,7 +727,8 @@ public final class PartyManager {
                                 String leaderId,
                                 String leaderName,
                                 PartyPrivacy privacy,
-                                List<PartyMemberSnapshot> members) {
+                                List<PartyMemberSnapshot> members,
+                                @Nullable String selectedLevelSelector) {
         public int memberCount() {
             return this.members.size();
         }
