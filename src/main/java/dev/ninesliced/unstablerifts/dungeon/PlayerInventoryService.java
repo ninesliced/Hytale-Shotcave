@@ -309,6 +309,48 @@ public final class PlayerInventoryService {
     }
 
     // ────────────────────────────────────────────────
+    //  Disconnect / reconnect inventory snapshots
+    // ────────────────────────────────────────────────
+
+    /**
+     * Creates an in-memory snapshot of the player's current inventory without
+     * clearing it. Used on disconnect so the dungeon inventory can be restored
+     * on reconnect.
+     *
+     * @return the snapshot, or null if the player reference is invalid.
+     */
+    @Nullable
+    public InventorySaveData snapshotCurrentInventory(@Nonnull Player player) {
+        Ref<EntityStore> ref = player.getReference();
+        if (ref == null || !ref.isValid()) return null;
+        Store<EntityStore> store = ref.getStore();
+        return snapshotInventory(ref, store);
+    }
+
+    /**
+     * Restores a player's inventory from an in-memory dungeon snapshot (e.g. after
+     * reconnecting). The caller is responsible for clearing the inventory beforehand.
+     */
+    public void restoreDungeonInventory(@Nonnull UUID playerId,
+                                        @Nonnull Player player,
+                                        @Nonnull InventorySaveData snapshot) {
+        Ref<EntityStore> ref = player.getReference();
+        if (ref == null || !ref.isValid()) return;
+        Store<EntityStore> store = ref.getStore();
+
+        restoreFromSnapshot(ref, store, snapshot);
+
+        InventoryComponent.Hotbar hotbarComp = store.getComponent(ref, InventoryComponent.Hotbar.getComponentType());
+        if (hotbarComp != null && snapshot.activeHotbarSlot >= 0
+                && snapshot.activeHotbarSlot < hotbarComp.getInventory().getCapacity()) {
+            hotbarComp.setActiveSlot(snapshot.activeHotbarSlot);
+        }
+
+        PlayerRef playerRef = Universe.get().getPlayer(playerId);
+        syncInventoryAndSelectedSlots(playerRef, ref, store);
+    }
+
+    // ────────────────────────────────────────────────
     //  Death inventory snapshots
     // ────────────────────────────────────────────────
 

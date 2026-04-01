@@ -47,8 +47,11 @@ import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 import javax.annotation.Nonnull;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class UnstableRifts extends JavaPlugin {
+
+    private static final Logger LOGGER = Logger.getLogger(UnstableRifts.class.getName());
 
     private static UnstableRifts instance;
 
@@ -118,6 +121,7 @@ public class UnstableRifts extends JavaPlugin {
         itemPickupHudRuntime.onPlayerConnect(playerRef);
         revivePromptHudRuntime.onPlayerConnect(playerRef);
         gameManager.onPlayerConnect(playerRef);
+        partyManager.reconnectMember(playerRef);
     }
 
     private void onPlayerReady(@Nonnull PlayerReadyEvent event) {
@@ -129,6 +133,10 @@ public class UnstableRifts extends JavaPlugin {
         }
 
         this.cameraService.handlePlayerReady(ref);
+        this.gameManager.handlePostReadyResync(playerRef, player);
+        LOGGER.info("[RECONNECT-DEBUG] onPlayerReady: about to call handlePlayerReconnect for "
+                + playerRef.getUsername() + " world=" + (player.getWorld() != null ? player.getWorld().getName() : "null"));
+        this.gameManager.handlePlayerReconnect(playerRef);
         this.gameManager.releasePendingRecovery(playerRef.getUuid());
 
         World world = player.getWorld();
@@ -137,6 +145,11 @@ public class UnstableRifts extends JavaPlugin {
         }
 
         var game = this.gameManager.findGameForPlayer(playerRef.getUuid());
+        LOGGER.info("[RECONNECT-DEBUG] onPlayerReady: post-reconnect check for " + playerRef.getUsername()
+                + " world=" + world.getName()
+                + " game=" + (game != null)
+                + " instanceWorld=" + (game != null && game.getInstanceWorld() != null ? game.getInstanceWorld().getName() : "null")
+                + " willNormalize=" + (game == null || game.getInstanceWorld() != world));
         if (game == null || game.getInstanceWorld() != world) {
             this.gameManager.normalizeOutsideDungeonState(playerRef, player, game);
         }
@@ -314,9 +327,9 @@ public class UnstableRifts extends JavaPlugin {
         this.getEventRegistry().registerGlobal(RemoveWorldEvent.class, this::onWorldRemoved);
         this.getEventRegistry().registerGlobal(PlayerReadyEvent.class, this::onPlayerReady);
         this.getEventRegistry().registerGlobal(PlayerDisconnectEvent.class, event -> {
+            this.gameManager.onPlayerDisconnect(event.getPlayerRef());
             this.partyManager.handleDisconnect(event.getPlayerRef());
             this.cameraService.clearState(event.getPlayerRef());
-            this.gameManager.onPlayerDisconnect(event.getPlayerRef());
             WeaponVirtualItems.onPlayerDisconnect(event.getPlayerRef().getUuid());
             ArmorVirtualItems.onPlayerDisconnect(event.getPlayerRef().getUuid());
             armorSetTracker.removePlayer(event.getPlayerRef().getUuid());

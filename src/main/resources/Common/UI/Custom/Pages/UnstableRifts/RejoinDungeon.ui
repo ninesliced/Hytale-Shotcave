@@ -1,0 +1,89 @@
+// ─────────────────────────────────────────────
+//  UnstableRifts — Rejoin Dungeon Prompt
+// ─────────────────────────────────────────────
+
+@PanelBg = #1a1e26(0.94);
+@TitleColor = #d9c18a;
+@BodyColor = #b9c7d6;
+@MutedColor = #7c8da1;
+
+@AcceptBtnLabelStyle = LabelStyle(FontSize: 13, TextColor: #d5f5d5, RenderBold: true, RenderUppercase: true, HorizontalAlignment: Center, VerticalAlignment: Center);
+@AcceptBtnStyle = TextButtonStyle(
+  Default: (Background: #2a5430, LabelStyle: @AcceptBtnLabelStyle),
+  Hovered: (Background: #3a7040, LabelStyle: @AcceptBtnLabelStyle),
+  Pressed: (Background: #2a5430, LabelStyle: @AcceptBtnLabelStyle)
+);
+
+@DeclineBtnLabelStyle = LabelStyle(FontSize: 13, TextColor: #e8c8c8, RenderBold: true, RenderUppercase: true, HorizontalAlignment: Center, VerticalAlignment: Center);
+@DeclineBtnStyle = TextButtonStyle(
+  Default: (Background: #542a2a, LabelStyle: @DeclineBtnLabelStyle),
+  Hovered: (Background: #703a3a, LabelStyle: @DeclineBtnLabelStyle),
+  Pressed: (Background: #542a2a, LabelStyle: @DeclineBtnLabelStyle)
+);
+
+Group #RejoinRoot {
+  Anchor: (Left: 0, Top: 0, Right: 0, Bottom: 0);
+
+  // Overlay background
+  Group {
+    Anchor: (Left: 0, Top: 0, Right: 0, Bottom: 0);
+    Background: #000000(0.5);
+  }
+
+  Group #RejoinCenter {
+    Anchor: (Width: 360, Height: 200);
+    LayoutMode: Middle;
+
+    Group #RejoinPanel {
+      Anchor: (Width: 360, Height: 200);
+      Background: @PanelBg;
+      OutlineColor: #3d5369(0.55);
+      OutlineSize: 1;
+      LayoutMode: Top;
+      Padding: (Horizontal: 24, Vertical: 20);
+
+      Label #RejoinTitle {
+        Text: "DUNGEON IN PROGRESS";
+        Anchor: (Height: 28);
+        Style: LabelStyle(
+          FontSize: 16,
+          TextColor: @TitleColor,
+          RenderBold: true,
+          RenderUppercase: true,
+          HorizontalAlignment: Center,
+          VerticalAlignment: Center
+        );
+      }
+
+      Label #RejoinBody {
+        Text: "Your party is still running a dungeon. Would you like to rejoin?";
+        Anchor: (Height: 44, Top: 10);
+        Style: LabelStyle(
+          FontSize: 13,
+          TextColor: @BodyColor,
+          Wrap: true,
+          HorizontalAlignment: Center,
+          VerticalAlignment: Center
+        );
+      }
+
+      Group {
+        Anchor: (Height: 44, Top: 16);
+        LayoutMode: Left;
+        Padding: (Horizontal: 20);
+
+        TextButton #RejoinYesBtn {
+          Text: "REJOIN";
+          Anchor: (Width: 130, Height: 36);
+          Style: @AcceptBtnStyle;
+        }
+
+        TextButton #RejoinNoBtn {
+          Text: "LEAVE PARTY";
+          Anchor: (Width: 130, Height: 36, Left: 16);
+          Style: @DeclineBtnStyle;
+        }
+      }
+    }
+  }
+}

@@ -41,13 +41,26 @@ public final class PlayerStateService {
     public void resetPlayerStatus(@Nonnull Player player,
                                   @Nonnull Ref<EntityStore> ref,
                                   @Nonnull Store<EntityStore> store) {
-        resetPlayerStatus(player, ref, store, null);
+        resetPlayerStatus(player, ref, store, null, false);
     }
 
     public void resetPlayerStatus(@Nonnull Player player,
                                   @Nonnull Ref<EntityStore> ref,
                                   @Nonnull Store<EntityStore> store,
                                   @Nullable CommandBuffer<EntityStore> commandBuffer) {
+        resetPlayerStatus(player, ref, store, commandBuffer, false);
+    }
+
+    /**
+     * Resets player status. If {@code skipMovementReset} is true, the default
+     * movement restoration at the end is skipped (useful when dungeon movement
+     * will be applied immediately afterwards).
+     */
+    public void resetPlayerStatus(@Nonnull Player player,
+                                  @Nonnull Ref<EntityStore> ref,
+                                  @Nonnull Store<EntityStore> store,
+                                  @Nullable CommandBuffer<EntityStore> commandBuffer,
+                                  boolean skipMovementReset) {
         try {
             DeathComponent deathComponent = store.getComponent(ref, DeathComponent.getComponentType());
             if (deathComponent != null) {
@@ -92,7 +105,9 @@ public final class PlayerStateService {
             LOGGER.log(Level.WARNING, "Failed to reset player status", e);
         }
 
-        restoreDefaultMovementSettings(ref, store);
+        if (!skipMovementReset) {
+            restoreDefaultMovementSettings(ref, store);
+        }
     }
 
     /**

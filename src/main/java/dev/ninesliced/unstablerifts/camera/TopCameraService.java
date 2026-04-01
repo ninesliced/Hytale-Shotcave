@@ -97,6 +97,17 @@ public class TopCameraService {
         setResolvedState(playerRef, shouldStayEnabled, shouldStayEnabled && (hadPending || hadRoomRotation));
     }
 
+    /**
+     * Re-sends the camera and movement packets if the camera is enabled.
+     * Used after a world transition where packets sent before JoinWorld
+     * were discarded by the client.
+     */
+    public void forceReapply(@Nonnull PlayerRef playerRef) {
+        if (enabled.getOrDefault(playerRef.getUuid(), false)) {
+            applyTopCamera(playerRef);
+        }
+    }
+
     public void refreshMovementProfile(@Nonnull PlayerRef playerRef) {
         restoreDefaultMovement(playerRef);
 
