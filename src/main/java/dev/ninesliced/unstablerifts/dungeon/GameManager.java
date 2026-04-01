@@ -7,9 +7,6 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.math.vector.Transform;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.inventory.InventoryComponent;
-import com.hypixel.hytale.server.core.inventory.ItemStack;
-import com.hypixel.hytale.server.core.inventory.container.ItemContainer;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
@@ -723,9 +720,6 @@ public final class GameManager {
      */
     public void onPlayerDisconnect(@Nonnull PlayerRef playerRef) {
         UUID playerId = playerRef.getUuid();
-        LOGGER.info("[RECONNECT-DEBUG] onPlayerDisconnect ENTER: player=" + playerRef.getUsername()
-                + " id=" + playerId
-                + " pendingRejoinDecision.contains=" + pendingRejoinDecision.contains(playerId));
         pendingReadyRecoveryPlayers.remove(playerId);
         pendingReconnectPlayers.remove(playerId);
         pendingPostReadyResync.remove(playerId);
@@ -758,7 +752,6 @@ public final class GameManager {
                 }
             });
         } else {
-            // Ref not valid — do non-store cleanup directly
             plugin.getCameraService().cancelDeferredEnable(playerRef);
             reviveMarkerService.despawnReviveMarker(playerId);
         }
@@ -772,15 +765,12 @@ public final class GameManager {
             game.setPlayerInInstance(playerId, false);
             game.removeDeadPlayer(playerId);
             game.addDisconnectedPlayer(playerId);
-            LOGGER.info("[RECONNECT-DEBUG] onPlayerDisconnect: marked " + playerId + " as disconnected in game for party " + partyId);
-            // Do NOT remove playerToParty — needed for reconnect lookup.
             if (!closeGameIfInstanceEmpty(game)) {
                 PartyUiPage.refreshOpenPages();
             }
         } else {
             game.addDisconnectedPlayer(playerId);
             PartyUiPage.refreshOpenPages();
-            LOGGER.info("[RECONNECT-DEBUG] onPlayerDisconnect: marked " + playerId + " as disconnected (not in active dungeon). gameState=" + game.getState());
         }
     }
 
@@ -841,22 +831,11 @@ public final class GameManager {
     public void onPlayerConnect(@Nonnull PlayerRef playerRef) {
         UUID playerId = playerRef.getUuid();
 
-        // Check if this player was disconnected from an active dungeon
         UUID partyId = playerToParty.get(playerId);
         Game game = partyId != null ? activeGames.get(partyId) : null;
-        LOGGER.info("[RECONNECT-DEBUG] onPlayerConnect: player=" + playerRef.getUsername()
-                + " id=" + playerId
-                + " partyId=" + partyId
-                + " game=" + (game != null)
-                + " isDisconnected=" + (game != null && game.isDisconnectedPlayer(playerId))
-                + " gameState=" + (game != null ? game.getState() : "null"));
         if (game != null && game.isDisconnectedPlayer(playerId)
                 && game.getState() != GameState.COMPLETE) {
-            // They'll be shown the rejoin popup once ready. Mark as pending
-            // so normalization is deferred until after the popup decision.
             pendingRejoinDecision.add(playerId);
-            LOGGER.info("[RECONNECT-DEBUG] onPlayerConnect: added " + playerId
-                    + " to pendingRejoinDecision. Set size=" + pendingRejoinDecision.size());
             return;
         }
 
@@ -886,52 +865,32 @@ public final class GameManager {
         UUID playerId = playerRef.getUuid();
         if (!pendingPostReadyResync.remove(playerId)) return;
 
-        LOGGER.info("[POST-READY-RESYNC] Running for " + playerRef.getUsername() + " (" + playerId + ")");
-
-        // Clear sent tracking so definitions are re-sent fresh now that
-        // the client is fully loaded (post-ClientReady).
         WeaponVirtualItems.onPlayerDisconnect(playerId);
         ArmorVirtualItems.onPlayerDisconnect(playerId);
 
         Ref<EntityStore> ref = playerRef.getReference();
         if (ref == null || !ref.isValid()) {
-            LOGGER.warning("[POST-READY-RESYNC] Invalid ref for " + playerId);
+            LOGGER.warning("handlePostReadyResync: invalid ref for " + playerId);
             return;
         }
         Store<EntityStore> store = ref.getStore();
 
-        // Reset death state and player status (health, stamina, etc.).
-        // Skip movement reset since dungeon movement will be applied below.
         playerStateService.resetPlayerStatus(player, ref, store, null, true);
 
-        // Always clear and give fresh dungeon start equipment.
-        // The player still has home-world items at this point because
-        // onPlayerAddedToWorld cannot touch inventory (entity ref is null)
-        // and the home-world inventory was restored before the rejoin popup.
         plugin.getInventoryLockService().unlock(player, playerId);
         inventoryService.clearPlayerInventory(player);
         Game game = findGameForPlayer(playerId);
         if (game != null) {
-            game.removeDisconnectedDungeonInventory(playerId); // discard snapshot
+            game.removeDisconnectedDungeonInventory(playerId);
         }
         DungeonConfig config = plugin.loadDungeonConfig();
         inventoryService.giveStartEquipment(playerRef, player, config);
-        LOGGER.info("[POST-READY-RESYNC] Gave fresh start equipment to " + playerRef.getUsername());
 
-        // Re-apply the inventory lock (3-slot restriction).
         plugin.getInventoryLockService().lock(player, playerId);
-
-        // Re-apply camera with force since packets sent before JoinWorld
-        // were likely discarded by the client.
         plugin.getCameraService().forceReapply(playerRef);
-
-        // Re-apply dungeon movement settings AFTER forceReapply so the dungeon
-        // movement packet is the LAST movement update the client receives.
-        // forceReapply → applyTopCamera → applyEqualizedMovement sends a movement
-        // packet with default multipliers; we must override with dungeon values after.
+        // Re-apply dungeon movement after forceReapply so the dungeon values win.
         playerStateService.applyDungeonMovementSettings(ref, store, playerRef);
 
-        // Re-enable map + send dungeon map data
         playerStateService.enableMap(playerRef);
         if (game != null) {
             plugin.getDungeonMapService().sendMapToPlayer(playerRef, game);
@@ -939,15 +898,11 @@ public final class GameManager {
 
         inventoryService.syncInventoryAndSelectedSlots(playerRef, ref, store);
 
-        // Teleport the reconnecting player to their saved position (where they
-        // were when they disconnected), or fall back to the level entrance.
         if (game != null) {
             Vector3d savedPosition = game.removeDisconnectedPosition(playerId);
             if (savedPosition != null) {
                 Teleport tp = Teleport.createForPlayer(savedPosition, new Rotation3f());
                 store.putComponent(ref, Teleport.getComponentType(), tp);
-                LOGGER.info("[POST-READY-RESYNC] Teleporting " + playerRef.getUsername()
-                        + " to saved position " + savedPosition);
             } else {
                 Level currentLevel = game.getCurrentLevel();
                 if (currentLevel != null) {
@@ -957,17 +912,13 @@ public final class GameManager {
                         Vector3d spawnPos = new Vector3d(anchor.x + 0.5, anchor.y + 1.0, anchor.z + 0.5);
                         Teleport tp = Teleport.createForPlayer(spawnPos, new Rotation3f());
                         store.putComponent(ref, Teleport.getComponentType(), tp);
-                        LOGGER.info("[POST-READY-RESYNC] Teleporting " + playerRef.getUsername()
-                                + " to level entrance " + spawnPos);
                     }
                 }
             }
             PartyUiPage.refreshOpenPages();
         }
 
-        // Safety net: re-apply dungeon movement one tick later in case any engine
-        // system (PostAssignmentSystem, resetManagers, etc.) overwrites our settings
-        // after this handler returns.
+        // Re-apply movement one tick later in case engine systems overwrite it.
         World world = player.getWorld();
         if (world != null) {
             world.execute(() -> {
@@ -975,12 +926,9 @@ public final class GameManager {
                 if (delayedRef != null && delayedRef.isValid()) {
                     Store<EntityStore> delayedStore = delayedRef.getStore();
                     playerStateService.applyDungeonMovementSettings(delayedRef, delayedStore, playerRef);
-                    LOGGER.info("[POST-READY-RESYNC] Delayed movement re-application for " + playerRef.getUsername());
                 }
             });
         }
-
-        LOGGER.info("[POST-READY-RESYNC] Complete for " + playerRef.getUsername());
     }
 
     /**
@@ -991,86 +939,54 @@ public final class GameManager {
     public void handlePlayerReconnect(@Nonnull PlayerRef playerRef) {
         UUID playerId = playerRef.getUuid();
         boolean wasInSet = pendingRejoinDecision.remove(playerId);
-        LOGGER.info("[RECONNECT-DEBUG] handlePlayerReconnect ENTER: player=" + playerRef.getUsername()
-                + " id=" + playerId
-                + " wasInPendingRejoinDecision=" + wasInSet
-                + " pendingRejoinDecisionSize=" + pendingRejoinDecision.size());
         if (!wasInSet) return;
 
         UUID partyId = playerToParty.get(playerId);
         Game game = partyId != null ? activeGames.get(partyId) : null;
 
-        LOGGER.info("[RECONNECT-DEBUG] handlePlayerReconnect: partyId=" + partyId
-                + " game=" + (game != null)
-                + " isDisconnected=" + (game != null && game.isDisconnectedPlayer(playerId))
-                + " gameState=" + (game != null ? game.getState() : "null"));
-
         if (game == null || !game.isDisconnectedPlayer(playerId)
                 || game.getState() == GameState.COMPLETE) {
-            LOGGER.info("[RECONNECT-DEBUG] handlePlayerReconnect: early return — game null, not disconnected, or complete");
             return;
         }
 
         World instanceWorld = game.getInstanceWorld();
         if (instanceWorld == null) {
-            LOGGER.info("[RECONNECT-DEBUG] handlePlayerReconnect: instanceWorld is null, removing disconnected player");
             game.removeDisconnectedPlayer(playerId);
             return;
         }
 
         Ref<EntityStore> ref = playerRef.getReference();
-        LOGGER.info("[RECONNECT-DEBUG] handlePlayerReconnect: ref=" + ref
-                + " refValid=" + (ref != null && ref.isValid()));
         if (ref == null || !ref.isValid()) {
-            LOGGER.warning("[RECONNECT-DEBUG] handlePlayerReconnect: ref not ready for " + playerId);
+            LOGGER.warning("handlePlayerReconnect: ref not ready for " + playerId);
             return;
         }
 
         Store<EntityStore> store = ref.getStore();
         Player player = store.getComponent(ref, Player.getComponentType());
-        LOGGER.info("[RECONNECT-DEBUG] handlePlayerReconnect: player=" + (player != null)
-                + " playerWorld=" + (player != null && player.getWorld() != null ? player.getWorld().getName() : "null")
-                + " instanceWorld=" + instanceWorld.getName());
         if (player == null) return;
 
-        // If the engine put the player back in the dungeon instance,
-        // exit the instance now. PlayerReadyEvent fires after the player is
-        // fully loaded in the world, so store operations and Teleport
-        // component addition work reliably here (unlike AddPlayerToWorldEvent
-        // where cross-world teleports are silently dropped).
+        // Exit the instance from PlayerReady, where cross-world teleports are reliable.
         World currentWorld = player.getWorld();
         boolean inDungeonWorld = currentWorld != null && currentWorld == instanceWorld;
-        LOGGER.info("[RECONNECT-DEBUG] handlePlayerReconnect: currentWorld=" + (currentWorld != null ? currentWorld.getName() : "null")
-                + " inDungeonWorld=" + inDungeonWorld
-                + " sameRef=" + (currentWorld == instanceWorld));
         if (inDungeonWorld) {
             try {
-                LOGGER.info("[RECONNECT-DEBUG] handlePlayerReconnect: calling InstancesPlugin.exitInstance for " + playerId);
                 InstancesPlugin.exitInstance(ref, store);
-                LOGGER.info("[RECONNECT-DEBUG] handlePlayerReconnect: exitInstance SUCCEEDED for " + playerId);
             } catch (Exception e) {
-                LOGGER.warning("[RECONNECT-DEBUG] handlePlayerReconnect: exitInstance FAILED for " + playerId
+                LOGGER.warning("handlePlayerReconnect: failed to exit instance for " + playerId
                         + ": " + e.getClass().getName() + ": " + e.getMessage());
                 Transform returnPoint = game.getReturnPoints().get(playerId);
                 World returnWorld = game.getReturnWorlds().get(playerId);
-                LOGGER.info("[RECONNECT-DEBUG] handlePlayerReconnect: fallback returnPoint=" + (returnPoint != null)
-                        + " returnWorld=" + (returnWorld != null ? returnWorld.getName() : "null"));
                 if (returnWorld == null) returnWorld = Universe.get().getDefaultWorld();
                 if (returnWorld != null && returnPoint != null) {
-                    LOGGER.info("[RECONNECT-DEBUG] handlePlayerReconnect: calling teleportPlayerToReturnPoint as fallback");
                     teleportPlayerToReturnPoint(ref, store, returnWorld, returnPoint);
                 } else {
-                    LOGGER.warning("[RECONNECT-DEBUG] handlePlayerReconnect: NO fallback available — no return world/point!");
+                    LOGGER.warning("handlePlayerReconnect: no fallback return point for " + playerId);
                 }
             }
-            // Re-add so the next PlayerReadyEvent (in home world) shows the popup.
             pendingRejoinDecision.add(playerId);
-            LOGGER.info("[RECONNECT-DEBUG] handlePlayerReconnect: re-added " + playerId + " to pendingRejoinDecision");
             return;
         }
 
-        // Player is in their home world. Restore home state and show rejoin popup.
-        LOGGER.info("[RECONNECT-DEBUG] handlePlayerReconnect: player is in home world, calling restoreHomeStateAndShowPopup");
         restoreHomeStateAndShowPopup(game, playerId, playerRef, player, ref, store);
     }
 
@@ -1084,30 +1000,22 @@ public final class GameManager {
                                               @Nonnull Player player,
                                               @Nonnull Ref<EntityStore> ref,
                                               @Nonnull Store<EntityStore> store) {
-        // Mark as already-normalized so that normalizeOutsideDungeonState (called
-        // later in onPlayerReady) doesn't run again and undo our state/popup.
         outsideDungeonNormalizedPlayers.add(playerId);
 
-        // Reset death state if present
         DeathComponent deathComponent = store.getComponent(ref, DeathComponent.getComponentType());
         if (deathComponent != null) deathComponent.reset();
         DeathStateController.clear(store, ref);
         playerStateService.resetPlayerStatus(player, ref, store);
 
-        // Restore camera, hide dungeon HUDs, unlock inventory
         plugin.getCameraService().restoreDefault(playerRef);
         playerStateService.hideDungeonHuds(player, playerRef);
         plugin.getInventoryLockService().unlock(player, playerId);
 
-        // Restore home/pre-dungeon inventory from file
         if (inventoryService.hasSavedInventoryFile(playerId)) {
             inventoryService.restorePlayerInventory(playerId, player, false);
         }
 
-        // Show the rejoin popup
         player.getPageManager().openCustomPage(ref, store, new RejoinDungeonPage(plugin, playerRef));
-        LOGGER.info("Showing rejoin popup to player " + playerRef.getUsername()
-                + " for party " + game.getPartyId());
         PartyUiPage.refreshOpenPages();
     }
 
@@ -1138,7 +1046,6 @@ public final class GameManager {
         Player player = store.getComponent(ref, Player.getComponentType());
         if (player == null) return;
 
-        // Save home inventory to file (overwrite with current state)
         if (!inventoryService.hasSavedInventoryFile(playerId)) {
             inventoryService.savePlayerInventory(playerId, player, game);
         }
@@ -1161,9 +1068,6 @@ public final class GameManager {
                     LOGGER.warning("handleRejoinAccepted: failed to teleport " + playerId + " to dungeon: " + status);
                 }
         );
-
-        LOGGER.info("handleRejoinAccepted: teleporting " + playerRef.getUsername()
-                + " back to dungeon for party " + partyId);
     }
 
     /**
@@ -1181,14 +1085,10 @@ public final class GameManager {
             game.removeDisconnectedPosition(playerId);
         }
 
-        // Delete the saved home inventory file since they're not going back
         if (inventoryService.hasSavedInventoryFile(playerId)) {
             inventoryService.deleteSavedInventoryFiles(playerId);
         }
 
-        // Teleport the player to their original pre-dungeon location.
-        // InstancesPlugin.exitInstance may have placed them at the instance
-        // return point which could differ from their saved home position.
         if (game != null) {
             Transform returnPoint = game.getReturnPoints().get(playerId);
             World returnWorld = game.getReturnWorlds().get(playerId);
@@ -1204,10 +1104,7 @@ public final class GameManager {
             }
         }
 
-        // Leave the party (this also cleans up returnPoints/returnWorlds)
         plugin.getPartyManager().leave(playerRef);
-        LOGGER.info("handleRejoinDeclined: player " + playerRef.getUsername()
-                + " declined rejoin. Left party " + partyId);
     }
 
     /**
@@ -1220,46 +1117,26 @@ public final class GameManager {
                                         @Nonnull Player player,
                                         @Nonnull Ref<EntityStore> ref,
                                         @Nonnull Store<EntityStore> store) {
-        LOGGER.info("[RESTORE-DUNGEON] BEGIN for " + playerRef.getUsername() + " (" + playerId + ")");
         outsideDungeonNormalizedPlayers.remove(playerId);
         pendingReconnectPlayers.remove(playerId);
         pendingReadyRecoveryPlayers.remove(playerId);
 
-        // Reset any residual death state
         DeathComponent deathComponent = store.getComponent(ref, DeathComponent.getComponentType());
         if (deathComponent != null) {
             deathComponent.reset();
         }
         DeathStateController.clear(store, ref);
-        // Skip movement reset — dungeon movement will be applied below.
         playerStateService.resetPlayerStatus(player, ref, store, null, true);
 
-        // Always give fresh base start equipment on reconnect (ignore any dungeon snapshot).
-        // The snapshot is discarded so that all reconnecting players start with the same loadout.
+        // Reconnects always start from the base dungeon loadout.
         plugin.getInventoryLockService().unlock(player, playerId);
         inventoryService.clearPlayerInventory(player);
-        game.removeDisconnectedDungeonInventory(playerId); // discard snapshot
+        game.removeDisconnectedDungeonInventory(playerId);
         DungeonConfig config = plugin.loadDungeonConfig();
         inventoryService.giveStartEquipment(playerRef, player, config);
-        LOGGER.info("[RESTORE-DUNGEON] Gave fresh start equipment to " + playerId);
 
         plugin.getInventoryLockService().lock(player, playerId);
 
-        // Verify items were actually placed
-        InventoryComponent.Hotbar hotbarCheck = store.getComponent(ref, InventoryComponent.Hotbar.getComponentType());
-        if (hotbarCheck != null) {
-            ItemContainer hb = hotbarCheck.getInventory();
-            int itemCount = 0;
-            for (short i = 0; i < hb.getCapacity(); i++) {
-                ItemStack stack = hb.getItemStack(i);
-                if (stack != null && !stack.isEmpty()) itemCount++;
-            }
-            LOGGER.info("[RESTORE-DUNGEON] Hotbar has " + itemCount + " items after setup for " + playerId);
-        } else {
-            LOGGER.warning("[RESTORE-DUNGEON] No hotbar component for " + playerId);
-        }
-
-        // Clear SENT_PER_PLAYER so that virtual item definitions are re-sent
         WeaponVirtualItems.onPlayerDisconnect(playerId);
         ArmorVirtualItems.onPlayerDisconnect(playerId);
 
@@ -1271,7 +1148,6 @@ public final class GameManager {
         game.setPlayerInInstance(playerId, true);
         pendingPostReadyResync.add(playerId);
 
-        // Teleport to saved position, or fall back to level entrance
         Vector3d savedPosition = game.removeDisconnectedPosition(playerId);
         if (savedPosition != null) {
             Teleport tp = Teleport.createForPlayer(savedPosition, new Rotation3f());
@@ -1288,9 +1164,6 @@ public final class GameManager {
                 }
             }
         }
-
-        LOGGER.info("restorePlayerToDungeon: restored " + playerRef.getUsername()
-                + " into dungeon for party " + game.getPartyId());
         PartyUiPage.refreshOpenPages();
     }
 
@@ -1303,31 +1176,14 @@ public final class GameManager {
         boolean inActiveDungeonWorld = game != null
                 && game.getState() != GameState.COMPLETE
                 && world == game.getInstanceWorld();
-        LOGGER.info("onPlayerAddedToWorld: player=" + playerId
-                + " world=" + world.getName()
-                + " gameState=" + (game != null ? game.getState() : null)
-                + " inActiveDungeonWorld=" + inActiveDungeonWorld
-                + " isPlayerInInstance=" + (game != null && game.isPlayerInInstance(playerId))
-                + " isReconnecting=" + isReconnecting
-                + " hasSavedInventory=" + hasSavedInventory
-                + " fileSnapshot=" + hasSavedInventoryFile);
 
-        // Player pending a rejoin decision (reconnecting after disconnect during dungeon).
-        // Skip all handling here — cross-world teleports cannot be initiated during
-        // AddPlayerToWorldEvent (the entity is mid-add). The exit will be performed
-        // by handlePlayerReconnect once PlayerReadyEvent fires.
+        // Defer rejoin handling to PlayerReady, where cross-world teleports are reliable.
         if (pendingRejoinDecision.contains(playerId)) {
-            LOGGER.info("[RECONNECT-DEBUG] onPlayerAddedToWorld: SKIPPING for player " + playerId
-                    + " pending rejoin decision, world=" + world.getName()
-                    + " inActiveDungeonWorld=" + inActiveDungeonWorld);
             return;
         }
 
         if (!inActiveDungeonWorld) {
             if (isReconnecting && pendingReconnectPlayers.contains(playerId)) {
-                // Reconnecting player landed in a non-dungeon world temporarily (e.g. default world).
-                // Skip normalization — they'll be teleported into the dungeon shortly.
-                LOGGER.info("Skipping normalization for reconnecting player " + playerId + " in non-dungeon world.");
                 return;
             }
             normalizeOutsideDungeonState(playerRef, player, game);
@@ -1336,19 +1192,13 @@ public final class GameManager {
 
         outsideDungeonNormalizedPlayers.remove(playerId);
 
-        // Reconnecting player arriving in the dungeon world (after accepting rejoin popup).
-        // Entity ref is NOT available during AddPlayerToWorldEvent — the entity
-        // hasn't been added to the store yet (addToStore runs asynchronously in
-        // onSetupPlayerJoining). Queue all ref-requiring setup to run during
-        // handlePostReadyResync (PlayerReadyEvent) when the entity is fully valid.
+        // Defer ref-dependent restore work until PlayerReady.
         if (isReconnecting) {
             pendingReconnectPlayers.remove(playerId);
             pendingReadyRecoveryPlayers.remove(playerId);
             game.removeDisconnectedPlayer(playerId);
             game.setPlayerInInstance(playerId, true);
             pendingPostReadyResync.add(playerId);
-            LOGGER.info("[RECONNECT-DEBUG] onPlayerAddedToWorld: deferred dungeon restore to PlayerReady for " + playerId
-                    + " (entity ref not available during AddPlayerToWorldEvent)");
             return;
         }
 
@@ -1369,11 +1219,6 @@ public final class GameManager {
 
     public void onPlayerRemovedFromWorld(@Nonnull PlayerRef playerRef, @Nonnull Player player, @Nonnull World world) {
         Game game = findGameForPlayer(playerRef.getUuid());
-        LOGGER.info("onPlayerRemovedFromWorld: player=" + playerRef.getUuid()
-                + " world=" + world.getName()
-                + " gameState=" + (game != null ? game.getState() : null)
-                + " isPlayerInInstance=" + (game != null && game.isPlayerInInstance(playerRef.getUuid()))
-                + " playerWorld=" + (player.getWorld() != null ? player.getWorld().getName() : "null"));
         if (game == null || game.getState() == GameState.COMPLETE || world != game.getInstanceWorld()) {
             return;
         }
@@ -1381,11 +1226,7 @@ public final class GameManager {
             return;
         }
 
-        // Player is still tracked as in-instance. Defer full cleanup to
-        // onPlayerDisconnect (if disconnecting) or normalizeOutsideDungeonState
-        // (if teleported elsewhere by admin). For alive players, snapshot
-        // their dungeon inventory now while the entity is still valid so it
-        // can be restored on reconnect.
+        // Snapshot alive players before the entity is removed so reconnect can restore them.
         boolean alive = !game.isPlayerDead(playerRef.getUuid());
         if (alive) {
             Ref<EntityStore> ref = playerRef.getReference();
@@ -1402,10 +1243,7 @@ public final class GameManager {
                     inventoryService.snapshotCurrentInventory(player);
             if (snapshot != null) {
                 game.putDisconnectedDungeonInventory(playerRef.getUuid(), snapshot);
-                LOGGER.info("Snapshotted dungeon inventory for player " + playerRef.getUuid()
-                        + " being removed from dungeon world.");
             }
-            // Save the player's current position so we can teleport them back on rejoin
             Ref<EntityStore> refPos = playerRef.getReference();
             if (refPos != null && refPos.isValid()) {
                 Store<EntityStore> storePos = refPos.getStore();
@@ -1416,8 +1254,6 @@ public final class GameManager {
                 }
             }
         }
-        LOGGER.info("Deferring dungeon exit cleanup for player " + playerRef.getUuid()
-                + " to the appropriate exit handler.");
     }
 
     public boolean normalizeOutsideDungeonState(@Nonnull PlayerRef playerRef,
@@ -1432,23 +1268,15 @@ public final class GameManager {
                                                 @Nullable CommandBuffer<EntityStore> commandBuffer) {
         UUID playerId = playerRef.getUuid();
 
-        // Reconnecting players should not be normalized — they're about to be teleported to the dungeon.
         if (pendingReconnectPlayers.contains(playerId)) {
-            LOGGER.info("Skipping normalizeOutsideDungeonState for reconnecting player " + playerId);
             return false;
         }
 
-        // Player pending rejoin decision — defer normalization until they accept or decline.
         if (pendingRejoinDecision.contains(playerId)) {
-            LOGGER.info("Skipping normalizeOutsideDungeonState for player pending rejoin decision " + playerId);
             return false;
         }
 
-        // Player already inside the dungeon instance — skip normalization to avoid
-        // undoing restorePlayerToDungeon state (e.g. if PlayerReadyEvent world
-        // reference is stale during a cross-world teleport).
         if (game != null && game.isPlayerInInstance(playerId)) {
-            LOGGER.info("Skipping normalizeOutsideDungeonState for in-instance player " + playerId);
             return false;
         }
 

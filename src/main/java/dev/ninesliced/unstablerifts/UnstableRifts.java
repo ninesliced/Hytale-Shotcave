@@ -134,8 +134,6 @@ public class UnstableRifts extends JavaPlugin {
 
         this.cameraService.handlePlayerReady(ref);
         this.gameManager.handlePostReadyResync(playerRef, player);
-        LOGGER.info("[RECONNECT-DEBUG] onPlayerReady: about to call handlePlayerReconnect for "
-                + playerRef.getUsername() + " world=" + (player.getWorld() != null ? player.getWorld().getName() : "null"));
         this.gameManager.handlePlayerReconnect(playerRef);
         this.gameManager.releasePendingRecovery(playerRef.getUuid());
 
@@ -145,11 +143,6 @@ public class UnstableRifts extends JavaPlugin {
         }
 
         var game = this.gameManager.findGameForPlayer(playerRef.getUuid());
-        LOGGER.info("[RECONNECT-DEBUG] onPlayerReady: post-reconnect check for " + playerRef.getUsername()
-                + " world=" + world.getName()
-                + " game=" + (game != null)
-                + " instanceWorld=" + (game != null && game.getInstanceWorld() != null ? game.getInstanceWorld().getName() : "null")
-                + " willNormalize=" + (game == null || game.getInstanceWorld() != world));
         if (game == null || game.getInstanceWorld() != world) {
             this.gameManager.normalizeOutsideDungeonState(playerRef, player, game);
         }
