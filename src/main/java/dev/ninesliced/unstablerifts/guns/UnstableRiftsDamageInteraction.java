@@ -61,7 +61,7 @@ public final class UnstableRiftsDamageInteraction extends DamageEntityInteractio
                             null,
                             1.0f,
                             particleYOffset != 0.0f
-                                    ? new com.hypixel.hytale.protocol.Vector3f(0.0f, particleYOffset, 0.0f)
+                                    ? new org.joml.Vector3f(0.0f, particleYOffset, 0.0f)
                                     : null,
                             null
                     )

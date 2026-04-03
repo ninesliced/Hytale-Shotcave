@@ -161,10 +161,7 @@ public final class RevivePromptHudRuntime {
                         continue;
                     }
 
-                    Player deadPlayer = deadEntityRef.getStore().getComponent(deadEntityRef, Player.getComponentType());
-                    nearestName = deadPlayer != null && deadPlayer.getDisplayName() != null
-                            ? deadPlayer.getDisplayName()
-                            : deadRef.getUsername();
+                    nearestName = deadRef.getUsername();
                     nearestDistSq = distSq;
                 }
 

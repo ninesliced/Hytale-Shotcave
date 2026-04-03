@@ -193,7 +193,7 @@ public final class PartyUiPage extends InteractiveCustomUIPage<PartyUiPage.UiEve
 
         if (result != null) {
             Color color = result.success() ? Color.GREEN : Color.RED;
-            player.sendMessage(PartyManager.partyPrefix().insert(Message.raw(result.message()).color(color)));
+            this.playerRef.sendMessage(PartyManager.partyPrefix().insert(Message.raw(result.message()).color(color)));
         }
 
         refresh(ref, store);
@@ -244,8 +244,10 @@ public final class PartyUiPage extends InteractiveCustomUIPage<PartyUiPage.UiEve
             String itemPath = "#CurrentPartyMembers[" + index + "]";
             ui.append("#CurrentPartyMembers", MEMBER_ITEM_PATH);
             ui.set(itemPath + " #MemberName.Text", member.name());
-            ui.set(itemPath + " #MemberMeta.Text", member.leader() ? "Leader" : "Party Member");
-            ui.set(itemPath + " #KickButton.Visible", leader && !member.leader());
+            String meta = member.leader() ? "Leader" : "Party Member";
+            if (member.disconnected()) meta += " (Disconnected)";
+            ui.set(itemPath + " #MemberMeta.Text", meta);
+            ui.set(itemPath + " #KickButton.Visible", leader && !member.leader() && !member.disconnected());
             if (leader && !member.leader()) {
                 bindClickWithTarget(events, itemPath + " #KickButton", Action.KICK, member.name());
             }

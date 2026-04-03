@@ -79,8 +79,8 @@ public final class PlayerDeathSystem extends EntityTickingSystem<EntityStore> {
             return true;
         }
 
-        String playerName = player.getDisplayName() != null
-                ? player.getDisplayName()
+        String playerName = playerRef.getUsername() != null
+                ? playerRef.getUsername()
                 : playerRef.getUuid().toString();
         gameManager.broadcastToParty(game.getPartyId(),
                 playerName + " has fallen! Hold the interaction key near them within 30 seconds to revive them!");

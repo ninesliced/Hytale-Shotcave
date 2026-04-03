@@ -232,7 +232,7 @@ public class PickupDebugCommand extends AbstractCommandCollection {
                 context.sendMessage(Message.raw("Pruned " + pruned + " stale entries. Remaining: " + sizeAfter + ".")
                         .color(Color.GREEN));
                 LOGGER.at(Level.INFO).log("[PickupDebug] %s pruned %d stale entries (remaining: %d)",
-                        context.sender().getDisplayName(), pruned, sizeAfter);
+                        context.sender().getUsername(), pruned, sizeAfter);
             } else {
                 context.sendMessage(Message.raw("No stale entries to prune. Total: " + sizeAfter + ".")
                         .color(Color.GRAY));
@@ -254,7 +254,7 @@ public class PickupDebugCommand extends AbstractCommandCollection {
             ItemPickupTracker.clear();
             context.sendMessage(Message.raw("Cleared all " + sizeBefore + " tracked entries.").color(Color.YELLOW));
             LOGGER.at(Level.INFO).log("[PickupDebug] %s cleared all %d tracked entries",
-                    context.sender().getDisplayName(), sizeBefore);
+                    context.sender().getUsername(), sizeBefore);
         }
     }
 }

@@ -2,6 +2,7 @@ package dev.ninesliced.unstablerifts.dungeon;
 
 import com.hypixel.hytale.math.vector.Transform;
 import com.hypixel.hytale.server.core.universe.world.World;
+import org.joml.Vector3d;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,6 +36,21 @@ public final class Game {
      * Players who are currently dead (in revive window or ghost state).
      */
     private final Set<UUID> deadPlayers = new HashSet<>();
+    /**
+     * Players who disconnected while inside the dungeon. They remain part of the
+     * game and can automatically rejoin on reconnect.
+     */
+    private final Set<UUID> disconnectedPlayers = new HashSet<>();
+    /**
+     * In-memory snapshots of the dungeon inventory each player had at the moment
+     * they disconnected. Used to restore their items when they reconnect.
+     */
+    private final Map<UUID, PlayerInventoryService.InventorySaveData> disconnectedDungeonInventories = new HashMap<>();
+    /**
+     * The position each disconnected player had inside the dungeon at the moment
+     * they disconnected. Used to teleport them back to the same spot on rejoin.
+     */
+    private final Map<UUID, Vector3d> disconnectedPositions = new HashMap<>();
     private int currentLevelIndex = 0;
     @Nullable
     private String currentLevelSelector;
@@ -310,14 +326,66 @@ public final class Game {
     }
 
     /**
-     * Returns {@code true} if every player currently in the instance is dead.
+     * Returns {@code true} if every player currently in the instance is dead
+     * and no disconnected players might still reconnect.
      */
     public boolean areAllPlayersDead() {
+        if (!disconnectedPlayers.isEmpty()) return false;
         return !playersInInstance.isEmpty() && deadPlayers.containsAll(playersInInstance);
     }
 
     public void clearDeadPlayers() {
         deadPlayers.clear();
+    }
+
+    // ── Disconnected player tracking ──
+
+    public void addDisconnectedPlayer(@Nonnull UUID playerId) {
+        disconnectedPlayers.add(playerId);
+    }
+
+    public void removeDisconnectedPlayer(@Nonnull UUID playerId) {
+        disconnectedPlayers.remove(playerId);
+    }
+
+    public boolean isDisconnectedPlayer(@Nonnull UUID playerId) {
+        return disconnectedPlayers.contains(playerId);
+    }
+
+    @Nonnull
+    public Set<UUID> getDisconnectedPlayers() {
+        return Collections.unmodifiableSet(disconnectedPlayers);
+    }
+
+    public void clearDisconnectedPlayers() {
+        disconnectedPlayers.clear();
+    }
+
+    public void putDisconnectedDungeonInventory(@Nonnull UUID playerId,
+                                                @Nonnull PlayerInventoryService.InventorySaveData data) {
+        disconnectedDungeonInventories.put(playerId, data);
+    }
+
+    @Nullable
+    public PlayerInventoryService.InventorySaveData removeDisconnectedDungeonInventory(@Nonnull UUID playerId) {
+        return disconnectedDungeonInventories.remove(playerId);
+    }
+
+    public void clearDisconnectedDungeonInventories() {
+        disconnectedDungeonInventories.clear();
+    }
+
+    public void putDisconnectedPosition(@Nonnull UUID playerId, @Nonnull Vector3d position) {
+        disconnectedPositions.put(playerId, new Vector3d(position));
+    }
+
+    @Nullable
+    public Vector3d removeDisconnectedPosition(@Nonnull UUID playerId) {
+        return disconnectedPositions.remove(playerId);
+    }
+
+    public void clearDisconnectedPositions() {
+        disconnectedPositions.clear();
     }
 
     // ── Portal system ──

@@ -126,7 +126,7 @@ public final class SpawnNPCAtImpactInteraction extends SimpleInstantInteraction 
         if (chain != null) {
             InteractionChainData chainData = chain.getChainData();
             if (chainData != null && chainData.hitLocation != null) {
-                return new SpawnPosition(chainData.hitLocation.x, chainData.hitLocation.y, chainData.hitLocation.z);
+                return new SpawnPosition(chainData.hitLocation.x(), chainData.hitLocation.y(), chainData.hitLocation.z());
             }
         }
 

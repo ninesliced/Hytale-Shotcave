@@ -1,0 +1,13 @@
+{
+  "Tags": {
+    "Attack": [
+      "Ranged"
+    ]
+  },
+  "Cooldown": {
+    "Cooldown": 1.5
+  },
+  "Interactions": [
+    "Industrial_Hazmat_ToxicLauncher_Shoot"
+  ]
+}

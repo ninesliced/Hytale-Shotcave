@@ -156,9 +156,8 @@ public final class ReviveTickSystem extends EntityTickingSystem<EntityStore> {
             death.markGhost();
             gameManager.getReviveMarkerService().despawnReviveMarker(commandBuffer, playerRef.getUuid());
 
-            Player player = archetypeChunk.getComponent(index, Player.getComponentType());
-            String playerName = player != null && player.getDisplayName() != null
-                    ? player.getDisplayName()
+            String playerName = playerRef.getUsername() != null
+                    ? playerRef.getUsername()
                     : playerRef.getUuid().toString();
 
             Ref<EntityStore> entityref = archetypeChunk.getReferenceTo(index);
@@ -167,6 +166,7 @@ public final class ReviveTickSystem extends EntityTickingSystem<EntityStore> {
                 DeathMovementController.restore(store, entityref, playerRef);
             }
 
+            Player player = archetypeChunk.getComponent(index, Player.getComponentType());
             if (player != null) {
                 DeathCountdownHud.hideHud(player, playerRef);
             }
@@ -299,13 +299,8 @@ public final class ReviveTickSystem extends EntityTickingSystem<EntityStore> {
             }
         }
 
-        Player reviverPlayer = null;
-        Ref<EntityStore> reviverEntityRef = reviverRef.getReference();
-        if (reviverEntityRef != null && reviverEntityRef.isValid()) {
-            reviverPlayer = reviverEntityRef.getStore().getComponent(reviverEntityRef, Player.getComponentType());
-        }
-        String reviverName = reviverPlayer != null && reviverPlayer.getDisplayName() != null
-                ? reviverPlayer.getDisplayName()
+        String reviverName = reviverRef.getUsername() != null
+                ? reviverRef.getUsername()
                 : reviverRef.getUuid().toString();
         String deadName = deadInfo.name != null ? deadInfo.name : deadInfo.uuid.toString();
 
@@ -375,8 +370,8 @@ public final class ReviveTickSystem extends EntityTickingSystem<EntityStore> {
             double distSq = dx * dx + dy * dy + dz * dz;
 
             if (distSq < REVIVE_RANGE_SQ && distSq < nearestDistSq) {
-                Player deadPlayer = deadStore.getComponent(ref, Player.getComponentType());
-                String name = deadPlayer != null ? deadPlayer.getDisplayName() : null;
+                PlayerRef deadPlayerRef = Universe.get().getPlayer(deadUuid);
+                String name = deadPlayerRef != null ? deadPlayerRef.getUsername() : null;
                 nearest = new DeadPlayerInfo(deadUuid, name, deathComp, ref);
                 nearestDistSq = distSq;
             }

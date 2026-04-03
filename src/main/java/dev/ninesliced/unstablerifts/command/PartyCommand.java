@@ -286,6 +286,7 @@ public final class PartyCommand extends AbstractCommand {
                 context.sendMessage(PartyManager.partyPrefix().insert(Message.raw("Current party: " + current.name() + " [" + current.privacy().name().toLowerCase(Locale.ROOT) + "]").color(Color.WHITE)));
                 for (PartyManager.PartyMemberSnapshot member : current.members()) {
                     String suffix = member.leader() ? " (Leader)" : "";
+                    if (member.disconnected()) suffix += " (Disconnected)";
                     context.sendMessage(Message.raw("- " + member.name() + suffix).color(Color.GRAY));
                 }
             } else {

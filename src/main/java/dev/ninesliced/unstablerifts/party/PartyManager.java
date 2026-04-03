@@ -331,6 +331,11 @@ public final class PartyManager {
             ));
         }
 
+        // Include disconnected members in the player-to-party tracking so they
+        // can reconnect to the dungeon. They aren't teleported now (offline).
+        List<UUID> disconnectedMemberIds = new ArrayList<>(party.disconnectedMembers.keySet());
+        memberIds.addAll(disconnectedMemberIds);
+
         if (membersToTeleport.isEmpty()) {
             return ActionResult.error("No online party members are available to start the run.");
         }
@@ -341,6 +346,14 @@ public final class PartyManager {
                 party.id, memberIds, memberRefsMap, memberEntitiesMap, memberStoresMap,
                 leaderWorld, leaderReturnPoint, party.selectedLevelSelector
         );
+
+        // Mark disconnected members on the Game so handlePlayerReconnect can find them
+        for (UUID disconnectedId : disconnectedMemberIds) {
+            var activeGame = gameManager.findGameForPlayer(disconnectedId);
+            if (activeGame != null) {
+                activeGame.addDisconnectedPlayer(disconnectedId);
+            }
+        }
 
         // When the game is ready, teleport all members and start the game loop
         gameFuture.thenAccept(game -> {
@@ -410,11 +423,28 @@ public final class PartyManager {
         UUID playerId = playerRef.getUuid();
         boolean wasLeader = isLeader(party, playerId);
         String memberName = party.members.remove(playerId);
-        this.partyByMember.remove(playerId);
+        // Keep in partyByMember so lookups still resolve for this player.
+        // Move to disconnectedMembers instead of fully removing.
+        if (memberName != null) {
+            party.disconnectedMembers.put(playerId, memberName);
+        }
         removeInvite(playerId, party.id);
 
+        // If no active members remain, check if there are disconnected ones
         if (party.members.isEmpty()) {
-            this.parties.remove(party.id);
+            if (party.disconnectedMembers.isEmpty()) {
+                this.parties.remove(party.id);
+                this.partyByMember.remove(playerId);
+                PartyUiPage.refreshOpenPages();
+                return;
+            }
+            // All members disconnected — keep the party alive but transfer leadership
+            // to the first disconnected member so the party has a nominal leader.
+            // When they reconnect they'll be the leader.
+            Map.Entry<UUID, String> nextLeader = party.disconnectedMembers.entrySet().iterator().next();
+            party.leaderId = nextLeader.getKey();
+            party.leaderName = nextLeader.getValue();
+            party.name = partyNameFor(nextLeader.getValue());
             PartyUiPage.refreshOpenPages();
             return;
         }
@@ -426,10 +456,38 @@ public final class PartyManager {
             party.name = partyNameFor(nextLeader.getValue());
             broadcast(party, memberName + " disconnected. " + party.leaderName + " is now the party leader.");
         } else {
-            broadcast(party, memberName + " disconnected and left the party.");
+            broadcast(party, memberName + " disconnected.");
         }
 
         PartyUiPage.refreshOpenPages();
+    }
+
+    /**
+     * Moves a previously-disconnected member back into the active member list.
+     * Called when a player reconnects to the server.
+     *
+     * @return {@code true} if the player was found in a party's disconnected list and restored.
+     */
+    public synchronized boolean reconnectMember(@Nonnull PlayerRef playerRef) {
+        UUID playerId = playerRef.getUuid();
+        UUID partyId = this.partyByMember.get(playerId);
+        if (partyId == null) {
+            return false;
+        }
+        Party party = this.parties.get(partyId);
+        if (party == null) {
+            this.partyByMember.remove(playerId);
+            return false;
+        }
+        String memberName = party.disconnectedMembers.remove(playerId);
+        if (memberName == null) {
+            return false;
+        }
+        // Use the current username in case it changed
+        party.members.put(playerId, playerRef.getUsername());
+        broadcast(party, playerRef.getUsername() + " reconnected!");
+        PartyUiPage.refreshOpenPages();
+        return true;
     }
 
     @Nullable
@@ -585,6 +643,11 @@ public final class PartyManager {
                 PlayerEventNotifier.showEventTitle(member, reason, true);
             }
         }
+        for (UUID memberId : new ArrayList<>(party.disconnectedMembers.keySet())) {
+            this.partyByMember.remove(memberId);
+            removeInvite(memberId, party.id);
+        }
+        party.disconnectedMembers.clear();
         PartyUiPage.refreshOpenPages();
 
         if (endActiveGame) {
@@ -667,7 +730,10 @@ public final class PartyManager {
     private PartySnapshot snapshot(@Nonnull Party party) {
         List<PartyMemberSnapshot> members = new ArrayList<>();
         for (Map.Entry<UUID, String> entry : party.members.entrySet()) {
-            members.add(new PartyMemberSnapshot(entry.getKey().toString(), entry.getValue(), entry.getKey().equals(party.leaderId)));
+            members.add(new PartyMemberSnapshot(entry.getKey().toString(), entry.getValue(), entry.getKey().equals(party.leaderId), false));
+        }
+        for (Map.Entry<UUID, String> entry : party.disconnectedMembers.entrySet()) {
+            members.add(new PartyMemberSnapshot(entry.getKey().toString(), entry.getValue(), entry.getKey().equals(party.leaderId), true));
         }
         members.sort(Comparator.comparing(PartyMemberSnapshot::name, String.CASE_INSENSITIVE_ORDER));
         return new PartySnapshot(party.id.toString(), party.name, party.leaderId.toString(), party.leaderName, party.privacy, members, party.selectedLevelSelector);
@@ -697,6 +763,11 @@ public final class PartyManager {
     private static final class Party {
         private final UUID id;
         private final LinkedHashMap<UUID, String> members = new LinkedHashMap<>();
+        /**
+         * Members who disconnected but are still logically part of the party.
+         * Key = player UUID, value = display name at time of disconnect.
+         */
+        private final LinkedHashMap<UUID, String> disconnectedMembers = new LinkedHashMap<>();
         private UUID leaderId;
         private String name;
         private String leaderName;
@@ -734,7 +805,7 @@ public final class PartyManager {
         }
     }
 
-    public record PartyMemberSnapshot(String id, String name, boolean leader) {
+    public record PartyMemberSnapshot(String id, String name, boolean leader, boolean disconnected) {
     }
 
     public record PartyInviteSnapshot(String partyId, String partyName, String leaderName, long remainingMs) {

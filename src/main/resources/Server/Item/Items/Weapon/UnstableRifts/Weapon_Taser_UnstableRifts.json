@@ -6,9 +6,19 @@
     "Items.Weapons"
   ],
   "Icon": "Icons/ItemsGenerated/Lightning_gun.png",
-  "Model": "Items/Weapons/UnstableRifts/Lightning_gun/LIGHTNING_GUN.blockymodel",
-  "Texture": "Items/Weapons/UnstableRifts/Lightning_gun/LIGHTNING_GUN_TEXTURE.png",
-  "PlayerAnimationsId": "Rifle",
+  "Model": "Items/Weapons/UnstableRifts/Lightning_gun/Model/LIGHTNING_GUN.blockymodel",
+  "Texture": "Items/Weapons/UnstableRifts/Lightning_gun/Model/LIGHTNING_GUN_TEXTURE.png",
+  "PlayerAnimationsId": {
+    "Parent": "Rifle",
+    "Animations": {
+      "Shoot": {
+        "ThirdPerson": "Characters/Animations/UnstableRifts/Taser_Shoot.blockyanim",
+        "FirstPerson": "Characters/Animations/UnstableRifts/Taser_Shoot.blockyanim",
+        "Speed": 2,
+        "Looping": false
+      }
+    }
+  },
   "Interactions": {
     "Primary": "Root_UnstableRifts_Taser_Primary",
     "Secondary": "Root_UnstableRifts_Taser_Reload"

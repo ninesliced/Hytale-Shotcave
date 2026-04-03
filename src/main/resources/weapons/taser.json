@@ -13,7 +13,7 @@
   },
   "primary": {
     "id": "UnstableRifts_Taser_Primary",
-    "cooldown": 0.75,
+    "cooldown": 0.8,
     "requireAmmo": true,
     "shotId": "UnstableRifts_Taser_Shot",
     "reloadId": "UnstableRifts_Taser_Reload"
