@@ -61,10 +61,27 @@ public class DungeonGenerator {
     private static final int MAX_RETRIES = 5;
 
     /**
+     * Number of rooms (from spawn outward) to spawn mobs in during generation.
+     */
+    private static final int EARLY_SPAWN_ROOM_COUNT = 3;
+
+    /**
      * The level produced by the last generate() call.
      */
     @Nullable
     private dev.ninesliced.unstablerifts.dungeon.Level generatedLevel;
+
+    /**
+     * Rooms whose mobs were pre-spawned during generation (before onGameStart).
+     */
+    @Nonnull
+    private Set<RoomData> preSpawnedRooms = new HashSet<>();
+
+    /**
+     * Optional mob spawning service for early mob spawning during generation.
+     */
+    @Nullable
+    private MobSpawningService mobSpawningService;
 
     private static Rotation toEngineRotation(int rot) {
         return switch (rot & 3) {
@@ -370,14 +387,43 @@ public class DungeonGenerator {
     }
 
     /**
-     * Generate a dungeon level in the given world.
+     * Returns the set of rooms whose mobs were pre-spawned during generation.
+     */
+    @Nonnull
+    public Set<RoomData> getPreSpawnedRooms() {
+        return preSpawnedRooms;
+    }
+
+    /**
+     * Sets the mob spawning service for early mob spawning during generation.
+     * When set, the generator will spawn mobs in the first few rooms immediately
+     * after distributing mobs, so they are ready before the player loads in.
+     */
+    public void setMobSpawningService(@Nullable MobSpawningService mobSpawningService) {
+        this.mobSpawningService = mobSpawningService;
+    }
+
+    /**
+     * Generate a dungeon level in the given world at the default origin (0, 128, 0).
      */
     public void generate(@Nonnull World world, long seed,
                          @Nonnull DungeonConfig.LevelConfig levelConfig) {
+        generate(world, seed, levelConfig, new Vector3i(0, 128, 0), 0);
+    }
+
+    /**
+     * Generate a dungeon level in the given world at the specified origin.
+     *
+     * @param origin     world position where the spawn room is placed
+     * @param levelIndex the index of this level within the dungeon run
+     */
+    public void generate(@Nonnull World world, long seed,
+                         @Nonnull DungeonConfig.LevelConfig levelConfig,
+                         @Nonnull Vector3i origin, int levelIndex) {
         Random random = new Random(seed);
         Store<EntityStore> store = world.getEntityStore().getStore();
 
-        dev.ninesliced.unstablerifts.dungeon.Level level = new dev.ninesliced.unstablerifts.dungeon.Level(levelConfig.getName(), 0);
+        dev.ninesliced.unstablerifts.dungeon.Level level = new dev.ninesliced.unstablerifts.dungeon.Level(levelConfig.getName(), levelIndex);
         this.generatedLevel = level;
 
         ResolvedPools resolvedPools = resolvePools(levelConfig);
@@ -392,7 +438,8 @@ public class DungeonGenerator {
                 new BranchCounter()
         );
 
-        LOGGER.at(Level.INFO).log("Generating dungeon '%s' seed=%d", levelConfig.getName(), seed);
+        LOGGER.at(Level.INFO).log("Generating dungeon '%s' seed=%d at origin=%s levelIndex=%d",
+                levelConfig.getName(), seed, origin, levelIndex);
         LOGGER.at(Level.INFO).log("Resolved pools: spawn=%d corridor=%d challenge=%d treasure=%d shop=%d boss=%d wall=%d keyDoor=%d",
                 resolvedPools.spawn.size(), resolvedPools.corridor.size(),
                 resolvedPools.challenge.size(), resolvedPools.treasure.size(),
@@ -415,7 +462,7 @@ public class DungeonGenerator {
             return;
         }
 
-        Vector3i spawnPaste = new Vector3i(0, 128, 0);
+        Vector3i spawnPaste = new Vector3i(origin);
         pasteAndRegister(context, spawnPath, spawnData, spawnPaste, 0);
 
         RoomData spawnRoom = buildRoomData(level, RoomType.SPAWN, spawnData, spawnPaste, 0,
@@ -496,6 +543,13 @@ public class DungeonGenerator {
 
         if (treasuresPlaced > 0) {
             distributeKeys(level, treasuresPlaced, random);
+        }
+
+        // Pre-spawn mobs in the first rooms so they are ready before the player loads in.
+        preSpawnedRooms.clear();
+        if (mobSpawningService != null) {
+            preSpawnedRooms = mobSpawningService.spawnEarlyRoomMobs(level, store, EARLY_SPAWN_ROOM_COUNT);
+            LOGGER.at(Level.INFO).log("Pre-spawned mobs in %d rooms during generation", preSpawnedRooms.size());
         }
 
         LOGGER.at(Level.INFO).log("Dungeon complete: %d rooms, boss=%b, treasures=%d, shops=%d, branches=%d",

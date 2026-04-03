@@ -85,6 +85,56 @@ public final class MobSpawningService {
     }
 
     /**
+     * Spawns mobs only for the first {@code count} rooms in the level (by insertion order).
+     * Sets expected mob counts for ALL rooms but only spawns for the early ones.
+     * Returns the set of rooms that were spawned so the caller can skip them later.
+     */
+    @Nonnull
+    public Set<RoomData> spawnEarlyRoomMobs(@Nonnull Level level, @Nonnull Store<EntityStore> store, int count) {
+        int totalSpawned = 0;
+        int roomsSpawned = 0;
+        Random random = new Random();
+        Set<RoomData> spawnedRooms = new HashSet<>();
+
+        for (RoomData room : level.getRooms()) {
+            int plannedMobCount = room.getMobsToSpawn().size()
+                    + room.getPinnedMobSpawns().size()
+                    + room.getPrefabMobMarkerPositions().size();
+            room.setExpectedMobCount(plannedMobCount);
+
+            if (room.isLocked()) continue;
+
+            if (roomsSpawned < count) {
+                spawnPinnedMobs(room, store);
+                totalSpawned += spawnPoolMobs(room, store, random);
+                spawnedRooms.add(room);
+                roomsSpawned++;
+            }
+        }
+        LOGGER.info("Early-spawned " + totalSpawned + " mobs in " + roomsSpawned
+                + "/" + level.getRooms().size() + " rooms for level " + level.getName());
+        return spawnedRooms;
+    }
+
+    /**
+     * Spawns mobs for all rooms in the level that were NOT already spawned.
+     */
+    public void spawnRemainingMobs(@Nonnull Level level, @Nonnull Store<EntityStore> store,
+                                   @Nonnull Set<RoomData> alreadySpawned) {
+        int totalSpawned = 0;
+        Random random = new Random();
+
+        for (RoomData room : level.getRooms()) {
+            if (room.isLocked()) continue;
+            if (alreadySpawned.contains(room)) continue;
+
+            spawnPinnedMobs(room, store);
+            totalSpawned += spawnPoolMobs(room, store, random);
+        }
+        LOGGER.info("Spawned remaining " + totalSpawned + " mobs for level " + level.getName());
+    }
+
+    /**
      * Spawns all mobs for a single room (pinned + random pool).
      * Used when a player enters a locked room whose spawning was deferred.
      */

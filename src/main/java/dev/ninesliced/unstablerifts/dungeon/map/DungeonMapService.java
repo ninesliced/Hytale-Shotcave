@@ -80,6 +80,10 @@ public final class DungeonMapService {
             return;
         }
 
+        // Collect old chunks and markers to clear from client
+        Map<Long, MapChunk> oldChunks = cachedChunks.get(game.getPartyId());
+        MapMarker[] oldMarkers = cachedMarkers.get(game.getPartyId());
+
         SmoothedDungeonGrid grid = SmoothedDungeonGrid.build(level);
         cachedGrids.put(game.getPartyId(), grid);
 
@@ -94,6 +98,44 @@ public final class DungeonMapService {
 
         MapMarker[] markers = buildMarkers(level);
         cachedMarkers.put(game.getPartyId(), markers);
+
+        // If there were old chunks, clear them on all clients before sending the new map
+        if (oldChunks != null && !oldChunks.isEmpty()) {
+            // Build clear packets for old chunks that are not in the new map
+            List<MapChunk> clearChunks = new ArrayList<>();
+            for (Map.Entry<Long, MapChunk> entry : oldChunks.entrySet()) {
+                if (!chunks.containsKey(entry.getKey())) {
+                    MapChunk old = entry.getValue();
+                    clearChunks.add(new MapChunk(old.chunkX, old.chunkZ, null));
+                }
+            }
+
+            // Collect old marker IDs to remove
+            String[] removedMarkerIds = null;
+            if (oldMarkers != null && oldMarkers.length > 0) {
+                removedMarkerIds = new String[oldMarkers.length];
+                for (int i = 0; i < oldMarkers.length; i++) {
+                    removedMarkerIds[i] = oldMarkers[i].id;
+                }
+            }
+
+            if (!clearChunks.isEmpty() || removedMarkerIds != null) {
+                UpdateWorldMap clearPacket = new UpdateWorldMap(
+                        clearChunks.isEmpty() ? null : clearChunks.toArray(new MapChunk[0]),
+                        null,
+                        removedMarkerIds
+                );
+                broadcastPacket(game, clearPacket);
+            }
+
+            // Send the new map to all players
+            for (UUID playerId : game.getPlayersInInstance()) {
+                PlayerRef playerRef = com.hypixel.hytale.server.core.universe.Universe.get().getPlayer(playerId);
+                if (playerRef != null && playerRef.isValid()) {
+                    sendMapToPlayer(playerRef, game);
+                }
+            }
+        }
 
         LOGGER.info("Dungeon map built: " + chunks.size() + " chunks, " + markers.length + " markers");
     }

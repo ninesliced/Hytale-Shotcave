@@ -12,6 +12,7 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.ninesliced.unstablerifts.UnstableRifts;
 import dev.ninesliced.unstablerifts.logging.UnstableRiftsLog;
+import org.joml.Vector3i;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -60,7 +61,8 @@ public final class DungeonInstanceService {
     public CompletableFuture<World> spawnGeneratedInstance(@Nonnull World currentWorld,
                                                            @Nonnull Transform returnPoint,
                                                            @Nonnull DungeonConfig.LevelConfig levelConfig,
-                                                           @Nullable Consumer<String> statusConsumer) {
+                                                           @Nullable Consumer<String> statusConsumer,
+                                                           @Nullable MobSpawningService mobSpawningService) {
         InstancesPlugin instancesPlugin = InstancesPlugin.get();
         CompletableFuture<World> worldFuture = instancesPlugin.spawnInstance(INSTANCE_TEMPLATE, currentWorld,
                 returnPoint);
@@ -71,6 +73,7 @@ public final class DungeonInstanceService {
                 try {
                     long seed = System.nanoTime();
                     DungeonGenerator generator = new DungeonGenerator();
+                    generator.setMobSpawningService(mobSpawningService);
                     generator.generate(world, seed, levelConfig);
                     this.lastGenerator = generator;
                     applyDungeonWorldSettings(world);
@@ -97,6 +100,55 @@ public final class DungeonInstanceService {
     @Nullable
     public dev.ninesliced.unstablerifts.dungeon.Level getLastGeneratedLevel() {
         return lastGenerator != null ? lastGenerator.getGeneratedLevel() : null;
+    }
+
+    /**
+     * Returns the rooms whose mobs were pre-spawned during the last generation.
+     */
+    @Nullable
+    public java.util.Set<RoomData> getLastPreSpawnedRooms() {
+        return lastGenerator != null ? lastGenerator.getPreSpawnedRooms() : null;
+    }
+
+    /**
+     * Generates a level into an already-existing world at the given origin offset.
+     * Used for background generation of upcoming levels in the same instance.
+     *
+     * @param world      the existing dungeon world
+     * @param levelConfig the level configuration to generate
+     * @param origin     world position where the spawn room is placed
+     * @param levelIndex the index of this level within the dungeon run
+     * @return a future that completes with the generated Level
+     */
+    @Nonnull
+    public CompletableFuture<dev.ninesliced.unstablerifts.dungeon.Level> generateLevelInWorld(
+            @Nonnull World world,
+            @Nonnull DungeonConfig.LevelConfig levelConfig,
+            @Nonnull Vector3i origin,
+            int levelIndex) {
+        CompletableFuture<dev.ninesliced.unstablerifts.dungeon.Level> future = new CompletableFuture<>();
+        world.execute(() -> {
+            try {
+                long seed = System.nanoTime();
+                DungeonGenerator generator = new DungeonGenerator();
+                generator.generate(world, seed, levelConfig, origin, levelIndex);
+                dev.ninesliced.unstablerifts.dungeon.Level generated = generator.getGeneratedLevel();
+                if (generated != null) {
+                    LOGGER.at(Level.INFO).log("Background generated level '%s' (index %d) at origin %s with %d rooms",
+                            levelConfig.getName(), levelIndex, origin, generated.getRooms().size());
+                    future.complete(generated);
+                } else {
+                    LOGGER.at(Level.WARNING).log("Background generation produced no level for '%s' (index %d)",
+                            levelConfig.getName(), levelIndex);
+                    future.completeExceptionally(new IllegalStateException("Generation produced no level"));
+                }
+            } catch (Exception e) {
+                LOGGER.at(Level.WARNING).withCause(e).log("Background level generation failed for '%s' (index %d)",
+                        levelConfig.getName(), levelIndex);
+                future.completeExceptionally(e);
+            }
+        });
+        return future;
     }
 
     private void applyDungeonWorldSettings(@Nonnull World world) {

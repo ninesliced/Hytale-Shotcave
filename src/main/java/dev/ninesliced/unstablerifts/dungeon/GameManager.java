@@ -136,7 +136,8 @@ public final class GameManager {
                 leaderWorld,
                 leaderReturnPoint,
                 firstLevelConfig,
-                status -> broadcastToParty(partyId, status)
+                status -> broadcastToParty(partyId, status),
+                mobSpawningService
         );
 
         game.setGenerationFuture(worldFuture);
@@ -147,6 +148,18 @@ public final class GameManager {
             Level generatedLevel = plugin.getDungeonInstanceService().getLastGeneratedLevel();
             if (generatedLevel != null) {
                 game.setLevel(0, generatedLevel);
+                // Store spawn position for level 0
+                RoomData entrance = generatedLevel.getEntranceRoom();
+                if (entrance != null) {
+                    Vector3i anchor = entrance.getAnchor();
+                    game.setLevelSpawnPosition(0, new Vector3d(anchor.x + 0.5, anchor.y + 1.0, anchor.z + 0.5));
+                }
+                // Track rooms whose mobs were already spawned during generation
+                Set<RoomData> preSpawned = plugin.getDungeonInstanceService().getLastPreSpawnedRooms();
+                if (preSpawned != null && !preSpawned.isEmpty()) {
+                    game.setPreSpawnedRooms(preSpawned);
+                    LOGGER.info("Carried over " + preSpawned.size() + " pre-spawned rooms for party " + partyId);
+                }
                 LOGGER.info("Applied generated level graph '" + generatedLevel.getName()
                         + "' with " + generatedLevel.getRooms().size() + " rooms for party " + partyId);
             } else {
@@ -158,7 +171,97 @@ public final class GameManager {
             plugin.getDungeonMapService().buildMap(game);
             PartyUiPage.refreshOpenPages();
             LOGGER.info("Game ready for party " + partyId + " in world " + world.getName());
+
             return game;
+        });
+    }
+
+    /**
+     * Distance between level origins along the X axis to prevent overlap.
+     */
+    private static final int LEVEL_OFFSET_X = 10000;
+
+    /**
+     * Number of rooms (from spawn outward) to spawn mobs in immediately.
+     * Remaining rooms' mobs are deferred to the next tick.
+     */
+    private static final int EARLY_SPAWN_ROOM_COUNT = 3;
+
+    /**
+     * Background-generates all subsequent levels in the same world instance.
+     * Each level is placed at a large X offset to avoid collision with previous levels.
+     * Generation is chained: each level starts generating only after the previous one completes.
+     */
+    private void scheduleBackgroundLevelGeneration(@Nonnull Game game,
+                                                   @Nonnull World world,
+                                                   @Nonnull DungeonConfig.LevelConfig firstLevelConfig) {
+        DungeonConfig config = plugin.loadDungeonConfig();
+        DungeonConfig.LevelConfig currentConfig = firstLevelConfig;
+
+        // Collect the chain of levels to generate
+        List<DungeonConfig.LevelConfig> upcomingLevels = new ArrayList<>();
+        while (true) {
+            String nextSelector = currentConfig.getNextLevel();
+            if (nextSelector == null) break;
+            DungeonConfig.LevelConfig nextConfig = config.findLevel(nextSelector);
+            if (nextConfig == null) {
+                LOGGER.warning("Background generation: unknown nextLevel '" + nextSelector
+                        + "' referenced by '" + currentConfig.getSelector() + "'");
+                break;
+            }
+            upcomingLevels.add(nextConfig);
+            currentConfig = nextConfig;
+        }
+
+        if (upcomingLevels.isEmpty()) {
+            LOGGER.info("No subsequent levels to background-generate for party " + game.getPartyId());
+            return;
+        }
+
+        game.setBackgroundGenerating(true);
+        LOGGER.info("Scheduling background generation of " + upcomingLevels.size()
+                + " upcoming level(s) for party " + game.getPartyId());
+
+        // Chain generation sequentially: level 1 after level 0, level 2 after level 1, etc.
+        CompletableFuture<Void> chain = CompletableFuture.completedFuture(null);
+        for (int i = 0; i < upcomingLevels.size(); i++) {
+            final int levelIndex = i + 1; // level 0 is already generated
+            final DungeonConfig.LevelConfig levelConfig = upcomingLevels.get(i);
+
+            chain = chain.thenCompose(ignored -> {
+                if (game.getState() == GameState.COMPLETE) {
+                    return CompletableFuture.completedFuture(null);
+                }
+
+                Vector3i origin = new Vector3i(LEVEL_OFFSET_X * levelIndex, 128, 0);
+                return plugin.getDungeonInstanceService()
+                        .generateLevelInWorld(world, levelConfig, origin, levelIndex)
+                        .thenAccept(generatedLevel -> {
+                            game.setLevel(levelIndex, generatedLevel);
+
+                            // Store spawn position for this level
+                            RoomData entrance = generatedLevel.getEntranceRoom();
+                            if (entrance != null) {
+                                Vector3i anchor = entrance.getAnchor();
+                                game.setLevelSpawnPosition(levelIndex,
+                                        new Vector3d(anchor.x + 0.5, anchor.y + 1.0, anchor.z + 0.5));
+                            }
+
+                            LOGGER.info("Background generated level '" + generatedLevel.getName()
+                                    + "' (index " + levelIndex + ") with " + generatedLevel.getRooms().size()
+                                    + " rooms for party " + game.getPartyId());
+                        });
+            });
+        }
+
+        chain.whenComplete((ignored, throwable) -> {
+            game.setBackgroundGenerating(false);
+            if (throwable != null) {
+                LOGGER.log(java.util.logging.Level.WARNING,
+                        "Background level generation failed for party " + game.getPartyId(), throwable);
+            } else {
+                LOGGER.info("All background level generation complete for party " + game.getPartyId());
+            }
         });
     }
 
@@ -207,7 +310,21 @@ public final class GameManager {
 
             Level currentLevel = game.getCurrentLevel();
             if (currentLevel != null) {
-                mobSpawningService.spawnLevelMobs(currentLevel, store);
+                // Some rooms may have had mobs pre-spawned during generation.
+                // Only spawn mobs for the remaining rooms.
+                Set<RoomData> preSpawned = game.getPreSpawnedRooms();
+                if (preSpawned.isEmpty()) {
+                    // No pre-spawning happened — spawn early rooms now, rest in background.
+                    Set<RoomData> earlyRooms = mobSpawningService.spawnEarlyRoomMobs(currentLevel, store, EARLY_SPAWN_ROOM_COUNT);
+                    world.execute(() -> {
+                        mobSpawningService.spawnRemainingMobs(currentLevel, store, earlyRooms);
+                    });
+                } else {
+                    // Early rooms were pre-spawned during generation — spawn the rest now.
+                    mobSpawningService.spawnRemainingMobs(currentLevel, store, preSpawned);
+                    game.setPreSpawnedRooms(Set.of()); // clear after use
+                }
+
                 // Spawn portals in unlocked rooms at level start (cosmetic only).
                 for (RoomData room : currentLevel.getRooms()) {
                     if (room.getType() != RoomType.BOSS
@@ -218,6 +335,12 @@ public final class GameManager {
                 }
             }
         });
+
+        // Start background generation of subsequent levels now that players are fully loaded.
+        DungeonConfig.LevelConfig currentLevelConfig = resolveCurrentLevelConfig(config, game);
+        if (currentLevelConfig != null) {
+            scheduleBackgroundLevelGeneration(game, world, currentLevelConfig);
+        }
     }
 
     /**
@@ -385,7 +508,8 @@ public final class GameManager {
     }
 
     /**
-     * Generates the next level, teleports all players to its entrance, and starts it.
+     * Advances to the next pre-generated level, teleports all players to its entrance, and starts it.
+     * If background generation hasn't completed the next level yet, waits for it.
      */
     private void advanceToNextLevel(@Nonnull Game game) {
         World world = game.getInstanceWorld();
@@ -400,17 +524,51 @@ public final class GameManager {
         }
 
         int nextIndex = game.getCurrentLevelIndex() + 1;
-        Level nextLevel = new Level(nextLevelConfig.getName(), nextIndex);
-        game.addLevel(nextLevel);
         game.setCurrentLevelIndex(nextIndex);
         game.setCurrentLevelSelector(nextLevelConfig.getSelector());
 
+        // Check if the level was already background-generated
+        Level nextLevel = (nextIndex < game.getLevels().size()) ? game.getLevels().get(nextIndex) : null;
+
+        if (nextLevel != null && nextLevel.getEntranceRoom() != null) {
+            // Level is ready — activate it immediately
+            activateLevel(game, world, nextLevel, nextIndex);
+        } else {
+            // Level not yet generated — generate it now and activate when done
+            LOGGER.info("Next level (index " + nextIndex + ") not yet generated for party "
+                    + game.getPartyId() + "; generating on demand");
+            broadcastToParty(game.getPartyId(), "Generating next level...");
+
+            Vector3i origin = new Vector3i(LEVEL_OFFSET_X * nextIndex, 128, 0);
+            plugin.getDungeonInstanceService()
+                    .generateLevelInWorld(world, nextLevelConfig, origin, nextIndex)
+                    .thenAccept(generatedLevel -> {
+                        game.setLevel(nextIndex, generatedLevel);
+                        RoomData entrance = generatedLevel.getEntranceRoom();
+                        if (entrance != null) {
+                            Vector3i anchor = entrance.getAnchor();
+                            game.setLevelSpawnPosition(nextIndex,
+                                    new Vector3d(anchor.x + 0.5, anchor.y + 1.0, anchor.z + 0.5));
+                        }
+                        activateLevel(game, world, generatedLevel, nextIndex);
+                    });
+        }
+    }
+
+    /**
+     * Activates a pre-generated level: spawns mobs, spawns portals, teleports all players
+     * to the stored spawn position, and sets the game state to ACTIVE.
+     */
+    private void activateLevel(@Nonnull Game game, @Nonnull World world,
+                               @Nonnull Level level, int levelIndex) {
         world.execute(() -> {
             Store<EntityStore> store = world.getEntityStore().getStore();
-            mobSpawningService.spawnLevelMobs(nextLevel, store);
+
+            // Spawn mobs in the first few rooms immediately so players can start playing.
+            Set<RoomData> earlyRooms = mobSpawningService.spawnEarlyRoomMobs(level, store, EARLY_SPAWN_ROOM_COUNT);
 
             // Spawn portals for unlocked rooms in the new level.
-            for (RoomData room : nextLevel.getRooms()) {
+            for (RoomData room : level.getRooms()) {
                 if (room.getType() != RoomType.BOSS
                         && !room.isLocked()
                         && !room.getPortalPositions().isEmpty()) {
@@ -418,14 +576,36 @@ public final class GameManager {
                 }
             }
 
-            // Teleport all players to the entrance of the new level.
-            RoomData entrance = nextLevel.getEntranceRoom();
-            if (entrance != null) {
-                Vector3i anchor = entrance.getAnchor();
-                Vector3d spawnPos = new Vector3d(anchor.x + 0.5, anchor.y + 1.0, anchor.z + 0.5);
-                teleportAllPlayersToPosition(game, world, store, spawnPos);
+            // Teleport all players to the stored spawn position for this level.
+            Vector3d spawnPos = game.getLevelSpawnPosition(levelIndex);
+            if (spawnPos == null) {
+                // Fallback: read from the entrance room directly
+                RoomData entrance = level.getEntranceRoom();
+                if (entrance != null) {
+                    Vector3i anchor = entrance.getAnchor();
+                    spawnPos = new Vector3d(anchor.x + 0.5, anchor.y + 1.0, anchor.z + 0.5);
+                    game.setLevelSpawnPosition(levelIndex, spawnPos);
+                }
             }
+
+            if (spawnPos != null) {
+                teleportAllPlayersToPosition(game, world, store, spawnPos);
+            } else {
+                LOGGER.warning("No spawn position available for level index " + levelIndex
+                        + " for party " + game.getPartyId());
+            }
+
             game.setState(GameState.ACTIVE);
+            game.setBossRoomSealed(false);
+            plugin.getDungeonMapService().buildMap(game);
+            PartyUiPage.refreshOpenPages();
+            LOGGER.info("Activated level '" + level.getName() + "' (index " + levelIndex
+                    + ") for party " + game.getPartyId());
+
+            // Spawn remaining mobs in background.
+            world.execute(() -> {
+                mobSpawningService.spawnRemainingMobs(level, store, earlyRooms);
+            });
         });
     }
 

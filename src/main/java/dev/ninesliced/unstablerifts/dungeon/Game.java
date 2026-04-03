@@ -55,6 +55,20 @@ public final class Game {
     @Nullable
     private String currentLevelSelector;
     private long money = 0L;
+    /**
+     * Spawn positions per level index — used to teleport players when they enter a level portal.
+     */
+    private final Map<Integer, Vector3d> levelSpawnPositions = new HashMap<>();
+    /**
+     * Tracks whether background generation of upcoming levels is still in progress.
+     */
+    private volatile boolean backgroundGenerating = false;
+    /**
+     * Rooms whose mobs were pre-spawned during generation (before onGameStart).
+     * Used to avoid double-spawning mobs in these rooms.
+     */
+    @Nonnull
+    private Set<RoomData> preSpawnedRooms = new HashSet<>();
     private long startTime;
     private long levelStartTime;
     private GameState state = GameState.GENERATING;
@@ -412,5 +426,37 @@ public final class Game {
 
     public void setVictoryTimestamp(long victoryTimestamp) {
         this.victoryTimestamp = victoryTimestamp;
+    }
+
+    // ── Level spawn positions ──
+
+    public void setLevelSpawnPosition(int levelIndex, @Nonnull Vector3d position) {
+        levelSpawnPositions.put(levelIndex, new Vector3d(position));
+    }
+
+    @Nullable
+    public Vector3d getLevelSpawnPosition(int levelIndex) {
+        return levelSpawnPositions.get(levelIndex);
+    }
+
+    // ── Background generation tracking ──
+
+    public boolean isBackgroundGenerating() {
+        return backgroundGenerating;
+    }
+
+    public void setBackgroundGenerating(boolean backgroundGenerating) {
+        this.backgroundGenerating = backgroundGenerating;
+    }
+
+    // ── Pre-spawned rooms ──
+
+    @Nonnull
+    public Set<RoomData> getPreSpawnedRooms() {
+        return preSpawnedRooms;
+    }
+
+    public void setPreSpawnedRooms(@Nonnull Set<RoomData> preSpawnedRooms) {
+        this.preSpawnedRooms = preSpawnedRooms;
     }
 }
