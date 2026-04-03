@@ -3,13 +3,16 @@
   "Interactions": [
     {
       "Type": "Simple",
-      "RunTime": 0.08
+      "RunTime": 1.065,
+      "Effects": {
+        "ItemAnimationId": "Shoot",
+        "ClearAnimationOnFinish": true
+      }
     },
     {
       "Type": "ChainLightning",
       "RunTime": 0.08,
       "Effects": {
-        "ItemAnimationId": "Shoot",
         "WorldSoundEventId": "SFX_Blunderbuss_Fire",
         "LocalSoundEventId": "SFX_Blunderbuss_Fire_Local",
         "FirstPersonParticles": [

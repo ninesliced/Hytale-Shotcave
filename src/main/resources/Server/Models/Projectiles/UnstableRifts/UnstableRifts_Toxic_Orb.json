@@ -1,0 +1,34 @@
+{
+  "Model": "Items/Projectiles/Acid.blockymodel",
+  "Texture": "Items/Projectiles/Acid_Texture.png",
+  "HitBox": {
+    "Max": { "X": 0.15, "Y": 0.15, "Z": 0.15 },
+    "Min": { "X": -0.15, "Y": -0.15, "Z": -0.15 }
+  },
+  "MinScale": 0.8,
+  "MaxScale": 1.0,
+  "AnimationSets": {
+    "Idle": {
+      "Animations": [
+        {
+          "Animation": "Items/Animations/Spin_Roll/Spin_Roll_Left.blockyanim",
+          "BlendingDuration": 0
+        }
+      ]
+    }
+  },
+  "Trails": [
+    {
+      "TargetNodeName": "Origin_Item",
+      "TrailId": "Small_Default"
+    }
+  ],
+  "Particles": [
+    {
+      "PositionOffset": { "X": 0, "Y": 0, "Z": 0 },
+      "SystemId": "Effect_Poison",
+      "TargetNodeName": "",
+      "Scale": 0.5
+    }
+  ]
+}

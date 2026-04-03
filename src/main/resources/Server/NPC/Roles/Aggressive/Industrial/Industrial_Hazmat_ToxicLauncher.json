@@ -1,0 +1,13 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Industrial_Hazmat",
+  "Modify": {
+    "Weapons": [
+      "Weapon_ToxicLauncher_UnstableRifts"
+    ],
+    "AttackSequence": "Component_Instruction_Attack_Sequence_Industrial_Hazmat_ToxicLauncher",
+    "AttackDistance": 16,
+    "MemoriesNameOverride": "Industrial_Hazmat_ToxicLauncher",
+    "NameTranslationKey": "bettermobs.npcRoles.Industrial_Hazmat_ToxicLauncher.name"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.Weapon_ToxicLauncher_UnstableRifts.name"
+  },
+  "Categories": [
+    "Items.Weapons"
+  ],
+  "Icon": "Icons/ItemsGenerated/Flamethrower_Goblin.png",
+  "ItemLevel": 40,
+  "Model": "Items/Weapons/UnstableRifts/Toxic_launcher/Model/Toxic_Launcher.blockymodel",
+  "Texture": "Items/Weapons/UnstableRifts/Toxic_launcher/Model/HazmatLauncher.png",
+  "PlayerAnimationsId": "Rifle",
+  "Weapon": {},
+  "Tags": {
+    "Family": ["Gun"],
+    "Type": ["Weapon"]
+  },
+  "DroppedItemAnimation": "Items/Animations/Dropped/Dropped_Diagonal_Left.blockyanim",
+  "ItemSoundSetId": "ISS_Weapons_Wood"
+}

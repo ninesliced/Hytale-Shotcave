@@ -193,7 +193,7 @@ public final class PartyUiPage extends InteractiveCustomUIPage<PartyUiPage.UiEve
 
         if (result != null) {
             Color color = result.success() ? Color.GREEN : Color.RED;
-            player.sendMessage(PartyManager.partyPrefix().insert(Message.raw(result.message()).color(color)));
+            this.playerRef.sendMessage(PartyManager.partyPrefix().insert(Message.raw(result.message()).color(color)));
         }
 
         refresh(ref, store);

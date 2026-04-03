@@ -1,0 +1,49 @@
+{
+  "Class": "Instruction",
+  "Interface": "Hytale.Instruction.AttackSequence",
+  "Parameters": {
+    "AttackDistance": {
+      "Value": 16,
+      "Description": "The distance at which the NPC will fire the toxic launcher"
+    },
+    "CombatRelativeTurnSpeed": {
+      "Value": 1.5,
+      "Description": "Modifier that decides turn speed difference in combat"
+    }
+  },
+  "Content": {
+    "Sensor": {
+      "Type": "Target",
+      "Range": { "Compute": "AttackDistance" },
+      "Filters": [
+        { "Type": "LineOfSight" }
+      ]
+    },
+    "ActionsBlocking": true,
+    "Actions": [
+      {
+        "Type": "Attack",
+        "Attack": "Root_Industrial_Hazmat_ToxicLauncher_Shoot",
+        "AimingTimeRange": [1.5, 2.5],
+        "AttackPauseRange": [1.0, 1.5]
+      },
+      {
+        "Type": "Attack",
+        "Attack": "Root_Industrial_Hazmat_ToxicLauncher_Shoot",
+        "AttackPauseRange": [0.8, 1.2]
+      },
+      {
+        "Type": "Attack",
+        "Attack": "Root_Industrial_Hazmat_ToxicLauncher_Shoot",
+        "AttackPauseRange": [1.5, 2.5]
+      }
+    ],
+    "HeadMotion": {
+      "Type": "Aim",
+      "RelativeTurnSpeed": { "Compute": "CombatRelativeTurnSpeed" },
+      "HitProbability": 0.6,
+      "Spread": 0.6
+    }
+  },
+  "Type": "Component"
+}
