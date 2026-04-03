@@ -430,22 +430,11 @@ public final class PartyManager {
         }
         removeInvite(playerId, party.id);
 
-        // If no active members remain, check if there are disconnected ones
+        // If no active members remain, close the party and end any active game.
+        // The endGame flow will teleport any players still in the dungeon instance
+        // back to their home world and clean up the instance.
         if (party.members.isEmpty()) {
-            if (party.disconnectedMembers.isEmpty()) {
-                this.parties.remove(party.id);
-                this.partyByMember.remove(playerId);
-                PartyUiPage.refreshOpenPages();
-                return;
-            }
-            // All members disconnected — keep the party alive but transfer leadership
-            // to the first disconnected member so the party has a nominal leader.
-            // When they reconnect they'll be the leader.
-            Map.Entry<UUID, String> nextLeader = party.disconnectedMembers.entrySet().iterator().next();
-            party.leaderId = nextLeader.getKey();
-            party.leaderName = nextLeader.getValue();
-            party.name = partyNameFor(nextLeader.getValue());
-            PartyUiPage.refreshOpenPages();
+            closePartyInternal(party, "All party members disconnected.", true);
             return;
         }
 
