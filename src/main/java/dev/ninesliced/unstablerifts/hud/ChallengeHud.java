@@ -3,6 +3,8 @@ package dev.ninesliced.unstablerifts.hud;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
+import com.hypixel.hytale.server.core.ui.Anchor;
+import com.hypixel.hytale.server.core.ui.Value;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import dev.ninesliced.unstablerifts.dungeon.ChallengeObjective;
@@ -19,6 +21,12 @@ public final class ChallengeHud extends CustomUIHud {
     public static final String UI_PATH = "Hud/UnstableRifts/Challenge.ui";
     public static final String HUD_ID = "UnstableRiftsChallenge";
     private static final int MAX_OBJECTIVES = 5;
+    private static final int PANEL_WIDTH = 240;
+    private static final int PANEL_VERTICAL_PADDING = 16;
+    private static final int TITLE_HEIGHT = 22;
+    private static final int FIRST_OBJECTIVE_ROW_HEIGHT = 24;
+    private static final int ADDITIONAL_OBJECTIVE_ROW_HEIGHT = 22;
+    private static final int MOB_COUNTER_ROW_HEIGHT = 24;
 
     private final List<ChallengeObjective> objectives;
     private final int mobsRemaining;
@@ -53,11 +61,32 @@ public final class ChallengeHud extends CustomUIHud {
         MultiHudCompat.hideHud(player, playerRef, HUD_ID);
     }
 
+    private static void setPanelHeight(@Nonnull UICommandBuilder ui, int height) {
+        Anchor anchor = new Anchor();
+        anchor.setWidth(Value.of(PANEL_WIDTH));
+        anchor.setHeight(Value.of(Math.max(0, height)));
+        ui.setObject("#ChallengePanel.Anchor", anchor);
+    }
+
+    private static int computePanelHeight(int objectiveCount, boolean hasMobClear) {
+        int rows = Math.max(0, Math.min(MAX_OBJECTIVES, objectiveCount));
+        int height = PANEL_VERTICAL_PADDING + TITLE_HEIGHT;
+        if (rows > 0) {
+            height += FIRST_OBJECTIVE_ROW_HEIGHT;
+            height += Math.max(0, rows - 1) * ADDITIONAL_OBJECTIVE_ROW_HEIGHT;
+        }
+        if (hasMobClear) {
+            height += MOB_COUNTER_ROW_HEIGHT;
+        }
+        return height;
+    }
+
     @Override
     protected void build(@Nonnull UICommandBuilder ui) {
         ui.append(UI_PATH);
 
         ui.set("#ChallengeRoot.Visible", true);
+        setPanelHeight(ui, computePanelHeight(objectives.size(), hasMobClear));
 
         for (int i = 0; i < MAX_OBJECTIVES; i++) {
             String objGroup = "#Obj" + i;

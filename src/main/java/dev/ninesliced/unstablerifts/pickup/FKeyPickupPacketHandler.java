@@ -43,8 +43,8 @@ import org.joml.Vector3d;
 import javax.annotation.Nonnull;
 
 /**
- * Observes {@link SyncInteractionChains} packets for F-key presses and
- * picks up the closest tracked item on the world thread.
+ * Observes {@link SyncInteractionChains} packets for F-key presses and routes
+ * them to doors, portals, and finally item pickup on the world thread.
  */
 public final class FKeyPickupPacketHandler implements PlayerPacketWatcher {
 
@@ -52,8 +52,7 @@ public final class FKeyPickupPacketHandler implements PlayerPacketWatcher {
     }
 
     /**
-     * Finds the closest F-key item within pickup radius and collects it.
-     * Only removes the entity after a successful inventory transaction.
+     * Handles the interaction key near supported dungeon/gameplay targets.
      */
     private static void attemptPickup(@Nonnull PlayerRef playerRef,
                                       @Nonnull Ref<EntityStore> playerEntityRef) {
@@ -83,6 +82,11 @@ public final class FKeyPickupPacketHandler implements PlayerPacketWatcher {
 
         // Try to unlock a KEY-mode door before item pickup.
         if (tryUnlockKeyDoor(playerRef, playerPos)) {
+            return;
+        }
+
+        // Portals now require explicit confirmation with the interaction key.
+        if (tryUsePortal(playerRef, playerPos)) {
             return;
         }
 
@@ -386,10 +390,17 @@ public final class FKeyPickupPacketHandler implements PlayerPacketWatcher {
         } catch (Exception e) {
             // Best-effort
         }
-
-        // Broadcast to party.
-        unstablerifts.getGameManager().broadcastToParty(game.getPartyId(), "A door has been unlocked!", DungeonConstants.COLOR_SUCCESS);
         return true;
+    }
+
+    private static boolean tryUsePortal(@Nonnull PlayerRef playerRef,
+                                        @Nonnull Vector3d playerPos) {
+        UnstableRifts unstablerifts = UnstableRifts.getInstance();
+        if (unstablerifts == null) {
+            return false;
+        }
+
+        return unstablerifts.getPortalInteractionService().tryInteract(playerRef, playerPos);
     }
 
     /**
@@ -605,10 +616,6 @@ public final class FKeyPickupPacketHandler implements PlayerPacketWatcher {
         }
 
         if (!hasUsePress) {
-            return;
-        }
-
-        if (ItemPickupTracker.size() == 0) {
             return;
         }
 

@@ -35,21 +35,9 @@ public enum MarkerType {
      */
     DOOR("UnstableRifts_Door"),
     /**
-     * Legacy key door marker — kept for backward compatibility.
+     * Room configuration marker — stores lock, mob clear, enter title/subtitle.
      */
-    DOOR_KEY("UnstableRifts_Door_Key"),
-    /**
-     * Legacy activator door marker — kept for backward compatibility.
-     */
-    DOOR_ACTIVATOR("UnstableRifts_Door_Activator"),
-    /**
-     * Mob activator — kill a specific mob to complete a challenge.
-     */
-    MOB_ACTIVATOR("UnstableRifts_Mob_Activator"),
-    /**
-     * Mob clear activator — kill all room mobs to complete a challenge.
-     */
-    MOB_CLEAR_ACTIVATOR("UnstableRifts_Mob_Clear_Activator"),
+    ROOM_CONFIG("UnstableRifts_Room_Config"),
     /**
      * Activation zone — step into a zone to complete a challenge.
      */
@@ -58,10 +46,6 @@ public enum MarkerType {
      * Possible key spawn location.
      */
     KEY_SPAWNER("UnstableRifts_Key_Spawner"),
-    /**
-     * Lock room indicator — room locks on player entry, unlocks on clear.
-     */
-    LOCK_ROOM("UnstableRifts_Lock_Room"),
     /**
      * Water block marker.
      */

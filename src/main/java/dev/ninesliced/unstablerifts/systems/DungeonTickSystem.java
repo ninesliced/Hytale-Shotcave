@@ -6,20 +6,19 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
-import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.hypixel.hytale.server.npc.NPCPlugin;
 import dev.ninesliced.unstablerifts.UnstableRifts;
 import dev.ninesliced.unstablerifts.camera.TopCameraService;
 import dev.ninesliced.unstablerifts.dungeon.*;
 import dev.ninesliced.unstablerifts.hud.ChallengeHud;
 import dev.ninesliced.unstablerifts.hud.DungeonInfoHud;
 import dev.ninesliced.unstablerifts.hud.PartyStatusHud;
+import dev.ninesliced.unstablerifts.hud.PortalPromptHudService;
 import dev.ninesliced.unstablerifts.party.PartyManager;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
@@ -45,7 +44,6 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
     private static final double BOSS_ROOM_WALK_THRESHOLD = 10.0;
     private static final long LOGIC_UPDATE_INTERVAL_MS = 200L;
     private static final long HUD_UPDATE_INTERVAL_MS = 400L;
-    private static final long PORTAL_ENTRY_ARM_DELAY_MS = 1500L;
 
     private final Map<UUID, Long> lastLogicUpdateByParty = new ConcurrentHashMap<>();
     private final Map<UUID, Long> lastHudUpdateByPlayer = new ConcurrentHashMap<>();
@@ -57,14 +55,6 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
      * Tracks how far each player has walked inside the boss room.
      */
     private final Map<UUID, BossEntryProgress> bossEntryProgressByPlayer = new ConcurrentHashMap<>();
-    /**
-     * Last time each player was observed off any active portal pad footprint.
-     */
-    private final Map<UUID, Long> lastPortalStepOffAtByPlayer = new ConcurrentHashMap<>();
-    /**
-     * Prevents double-trigger of portal teleport per party.
-     */
-    private final Set<UUID> partiesInTransit = ConcurrentHashMap.newKeySet();
 
     @Override
     public Query<EntityStore> getQuery() {
@@ -92,11 +82,12 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
             lastHudUpdateByPlayer.remove(playerRef.getUuid());
             playerCurrentRoom.remove(playerRef.getUuid());
             bossEntryProgressByPlayer.remove(playerRef.getUuid());
-            lastPortalStepOffAtByPlayer.remove(playerRef.getUuid());
+            unstablerifts.getPortalInteractionService().clearPlayer(playerRef.getUuid());
             gameManager.normalizeOutsideDungeonState(playerRef, player, null, commandBuffer);
             unstablerifts.getCameraService().restoreDefault(playerRef);
             DungeonInfoHud.hideHud(player, playerRef);
             PartyStatusHud.hideHud(player, playerRef);
+            PortalPromptHudService.hide(player, playerRef);
             return;
         }
 
@@ -105,22 +96,24 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
                 && game.getState() != GameState.TRANSITIONING) {
             lastHudUpdateByPlayer.remove(playerRef.getUuid());
             bossEntryProgressByPlayer.remove(playerRef.getUuid());
-            lastPortalStepOffAtByPlayer.remove(playerRef.getUuid());
+            unstablerifts.getPortalInteractionService().clearPlayer(playerRef.getUuid());
             gameManager.normalizeOutsideDungeonState(playerRef, player, game, commandBuffer);
             unstablerifts.getCameraService().restoreDefault(playerRef);
             DungeonInfoHud.hideHud(player, playerRef);
             PartyStatusHud.hideHud(player, playerRef);
+            PortalPromptHudService.hide(player, playerRef);
             return;
         }
 
         if (game.getInstanceWorld() == null || player.getWorld() != game.getInstanceWorld()) {
             lastHudUpdateByPlayer.remove(playerRef.getUuid());
             bossEntryProgressByPlayer.remove(playerRef.getUuid());
-            lastPortalStepOffAtByPlayer.remove(playerRef.getUuid());
+            unstablerifts.getPortalInteractionService().clearPlayer(playerRef.getUuid());
             gameManager.normalizeOutsideDungeonState(playerRef, player, game, commandBuffer);
             unstablerifts.getCameraService().restoreDefault(playerRef);
             DungeonInfoHud.hideHud(player, playerRef);
             PartyStatusHud.hideHud(player, playerRef);
+            PortalPromptHudService.hide(player, playerRef);
             return;
         }
 
@@ -128,16 +121,19 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
         long now = System.currentTimeMillis();
         Level level = game.getCurrentLevel();
 
-        // Update HUDs on a per-player cadence so iteration order does not starve one client.
-        if (shouldRun(lastHudUpdateByPlayer, playerRef.getUuid(), now, HUD_UPDATE_INTERVAL_MS)) {
-            updateHuds(player, playerRef, game, config, unstablerifts);
-        }
-
         // Smoothly rotate camera to match corridor direction when the player enters a new room.
         updateCameraForRoom(ref, store, game, unstablerifts.getCameraService(), playerRef);
 
         // Detect player entering a locked room -> seal doors.
         detectRoomEntry(ref, store, game, unstablerifts, config, playerRef);
+
+        RoomData currentRoom = level != null ? resolveCurrentRoom(ref, store, level) : null;
+        RoomData hudRoom = level != null ? resolveChallengeHudRoom(ref, store, level, currentRoom) : null;
+
+        // Update HUDs on a per-player cadence so iteration order does not starve one client.
+        if (shouldRun(lastHudUpdateByPlayer, playerRef.getUuid(), now, HUD_UPDATE_INTERVAL_MS)) {
+            updateHuds(player, playerRef, game, config, unstablerifts, hudRoom);
+        }
 
         // Detect boss room proximity per player so multiplayer iteration order
         // cannot block or reset boss entry progress.
@@ -147,11 +143,12 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
             bossEntryProgressByPlayer.remove(playerRef.getUuid());
         }
 
-        // Check portal collision whenever any spawned portal is active in the current level.
+        // Update the portal confirmation HUD whenever an active portal is nearby.
         if (level != null && unstablerifts.getPortalService().hasActivePortals(level)) {
-            checkPortalCollision(ref, store, game, unstablerifts, gameManager, playerRef.getUuid());
+            updatePortalPrompt(ref, store, player, playerRef, game, unstablerifts);
         } else {
-            lastPortalStepOffAtByPlayer.remove(playerRef.getUuid());
+            unstablerifts.getPortalInteractionService().clearPlayer(playerRef.getUuid());
+            PortalPromptHudService.hide(player, playerRef);
         }
 
         // Run shared dungeon logic once per party cadence instead of once per entity.
@@ -190,7 +187,7 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
             if (world != null) {
                 world.execute(() -> {
                     gameManager.broadcastToParty(game.getPartyId(),
-                            "Time's up! Returning to the surface...", DungeonConstants.COLOR_SOFT_DANGER);
+                            "Time's up! Returning to the surface...");
                     gameManager.endGame(game, false);
                 });
             }
@@ -199,7 +196,8 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
 
     private void updateHuds(@Nonnull Player player, @Nonnull PlayerRef playerRef,
                             @Nonnull Game game, @Nonnull DungeonConfig config,
-                            @Nonnull UnstableRifts unstablerifts) {
+                            @Nonnull UnstableRifts unstablerifts,
+                            @Nullable RoomData currentRoom) {
         // Dungeon Info HUD
         DungeonInfoHud infoHud = DungeonInfoHud.fromGame(playerRef, game, config.getDungeonName());
         DungeonInfoHud.applyHud(player, playerRef, infoHud);
@@ -220,9 +218,11 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
             PartyStatusHud.hideHud(player, playerRef);
         }
 
-        // Challenge HUD — show if player is in a room with active challenges.
-        RoomData currentRoom = playerCurrentRoom.get(playerRef.getUuid());
-        if (currentRoom != null && currentRoom.isChallengeActive() && !currentRoom.isCleared()) {
+        // Challenge HUD — show while the player is inside a locked, uncleared room.
+        if (currentRoom != null
+                && (currentRoom.isLocked() || currentRoom.isChallengeActive())
+                && !currentRoom.isCleared()
+                && !currentRoom.getChallenges().isEmpty()) {
             ChallengeHud challengeHud = ChallengeHud.fromRoom(playerRef, currentRoom);
             ChallengeHud.applyHud(player, playerRef, challengeHud);
         } else {
@@ -230,9 +230,93 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
         }
     }
 
+    @Nullable
+    private RoomData resolveCurrentRoom(@Nonnull Ref<EntityStore> ref,
+                                        @Nonnull Store<EntityStore> store,
+                                        @Nonnull Level level) {
+        TransformComponent transform = store.getComponent(ref, TransformComponent.getComponentType());
+        if (transform == null) {
+            return null;
+        }
+
+        int px = (int) Math.floor(transform.getPosition().x);
+        int py = (int) Math.floor(transform.getPosition().y);
+        int pz = (int) Math.floor(transform.getPosition().z);
+        return level.findRoomAt(px, py, pz);
+    }
+
+    @Nullable
+    private RoomData resolveChallengeHudRoom(@Nonnull Ref<EntityStore> ref,
+                                             @Nonnull Store<EntityStore> store,
+                                             @Nonnull Level level,
+                                             @Nullable RoomData fallbackRoom) {
+        TransformComponent transform = store.getComponent(ref, TransformComponent.getComponentType());
+        if (transform == null) {
+            return fallbackRoom;
+        }
+
+        int px = (int) Math.floor(transform.getPosition().x);
+        int py = (int) Math.floor(transform.getPosition().y);
+        int pz = (int) Math.floor(transform.getPosition().z);
+
+        RoomData bestRoom = null;
+        int bestScore = Integer.MIN_VALUE;
+        int bestArea = Integer.MAX_VALUE;
+
+        for (RoomData room : level.getRooms()) {
+            if (!room.hasBounds() || !room.contains(px, py, pz)) {
+                continue;
+            }
+
+            int score = scoreChallengeHudRoom(room);
+            int area = roomArea(room);
+            if (score > bestScore || (score == bestScore && area < bestArea)) {
+                bestRoom = room;
+                bestScore = score;
+                bestArea = area;
+            }
+        }
+
+        if (bestRoom != null) {
+            return bestRoom;
+        }
+        return fallbackRoom;
+    }
+
+    private int scoreChallengeHudRoom(@Nonnull RoomData room) {
+        int score = 0;
+        if (!room.getChallenges().isEmpty()) {
+            score += 100;
+        }
+        if (room.isLocked() && !room.isCleared()) {
+            score += 80;
+        }
+        if (room.isChallengeActive()) {
+            score += 60;
+        }
+        if (room.getType() == RoomType.CHALLENGE) {
+            score += 40;
+        }
+        if (room.isDoorsSealed()) {
+            score += 20;
+        }
+        return score;
+    }
+
+    private int roomArea(@Nonnull RoomData room) {
+        if (!room.hasBounds()) {
+            return Integer.MAX_VALUE;
+        }
+        int width = Math.max(1, room.getBoundsMaxX() - room.getBoundsMinX() + 1);
+        int depth = Math.max(1, room.getBoundsMaxZ() - room.getBoundsMinZ() + 1);
+        return width * depth;
+    }
+
     private void trackMobDeaths(@Nonnull Game game, @Nonnull Level level) {
         for (RoomData room : level.getRooms()) {
             if (room.isCleared()) continue;
+            // Locked rooms are handled entirely by the challenge system.
+            if (room.isLocked()) continue;
 
             if (room.areAllMobsDead() && room.getExpectedMobCount() > 0) {
                 room.setCleared(true);
@@ -248,8 +332,7 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
                             w.execute(() -> instance.getPortalService().spawnPortal(room, w));
                         }
                     }
-                    instance.getGameManager().broadcastToParty(game.getPartyId(),
-                            "Room cleared! Doors are now open.", DungeonConstants.COLOR_SUCCESS);
+                    broadcastRoomMessage(instance, game, room.getUnlockTitle(), room.getUnlockSubtitle());
                 }
             }
         }
@@ -294,78 +377,32 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
         }
     }
 
-    private void checkPortalCollision(@Nonnull Ref<EntityStore> ref,
-                                      @Nonnull Store<EntityStore> store,
-                                      @Nonnull Game game,
-                                      @Nonnull UnstableRifts unstablerifts,
-                                      @Nonnull GameManager gameManager,
-                                      @Nonnull UUID playerId) {
-        Level level = game.getCurrentLevel();
-        if (level == null) return;
+    private void updatePortalPrompt(@Nonnull Ref<EntityStore> ref,
+                                    @Nonnull Store<EntityStore> store,
+                                    @Nonnull Player player,
+                                    @Nonnull PlayerRef playerRef,
+                                    @Nonnull Game game,
+                                    @Nonnull UnstableRifts unstablerifts) {
+        DeathComponent death = store.getComponent(ref, DeathComponent.getComponentType());
+        if (death != null && death.isDead()) {
+            PortalPromptHudService.hide(player, playerRef);
+            return;
+        }
 
         TransformComponent transform = store.getComponent(ref, TransformComponent.getComponentType());
-        if (transform == null) return;
-
-        Vector3d pos = transform.getPosition();
-        int bx = (int) Math.floor(pos.x);
-        int by = (int) Math.floor(pos.y);
-        int bz = (int) Math.floor(pos.z);
-        PortalService.ActivePortal activePortal = unstablerifts.getPortalService().getActivePortalAt(level, bx, by, bz);
-        if (activePortal == null) {
-            lastPortalStepOffAtByPlayer.put(playerId, System.currentTimeMillis());
+        if (transform == null) {
+            PortalPromptHudService.hide(player, playerRef);
             return;
         }
 
-        if (System.currentTimeMillis() - activePortal.activatedAt() < PORTAL_ENTRY_ARM_DELAY_MS) {
+        PortalInteractionService.PortalPrompt prompt = unstablerifts.getPortalInteractionService()
+                .resolvePrompt(game, playerRef.getUuid(), transform.getPosition());
+        if (prompt == null) {
+            PortalPromptHudService.hide(player, playerRef);
             return;
         }
 
-        // Prevent auto-trigger when a portal appears under a player: they must
-        // have been observed off the pad at least once after this activation.
-        long lastStepOffAt = lastPortalStepOffAtByPlayer.getOrDefault(playerId, Long.MIN_VALUE);
-        if (lastStepOffAt <= activePortal.activatedAt()) {
-            return;
-        }
-
-        lastPortalStepOffAtByPlayer.put(playerId, Long.MIN_VALUE);
-        LOGGER.info("Portal collision accepted for party " + game.getPartyId()
-                + " player=" + playerId
-                + " pos=" + pos
-                + " portalMode=" + activePortal.portal().mode()
-                + " activatedAt=" + activePortal.activatedAt()
-                + " state=" + game.getState());
-
-        if (activePortal.portal().mode() == PortalMode.NEXT_LEVEL) {
-            if (game.getState() != GameState.TRANSITIONING) {
-                return;
-            }
-            if (partiesInTransit.contains(game.getPartyId())) return;
-
-            if (partiesInTransit.add(game.getPartyId())) {
-                World world = game.getInstanceWorld();
-                if (world != null) {
-                    UUID partyId = game.getPartyId();
-                    world.execute(() -> {
-                        gameManager.onPortalEntered(game, playerId);
-                        partiesInTransit.remove(partyId);
-                    });
-                } else {
-                    partiesInTransit.remove(game.getPartyId());
-                }
-            }
-            return;
-        }
-
-        World world = game.getInstanceWorld();
-        RoomData sourceRoom = level.findRoomAt(bx, by, bz);
-        RoomData fallbackRoom = activePortal.room();
-        if (sourceRoom == null) {
-            sourceRoom = fallbackRoom;
-        }
-        if (world != null) {
-            RoomData currentRoom = sourceRoom;
-            world.execute(() -> gameManager.onClosestExitPortalEntered(game, playerId, currentRoom, fallbackRoom));
-        }
+        PortalPromptHudService.show(player, playerRef, prompt.title(), prompt.detail());
     }
 
     private void updateCameraForRoom(@Nonnull Ref<EntityStore> ref,
@@ -412,6 +449,14 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
         // Only trigger on room change.
         if (previousRoom == room) return;
 
+        // Broadcast exit message for the room the player just left.
+        if (previousRoom != null) {
+            broadcastRoomMessage(unstablerifts, game, previousRoom.getExitTitle(), previousRoom.getExitSubtitle());
+        }
+
+        // Broadcast enter message for the new room.
+        broadcastRoomMessage(unstablerifts, game, room.getEnterTitle(), room.getEnterSubtitle());
+
         // Player just entered a new room — check if it's locked.
         if (room.isLocked() && !room.isCleared() && !room.isDoorsSealed()) {
             DungeonConfig.LevelConfig levelConfig = null;
@@ -424,8 +469,6 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
             }
             String doorBlock = levelConfig != null ? levelConfig.getDoorBlock() : DungeonConstants.DEFAULT_DOOR_BLOCK;
             unstablerifts.getDoorService().onPlayerEnterRoom(room, game, level, game.getInstanceWorld(), doorBlock);
-            unstablerifts.getGameManager().broadcastToParty(game.getPartyId(),
-                    "The room has been sealed! Defeat all enemies to escape!", DungeonConstants.COLOR_DANGER);
 
             // Lock the room entrance at the anchor, and seal every outbound exit spawner.
             World world = game.getInstanceWorld();
@@ -439,13 +482,26 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
                 });
             }
 
-            // Spawn pinned mobs on room entry (deferred from level start).
+            // Spawn ALL deferred mobs on room entry (pinned + random pool).
             // Must use world.execute() — can't add entities during tick processing.
-            if (world != null && !room.getPinnedMobSpawns().isEmpty()) {
+            if (world != null) {
                 world.execute(() -> {
                     Store<EntityStore> eStore = world.getEntityStore().getStore();
-                    unstablerifts.getGameManager().getMobSpawningService().spawnPinnedMobs(room, eStore);
+                    unstablerifts.getGameManager().getMobSpawningService().spawnRoomMobs(room, eStore);
                 });
+            }
+
+            // If no challenges at all → instantly mark as completed and open doors.
+            if (room.getChallenges().isEmpty()) {
+                room.setCleared(true);
+                if (world != null && room.isDoorsSealed()) {
+                    unstablerifts.getDoorService().onRoomCleared(room, world);
+                }
+                if (world != null && !room.getPortalPositions().isEmpty()) {
+                    world.execute(() -> unstablerifts.getPortalService().spawnPortal(room, world));
+                }
+                unstablerifts.getDungeonMapService().onRoomCleared(game, room);
+                broadcastRoomMessage(unstablerifts, game, room.getUnlockTitle(), room.getUnlockSubtitle());
             }
         }
 
@@ -453,16 +509,6 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
         if (!room.getChallenges().isEmpty()
                 && !room.isChallengeActive() && !room.isCleared()) {
             room.setChallengeActive(true);
-            // Spawn mobs for MOB_ACTIVATOR objectives.
-            World world = game.getInstanceWorld();
-            if (world != null) {
-                Store<EntityStore> eStore = world.getEntityStore().getStore();
-                for (ChallengeObjective obj : room.getChallenges()) {
-                    if (obj.getType() == ChallengeObjective.Type.MOB_ACTIVATOR && !obj.isMobSpawned()) {
-                        spawnMobActivator(obj, room, eStore);
-                    }
-                }
-            }
         }
     }
 
@@ -498,15 +544,6 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
                             }
                         }
                     }
-                    case MOB_ACTIVATOR -> {
-                        // Complete when the summoned mob has actually died.
-                        if (obj.isMobSpawned()) {
-                            Ref<EntityStore> mobRef = obj.getSpawnedMob();
-                            if (room.isMobDefeated(mobRef)) {
-                                obj.complete();
-                            }
-                        }
-                    }
                     case MOB_CLEAR -> {
                         // Complete if all mobs in the room are dead.
                         if (room.areAllMobsDead() && room.getExpectedMobCount() > 0) {
@@ -533,50 +570,18 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
                     world.execute(() -> unstablerifts.getPortalService().spawnPortal(room, world));
                 }
                 unstablerifts.getDungeonMapService().onRoomCleared(game, room);
+                broadcastRoomMessage(unstablerifts, game, room.getUnlockTitle(), room.getUnlockSubtitle());
             }
         }
     }
 
-    private void spawnMobActivator(@Nonnull ChallengeObjective obj,
-                                   @Nonnull RoomData room,
-                                   @Nonnull Store<EntityStore> store) {
-        Map<String, Integer> pool = obj.getMobPool();
-        String mobId;
-        if (pool != null && !pool.isEmpty()) {
-            // Weighted random pick from pool.
-            int totalWeight = pool.values().stream().mapToInt(Integer::intValue).sum();
-            int roll = (int) (Math.random() * totalWeight);
-            mobId = null;
-            for (Map.Entry<String, Integer> entry : pool.entrySet()) {
-                roll -= entry.getValue();
-                if (roll < 0) {
-                    mobId = entry.getKey();
-                    break;
-                }
-            }
-            if (mobId == null) {
-                mobId = pool.keySet().iterator().next();
-            }
-        } else {
-            // Fallback: use first mob from room's mob list.
-            if (room.getMobsToSpawn().isEmpty()) return;
-            mobId = room.getMobsToSpawn().get(0);
-        }
-
-        Vector3i pos = obj.getPosition();
-        Vector3d spawnPos = new Vector3d(pos.x + 0.5, pos.y + 1.0, pos.z + 0.5);
-        try {
-            var result = NPCPlugin.get().spawnNPC(store, mobId, null, spawnPos, Rotation3f.ZERO);
-            Ref<EntityStore> ref = result != null ? result.first() : null;
-            if (ref != null) {
-                KweebecScaleHelper.applyScale(store, ref, mobId);
-                obj.setSpawnedMob(ref);
-                room.addSpawnedMob(ref, false);
-            }
-        } catch (Exception e) {
-            // Failed to spawn — mark as completed to not block progression.
-            obj.complete();
-        }
+    private static void broadcastRoomMessage(@Nonnull UnstableRifts unstablerifts,
+                                               @Nonnull Game game,
+                                               @Nonnull String title,
+                                               @Nonnull String subtitle) {
+        if (title.isEmpty() && subtitle.isEmpty()) return;
+        unstablerifts.getGameManager().broadcastToParty(
+                game.getPartyId(), title.isEmpty() ? " " : title, subtitle.isEmpty() ? null : subtitle);
     }
 
     private boolean shouldRun(@Nonnull Map<UUID, Long> lastRunTimes,

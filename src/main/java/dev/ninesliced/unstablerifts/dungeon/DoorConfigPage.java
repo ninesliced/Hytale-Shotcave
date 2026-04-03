@@ -23,17 +23,6 @@ public final class DoorConfigPage extends AbstractModeConfigPage<DoorMode> {
         super(playerRef, blockPos);
     }
 
-    @Nonnull
-    private static DoorMode parseLegacyBlockMode(@Nullable String blockId) {
-        if ("UnstableRifts_Door_Key".equals(blockId)) {
-            return DoorMode.KEY;
-        }
-        if ("UnstableRifts_Door_Activator".equals(blockId)) {
-            return DoorMode.ACTIVATOR;
-        }
-        return DoorMode.ACTIVATOR;
-    }
-
     @Override
     @Nonnull
     protected String getLayoutPath() {
@@ -68,7 +57,7 @@ public final class DoorConfigPage extends AbstractModeConfigPage<DoorMode> {
     @Override
     @Nonnull
     protected DoorMode readLegacyMode(@Nullable BlockType blockType) {
-        return blockType != null ? parseLegacyBlockMode(blockType.getId()) : DoorMode.ACTIVATOR;
+        return DoorMode.ACTIVATOR;
     }
 
     @Override

@@ -13,10 +13,10 @@ Group #ChallengeRoot {
   Anchor: (Left: 0, Top: 0, Right: 0, Bottom: 0);
   HitTestVisible: false;
 
-  // ── Left-side panel ──
+  // ── Top-right panel below dungeon info ──
   Group #ChallengeAnchor {
-    Anchor: (Width: 240, Left: 12, Top: 0, Bottom: 0);
-    LayoutMode: Middle;
+    Anchor: (Width: 240, Right: 12, Top: 146, Bottom: 0);
+    LayoutMode: Top;
 
     Group #ChallengePanel {
       Anchor: (Width: 240, Height: 160);

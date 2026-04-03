@@ -36,6 +36,11 @@ public final class PartyStatusHud extends CustomUIHud {
     public static final String HUD_ID = "UnstableRiftsParty";
 
     private static final int MAX_DISPLAYED_MEMBERS = 8;
+    private static final int PANEL_HEADER_HEIGHT = 20;
+    private static final int PANEL_VERTICAL_PADDING = 16;
+    private static final int FIRST_MEMBER_TOP = 4;
+    private static final int MEMBER_ROW_HEIGHT = 32;
+    private static final int MEMBER_SPACING = 2;
     /**
      * Width of the health bar background in the .ui file (parent element).
      */
@@ -74,12 +79,32 @@ public final class PartyStatusHud extends CustomUIHud {
         ui.setObject(selector + ".Anchor", anchor);
     }
 
+    private static void setPanelHeight(@Nonnull UICommandBuilder ui, int height) {
+        Anchor anchor = new Anchor();
+        anchor.setWidth(Value.of(200));
+        anchor.setHeight(Value.of(Math.max(0, height)));
+        ui.setObject("#PartyStatusPanel.Anchor", anchor);
+    }
+
+    private static int computePanelHeight(int displayedMembers) {
+        int clamped = Math.max(0, Math.min(MAX_DISPLAYED_MEMBERS, displayedMembers));
+        if (clamped == 0) {
+            return PANEL_HEADER_HEIGHT + PANEL_VERTICAL_PADDING;
+        }
+        return PANEL_HEADER_HEIGHT
+                + PANEL_VERTICAL_PADDING
+                + FIRST_MEMBER_TOP
+                + (clamped * MEMBER_ROW_HEIGHT)
+                + (Math.max(0, clamped - 1) * MEMBER_SPACING);
+    }
+
     @Override
     protected void build(@Nonnull UICommandBuilder ui) {
         ui.append(UI_PATH);
         ui.set("#PartyStatusRoot.Visible", true);
 
         int displayed = Math.min(members.size(), MAX_DISPLAYED_MEMBERS);
+        setPanelHeight(ui, computePanelHeight(displayed));
         for (int i = 0; i < MAX_DISPLAYED_MEMBERS; i++) {
             String prefix = "#Member" + i;
             if (i < displayed) {

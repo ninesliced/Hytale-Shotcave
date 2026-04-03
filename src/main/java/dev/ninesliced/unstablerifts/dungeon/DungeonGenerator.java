@@ -123,7 +123,8 @@ public class DungeonGenerator {
                                 z,
                                 markerType,
                                 readDoorMode(markerType, serializedComponents),
-                                readPortalMode(markerType, serializedComponents)
+                                readPortalMode(markerType, serializedComponents),
+                                readRoomConfig(markerType, serializedComponents)
                         ));
                         if (markerType == MarkerType.MOB_SPAWNER) {
                             JsonObject mobSpawnerData = getSerializedComponent(serializedComponents, "MobSpawnerData");
@@ -214,11 +215,7 @@ public class DungeonGenerator {
             return DoorData.parseMode(serializedMode);
         }
 
-        return switch (markerType) {
-            case DOOR_KEY -> DoorMode.KEY;
-            case DOOR, DOOR_ACTIVATOR -> DoorMode.ACTIVATOR;
-            default -> DoorMode.ACTIVATOR;
-        };
+        return DoorMode.ACTIVATOR;
     }
 
     @Nonnull
@@ -233,6 +230,29 @@ public class DungeonGenerator {
         }
 
         return PortalMode.NEXT_LEVEL;
+    }
+
+    @Nullable
+    private static RoomConfigData readRoomConfig(@Nonnull MarkerType markerType, @Nullable JsonObject serializedComponents) {
+        if (markerType != MarkerType.ROOM_CONFIG) {
+            return null;
+        }
+
+        JsonObject component = getSerializedComponent(serializedComponents, "RoomConfigData");
+        if (component == null) {
+            return null;
+        }
+
+        return new RoomConfigData(
+                getSerializedString(component, "LockRoom"),
+                getSerializedString(component, "MobClearActivator"),
+                getSerializedString(component, "EnterTitle"),
+                getSerializedString(component, "EnterSubtitle"),
+                getSerializedString(component, "UnlockTitle"),
+                getSerializedString(component, "UnlockSubtitle"),
+                getSerializedString(component, "ExitTitle"),
+                getSerializedString(component, "ExitSubtitle")
+        );
     }
 
     public static void pasteLockDoor(@Nonnull World world, @Nonnull DungeonConfig.LevelConfig levelConfig,
@@ -1042,18 +1062,24 @@ public class DungeonGenerator {
                     roomData.addDoorPosition(worldPos);
                     roomData.setDoorMode(marker.doorMode);
                 }
-                case DOOR_KEY -> {
-                    roomData.addDoorPosition(worldPos);
-                    roomData.setDoorMode(marker.doorMode);
+                case ROOM_CONFIG -> {
+                    RoomConfigData cfg = marker.roomConfig;
+                    if (cfg != null) {
+                        if (cfg.isLockRoom()) {
+                            roomData.setLocked(true);
+                        }
+                        if (cfg.isMobClearActivator()) {
+                            roomData.setHasMobClearActivator(true);
+                        }
+                        roomData.setEnterTitle(cfg.getEnterTitle());
+                        roomData.setEnterSubtitle(cfg.getEnterSubtitle());
+                        roomData.setUnlockTitle(cfg.getUnlockTitle());
+                        roomData.setUnlockSubtitle(cfg.getUnlockSubtitle());
+                        roomData.setExitTitle(cfg.getExitTitle());
+                        roomData.setExitSubtitle(cfg.getExitSubtitle());
+                    }
                 }
-                case DOOR_ACTIVATOR -> {
-                    roomData.addDoorPosition(worldPos);
-                    roomData.setDoorMode(marker.doorMode);
-                }
-                case LOCK_ROOM -> roomData.setLocked(true);
                 case ACTIVATION_ZONE -> roomData.addActivationZonePosition(worldPos);
-                case MOB_ACTIVATOR -> roomData.addMobActivatorPosition(worldPos);
-                case MOB_CLEAR_ACTIVATOR -> roomData.setHasMobClearActivator(true);
                 default -> {
                 }
             }
@@ -1087,9 +1113,6 @@ public class DungeonGenerator {
 
         for (Vector3i pos : roomData.getActivationZonePositions()) {
             roomData.addChallenge(new ChallengeObjective(ChallengeObjective.Type.ACTIVATION_ZONE, pos));
-        }
-        for (Vector3i pos : roomData.getMobActivatorPositions()) {
-            roomData.addChallenge(new ChallengeObjective(ChallengeObjective.Type.MOB_ACTIVATOR, pos));
         }
         if (roomData.hasMobClearActivator()) {
             roomData.addChallenge(new ChallengeObjective(ChallengeObjective.Type.MOB_CLEAR, roomData.getAnchor()));
@@ -1408,7 +1431,8 @@ public class DungeonGenerator {
     private record MarkerLocal(int x, int y, int z,
                                @Nonnull MarkerType type,
                                @Nonnull DoorMode doorMode,
-                               @Nonnull PortalMode portalMode) {
+                               @Nonnull PortalMode portalMode,
+                               @Nullable RoomConfigData roomConfig) {
     }
 
     private record PrefabMobMarkerLocal(double x, double y, double z, @Nonnull String mobId) {

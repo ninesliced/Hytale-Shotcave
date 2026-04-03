@@ -41,12 +41,23 @@ public final class RoomData {
     private final List<Vector3i> lockDoorBlockPositions = new ArrayList<>();
     private final List<Vector3i> doorPositions = new ArrayList<>();
     private final List<Vector3i> activationZonePositions = new ArrayList<>();
-    private final List<Vector3i> mobActivatorPositions = new ArrayList<>();
     private final List<ChallengeObjective> challenges = new ArrayList<>();
     private int branchDepth;
     private String branchId;
     private boolean hasMobClearActivator = false;
     private boolean locked = false;
+    @Nonnull
+    private String enterTitle = "";
+    @Nonnull
+    private String enterSubtitle = "";
+    @Nonnull
+    private String unlockTitle = "";
+    @Nonnull
+    private String unlockSubtitle = "";
+    @Nonnull
+    private String exitTitle = "";
+    @Nonnull
+    private String exitSubtitle = "";
     private boolean doorsSealed = false;
     private DoorMode doorMode = DoorMode.ACTIVATOR;
     // ── Portal ──
@@ -410,15 +421,6 @@ public final class RoomData {
         activationZonePositions.add(pos);
     }
 
-    @Nonnull
-    public List<Vector3i> getMobActivatorPositions() {
-        return mobActivatorPositions;
-    }
-
-    public void addMobActivatorPosition(@Nonnull Vector3i pos) {
-        mobActivatorPositions.add(pos);
-    }
-
     public boolean hasMobClearActivator() {
         return hasMobClearActivator;
     }
@@ -433,6 +435,60 @@ public final class RoomData {
 
     public void setLocked(boolean locked) {
         this.locked = locked;
+    }
+
+    @Nonnull
+    public String getEnterTitle() {
+        return enterTitle;
+    }
+
+    public void setEnterTitle(@Nonnull String enterTitle) {
+        this.enterTitle = enterTitle;
+    }
+
+    @Nonnull
+    public String getEnterSubtitle() {
+        return enterSubtitle;
+    }
+
+    public void setEnterSubtitle(@Nonnull String enterSubtitle) {
+        this.enterSubtitle = enterSubtitle;
+    }
+
+    @Nonnull
+    public String getUnlockTitle() {
+        return unlockTitle;
+    }
+
+    public void setUnlockTitle(@Nonnull String unlockTitle) {
+        this.unlockTitle = unlockTitle;
+    }
+
+    @Nonnull
+    public String getUnlockSubtitle() {
+        return unlockSubtitle;
+    }
+
+    public void setUnlockSubtitle(@Nonnull String unlockSubtitle) {
+        this.unlockSubtitle = unlockSubtitle;
+    }
+
+    @Nonnull
+    public String getExitTitle() {
+        return exitTitle;
+    }
+
+    public void setExitTitle(@Nonnull String exitTitle) {
+        this.exitTitle = exitTitle;
+    }
+
+    @Nonnull
+    public String getExitSubtitle() {
+        return exitSubtitle;
+    }
+
+    public void setExitSubtitle(@Nonnull String exitSubtitle) {
+        this.exitSubtitle = exitSubtitle;
     }
 
     public boolean isDoorsSealed() {

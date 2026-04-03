@@ -117,8 +117,7 @@ public final class GameManager {
                 leaderWorld,
                 leaderReturnPoint,
                 firstLevelConfig,
-                status -> broadcastToParty(partyId, status,
-                        status.startsWith("Dungeon ready") ? DungeonConstants.COLOR_SUCCESS : DungeonConstants.COLOR_WARNING)
+                status -> broadcastToParty(partyId, status)
         );
 
         game.setGenerationFuture(worldFuture);
@@ -199,8 +198,6 @@ public final class GameManager {
                     }
                 }
             }
-
-            broadcastToParty(game.getPartyId(), "The dungeon awaits! Fight your way through!", DungeonConstants.COLOR_SUCCESS);
         });
     }
 
@@ -232,14 +229,12 @@ public final class GameManager {
             } else {
                 sealBossRoom(game, bossRoom, world);
             }
-
-            broadcastToParty(game.getPartyId(), "BOSS ROOM! Clear the room to advance!", DungeonConstants.COLOR_DANGER);
         });
     }
 
     /**
      * Called when the boss room is cleared. Sets TRANSITIONING state and spawns
-     * a portal in the boss room for players to walk into.
+     * a portal in the boss room for players to confirm with the interaction key.
      */
     public void onBossDefeated(@Nonnull Game game) {
         if (game.getState() != GameState.BOSS && game.getState() != GameState.ACTIVE) return;
@@ -283,10 +278,7 @@ public final class GameManager {
                     + " activatedAt=" + game.getPortalsActivatedAt()
                     + " victoryTimestamp=" + game.getVictoryTimestamp());
 
-            if (hasNextLevelConfig(game)) {
-                broadcastToParty(game.getPartyId(), "Boss defeated! Step into the portal to advance!", DungeonConstants.COLOR_SUCCESS);
-            } else {
-                broadcastToParty(game.getPartyId(), "Dungeon Complete! Step into the portal to return home!", DungeonConstants.COLOR_VICTORY);
+            if (!hasNextLevelConfig(game)) {
                 game.setVictoryTimestamp(System.currentTimeMillis());
             }
         });
@@ -301,7 +293,7 @@ public final class GameManager {
     }
 
     /**
-     * Called when a player walks into the boss room portal.
+     * Called when a player confirms the boss room portal.
      * Advances to the next level or ends the game.
      */
     public void onPortalEntered(@Nonnull Game game, @Nonnull UUID playerId) {
@@ -414,9 +406,7 @@ public final class GameManager {
                 Vector3d spawnPos = new Vector3d(anchor.x + 0.5, anchor.y + 1.0, anchor.z + 0.5);
                 teleportAllPlayersToPosition(game, world, store, spawnPos);
             }
-
             game.setState(GameState.ACTIVE);
-            broadcastToParty(game.getPartyId(), "Welcome to " + nextLevelConfig.getName() + "!", DungeonConstants.COLOR_SUCCESS);
         });
     }
 
@@ -542,7 +532,7 @@ public final class GameManager {
         activeGames.remove(game.getPartyId());
 
         if (forced) {
-            broadcastToParty(game.getPartyId(), "The dungeon run was cancelled.", DungeonConstants.COLOR_SOFT_DANGER);
+            broadcastToParty(game.getPartyId(), "The dungeon run was cancelled.");
         }
 
         World instanceWorld = game.getInstanceWorld();
@@ -1252,12 +1242,23 @@ public final class GameManager {
         LOGGER.info("Completed game cleaned up for party " + game.getPartyId());
     }
 
-    public void broadcastToParty(@Nonnull UUID partyId, @Nonnull String text, @Nonnull String color) {
+    public void broadcastToParty(@Nonnull UUID partyId, @Nonnull String text) {
         for (Map.Entry<UUID, UUID> entry : playerToParty.entrySet()) {
             if (entry.getValue().equals(partyId)) {
                 PlayerRef playerRef = Universe.get().getPlayer(entry.getKey());
                 if (playerRef != null) {
                     PlayerEventNotifier.showEventTitle(playerRef, text, true);
+                }
+            }
+        }
+    }
+
+    public void broadcastToParty(@Nonnull UUID partyId, @Nonnull String title, @Nullable String subtitle) {
+        for (Map.Entry<UUID, UUID> entry : playerToParty.entrySet()) {
+            if (entry.getValue().equals(partyId)) {
+                PlayerRef playerRef = Universe.get().getPlayer(entry.getKey());
+                if (playerRef != null) {
+                    PlayerEventNotifier.showEventTitle(playerRef, title, subtitle, true);
                 }
             }
         }
@@ -1347,7 +1348,7 @@ public final class GameManager {
         if (game.getState() == GameState.COMPLETE) return;
 
         broadcastToParty(game.getPartyId(),
-                "All players have fallen! The dungeon run is over.", DungeonConstants.COLOR_DANGER);
+                "All players have fallen! The dungeon run is over.");
         endGame(game, true);
     }
 
@@ -1400,7 +1401,7 @@ public final class GameManager {
 
         game.clearDeadPlayers();
         broadcastToParty(game.getPartyId(),
-                "All fallen players have been revived!", DungeonConstants.COLOR_SUCCESS);
+                "All fallen players have been revived!");
     }
 
     /**

@@ -75,53 +75,69 @@ public final class MobSpawningService {
                     + room.getPrefabMobMarkerPositions().size();
             room.setExpectedMobCount(plannedMobCount);
 
-            // Locked rooms defer pinned spawns until room entry.
-            if (!room.isLocked()) {
-                spawnPinnedMobs(room, store);
-            }
+            // Locked rooms defer ALL mob spawning until the player enters.
+            if (room.isLocked()) continue;
 
-            List<String> mobs = room.getMobsToSpawn();
-            List<Vector3i> allPoints = room.getMobSpawnPoints();
-            if (mobs.isEmpty() || allPoints.isEmpty()) continue;
-
-            // Randomly pick which spawn points to use
-            List<Vector3i> chosen = new ArrayList<>(allPoints);
-            Collections.shuffle(chosen, random);
-            if (chosen.size() > mobs.size()) {
-                chosen = chosen.subList(0, mobs.size());
-            }
-
-            // Group chosen points into spatial clusters so mobs form packs
-            List<List<Integer>> clusters = buildClusters(chosen);
-
-            // Spawn mobs at cluster centers with small offsets
-            int mobIndex = 0;
-            for (List<Integer> cluster : clusters) {
-                double cx = 0, cy = 0, cz = 0;
-                for (int idx : cluster) {
-                    Vector3i sp = chosen.get(idx);
-                    cx += sp.x;
-                    cy += sp.y;
-                    cz += sp.z;
-                }
-                cx /= cluster.size();
-                cy /= cluster.size();
-                cz /= cluster.size();
-
-                for (int k = 0; k < cluster.size() && mobIndex < mobs.size(); k++, mobIndex++) {
-                    String mobId = mobs.get(mobIndex);
-                    if (mobId == null || mobId.isBlank()) continue;
-
-                    double ox = (random.nextDouble() - 0.5) * 2.0 * CLUSTER_SPREAD;
-                    double oz = (random.nextDouble() - 0.5) * 2.0 * CLUSTER_SPREAD;
-                    Vector3d spawnPos = new Vector3d(cx + 0.5 + ox, cy + 1.0, cz + 0.5 + oz);
-
-                    Ref<EntityStore> mobRef = spawnMob(store, mobId, spawnPos, room);
-                    if (mobRef != null) totalSpawned++;
-                }
-            }
+            spawnPinnedMobs(room, store);
+            totalSpawned += spawnPoolMobs(room, store, random);
         }
         LOGGER.info("Spawned " + totalSpawned + " mobs for level " + level.getName());
+    }
+
+    /**
+     * Spawns all mobs for a single room (pinned + random pool).
+     * Used when a player enters a locked room whose spawning was deferred.
+     */
+    public void spawnRoomMobs(@Nonnull RoomData room, @Nonnull Store<EntityStore> store) {
+        spawnPinnedMobs(room, store);
+        int poolSpawned = spawnPoolMobs(room, store, new Random());
+        LOGGER.info("Deferred spawn for room " + room.getType() + " at " + room.getAnchor()
+                + ": pinned=" + room.getPinnedMobSpawns().size() + " pool=" + poolSpawned);
+    }
+
+    /**
+     * Spawns randomly-distributed mobs from the room's mob pool at its spawn points.
+     * Returns the number of mobs successfully spawned.
+     */
+    private int spawnPoolMobs(@Nonnull RoomData room, @Nonnull Store<EntityStore> store, @Nonnull Random random) {
+        List<String> mobs = room.getMobsToSpawn();
+        List<Vector3i> allPoints = room.getMobSpawnPoints();
+        if (mobs.isEmpty() || allPoints.isEmpty()) return 0;
+
+        List<Vector3i> chosen = new ArrayList<>(allPoints);
+        Collections.shuffle(chosen, random);
+        if (chosen.size() > mobs.size()) {
+            chosen = chosen.subList(0, mobs.size());
+        }
+
+        List<List<Integer>> clusters = buildClusters(chosen);
+        int spawned = 0;
+        int mobIndex = 0;
+        for (List<Integer> cluster : clusters) {
+            double cx = 0, cy = 0, cz = 0;
+            for (int idx : cluster) {
+                Vector3i sp = chosen.get(idx);
+                cx += sp.x;
+                cy += sp.y;
+                cz += sp.z;
+            }
+            cx /= cluster.size();
+            cy /= cluster.size();
+            cz /= cluster.size();
+
+            for (int k = 0; k < cluster.size() && mobIndex < mobs.size(); k++, mobIndex++) {
+                String mobId = mobs.get(mobIndex);
+                if (mobId == null || mobId.isBlank()) continue;
+
+                double ox = (random.nextDouble() - 0.5) * 2.0 * CLUSTER_SPREAD;
+                double oz = (random.nextDouble() - 0.5) * 2.0 * CLUSTER_SPREAD;
+                Vector3d spawnPos = new Vector3d(cx + 0.5 + ox, cy + 1.0, cz + 0.5 + oz);
+
+                Ref<EntityStore> mobRef = spawnMob(store, mobId, spawnPos, room);
+                if (mobRef != null) spawned++;
+            }
+        }
+        return spawned;
     }
 
     /**

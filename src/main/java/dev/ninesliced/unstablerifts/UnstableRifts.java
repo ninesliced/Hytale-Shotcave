@@ -29,6 +29,7 @@ import dev.ninesliced.unstablerifts.dungeon.*;
 import dev.ninesliced.unstablerifts.dungeon.map.DungeonMapService;
 import dev.ninesliced.unstablerifts.guns.WeaponRegistry;
 import dev.ninesliced.unstablerifts.hud.AmmoHudRuntime;
+import dev.ninesliced.unstablerifts.hud.PortalPromptHudService;
 import dev.ninesliced.unstablerifts.hud.RevivePromptHudRuntime;
 import dev.ninesliced.unstablerifts.interactions.*;
 import dev.ninesliced.unstablerifts.inventory.DropBlockSystem;
@@ -67,6 +68,7 @@ public class UnstableRifts extends JavaPlugin {
     private final DungeonMapService dungeonMapService = new DungeonMapService();
     private final DoorService doorService = new DoorService();
     private final PortalService portalService = new PortalService();
+    private final PortalInteractionService portalInteractionService = new PortalInteractionService(this);
 
     private Path dungeonConfigPath;
 
@@ -106,6 +108,8 @@ public class UnstableRifts extends JavaPlugin {
         this.itemPickupHudRuntime.stop();
         this.revivePromptHudRuntime.stop();
         this.ammoHudRuntime.stop();
+        this.portalInteractionService.clearAll();
+        PortalPromptHudService.clearAll();
         this.gameManager.shutdown();
         instance = null;
         super.shutdown();
@@ -117,6 +121,8 @@ public class UnstableRifts extends JavaPlugin {
         ammoHudRuntime.onPlayerConnect(playerRef);
         itemPickupHudRuntime.onPlayerConnect(playerRef);
         revivePromptHudRuntime.onPlayerConnect(playerRef);
+        portalInteractionService.clearPlayer(playerRef.getUuid());
+        PortalPromptHudService.clear(playerRef);
         gameManager.onPlayerConnect(playerRef);
     }
 
@@ -171,7 +177,8 @@ public class UnstableRifts extends JavaPlugin {
                 .register("UnstableRiftsPartyPortal", UnstableRiftsPartyPageSupplier.class, UnstableRiftsPartyPageSupplier.CODEC)
                 .register("UnstableRiftsDoorConfig", DoorConfigPageSupplier.class, DoorConfigPageSupplier.CODEC)
                 .register("UnstableRiftsPortalConfig", PortalConfigPageSupplier.class, PortalConfigPageSupplier.CODEC)
-                .register("UnstableRiftsMobSpawnerConfig", MobSpawnerConfigPageSupplier.class, MobSpawnerConfigPageSupplier.CODEC);
+                .register("UnstableRiftsMobSpawnerConfig", MobSpawnerConfigPageSupplier.class, MobSpawnerConfigPageSupplier.CODEC)
+                .register("UnstableRiftsRoomConfig", RoomConfigPageSupplier.class, RoomConfigPageSupplier.CODEC);
     }
 
     private void registerInteractions() {
@@ -210,6 +217,10 @@ public class UnstableRifts extends JavaPlugin {
         ComponentType<ChunkStore, PortalData> portalDataType =
                 this.getChunkStoreRegistry().registerComponent(PortalData.class, "PortalData", PortalData.CODEC);
         PortalData.setComponentType(portalDataType);
+
+        ComponentType<ChunkStore, RoomConfigData> roomConfigDataType =
+                this.getChunkStoreRegistry().registerComponent(RoomConfigData.class, "RoomConfigData", RoomConfigData.CODEC);
+        RoomConfigData.setComponentType(roomConfigDataType);
 
         ComponentType<EntityStore, PlayerRef> playerRefComponentType = PlayerRef.getComponentType();
 
@@ -317,6 +328,8 @@ public class UnstableRifts extends JavaPlugin {
             this.partyManager.handleDisconnect(event.getPlayerRef());
             this.cameraService.clearState(event.getPlayerRef());
             this.gameManager.onPlayerDisconnect(event.getPlayerRef());
+            this.portalInteractionService.clearPlayer(event.getPlayerRef().getUuid());
+            PortalPromptHudService.clear(event.getPlayerRef());
             WeaponVirtualItems.onPlayerDisconnect(event.getPlayerRef().getUuid());
             ArmorVirtualItems.onPlayerDisconnect(event.getPlayerRef().getUuid());
             armorSetTracker.removePlayer(event.getPlayerRef().getUuid());
@@ -384,6 +397,11 @@ public class UnstableRifts extends JavaPlugin {
     @Nonnull
     public PortalService getPortalService() {
         return this.portalService;
+    }
+
+    @Nonnull
+    public PortalInteractionService getPortalInteractionService() {
+        return this.portalInteractionService;
     }
 
     @NonNullDecl

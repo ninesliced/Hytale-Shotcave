@@ -172,7 +172,7 @@ public final class ReviveTickSystem extends EntityTickingSystem<EntityStore> {
             }
 
             gameManager.broadcastToParty(game.getPartyId(),
-                    playerName + " is now a ghost. They will be revived when the level is completed.", DungeonConstants.COLOR_GHOST);
+                    playerName + " is now a ghost. They will be revived when the level is completed.");
         }
     }
 
@@ -310,7 +310,7 @@ public final class ReviveTickSystem extends EntityTickingSystem<EntityStore> {
         String deadName = deadInfo.name != null ? deadInfo.name : deadInfo.uuid.toString();
 
         gameManager.broadcastToParty(game.getPartyId(),
-                deadName + " has been revived by " + reviverName + "!", DungeonConstants.COLOR_SUCCESS);
+                deadName + " has been revived by " + reviverName + "!");
     }
 
     private void hideAllHuds(@Nonnull PlayerRef playerRef,
