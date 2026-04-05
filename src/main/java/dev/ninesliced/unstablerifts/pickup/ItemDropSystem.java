@@ -12,6 +12,7 @@ import dev.ninesliced.unstablerifts.armor.ArmorDefinition;
 import dev.ninesliced.unstablerifts.armor.ArmorDefinitions;
 import dev.ninesliced.unstablerifts.guns.WeaponDefinition;
 import dev.ninesliced.unstablerifts.guns.WeaponDefinitions;
+import dev.ninesliced.unstablerifts.shop.ShopDisplayItemComponent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -93,6 +94,9 @@ public final class ItemDropSystem extends RefSystem<EntityStore> {
 
         ItemComponent itemComponent = store.getComponent(ref, ItemComponent.getComponentType());
         if (itemComponent == null) {
+            return;
+        }
+        if (store.getComponent(ref, ShopDisplayItemComponent.getComponentType()) != null) {
             return;
         }
 

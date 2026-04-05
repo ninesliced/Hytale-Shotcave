@@ -9,6 +9,9 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 
+import dev.ninesliced.unstablerifts.shop.ShopItemData;
+import dev.ninesliced.unstablerifts.shop.ShopItemType;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -63,6 +66,15 @@ public final class RoomData {
     // ── Portal ──
     private boolean portalSpawned = false;
     private long portalSpawnedAt = 0L;
+
+    // ── Shop system ──
+    private final List<ShopItemSlot> shopItemSlots = new ArrayList<>();
+    @Nullable
+    private Vector3i shopKeeperPosition;
+    private double shopActionRange = 5.0;
+    private float shopKeeperYaw = 0.0f;
+    private int shopRefreshCost = 0;
+    private int shopRefreshCount = 0;
 
     // ── Lock door prefab blocks (pasted at runtime, removed on clear) ──
     // ── Challenge system ──
@@ -632,6 +644,58 @@ public final class RoomData {
         return pinnedMobSpawns;
     }
 
+    // ── Shop system ──
+
+    @Nullable
+    public Vector3i getShopKeeperPosition() {
+        return shopKeeperPosition;
+    }
+
+    public void setShopKeeperPosition(@Nonnull Vector3i position) {
+        this.shopKeeperPosition = position;
+    }
+
+    public float getShopKeeperYaw() {
+        return shopKeeperYaw;
+    }
+
+    public void setShopKeeperYaw(float yaw) {
+        this.shopKeeperYaw = yaw;
+    }
+
+    public double getShopActionRange() {
+        return shopActionRange;
+    }
+
+    public void setShopActionRange(double range) {
+        this.shopActionRange = range;
+    }
+
+    public int getShopRefreshCost() {
+        return shopRefreshCost;
+    }
+
+    public void setShopRefreshCost(int cost) {
+        this.shopRefreshCost = Math.max(0, cost);
+    }
+
+    public int getShopRefreshCount() {
+        return shopRefreshCount;
+    }
+
+    public void setShopRefreshCount(int count) {
+        this.shopRefreshCount = Math.max(0, count);
+    }
+
+    @Nonnull
+    public List<ShopItemSlot> getShopItemSlots() {
+        return Collections.unmodifiableList(shopItemSlots);
+    }
+
+    public void addShopItemSlot(@Nonnull ShopItemSlot slot) {
+        shopItemSlots.add(slot);
+    }
+
     @Nullable
     private TrackedMob findTrackedMob(@Nonnull Ref<EntityStore> ref, @Nullable UUID refUuid) {
         for (TrackedMob mob : trackedMobs) {
@@ -674,6 +738,18 @@ public final class RoomData {
     }
 
     public record PinnedMobSpawn(@Nonnull Vector3i position, @Nonnull String mobId) {
+    }
+
+    /**
+     * A shop item emplacement parsed from a prefab's ShopItemData block component.
+     */
+    public record ShopItemSlot(@Nonnull Vector3i position,
+                               @Nonnull ShopItemType itemType,
+                               int price,
+                               @Nonnull List<ShopItemData.WeightedEntry> weapons,
+                               @Nonnull List<ShopItemData.WeightedEntry> armors,
+                               @Nonnull String minRarity,
+                               @Nonnull String maxRarity) {
     }
 
     private static final class TrackedMob {

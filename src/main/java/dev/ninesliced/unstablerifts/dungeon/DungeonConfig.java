@@ -44,6 +44,9 @@ public class DungeonConfig {
     @SerializedName("dungeonName")
     private String dungeonName = "UnstableRifts";
 
+    @SerializedName("shopKeeperMobId")
+    private String shopKeeperMobId = "";
+
     // ────────────────────────────────────────────────
     //  Static helpers — config file management
     // ────────────────────────────────────────────────
@@ -251,6 +254,11 @@ public class DungeonConfig {
     @Nonnull
     public String getDungeonName() {
         return dungeonName != null ? dungeonName : "UnstableRifts";
+    }
+
+    @Nonnull
+    public String getShopKeeperMobId() {
+        return shopKeeperMobId != null ? shopKeeperMobId : "";
     }
 
     @Nonnull

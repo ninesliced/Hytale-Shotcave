@@ -69,7 +69,15 @@ public enum MarkerType {
     /**
      * Red Slime block marker.
      */
-    RED_SLIME("UnstableRifts_Red_Slime");
+    RED_SLIME("UnstableRifts_Red_Slime"),
+    /**
+     * Shopkeeper spawn position — NPC spawns here, players interact within action range.
+     */
+    SHOP_KEEPER("UnstableRifts_Shop_Keeper"),
+    /**
+     * Shop item emplacement — defines an item slot sold in the shop.
+     */
+    SHOP_ITEM("UnstableRifts_Shop_Item");
 
     private static final Map<String, MarkerType> BY_BLOCK_NAME = createLookup();
 

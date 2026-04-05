@@ -5,6 +5,8 @@ package dev.ninesliced.unstablerifts.dungeon;
  */
 public final class RotationUtil {
 
+    private static final float HALF_PI = (float) (Math.PI / 2.0);
+
     private RotationUtil() {
     }
 
@@ -42,5 +44,18 @@ public final class RotationUtil {
             case 3 -> x;
             default -> z;
         };
+    }
+
+    public static float rotationIndexToYaw(int rotation) {
+        return switch (rotation & 3) {
+            case 1 -> HALF_PI;
+            case 2 -> HALF_PI * 2.0f;
+            case 3 -> -HALF_PI;
+            default -> 0.0f;
+        };
+    }
+
+    public static double rotationIndexToYawDegrees(int rotation) {
+        return Math.toDegrees(rotationIndexToYaw(rotation));
     }
 }

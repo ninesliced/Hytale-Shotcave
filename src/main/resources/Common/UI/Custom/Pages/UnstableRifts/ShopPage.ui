@@ -1,0 +1,190 @@
+// ─────────────────────────────────────────────
+//  UnstableRifts — Shop Page
+//  Player-facing shop UI for browsing and
+//  purchasing items during a dungeon run.
+// ─────────────────────────────────────────────
+
+@PanelBg = #1a1e26(0.92);
+@TitleColor = #f0d060;
+@LabelColor = #8fa4b8;
+@ValueColor = #e8ecf0;
+@MoneyColor = #f0d060;
+@BtnBg = #2a3040;
+@BtnHover = #3a4560;
+@BtnText = #e8ecf0;
+@BtnDisabledBg = #3a3f48;
+@BtnDisabledText = #9aa3ad;
+@ConfirmBg = #1e2a1e(0.95);
+@ConfirmBtnBg = #2a6030;
+@ConfirmBtnHover = #3a8045;
+@CancelBtnBg = #602a2a;
+@CancelBtnHover = #804040;
+@SepColor = #2a3040;
+@BtnLabelStyle = LabelStyle(FontSize: 12, TextColor: @BtnText, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center);
+@BtnStyle = TextButtonStyle(
+  Default: (Background: @BtnBg, LabelStyle: @BtnLabelStyle),
+  Hovered: (Background: @BtnHover, LabelStyle: @BtnLabelStyle),
+  Pressed: (Background: @BtnBg, LabelStyle: @BtnLabelStyle)
+);
+@BtnDisabledLabelStyle = LabelStyle(FontSize: 12, TextColor: @BtnDisabledText, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center);
+@BtnDisabledStyle = TextButtonStyle(
+  Default: (Background: @BtnDisabledBg, LabelStyle: @BtnDisabledLabelStyle),
+  Hovered: (Background: @BtnDisabledBg, LabelStyle: @BtnDisabledLabelStyle),
+  Pressed: (Background: @BtnDisabledBg, LabelStyle: @BtnDisabledLabelStyle)
+);
+@ConfirmBtnStyle = TextButtonStyle(
+  Default: (Background: @ConfirmBtnBg, LabelStyle: @BtnLabelStyle),
+  Hovered: (Background: @ConfirmBtnHover, LabelStyle: @BtnLabelStyle),
+  Pressed: (Background: @ConfirmBtnBg, LabelStyle: @BtnLabelStyle)
+);
+@CancelBtnStyle = TextButtonStyle(
+  Default: (Background: @CancelBtnBg, LabelStyle: @BtnLabelStyle),
+  Hovered: (Background: @CancelBtnHover, LabelStyle: @BtnLabelStyle),
+  Pressed: (Background: @CancelBtnBg, LabelStyle: @BtnLabelStyle)
+);
+
+Group #ShopPageRoot {
+  Anchor: (Left: 0, Top: 0, Right: 0, Bottom: 0);
+
+  // Overlay background
+  Group {
+    Anchor: (Left: 0, Top: 0, Right: 0, Bottom: 0);
+    Background: #000000(0.5);
+  }
+
+  Group #ShopPageCenter {
+    Anchor: (Width: 460, Height: 520);
+
+    Group #ShopPagePanel {
+      Anchor: (Left: 0, Top: 0, Right: 0, Bottom: 0);
+      Background: @PanelBg;
+      LayoutMode: Top;
+      Padding: (Horizontal: 20, Vertical: 14);
+
+      // ── Header ──
+      Group {
+        Anchor: (Height: 30);
+        LayoutMode: Left;
+
+        Label #ShopTitle {
+          Text: "SHOP";
+          Anchor: (Width: 200, Height: 28);
+          Style: LabelStyle(
+            FontName: "Secondary",
+            FontSize: 17,
+            TextColor: @TitleColor,
+            RenderBold: true,
+            RenderUppercase: true,
+            HorizontalAlignment: Start,
+            VerticalAlignment: Center
+          );
+        }
+
+        Label #ShopMoney {
+          Text: "Coins: 0";
+          Anchor: (Height: 28);
+          FlexWeight: 1;
+          Style: LabelStyle(
+            FontSize: 13,
+            TextColor: @MoneyColor,
+            RenderBold: true,
+            HorizontalAlignment: End,
+            VerticalAlignment: Center
+          );
+        }
+      }
+
+      // ── Separator ──
+      Group {
+        Anchor: (Height: 1, Top: 6);
+        Background: @SepColor;
+      }
+
+      // ── Scrollable Item List ──
+      Group #ShopItemList {
+        Anchor: (Top: 6);
+        FlexWeight: 1;
+        LayoutMode: TopScrolling;
+        Padding: (Right: 6);
+      }
+
+      // ── Bottom Buttons ──
+      Group {
+        Anchor: (Height: 40, Top: 8);
+        LayoutMode: Center;
+
+        Group {
+          Anchor: (Width: 160, Height: 32);
+
+          TextButton #ShopRefreshBtn {
+            Text: "REFRESH";
+            Anchor: (Left: 0, Top: 0, Right: 0, Bottom: 0);
+            Style: @BtnStyle;
+            Visible: false;
+          }
+
+          TextButton #ShopRefreshBtnDisabled {
+            Text: "REFRESH";
+            Anchor: (Left: 0, Top: 0, Right: 0, Bottom: 0);
+            Style: @BtnDisabledStyle;
+            Visible: true;
+          }
+        }
+
+        TextButton #ShopCloseBtn {
+          Text: "CLOSE";
+          Anchor: (Width: 140, Height: 32, Left: 10);
+          Style: @BtnStyle;
+        }
+      }
+    }
+
+    // ── Confirmation Panel (true overlay) ──
+    Group #ShopConfirmPanel {
+      Anchor: (Left: 0, Top: 0, Right: 0, Bottom: 0);
+      Background: #000000(0.6);
+      Visible: false;
+
+      Group {
+        Anchor: (Width: 340, Height: 160);
+        LayoutMode: Middle;
+
+        Group {
+          Anchor: (Width: 340, Height: 160);
+          Background: @ConfirmBg;
+          LayoutMode: Top;
+          Padding: (Horizontal: 20, Vertical: 16);
+
+          Label #ShopConfirmText {
+            Text: "Buy item?";
+            Anchor: (Height: 60);
+            Style: LabelStyle(
+              FontSize: 13,
+              TextColor: @ValueColor,
+              HorizontalAlignment: Center,
+              VerticalAlignment: Center
+            );
+          }
+
+          Group {
+            Anchor: (Height: 40, Top: 14);
+            LayoutMode: Left;
+            Padding: (Horizontal: 20);
+
+            TextButton #ShopConfirmBtn {
+              Text: "CONFIRM";
+              Anchor: (Width: 120, Height: 32);
+              Style: @ConfirmBtnStyle;
+            }
+
+            TextButton #ShopCancelBtn {
+              Text: "CANCEL";
+              Anchor: (Width: 120, Height: 32, Left: 10);
+              Style: @CancelBtnStyle;
+            }
+          }
+        }
+      }
+    }
+  }
+}

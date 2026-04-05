@@ -1,0 +1,252 @@
+// ─────────────────────────────────────────────
+//  UnstableRifts — Shop Item Configuration (Level Designer)
+//  Dropdown-based UI for item type, weapon/armor pool, and rarity.
+// ─────────────────────────────────────────────
+
+$C = "../../Common.ui";
+
+@PanelBg = #1a1e26(0.92);
+@TitleColor = #d9c18a;
+@LabelColor = #8fa4b8;
+@ValueColor = #e8ecf0;
+@SectionColor = #c0a870;
+@BtnBg = #2a3040;
+@BtnHover = #3a4560;
+@BtnText = #e8ecf0;
+@InputBg = #222838;
+@BtnLabelStyle = LabelStyle(FontSize: 12, TextColor: @BtnText, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center);
+@BtnStyle = TextButtonStyle(
+  Default: (Background: @BtnBg, LabelStyle: @BtnLabelStyle),
+  Hovered: (Background: @BtnHover, LabelStyle: @BtnLabelStyle),
+  Pressed: (Background: @BtnBg, LabelStyle: @BtnLabelStyle)
+);
+@SmallBtnLabelStyle = LabelStyle(FontSize: 11, TextColor: @BtnText, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center);
+@SmallBtnStyle = TextButtonStyle(
+  Default: (Background: @BtnBg, LabelStyle: @SmallBtnLabelStyle),
+  Hovered: (Background: @BtnHover, LabelStyle: @SmallBtnLabelStyle),
+  Pressed: (Background: @BtnBg, LabelStyle: @SmallBtnLabelStyle)
+);
+
+Group #ShopItemConfigRoot {
+  Anchor: (Left: 0, Top: 0, Right: 0, Bottom: 0);
+
+  // Overlay background
+  Group {
+    Anchor: (Left: 0, Top: 0, Right: 0, Bottom: 0);
+    Background: #000000(0.5);
+  }
+
+  Group #ShopItemConfigCenter {
+    Anchor: (Width: 420, Height: 540);
+    LayoutMode: Middle;
+
+    Group #ShopItemConfigPanel {
+      Anchor: (Width: 420, Height: 540);
+      Background: @PanelBg;
+      LayoutMode: Top;
+      Padding: (Horizontal: 18, Vertical: 12);
+
+      // ── Title ──
+      Label {
+        Text: "SHOP ITEM CONFIG";
+        Anchor: (Height: 28);
+        Style: LabelStyle(
+          FontSize: 15,
+          TextColor: @TitleColor,
+          RenderBold: true,
+          RenderUppercase: true,
+          HorizontalAlignment: Center,
+          VerticalAlignment: Center
+        );
+      }
+
+      // ── Item Type Selector (prev/next — only 4 values) ──
+      Group {
+        Anchor: (Height: 30, Top: 8);
+        LayoutMode: Left;
+
+        Label {
+          Text: "Item Type";
+          Anchor: (Width: 90, Height: 28);
+          Style: LabelStyle(FontSize: 12, TextColor: @LabelColor, RenderBold: true, HorizontalAlignment: Start, VerticalAlignment: Center);
+        }
+
+        TextButton #ItemTypePrevBtn {
+          Text: "<";
+          Anchor: (Width: 28, Height: 28);
+          Style: @SmallBtnStyle;
+        }
+
+        Label #ItemTypeLabel {
+          Text: "WEAPON";
+          Anchor: (Width: 130, Height: 28);
+          Style: LabelStyle(FontSize: 13, TextColor: @ValueColor, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center);
+        }
+
+        TextButton #ItemTypeNextBtn {
+          Text: ">";
+          Anchor: (Width: 28, Height: 28);
+          Style: @SmallBtnStyle;
+        }
+      }
+
+      // ── Price ──
+      Group {
+        Anchor: (Height: 30, Top: 4);
+        LayoutMode: Left;
+
+        Label {
+          Text: "Price";
+          Anchor: (Width: 90, Height: 28);
+          Style: LabelStyle(FontSize: 12, TextColor: @LabelColor, RenderBold: true, HorizontalAlignment: Start, VerticalAlignment: Center);
+        }
+
+        TextField #PriceInput {
+          PlaceholderText: "10";
+          Anchor: (Width: 186, Height: 26);
+          Style: InputFieldStyle(FontSize: 12, TextColor: @ValueColor);
+          PlaceholderStyle: InputFieldStyle(FontSize: 12, TextColor: #556070);
+          Background: @InputBg;
+          Padding: (Left: 6, Right: 6);
+        }
+      }
+
+      // ── Separator ──
+      Group {
+        Anchor: (Height: 1, Top: 8);
+        Background: #3a4560;
+      }
+
+      // ═══ RARITY SECTION (visible for WEAPON / ARMOR) ═══
+      Group #RaritySection {
+        Anchor: (Top: 4);
+        LayoutMode: Top;
+
+        Label {
+          Text: "RARITY RANGE";
+          Anchor: (Height: 18, Top: 2);
+          Style: LabelStyle(FontSize: 11, TextColor: @SectionColor, RenderBold: true, RenderUppercase: true, HorizontalAlignment: Start, VerticalAlignment: Center);
+        }
+
+        // ── Min Rarity Dropdown ──
+        Group {
+          Anchor: (Height: 32, Top: 4);
+          LayoutMode: Left;
+
+          Label {
+            Text: "Min Rarity";
+            Anchor: (Width: 90, Height: 28);
+            Style: LabelStyle(FontSize: 12, TextColor: @LabelColor, RenderBold: true, HorizontalAlignment: Start, VerticalAlignment: Center);
+          }
+
+          $C.@DropdownBox #MinRarityDropdown {
+            @Anchor = (Width: 280);
+            Value: "";
+          }
+        }
+
+        // ── Max Rarity Dropdown ──
+        Group {
+          Anchor: (Height: 32, Top: 2);
+          LayoutMode: Left;
+
+          Label {
+            Text: "Max Rarity";
+            Anchor: (Width: 90, Height: 28);
+            Style: LabelStyle(FontSize: 12, TextColor: @LabelColor, RenderBold: true, HorizontalAlignment: Start, VerticalAlignment: Center);
+          }
+
+          $C.@DropdownBox #MaxRarityDropdown {
+            @Anchor = (Width: 280);
+            Value: "";
+          }
+        }
+      }
+
+      // ── Separator ──
+      Group {
+        Anchor: (Height: 1, Top: 6);
+        Background: #3a4560;
+      }
+
+      // ═══ WEAPON SECTION (visible for WEAPON type) ═══
+      Group #WeaponSection {
+        Anchor: (Top: 4);
+        LayoutMode: Top;
+
+        Group {
+          Anchor: (Height: 20);
+          LayoutMode: Left;
+
+          Label {
+            Text: "WEAPON POOL";
+            Anchor: (Width: 200, Height: 20);
+            Style: LabelStyle(FontSize: 11, TextColor: @SectionColor, RenderBold: true, RenderUppercase: true, HorizontalAlignment: Start, VerticalAlignment: Center);
+          }
+
+          TextButton #AddWeaponBtn {
+            Text: "+ ADD";
+            Anchor: (Width: 70, Height: 20);
+            Style: @SmallBtnStyle;
+          }
+        }
+
+        Group #WeaponListContainer {
+          Anchor: (Top: 4);
+          LayoutMode: TopScrolling;
+          FlexWeight: 1;
+          Padding: (Right: 4);
+        }
+      }
+
+      // ═══ ARMOR SECTION (visible for ARMOR type) ═══
+      Group #ArmorSection {
+        Anchor: (Top: 4);
+        LayoutMode: Top;
+
+        Group {
+          Anchor: (Height: 20);
+          LayoutMode: Left;
+
+          Label {
+            Text: "ARMOR POOL";
+            Anchor: (Width: 200, Height: 20);
+            Style: LabelStyle(FontSize: 11, TextColor: @SectionColor, RenderBold: true, RenderUppercase: true, HorizontalAlignment: Start, VerticalAlignment: Center);
+          }
+
+          TextButton #AddArmorBtn {
+            Text: "+ ADD";
+            Anchor: (Width: 70, Height: 20);
+            Style: @SmallBtnStyle;
+          }
+        }
+
+        Group #ArmorListContainer {
+          Anchor: (Top: 4);
+          LayoutMode: TopScrolling;
+          FlexWeight: 1;
+          Padding: (Right: 4);
+        }
+      }
+
+      // ── Action Buttons ──
+      Group {
+        Anchor: (Height: 40, Top: 10);
+        LayoutMode: Left;
+        Padding: (Horizontal: 10);
+
+        TextButton #SaveBtn {
+          Text: "SAVE";
+          Anchor: (Width: 140, Height: 32);
+          Style: @BtnStyle;
+        }
+
+        TextButton #CloseBtn {
+          Text: "CLOSE";
+          Anchor: (Width: 140, Height: 32, Left: 10);
+          Style: @BtnStyle;
+        }
+      }
+    }
+  }
+}

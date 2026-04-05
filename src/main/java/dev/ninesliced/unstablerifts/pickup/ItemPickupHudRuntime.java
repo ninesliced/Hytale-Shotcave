@@ -110,40 +110,15 @@ public final class ItemPickupHudRuntime {
                 double radiusSq = ItemPickupConfig.HUD_PROXIMITY_RADIUS
                         * ItemPickupConfig.HUD_PROXIMITY_RADIUS;
 
-                ItemPickupTracker.TrackedItem closest = null;
-                double closestDistSq = Double.MAX_VALUE;
+                ItemPickupTracker.TrackedItem closest =
+                        ItemPickupTracker.findClosestFKeyPickup(ref.getStore(), playerPos, radiusSq);
                 int closestQuantity = 1;
                 ItemStack closestStack = null;
 
-                for (ItemPickupTracker.TrackedItem tracked : ItemPickupTracker.getAll()) {
-                    if (!tracked.isFKeyPickup()) {
-                        continue;
-                    }
-                    if (!tracked.getRef().isValid()) {
-                        continue;
-                    }
-                    if (tracked.getRef().getStore() != ref.getStore()) {
-                        continue;
-                    }
-
-                    Vector3d itemPos = tracked.getPosition(ref.getStore());
-                    if (itemPos == null) {
-                        continue;
-                    }
-
-                    double dx = playerPos.x - itemPos.x;
-                    double dy = playerPos.y - itemPos.y;
-                    double dz = playerPos.z - itemPos.z;
-                    double distSq = dx * dx + dy * dy + dz * dz;
-
-                    if (distSq <= radiusSq && distSq < closestDistSq) {
-                        closestDistSq = distSq;
-                        closest = tracked;
-
-                        ItemStack stack = tracked.getItemStack(ref.getStore());
-                        closestStack = stack;
-                        closestQuantity = (stack != null) ? stack.getQuantity() : 1;
-                    }
+                if (closest != null) {
+                    ItemStack stack = closest.getItemStack(ref.getStore());
+                    closestStack = stack;
+                    closestQuantity = (stack != null) ? stack.getQuantity() : 1;
                 }
 
                 if (closest != null) {

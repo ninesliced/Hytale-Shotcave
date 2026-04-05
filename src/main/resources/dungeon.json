@@ -2,6 +2,7 @@
   "dungeonName": "UnstableRifts",
   "maxPartySize": 4,
   "bossWallBlock": "Stone_Brick_Wall",
+  "shopKeeperMobId": "Klops_Merchant",
   "startEquipment": [
     "Weapon_Pistol_UnstableRifts",
     "Weapon_Crystal_Sword_UnstableRifts"

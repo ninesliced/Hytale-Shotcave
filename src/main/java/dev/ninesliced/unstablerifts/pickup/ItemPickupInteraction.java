@@ -26,6 +26,7 @@ import dev.ninesliced.unstablerifts.armor.ArmorDefinition;
 import dev.ninesliced.unstablerifts.armor.ArmorDefinitions;
 import dev.ninesliced.unstablerifts.armor.ArmorSetTracker;
 import dev.ninesliced.unstablerifts.inventory.InventoryLockService;
+import dev.ninesliced.unstablerifts.shop.ShopDisplayItemComponent;
 import dev.ninesliced.unstablerifts.systems.DeathComponent;
 import org.joml.Vector3d;
 
@@ -93,6 +94,15 @@ public final class ItemPickupInteraction extends SimpleInstantInteraction {
 
         ItemComponent itemComponent = commandBuffer.getComponent(targetRef, ItemComponent.getComponentType());
         if (itemComponent == null) {
+            context.getState().state = InteractionState.Failed;
+            return;
+        }
+        if (commandBuffer.getComponent(targetRef, ShopDisplayItemComponent.getComponentType()) != null) {
+            context.getState().state = InteractionState.Failed;
+            return;
+        }
+        UnstableRifts plugin = UnstableRifts.getInstance();
+        if (plugin != null && plugin.getShopService().isTrackedDisplayRef(targetRef)) {
             context.getState().state = InteractionState.Failed;
             return;
         }

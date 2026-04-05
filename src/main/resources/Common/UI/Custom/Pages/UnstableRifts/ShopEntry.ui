@@ -1,0 +1,97 @@
+// ─────────────────────────────────────────────
+//  UnstableRifts — Shop Entry (template item)
+//  Appended once per item in the shop list.
+// ─────────────────────────────────────────────
+
+@EntryBg = #161a22;
+@LabelColor = #8fa4b8;
+@ValueColor = #e8ecf0;
+@PriceColor = #f0d060;
+@DetailColor = #8fa4b8;
+@SepColor = #2a3040;
+@BuyBtnBg = #2a5030;
+@BuyBtnHover = #3a7045;
+@BuyBtnText = #e8ecf0;
+@BuyBtnLabelStyle = LabelStyle(FontSize: 11, TextColor: @BuyBtnText, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center);
+@BuyBtnStyle = TextButtonStyle(
+  Default: (Background: @BuyBtnBg, LabelStyle: @BuyBtnLabelStyle),
+  Hovered: (Background: @BuyBtnHover, LabelStyle: @BuyBtnLabelStyle),
+  Pressed: (Background: @BuyBtnBg, LabelStyle: @BuyBtnLabelStyle)
+);
+
+Group {
+  Anchor: (Top: 4);
+  LayoutMode: Top;
+  Background: @EntryBg;
+  Padding: (Horizontal: 12, Vertical: 8);
+
+  // ── Top row: name + price + buy button ──
+  Group {
+    Anchor: (Height: 24);
+    LayoutMode: Left;
+
+    Label #ShopEntryName {
+      Text: "Item";
+      Anchor: (Height: 24);
+      FlexWeight: 1;
+      Style: LabelStyle(
+        FontName: "Secondary",
+        FontSize: 13,
+        TextColor: @ValueColor,
+        RenderBold: true,
+        HorizontalAlignment: Start,
+        VerticalAlignment: Center,
+        ShrinkTextToFit: true,
+        MinShrinkTextToFitFontSize: 10
+      );
+    }
+
+    Label #ShopEntryPrice {
+      Text: "0 coins";
+      Anchor: (Width: 80, Height: 24, Left: 6);
+      Style: LabelStyle(
+        FontSize: 12,
+        TextColor: @PriceColor,
+        RenderBold: true,
+        HorizontalAlignment: End,
+        VerticalAlignment: Center
+      );
+    }
+
+    TextButton #ShopEntryBuyBtn {
+      Text: "BUY";
+      Anchor: (Width: 50, Height: 22, Left: 8);
+      Style: @BuyBtnStyle;
+    }
+  }
+
+  // ── Type label ──
+  Label #ShopEntryType {
+    Text: "";
+    Anchor: (Height: 16, Top: 2);
+    Style: LabelStyle(FontSize: 10, TextColor: @LabelColor, HorizontalAlignment: Start, VerticalAlignment: Center);
+  }
+
+  // ── Details (stats, modifiers) ──
+  Group #ShopEntryDetails {
+    Anchor: (Top: 2);
+    LayoutMode: Top;
+
+    // ── Separator ──
+    Group {
+      Anchor: (Height: 1, Top: 2);
+      Background: @SepColor;
+    }
+
+    Label #ShopDetailText {
+      Text: "";
+      Anchor: (Top: 4);
+      Style: LabelStyle(
+        FontSize: 11,
+        TextColor: @DetailColor,
+        HorizontalAlignment: Start,
+        VerticalAlignment: Start
+      );
+    }
+  }
+}

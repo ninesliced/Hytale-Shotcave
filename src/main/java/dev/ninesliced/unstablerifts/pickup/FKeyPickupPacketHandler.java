@@ -37,6 +37,8 @@ import dev.ninesliced.unstablerifts.guns.WeaponDefinitions;
 import dev.ninesliced.unstablerifts.hud.AmmoHudService;
 import dev.ninesliced.unstablerifts.inventory.InventoryLockService;
 import dev.ninesliced.unstablerifts.network.UnstableRiftsPacketIds;
+import dev.ninesliced.unstablerifts.shop.ShopPage;
+import dev.ninesliced.unstablerifts.shop.ShopService;
 import dev.ninesliced.unstablerifts.systems.DeathComponent;
 import org.joml.Vector3d;
 
@@ -91,58 +93,39 @@ public final class FKeyPickupPacketHandler implements PlayerPacketWatcher {
         }
 
         if (ItemPickupTracker.size() == 0) {
+            // Open shop if near a shopkeeper and there is no pickup target competing for F.
+            if (tryOpenShop(playerRef, playerEntityRef, store, playerPos)) {
+                return;
+            }
             return;
         }
 
         double pickupRadiusSq = ItemPickupConfig.ITEM_PICKUP_RADIUS
                 * ItemPickupConfig.ITEM_PICKUP_RADIUS;
 
-        ItemPickupTracker.TrackedItem closest = null;
-        double closestDistSq = Double.MAX_VALUE;
+        ItemPickupTracker.TrackedItem closest =
+                ItemPickupTracker.findClosestFKeyPickup(store, playerPos, pickupRadiusSq);
 
-        for (ItemPickupTracker.TrackedItem tracked : ItemPickupTracker.getAll()) {
-            if (!tracked.isFKeyPickup()) {
-                continue;
+        if (closest != null) {
+            // Special item handling — heal and ammo items apply effects instead of going to inventory.
+            String itemId = closest.getItemId();
+            if ("UnstableRifts_Heal_Item".equals(itemId)) {
+                collectHealItem(closest, player, playerRef, playerEntityRef, store);
+                return;
             }
-            if (!tracked.getRef().isValid()) {
-                continue;
-            }
-            if (tracked.getRef().getStore() != store) {
-                continue;
-            }
-
-            Vector3d itemPos = tracked.getPosition(store);
-            if (itemPos == null) {
-                continue;
+            if ("UnstableRifts_Ammo_Item".equals(itemId)) {
+                collectAmmoItem(closest, player, playerRef, playerEntityRef, store);
+                return;
             }
 
-            double dx = playerPos.x - itemPos.x;
-            double dy = playerPos.y - itemPos.y;
-            double dz = playerPos.z - itemPos.z;
-            double distSq = dx * dx + dy * dy + dz * dz;
-
-            if (distSq <= pickupRadiusSq && distSq < closestDistSq) {
-                closestDistSq = distSq;
-                closest = tracked;
-            }
-        }
-
-        if (closest == null) {
+            collectItem(closest, player, playerRef, playerEntityRef, store);
             return;
         }
 
-        // Special item handling — heal and ammo items apply effects instead of going to inventory.
-        String itemId = closest.getItemId();
-        if ("UnstableRifts_Heal_Item".equals(itemId)) {
-            collectHealItem(closest, player, playerRef, playerEntityRef, store);
+        // Open shop if near a shopkeeper and there is no pickup target competing for F.
+        if (tryOpenShop(playerRef, playerEntityRef, store, playerPos)) {
             return;
         }
-        if ("UnstableRifts_Ammo_Item".equals(itemId)) {
-            collectAmmoItem(closest, player, playerRef, playerEntityRef, store);
-            return;
-        }
-
-        collectItem(closest, player, playerRef, playerEntityRef, store);
     }
 
     /**
@@ -401,6 +384,28 @@ public final class FKeyPickupPacketHandler implements PlayerPacketWatcher {
         }
 
         return unstablerifts.getPortalInteractionService().tryInteract(playerRef, playerPos);
+    }
+
+    private static boolean tryOpenShop(@Nonnull PlayerRef playerRef,
+                                       @Nonnull Ref<EntityStore> playerEntityRef,
+                                       @Nonnull Store<EntityStore> store,
+                                       @Nonnull Vector3d playerPos) {
+        UnstableRifts unstablerifts = UnstableRifts.getInstance();
+        if (unstablerifts == null) return false;
+
+        Game game = unstablerifts.getGameManager().findGameForPlayer(playerRef.getUuid());
+        if (game == null) return false;
+
+        ShopService shopService = unstablerifts.getShopService();
+        ShopService.ShopRoomInventory nearby = shopService.findNearbyShop(game, playerPos);
+        if (nearby == null) return false;
+
+        Player player = store.getComponent(playerEntityRef, Player.getComponentType());
+        if (player == null) return false;
+
+        ShopPage shopPage = new ShopPage(playerRef, game, nearby);
+        player.getPageManager().openCustomPage(playerEntityRef, store, shopPage);
+        return true;
     }
 
     /**

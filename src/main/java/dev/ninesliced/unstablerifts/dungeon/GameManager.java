@@ -310,6 +310,8 @@ public final class GameManager {
 
             Level currentLevel = game.getCurrentLevel();
             if (currentLevel != null) {
+                plugin.getShopService().initializeShops(game, store, config.getShopKeeperMobId());
+
                 // Some rooms may have had mobs pre-spawned during generation.
                 // Only spawn mobs for the remaining rooms.
                 Set<RoomData> preSpawned = game.getPreSpawnedRooms();
@@ -561,8 +563,11 @@ public final class GameManager {
      */
     private void activateLevel(@Nonnull Game game, @Nonnull World world,
                                @Nonnull Level level, int levelIndex) {
+        DungeonConfig config = plugin.loadDungeonConfig();
         world.execute(() -> {
             Store<EntityStore> store = world.getEntityStore().getStore();
+
+            plugin.getShopService().initializeShops(game, store, config.getShopKeeperMobId());
 
             // Spawn mobs in the first few rooms immediately so players can start playing.
             Set<RoomData> earlyRooms = mobSpawningService.spawnEarlyRoomMobs(level, store, EARLY_SPAWN_ROOM_COUNT);
@@ -753,6 +758,7 @@ public final class GameManager {
         }
 
         plugin.getDungeonMapService().cleanup(game.getPartyId());
+        plugin.getShopService().clearGame(game.getPartyId());
         activeGames.remove(game.getPartyId());
 
         if (forced) {

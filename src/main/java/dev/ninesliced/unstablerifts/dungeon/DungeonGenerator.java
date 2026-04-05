@@ -38,6 +38,8 @@ import java.util.logging.Level;
 
 import static dev.ninesliced.unstablerifts.dungeon.RotationUtil.rotateLocalX;
 import static dev.ninesliced.unstablerifts.dungeon.RotationUtil.rotateLocalZ;
+import static dev.ninesliced.unstablerifts.dungeon.RotationUtil.rotationIndexToYaw;
+import static dev.ninesliced.unstablerifts.dungeon.RotationUtil.rotationIndexToYawDegrees;
 
 /**
  * Generates a dungeon level by placing prefab rooms in a structured graph.
@@ -114,6 +116,8 @@ public class DungeonGenerator {
             List<MarkerLocal> markers = new ArrayList<>();
             List<PrefabMobMarkerLocal> mobMarkers = new ArrayList<>();
             List<ConfiguredSpawnerLocal> configuredSpawners = new ArrayList<>();
+            List<ShopKeeperLocal> shopKeepers = new ArrayList<>();
+            List<ShopItemLocal> shopItems = new ArrayList<>();
 
             JsonArray arr = root.getAsJsonArray("blocks");
             if (arr != null) {
@@ -123,13 +127,13 @@ public class DungeonGenerator {
                     int y = b.get("y").getAsInt() - ay;
                     int z = b.get("z").getAsInt() - az;
                     String name = b.has("name") ? b.get("name").getAsString() : "";
+                    int sRot = b.has("rotation") ? b.get("rotation").getAsInt() : 0;
 
                     MarkerType markerType = MarkerType.fromBlockName(name);
                     boolean isMarker;
 
                     if (markerType == MarkerType.EXIT) {
                         isMarker = true;
-                        int sRot = b.has("rotation") ? b.get("rotation").getAsInt() : 0;
                         spawners.add(new SpawnerLocal(x, y, z, sRot));
                     } else if (markerType != null) {
                         isMarker = true;
@@ -160,10 +164,72 @@ public class DungeonGenerator {
                                 }
                             }
                         }
+                        if (markerType == MarkerType.SHOP_KEEPER) {
+                            JsonObject shopKeeperComp = getSerializedComponent(serializedComponents, "ShopKeeperData");
+                            double range = 5.0;
+                            double yawDegrees = rotationIndexToYawDegrees(sRot);
+                            int refreshCost = 0;
+                            int refreshCount = 0;
+                            if (shopKeeperComp != null) {
+                                String rawRange = getSerializedString(shopKeeperComp, "ActionRange");
+                                if (rawRange != null) {
+                                    try {
+                                        range = Double.parseDouble(rawRange);
+                                    } catch (NumberFormatException ignored) {
+                                    }
+                                }
+                                String rawYaw = getSerializedString(shopKeeperComp, "RotationYaw");
+                                if (rawYaw != null) {
+                                    try {
+                                        yawDegrees = Double.parseDouble(rawYaw);
+                                    } catch (NumberFormatException ignored) {
+                                    }
+                                }
+                                String rawRefreshCost = getSerializedString(shopKeeperComp, "RefreshCost");
+                                if (rawRefreshCost != null) {
+                                    try {
+                                        refreshCost = Math.max(0, Integer.parseInt(rawRefreshCost));
+                                    } catch (NumberFormatException ignored) {
+                                    }
+                                }
+                                String rawRefreshCount = getSerializedString(shopKeeperComp, "RefreshCount");
+                                if (rawRefreshCount != null) {
+                                    try {
+                                        refreshCount = Math.max(0, Integer.parseInt(rawRefreshCount));
+                                    } catch (NumberFormatException ignored) {
+                                    }
+                                }
+                            }
+                            shopKeepers.add(new ShopKeeperLocal(x, y, z, range, yawDegrees, refreshCost, refreshCount));
+                        }
+                        if (markerType == MarkerType.SHOP_ITEM) {
+                            JsonObject shopItemComp = getSerializedComponent(serializedComponents, "ShopItemData");
+                            if (shopItemComp != null) {
+                                String type = getSerializedString(shopItemComp, "ItemType");
+                                String rawPrice = getSerializedString(shopItemComp, "Price");
+                                int itemPrice = 10;
+                                if (rawPrice != null) {
+                                    try {
+                                        itemPrice = Integer.parseInt(rawPrice);
+                                    } catch (NumberFormatException ignored) {
+                                    }
+                                }
+                                String weapons = getSerializedString(shopItemComp, "Weapons");
+                                String armors = getSerializedString(shopItemComp, "Armors");
+                                String minRarity = getSerializedString(shopItemComp, "MinRarity");
+                                String maxRarity = getSerializedString(shopItemComp, "MaxRarity");
+                                shopItems.add(new ShopItemLocal(x, y, z,
+                                        type != null ? type : "",
+                                        itemPrice,
+                                        weapons != null ? weapons : "",
+                                        armors != null ? armors : "",
+                                        minRarity != null ? minRarity : "",
+                                        maxRarity != null ? maxRarity : ""));
+                            }
+                        }
                     } else {
                         isMarker = "Prefab_Spawner_Block".equals(name);
                         if (isMarker) {
-                            int sRot = b.has("rotation") ? b.get("rotation").getAsInt() : 0;
                             spawners.add(new SpawnerLocal(x, y, z, sRot));
                         }
                     }
@@ -195,7 +261,8 @@ public class DungeonGenerator {
                 }
             }
 
-            return new PrefabData(blocks, spawners, markers, mobMarkers, configuredSpawners);
+            return new PrefabData(blocks, spawners, markers, mobMarkers, configuredSpawners,
+                    shopKeepers, shopItems);
         } catch (IOException e) {
             LOGGER.at(Level.WARNING).withCause(e).log("Failed to read prefab: %s", path);
             return null;
@@ -1165,6 +1232,32 @@ public class DungeonGenerator {
             }
         }
 
+        for (ShopKeeperLocal sk : data.shopKeepers()) {
+            int wx = pastePos.x + rotateLocalX(sk.x, sk.z, rot);
+            int wy = pastePos.y + sk.y;
+            int wz = pastePos.z + rotateLocalZ(sk.x, sk.z, rot);
+            roomData.setShopKeeperPosition(new Vector3i(wx, wy, wz));
+            roomData.setShopActionRange(sk.actionRange);
+            roomData.setShopKeeperYaw((float) Math.toRadians(sk.yawDegrees) + rotationIndexToYaw(rot));
+            roomData.setShopRefreshCost(sk.refreshCost);
+            roomData.setShopRefreshCount(sk.refreshCount);
+        }
+
+        for (ShopItemLocal si : data.shopItems()) {
+            int wx = pastePos.x + rotateLocalX(si.x, si.z, rot);
+            int wy = pastePos.y + si.y;
+            int wz = pastePos.z + rotateLocalZ(si.x, si.z, rot);
+            dev.ninesliced.unstablerifts.shop.ShopItemType itemType =
+                    dev.ninesliced.unstablerifts.shop.ShopItemType.fromString(si.itemType);
+            if (itemType != null) {
+                roomData.addShopItemSlot(new RoomData.ShopItemSlot(
+                        new Vector3i(wx, wy, wz), itemType, si.price,
+                        dev.ninesliced.unstablerifts.shop.ShopItemData.parseWeightedEntriesStatic(si.weapons),
+                        dev.ninesliced.unstablerifts.shop.ShopItemData.parseWeightedEntriesStatic(si.armors),
+                        si.minRarity, si.maxRarity));
+            }
+        }
+
         for (Vector3i pos : roomData.getActivationZonePositions()) {
             roomData.addChallenge(new ChallengeObjective(ChallengeObjective.Type.ACTIVATION_ZONE, pos));
         }
@@ -1476,6 +1569,19 @@ public class DungeonGenerator {
         fluidSection.setFluid(x, y, z, fluidId, level);
     }
 
+    @Nonnull
+    private static List<String> parseCommaSeparated(@Nullable String raw) {
+        List<String> result = new ArrayList<>();
+        if (raw == null || raw.isBlank()) return result;
+        for (String part : raw.split(",")) {
+            String trimmed = part.trim();
+            if (!trimmed.isEmpty()) {
+                result.add(trimmed);
+            }
+        }
+        return result;
+    }
+
     private record SpawnerLocal(int x, int y, int z, int rot) {
     }
 
@@ -1496,9 +1602,24 @@ public class DungeonGenerator {
                                           @Nonnull String mobEntries, int spawnCount) {
     }
 
+    private record ShopKeeperLocal(int x, int y, int z,
+                                   double actionRange,
+                                   double yawDegrees,
+                                   int refreshCost,
+                                   int refreshCount) {
+    }
+
+    private record ShopItemLocal(int x, int y, int z,
+                                 @Nonnull String itemType, int price,
+                                 @Nonnull String weapons, @Nonnull String armors,
+                                 @Nonnull String minRarity, @Nonnull String maxRarity) {
+    }
+
     private record PrefabData(List<BlockLocal> blocks, List<SpawnerLocal> spawners,
                               List<MarkerLocal> markers, List<PrefabMobMarkerLocal> mobMarkers,
-                              List<ConfiguredSpawnerLocal> configuredSpawners) {
+                              List<ConfiguredSpawnerLocal> configuredSpawners,
+                              List<ShopKeeperLocal> shopKeepers,
+                              List<ShopItemLocal> shopItems) {
     }
 
     private record OpenExit(int worldX, int worldY, int worldZ, int rotation) {

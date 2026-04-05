@@ -1,0 +1,157 @@
+// ─────────────────────────────────────────────
+//  UnstableRifts — Shop Keeper Configuration (Level Designer)
+// ─────────────────────────────────────────────
+
+@PanelBg = #1a1e26(0.92);
+@TitleColor = #d9c18a;
+@LabelColor = #8fa4b8;
+@ValueColor = #e8ecf0;
+@BtnBg = #2a3040;
+@BtnHover = #3a4560;
+@BtnText = #e8ecf0;
+@InputBg = #222838;
+@BtnLabelStyle = LabelStyle(FontSize: 12, TextColor: @BtnText, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center);
+@BtnStyle = TextButtonStyle(
+  Default: (Background: @BtnBg, LabelStyle: @BtnLabelStyle),
+  Hovered: (Background: @BtnHover, LabelStyle: @BtnLabelStyle),
+  Pressed: (Background: @BtnBg, LabelStyle: @BtnLabelStyle)
+);
+
+Group #ShopKeeperConfigRoot {
+  Anchor: (Left: 0, Top: 0, Right: 0, Bottom: 0);
+
+  // Overlay background
+  Group {
+    Anchor: (Left: 0, Top: 0, Right: 0, Bottom: 0);
+    Background: #000000(0.5);
+  }
+
+  Group #ShopKeeperConfigCenter {
+    Anchor: (Width: 340, Height: 322);
+    LayoutMode: Middle;
+
+    Group #ShopKeeperConfigPanel {
+      Anchor: (Width: 340, Height: 322);
+      Background: @PanelBg;
+      LayoutMode: Top;
+      Padding: (Horizontal: 20, Vertical: 14);
+
+      // ── Title ──
+      Label {
+        Text: "SHOP KEEPER CONFIG";
+        Anchor: (Height: 28);
+        Style: LabelStyle(
+          FontSize: 15,
+          TextColor: @TitleColor,
+          RenderBold: true,
+          RenderUppercase: true,
+          HorizontalAlignment: Center,
+          VerticalAlignment: Center
+        );
+      }
+
+      // ── Action Range ──
+      Group {
+        Anchor: (Height: 30, Top: 12);
+        LayoutMode: Left;
+
+        Label {
+          Text: "Action Range";
+          Anchor: (Width: 120, Height: 28);
+          Style: LabelStyle(FontSize: 12, TextColor: @LabelColor, RenderBold: true, HorizontalAlignment: Start, VerticalAlignment: Center);
+        }
+
+        TextField #ActionRangeInput {
+          PlaceholderText: "5.0";
+          Anchor: (Width: 160, Height: 26);
+          Style: InputFieldStyle(FontSize: 12, TextColor: @ValueColor);
+          PlaceholderStyle: InputFieldStyle(FontSize: 12, TextColor: #556070);
+          Background: @InputBg;
+          Padding: (Left: 6, Right: 6);
+        }
+      }
+
+      // ── NPC Rotation ──
+      Group {
+        Anchor: (Height: 30, Top: 10);
+        LayoutMode: Left;
+
+        Label {
+          Text: "NPC Yaw (deg)";
+          Anchor: (Width: 120, Height: 28);
+          Style: LabelStyle(FontSize: 12, TextColor: @LabelColor, RenderBold: true, HorizontalAlignment: Start, VerticalAlignment: Center);
+        }
+
+        TextField #RotationYawInput {
+          PlaceholderText: "0";
+          Anchor: (Width: 160, Height: 26);
+          Style: InputFieldStyle(FontSize: 12, TextColor: @ValueColor);
+          PlaceholderStyle: InputFieldStyle(FontSize: 12, TextColor: #556070);
+          Background: @InputBg;
+          Padding: (Left: 6, Right: 6);
+        }
+      }
+
+      // ── Refresh Cost ──
+      Group {
+        Anchor: (Height: 30, Top: 10);
+        LayoutMode: Left;
+
+        Label {
+          Text: "Refresh Cost";
+          Anchor: (Width: 120, Height: 28);
+          Style: LabelStyle(FontSize: 12, TextColor: @LabelColor, RenderBold: true, HorizontalAlignment: Start, VerticalAlignment: Center);
+        }
+
+        TextField #RefreshCostInput {
+          PlaceholderText: "0";
+          Anchor: (Width: 160, Height: 26);
+          Style: InputFieldStyle(FontSize: 12, TextColor: @ValueColor);
+          PlaceholderStyle: InputFieldStyle(FontSize: 12, TextColor: #556070);
+          Background: @InputBg;
+          Padding: (Left: 6, Right: 6);
+        }
+      }
+
+      // ── Refresh Uses ──
+      Group {
+        Anchor: (Height: 30, Top: 10);
+        LayoutMode: Left;
+
+        Label {
+          Text: "Refresh Uses";
+          Anchor: (Width: 120, Height: 28);
+          Style: LabelStyle(FontSize: 12, TextColor: @LabelColor, RenderBold: true, HorizontalAlignment: Start, VerticalAlignment: Center);
+        }
+
+        TextField #RefreshCountInput {
+          PlaceholderText: "0";
+          Anchor: (Width: 160, Height: 26);
+          Style: InputFieldStyle(FontSize: 12, TextColor: @ValueColor);
+          PlaceholderStyle: InputFieldStyle(FontSize: 12, TextColor: #556070);
+          Background: @InputBg;
+          Padding: (Left: 6, Right: 6);
+        }
+      }
+
+      // ── Action Buttons ──
+      Group {
+        Anchor: (Height: 40, Top: 16);
+        LayoutMode: Left;
+        Padding: (Horizontal: 10);
+
+        TextButton #SaveBtn {
+          Text: "SAVE";
+          Anchor: (Width: 120, Height: 32);
+          Style: @BtnStyle;
+        }
+
+        TextButton #CloseBtn {
+          Text: "CLOSE";
+          Anchor: (Width: 120, Height: 32, Left: 10);
+          Style: @BtnStyle;
+        }
+      }
+    }
+  }
+}

@@ -6,6 +6,8 @@ import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.item.ItemComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import dev.ninesliced.unstablerifts.UnstableRifts;
+import dev.ninesliced.unstablerifts.shop.ShopDisplayItemComponent;
 import org.joml.Vector3d;
 
 import javax.annotation.Nonnull;
@@ -56,6 +58,50 @@ public final class ItemPickupTracker {
 
     public static int size() {
         return TRACKED.size();
+    }
+
+    @Nullable
+    public static TrackedItem findClosestFKeyPickup(@Nonnull Store<EntityStore> store,
+                                                    @Nonnull Vector3d playerPos,
+                                                    double maxDistanceSq) {
+        TrackedItem closest = null;
+        double closestDistSq = Double.MAX_VALUE;
+
+        for (TrackedItem tracked : TRACKED.values()) {
+            if (!tracked.isFKeyPickup()) {
+                continue;
+            }
+            if (!tracked.ref.isValid()) {
+                continue;
+            }
+            if (tracked.ref.getStore() != store) {
+                continue;
+            }
+            if (store.getComponent(tracked.ref, ShopDisplayItemComponent.getComponentType()) != null) {
+                continue;
+            }
+            UnstableRifts plugin = UnstableRifts.getInstance();
+            if (plugin != null && plugin.getShopService().isTrackedDisplayRef(tracked.ref)) {
+                continue;
+            }
+
+            Vector3d itemPos = tracked.getPosition(store);
+            if (itemPos == null) {
+                continue;
+            }
+
+            double dx = playerPos.x - itemPos.x;
+            double dy = playerPos.y - itemPos.y;
+            double dz = playerPos.z - itemPos.z;
+            double distSq = dx * dx + dy * dy + dz * dz;
+
+            if (distSq <= maxDistanceSq && distSq < closestDistSq) {
+                closest = tracked;
+                closestDistSq = distSq;
+            }
+        }
+
+        return closest;
     }
 
     @Nonnull

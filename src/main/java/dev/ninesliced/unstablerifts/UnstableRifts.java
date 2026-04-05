@@ -38,6 +38,7 @@ import dev.ninesliced.unstablerifts.inventory.SlotSwitchBlockSystem;
 import dev.ninesliced.unstablerifts.party.PartyManager;
 import dev.ninesliced.unstablerifts.party.UnstableRiftsPartyPageSupplier;
 import dev.ninesliced.unstablerifts.pickup.*;
+import dev.ninesliced.unstablerifts.shop.*;
 import dev.ninesliced.unstablerifts.systems.*;
 import dev.ninesliced.unstablerifts.tooltip.ArmorTooltipAdapter;
 import dev.ninesliced.unstablerifts.tooltip.ArmorVirtualItems;
@@ -61,6 +62,7 @@ public class UnstableRifts extends JavaPlugin {
     private final AmmoHudRuntime ammoHudRuntime = new AmmoHudRuntime();
     private final ItemPickupHudRuntime itemPickupHudRuntime = new ItemPickupHudRuntime();
     private final RevivePromptHudRuntime revivePromptHudRuntime = new RevivePromptHudRuntime();
+    private final ShopPromptHudRuntime shopPromptHudRuntime = new ShopPromptHudRuntime();
 
     // Core gameplay services
     private final InventoryLockService inventoryLockService = new InventoryLockService();
@@ -72,6 +74,7 @@ public class UnstableRifts extends JavaPlugin {
     private final DoorService doorService = new DoorService();
     private final PortalService portalService = new PortalService();
     private final PortalInteractionService portalInteractionService = new PortalInteractionService(this);
+    private final ShopService shopService = new ShopService();
 
     private Path dungeonConfigPath;
 
@@ -111,6 +114,7 @@ public class UnstableRifts extends JavaPlugin {
         this.itemPickupHudRuntime.stop();
         this.revivePromptHudRuntime.stop();
         this.ammoHudRuntime.stop();
+        this.shopPromptHudRuntime.stop();
         this.portalInteractionService.clearAll();
         PortalPromptHudService.clearAll();
         this.gameManager.shutdown();
@@ -124,6 +128,7 @@ public class UnstableRifts extends JavaPlugin {
         ammoHudRuntime.onPlayerConnect(playerRef);
         itemPickupHudRuntime.onPlayerConnect(playerRef);
         revivePromptHudRuntime.onPlayerConnect(playerRef);
+        shopPromptHudRuntime.onPlayerConnect(playerRef);
         portalInteractionService.clearPlayer(playerRef.getUuid());
         PortalPromptHudService.clear(playerRef);
         gameManager.onPlayerConnect(playerRef);
@@ -184,7 +189,9 @@ public class UnstableRifts extends JavaPlugin {
                 .register("UnstableRiftsDoorConfig", DoorConfigPageSupplier.class, DoorConfigPageSupplier.CODEC)
                 .register("UnstableRiftsPortalConfig", PortalConfigPageSupplier.class, PortalConfigPageSupplier.CODEC)
                 .register("UnstableRiftsMobSpawnerConfig", MobSpawnerConfigPageSupplier.class, MobSpawnerConfigPageSupplier.CODEC)
-                .register("UnstableRiftsRoomConfig", RoomConfigPageSupplier.class, RoomConfigPageSupplier.CODEC);
+                .register("UnstableRiftsRoomConfig", RoomConfigPageSupplier.class, RoomConfigPageSupplier.CODEC)
+                .register("UnstableRiftsShopKeeperConfig", ShopKeeperConfigPageSupplier.class, ShopKeeperConfigPageSupplier.CODEC)
+                .register("UnstableRiftsShopItemConfig", ShopItemConfigPageSupplier.class, ShopItemConfigPageSupplier.CODEC);
     }
 
     private void registerInteractions() {
@@ -228,6 +235,14 @@ public class UnstableRifts extends JavaPlugin {
                 this.getChunkStoreRegistry().registerComponent(RoomConfigData.class, "RoomConfigData", RoomConfigData.CODEC);
         RoomConfigData.setComponentType(roomConfigDataType);
 
+        ComponentType<ChunkStore, ShopKeeperData> shopKeeperDataType =
+                this.getChunkStoreRegistry().registerComponent(ShopKeeperData.class, "ShopKeeperData", ShopKeeperData.CODEC);
+        ShopKeeperData.setComponentType(shopKeeperDataType);
+
+        ComponentType<ChunkStore, ShopItemData> shopItemDataType =
+                this.getChunkStoreRegistry().registerComponent(ShopItemData.class, "ShopItemData", ShopItemData.CODEC);
+        ShopItemData.setComponentType(shopItemDataType);
+
         ComponentType<EntityStore, PlayerRef> playerRefComponentType = PlayerRef.getComponentType();
 
         ComponentType<EntityStore, DeathComponent> deathComponentType =
@@ -249,6 +264,10 @@ public class UnstableRifts extends JavaPlugin {
         ComponentType<EntityStore, ArmorChargeComponent> armorChargeComponentType =
                 this.getEntityStoreRegistry().registerComponent(ArmorChargeComponent.class, ArmorChargeComponent::new);
         ArmorChargeComponent.setComponentType(armorChargeComponentType);
+
+        ComponentType<EntityStore, ShopDisplayItemComponent> shopDisplayItemComponentType =
+                this.getEntityStoreRegistry().registerComponent(ShopDisplayItemComponent.class, ShopDisplayItemComponent::new);
+        ShopDisplayItemComponent.setComponentType(shopDisplayItemComponentType);
 
         return new RegisteredComponentTypes(playerRefComponentType, deathComponentType, rollComponentType, armorChargeComponentType);
     }
@@ -291,6 +310,7 @@ public class UnstableRifts extends JavaPlugin {
         this.getEntityStoreRegistry().registerSystem(new PrefabSpawnTrackingSystem());
         this.getEntityStoreRegistry().registerSystem(new MobDeathTrackingSystem());
         this.getEntityStoreRegistry().registerSystem(new NPCScaleHolderSystem());
+        this.getEntityStoreRegistry().registerSystem(new ShopDisplayCleanupSystem());
 
         this.getEntityStoreRegistry().registerSystem(
                 new DeathPlayerAddedSystem(componentTypes.playerRefComponentType(), componentTypes.deathComponentType()));
@@ -337,6 +357,7 @@ public class UnstableRifts extends JavaPlugin {
             this.cameraService.clearState(event.getPlayerRef());
             this.portalInteractionService.clearPlayer(event.getPlayerRef().getUuid());
             PortalPromptHudService.clear(event.getPlayerRef());
+            ShopPromptHudService.clear(event.getPlayerRef());
             WeaponVirtualItems.onPlayerDisconnect(event.getPlayerRef().getUuid());
             ArmorVirtualItems.onPlayerDisconnect(event.getPlayerRef().getUuid());
             armorSetTracker.removePlayer(event.getPlayerRef().getUuid());
@@ -352,6 +373,7 @@ public class UnstableRifts extends JavaPlugin {
         this.ammoHudRuntime.start(this);
         this.itemPickupHudRuntime.start(this);
         this.revivePromptHudRuntime.start(this);
+        this.shopPromptHudRuntime.start(this);
     }
 
     @Nonnull
@@ -409,6 +431,11 @@ public class UnstableRifts extends JavaPlugin {
     @Nonnull
     public PortalInteractionService getPortalInteractionService() {
         return this.portalInteractionService;
+    }
+
+    @Nonnull
+    public ShopService getShopService() {
+        return this.shopService;
     }
 
     @NonNullDecl

@@ -457,6 +457,16 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
         // Broadcast enter message for the new room.
         broadcastRoomMessage(unstablerifts, game, room.getEnterTitle(), room.getEnterSubtitle());
 
+        if (room.getType() == RoomType.SHOP) {
+            World world = game.getInstanceWorld();
+            if (world != null) {
+                world.execute(() -> {
+                    Store<EntityStore> roomStore = world.getEntityStore().getStore();
+                    unstablerifts.getShopService().refreshOnFirstRoomEntry(game, room, roomStore);
+                });
+            }
+        }
+
         // Player just entered a new room — check if it's locked.
         if (room.isLocked() && !room.isCleared() && !room.isDoorsSealed()) {
             DungeonConfig.LevelConfig levelConfig = null;

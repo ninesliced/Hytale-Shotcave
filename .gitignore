@@ -36,3 +36,7 @@ UnstableRifts.code-workspace
 
 /server/
 /bin/
+
+# Hytale prefabs
+*.lpf
+*.bak

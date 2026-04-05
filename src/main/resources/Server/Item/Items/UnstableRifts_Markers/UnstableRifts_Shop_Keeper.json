@@ -1,0 +1,53 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.UnstableRifts_Shop_Keeper.name",
+    "Description": "server.items.UnstableRifts_Shop_Keeper.description"
+  },
+  "Icon": "Icons/ItemsGenerated/UnstableRifts_Marker_Shop_Keeper.png",
+  "Quality": "Technical",
+  "Categories": [
+    "Tool.Block"
+  ],
+  "BlockType": {
+    "DrawType": "Cube",
+    "Textures": [
+      {
+        "Weight": 1,
+        "All": "BlockTextures/UnstableRifts_Marker_Shop_Keeper.png"
+      }
+    ],
+    "Opacity": "Transparent",
+    "Group": "@Tech",
+    "State": {
+      "Id": "unstablerifts_shop_keeper"
+    },
+    "Flags": {
+      "IsUsable": true
+    },
+    "Interactions": {
+      "Use": {
+        "Interactions": [
+          {
+            "Type": "OpenCustomUI",
+            "Page": {
+              "Id": "UnstableRiftsShopKeeperConfig"
+            }
+          }
+        ]
+      }
+    },
+    "BlockParticleSetId": "Stone",
+    "BlockSoundSetId": "Stone"
+  },
+  "PlayerAnimationsId": "Block",
+  "Tags": {
+    "Type": [
+      "DungeonMarker",
+      "UnstableRifts"
+    ],
+    "Marker": [
+      "ShopKeeper"
+    ]
+  },
+  "ItemSoundSetId": "ISS_Blocks_Stone"
+}
