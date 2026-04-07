@@ -2,7 +2,7 @@
   "TranslationProperties": {
     "Name": "server.items.UnstableRifts_Heal_Item.name"
   },
-  "Icon": "Icons/ItemsGenerated/UnstableRifts_Heal_Item.png",
+  "Icon": "Icons/ItemsGenerated/heart.png",
   "Model": "Items/Consumable/heart/Heart.blockymodel",
   "Texture": "Items/Consumable/heart/Heart.png",
   "Scale": 2.8,

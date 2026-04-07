@@ -2,7 +2,7 @@
   "TranslationProperties": {
     "Name": "server.items.UnstableRifts_Props_Coin.name"
   },
-  "Icon": "Icons/ItemsGenerated/Ingredient_Bar_Gold.png",
+  "Icon": "Icons/ItemsGenerated/coin.png",
   "Model": "Items/Consumable/coin/Coin.blockymodel",
   "Texture": "Items/Consumable/coin/Coin.png",
   "Scale": 2.8,

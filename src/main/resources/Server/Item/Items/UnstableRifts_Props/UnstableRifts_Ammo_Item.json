@@ -2,7 +2,7 @@
   "TranslationProperties": {
     "Name": "server.items.UnstableRifts_Ammo_Item.name"
   },
-  "Icon": "Icons/ItemsGenerated/UnstableRifts_Ammo_Item.png",
+  "Icon": "Icons/ItemsGenerated/ammo.png",
   "Model": "Items/Consumable/ammo/Ammo.blockymodel",
   "Texture": "Items/Consumable/ammo/AmmoBox.png",
   "Scale": 2.8,
