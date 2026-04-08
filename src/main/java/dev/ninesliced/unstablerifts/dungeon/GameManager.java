@@ -6,7 +6,6 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.math.vector.Transform;
-import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
@@ -361,7 +360,6 @@ public final class GameManager {
                     }
                 }
 
-                broadcastKeyLocationsToParty(game, currentLevel);
             }
         });
 
@@ -626,7 +624,6 @@ public final class GameManager {
             game.setBossRoomSealed(false);
             plugin.getDungeonMapService().buildMap(game);
             PartyUiPage.refreshOpenPages();
-            broadcastKeyLocationsToParty(game, level);
             LOGGER.info("Activated level '" + level.getName() + "' (index " + levelIndex
                     + ") for party " + game.getPartyId());
 
@@ -2000,36 +1997,6 @@ public final class GameManager {
                     PlayerEventNotifier.showEventTitle(playerRef, title, subtitle, true);
                 }
             }
-        }
-    }
-
-    private void broadcastChatToParty(@Nonnull UUID partyId, @Nonnull String text) {
-        for (Map.Entry<UUID, UUID> entry : playerToParty.entrySet()) {
-            if (!entry.getValue().equals(partyId)) {
-                continue;
-            }
-
-            PlayerRef playerRef = Universe.get().getPlayer(entry.getKey());
-            if (playerRef != null) {
-                playerRef.sendMessage(Message.raw(text));
-            }
-        }
-    }
-
-    private void broadcastKeyLocationsToParty(@Nonnull Game game, @Nonnull Level level) {
-        List<Vector3i> keySpawnPositions = level.getKeySpawnPositions();
-        if (keySpawnPositions.isEmpty()) {
-            broadcastChatToParty(game.getPartyId(),
-                    "[DEBUG] Level " + (level.getIndex() + 1) + " has no spawned keys.");
-            return;
-        }
-
-        for (int i = 0; i < keySpawnPositions.size(); i++) {
-            Vector3i pos = keySpawnPositions.get(i);
-            broadcastChatToParty(game.getPartyId(),
-                    "[DEBUG] Level " + (level.getIndex() + 1)
-                            + " key " + (i + 1) + "/" + keySpawnPositions.size()
-                            + " at (" + pos.x + ", " + pos.y + ", " + pos.z + ")");
         }
     }
 
