@@ -33,9 +33,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
-import static dev.ninesliced.unstablerifts.dungeon.RotationUtil.rotateLocalX;
-import static dev.ninesliced.unstablerifts.dungeon.RotationUtil.rotateLocalZ;
-
 /**
  * Orchestrates the dungeon game lifecycle: generation, start, boss, end, cleanup.
  */
@@ -385,13 +382,10 @@ public final class GameManager {
         DungeonConfig.LevelConfig levelConfig = resolveCurrentLevelConfig(config, game);
 
         world.execute(() -> {
-            // Seal boss room — prefer door positions from prefab, fall back to hardcoded.
-            if (!bossRoom.getDoorPositions().isEmpty()) {
-                String doorBlock = levelConfig != null ? levelConfig.getDoorBlock() : DungeonConstants.DEFAULT_DOOR_BLOCK;
-                plugin.getDoorService().sealRoom(bossRoom, world, doorBlock);
-                game.setBossRoomSealed(true);
-            } else {
-                sealBossRoom(game, bossRoom, world);
+            if (!sealBossRoom(game, bossRoom, world, levelConfig)) {
+                LOGGER.warning("Boss room " + bossRoom.getAnchor()
+                        + " has no configured door prefabs to seal for level "
+                        + (levelConfig != null ? levelConfig.getSelector() : "<unknown>"));
             }
         });
     }
@@ -1749,50 +1743,29 @@ public final class GameManager {
     //  Boss room sealing
     // ────────────────────────────────────────────────
 
-    private void sealBossRoom(@Nonnull Game game, @Nonnull RoomData bossRoom, @Nonnull World world) {
-        if (game.isBossRoomSealed()) return;
-
-        Vector3i anchor = bossRoom.getAnchor();
-        int rotation = bossRoom.getRotation();
-        DungeonConfig config = plugin.loadDungeonConfig();
-        String wallBlock = config.getBossWallBlock();
-
-        for (int dx = -2; dx <= 2; dx++) {
-            for (int dy = 0; dy < 4; dy++) {
-                try {
-                    int wx = anchor.x + rotateLocalX(dx, -1, rotation);
-                    int wz = anchor.z + rotateLocalZ(dx, -1, rotation);
-                    world.setBlock(wx, anchor.y + dy, wz, wallBlock, 0);
-                } catch (Exception e) {
-                    LOGGER.log(java.util.logging.Level.FINE, "Failed to seal block at offset " + dx + "," + dy, e);
-                }
-            }
+    private boolean sealBossRoom(@Nonnull Game game,
+                                 @Nonnull RoomData bossRoom,
+                                 @Nonnull World world,
+                                 @Nullable DungeonConfig.LevelConfig levelConfig) {
+        if (game.isBossRoomSealed() || levelConfig == null) {
+            return false;
         }
 
+        boolean sealed = DungeonGenerator.pasteConfiguredDoorMarkers(
+                world,
+                levelConfig,
+                bossRoom,
+                EnumSet.of(DoorMode.ACTIVATOR),
+                false);
+        sealed = DungeonGenerator.pasteSealDoorsAtRoomExits(world, levelConfig, bossRoom) || sealed;
+        if (!sealed) {
+            return false;
+        }
+
+        bossRoom.setDoorsSealed(true);
         game.setBossRoomSealed(true);
-        LOGGER.info("Boss room sealed at " + anchor);
-    }
-
-    private void unsealBossRoom(@Nonnull Game game, @Nullable RoomData bossRoom, @Nonnull World world) {
-        if (!game.isBossRoomSealed() || bossRoom == null) return;
-
-        Vector3i anchor = bossRoom.getAnchor();
-        int rotation = bossRoom.getRotation();
-
-        for (int dx = -2; dx <= 2; dx++) {
-            for (int dy = 0; dy < 4; dy++) {
-                try {
-                    int wx = anchor.x + rotateLocalX(dx, -1, rotation);
-                    int wz = anchor.z + rotateLocalZ(dx, -1, rotation);
-                    world.setBlock(wx, anchor.y + dy, wz, DungeonConstants.EMPTY_BLOCK, 0);
-                } catch (Exception e) {
-                    LOGGER.log(java.util.logging.Level.FINE, "Failed to unseal block at offset " + dx + "," + dy, e);
-                }
-            }
-        }
-
-        game.setBossRoomSealed(false);
-        LOGGER.info("Boss room unsealed at " + anchor);
+        LOGGER.info("Boss room sealed at " + bossRoom.getAnchor());
+        return true;
     }
 
     // ────────────────────────────────────────────────
