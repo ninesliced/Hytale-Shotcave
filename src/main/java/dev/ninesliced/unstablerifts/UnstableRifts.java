@@ -27,6 +27,7 @@ import dev.ninesliced.unstablerifts.command.UnstableRiftsCommand;
 import dev.ninesliced.unstablerifts.crate.CrateBreakDropSystem;
 import dev.ninesliced.unstablerifts.crate.DestructibleBlockConfig;
 import dev.ninesliced.unstablerifts.dungeon.*;
+import dev.ninesliced.unstablerifts.dungeon.map.DungeonMapLegendService;
 import dev.ninesliced.unstablerifts.dungeon.map.DungeonMapService;
 import dev.ninesliced.unstablerifts.guns.WeaponRegistry;
 import dev.ninesliced.unstablerifts.hud.AmmoHudRuntime;
@@ -72,7 +73,8 @@ public class UnstableRifts extends JavaPlugin {
     private final PartyManager partyManager = new PartyManager(this);
     private final ArmorSetTracker armorSetTracker = new ArmorSetTracker();
     private final GameManager gameManager = new GameManager(this);
-    private final DungeonMapService dungeonMapService = new DungeonMapService();
+    private final DungeonMapLegendService dungeonMapLegendService = new DungeonMapLegendService();
+    private final DungeonMapService dungeonMapService = new DungeonMapService(this.dungeonMapLegendService);
     private final DoorService doorService = new DoorService();
     private final PortalService portalService = new PortalService();
     private final PortalInteractionService portalInteractionService = new PortalInteractionService(this);
@@ -429,6 +431,11 @@ public class UnstableRifts extends JavaPlugin {
     @Nonnull
     public DungeonMapService getDungeonMapService() {
         return this.dungeonMapService;
+    }
+
+    @Nonnull
+    public DungeonMapLegendService getDungeonMapLegendService() {
+        return this.dungeonMapLegendService;
     }
 
     @Nonnull

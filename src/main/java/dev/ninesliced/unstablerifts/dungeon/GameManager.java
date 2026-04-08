@@ -1261,6 +1261,7 @@ public final class GameManager {
         DeathStateController.clear(store, ref);
         playerStateService.resetPlayerStatus(player, ref, store);
 
+        plugin.getDungeonMapLegendService().clear(playerRef);
         plugin.getCameraService().restoreDefault(playerRef);
         playerStateService.hideDungeonHuds(player, playerRef);
         plugin.getInventoryLockService().unlock(player, playerId);
@@ -1587,6 +1588,7 @@ public final class GameManager {
                 + " gamePlayerDead=" + gamePlayerDead
                 + " deleteAfterRestore=" + (game == null || game.getState() == GameState.COMPLETE));
 
+        plugin.getDungeonMapLegendService().clear(playerRef);
         plugin.getCameraService().restoreDefault(playerRef);
         playerStateService.hideDungeonHuds(player, playerRef);
         plugin.getInventoryLockService().unlock(player, playerId);

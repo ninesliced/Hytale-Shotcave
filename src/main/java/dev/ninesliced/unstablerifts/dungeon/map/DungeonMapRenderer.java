@@ -34,9 +34,17 @@ public final class DungeonMapRenderer {
     private DungeonMapRenderer() {
     }
 
+    @Nonnull
+    public static String getLegendColorHex(@Nonnull RoomType roomType) {
+        return toHex(roomColor(roomType, false));
+    }
+
     private static int roomColor(@Nonnull RoomData room) {
-        boolean dim = room.isCleared();
-        return switch (room.getType()) {
+        return roomColor(room.getType(), room.isCleared());
+    }
+
+    private static int roomColor(@Nonnull RoomType roomType, boolean dim) {
+        return switch (roomType) {
             case SPAWN -> dim ? COLOR_SPAWN_DIM : COLOR_SPAWN;
             case CORRIDOR -> dim ? COLOR_CORRIDOR_DIM : COLOR_CORRIDOR;
             case CHALLENGE -> dim ? COLOR_CHALLENGE_DIM : COLOR_CHALLENGE;
@@ -45,6 +53,14 @@ public final class DungeonMapRenderer {
             case BOSS -> dim ? COLOR_BOSS_DIM : COLOR_BOSS;
             case WALL -> COLOR_TRANSPARENT;
         };
+    }
+
+    @Nonnull
+    private static String toHex(int color) {
+        return String.format("#%02x%02x%02x",
+                (color >> 24) & 0xFF,
+                (color >> 16) & 0xFF,
+                (color >> 8) & 0xFF);
     }
 
     @Nullable

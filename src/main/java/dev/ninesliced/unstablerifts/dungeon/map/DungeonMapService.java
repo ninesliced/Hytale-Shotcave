@@ -22,9 +22,14 @@ public final class DungeonMapService {
     private static final int SEND_BATCH_SIZE = 15;
     private static final String MARKER_ICON = "User1.png";
 
+    private final DungeonMapLegendService legendService;
     private final Map<UUID, Map<Long, MapChunk>> cachedChunks = new ConcurrentHashMap<>();
     private final Map<UUID, MapMarker[]> cachedMarkers = new ConcurrentHashMap<>();
     private final Map<UUID, SmoothedDungeonGrid> cachedGrids = new ConcurrentHashMap<>();
+
+    public DungeonMapService(@Nonnull DungeonMapLegendService legendService) {
+        this.legendService = legendService;
+    }
 
     @Nonnull
     private static MapMarker[] buildMarkers(@Nonnull Level level) {
@@ -143,7 +148,10 @@ public final class DungeonMapService {
     public void sendMapToPlayer(@Nonnull PlayerRef playerRef, @Nonnull Game game) {
         Map<Long, MapChunk> chunks = cachedChunks.get(game.getPartyId());
         MapMarker[] markers = cachedMarkers.get(game.getPartyId());
-        if (chunks == null || chunks.isEmpty()) return;
+        if (chunks == null || chunks.isEmpty()) {
+            legendService.clear(playerRef);
+            return;
+        }
 
         List<MapChunk> allChunks = new ArrayList<>(chunks.values());
 
@@ -154,6 +162,8 @@ public final class DungeonMapService {
             UpdateWorldMap packet = new UpdateWorldMap(batch, batchMarkers, null);
             playerRef.getPacketHandler().write(packet);
         }
+
+        legendService.sendLegend(playerRef, game);
     }
 
     public void onRoomCleared(@Nonnull Game game, @Nonnull RoomData room) {
