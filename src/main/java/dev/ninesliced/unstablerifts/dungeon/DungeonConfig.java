@@ -35,9 +35,6 @@ public class DungeonConfig {
     @SerializedName("startEquipment")
     private List<String> startEquipment = new ArrayList<>();
 
-    @SerializedName("bossWallBlock")
-    private String bossWallBlock = DungeonConstants.DEFAULT_DOOR_BLOCK;
-
     @SerializedName("maxPartySize")
     private int maxPartySize = 4;
 
@@ -242,11 +239,6 @@ public class DungeonConfig {
         return startEquipment != null ? startEquipment : new ArrayList<>();
     }
 
-    @Nonnull
-    public String getBossWallBlock() {
-        return bossWallBlock != null ? bossWallBlock : DungeonConstants.DEFAULT_DOOR_BLOCK;
-    }
-
     public int getMaxPartySize() {
         return maxPartySize;
     }
@@ -325,12 +317,6 @@ public class DungeonConfig {
         @SerializedName("nextLevel")
         private String nextLevel;
 
-        /**
-         * Block type used for sealed doors.
-         */
-        @SerializedName("doorBlock")
-        private String doorBlock = DungeonConstants.DEFAULT_DOOR_BLOCK;
-
         public String getId() {
             return id;
         }
@@ -372,11 +358,6 @@ public class DungeonConfig {
         @Nullable
         public String getNextLevel() {
             return nextLevel != null && !nextLevel.isBlank() ? nextLevel.trim() : null;
-        }
-
-        @Nonnull
-        public String getDoorBlock() {
-            return doorBlock != null ? doorBlock : DungeonConstants.DEFAULT_DOOR_BLOCK;
         }
 
         @Nonnull

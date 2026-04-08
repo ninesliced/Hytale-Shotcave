@@ -6,7 +6,6 @@ package dev.ninesliced.unstablerifts.dungeon;
 public final class DungeonConstants {
 
     public static final String EMPTY_BLOCK = "Empty";
-    public static final String DEFAULT_DOOR_BLOCK = "Stone_Brick_Wall";
 
     public static final String HEALTH_STAT = "Health";
     public static final String STAMINA_STAT = "Stamina";
