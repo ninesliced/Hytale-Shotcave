@@ -79,6 +79,17 @@ public final class GameManager {
      * responded. While in this set, normalization is deferred.
      */
     private final Set<UUID> pendingRejoinDecision = ConcurrentHashMap.newKeySet();
+    /**
+     * Return targets preserved after a dungeon run has already been cleaned up.
+     * This lets reconnect cleanup teleport players out of stale instance worlds
+     * even when their Game is no longer present in activeGames.
+     */
+    private final Map<UUID, PendingReturnTarget> pendingReturnTargets = new ConcurrentHashMap<>();
+
+    private record PendingReturnTarget(@Nonnull Transform returnPoint,
+                                       @Nullable World returnWorld,
+                                       @Nullable World instanceWorld) {
+    }
 
     public GameManager(@Nonnull UnstableRifts plugin) {
         this.plugin = plugin;
@@ -712,6 +723,7 @@ public final class GameManager {
 
         // Clean up pending reconnect state for any disconnected players
         for (UUID disconnectedId : game.getDisconnectedPlayers()) {
+            rememberPendingReturnTarget(game, disconnectedId);
             pendingReconnectPlayers.remove(disconnectedId);
             pendingReadyRecoveryPlayers.remove(disconnectedId);
             pendingRejoinDecision.remove(disconnectedId);
@@ -781,6 +793,7 @@ public final class GameManager {
 
                 plugin.getInventoryLockService().unlock(player, playerId);
                 if (treatAsInInstance) {
+                    resetVirtualItemTracking(playerId);
                     inventoryService.restorePlayerInventory(playerId, player, true);
                 } else if (treatAsReconnected) {
                     if (inventoryService.hasSavedInventoryFile(playerId)) {
@@ -856,6 +869,7 @@ public final class GameManager {
     public void onPlayerLeftParty(@Nonnull UUID partyId, @Nonnull UUID playerId) {
         Game game = activeGames.get(partyId);
         playerToParty.remove(playerId, partyId);
+        clearPendingReturnTarget(playerId);
         reviveMarkerService.despawnReviveMarker(playerId);
 
         if (game == null) {
@@ -910,6 +924,7 @@ public final class GameManager {
                         DeathStateController.clear(store, ref);
                         plugin.getInventoryLockService().unlock(player, playerId);
                         if (treatAsInInstance) {
+                            resetVirtualItemTracking(playerId);
                             inventoryService.restorePlayerInventory(playerId, player, true);
                         } else if (treatAsDisconnected && inventoryService.hasSavedInventoryFile(playerId)) {
                             // Reconnected player in home world — home inventory is already
@@ -1092,6 +1107,183 @@ public final class GameManager {
         pendingReadyRecoveryPlayers.remove(playerId);
     }
 
+    private void clearReconnectTracking(@Nonnull UUID playerId) {
+        pendingRejoinDecision.remove(playerId);
+        pendingReconnectPlayers.remove(playerId);
+        pendingReadyRecoveryPlayers.remove(playerId);
+        pendingPostReadyResync.remove(playerId);
+        RejoinDungeonPage.closeForPlayer(playerId);
+    }
+
+    private void clearPendingReturnTarget(@Nonnull UUID playerId) {
+        pendingReturnTargets.remove(playerId);
+    }
+
+    private void resetVirtualItemTracking(@Nonnull UUID playerId) {
+        WeaponVirtualItems.onPlayerDisconnect(playerId);
+        ArmorVirtualItems.onPlayerDisconnect(playerId);
+    }
+
+    private int getTotalPartyMemberCount(@Nonnull UUID playerId) {
+        PartyManager.PartySnapshot partySnapshot = plugin.getPartyManager().getPartySnapshot(playerId);
+        return partySnapshot != null ? partySnapshot.memberCount() : 0;
+    }
+
+    private boolean shouldAutoExitSoloReconnect(@Nonnull Game game, @Nonnull UUID playerId) {
+        return getTotalPartyMemberCount(playerId) <= 1 && game.getPlayersInInstance().isEmpty();
+    }
+
+    private void clearDisconnectedRejoinState(@Nonnull Game game, @Nonnull UUID playerId) {
+        game.removeDeadPlayer(playerId);
+        game.setPlayerInInstance(playerId, false);
+        game.removeDisconnectedPlayer(playerId);
+        game.removeDisconnectedDungeonInventory(playerId);
+        game.removeDisconnectedPosition(playerId);
+    }
+
+    private void rememberPendingReturnTarget(@Nonnull Game game, @Nonnull UUID playerId) {
+        Transform returnPoint = game.getReturnPoints().get(playerId);
+        if (returnPoint == null) {
+            return;
+        }
+
+        pendingReturnTargets.put(playerId, new PendingReturnTarget(
+                returnPoint.clone(),
+                game.getReturnWorlds().get(playerId),
+                game.getInstanceWorld()
+        ));
+    }
+
+    private static boolean isTrackedInstanceWorld(@Nullable World currentWorld,
+                                                  @Nullable World instanceWorld) {
+        return currentWorld != null && instanceWorld != null && currentWorld == instanceWorld;
+    }
+
+    private boolean shouldForceReturnTeleport(@Nonnull UUID playerId,
+                                              @Nonnull Player player,
+                                              @Nullable Game game) {
+        World currentWorld = player.getWorld();
+        if (game != null && game.getState() == GameState.COMPLETE
+                && isTrackedInstanceWorld(currentWorld, game.getInstanceWorld())) {
+            return true;
+        }
+
+        PendingReturnTarget pendingReturnTarget = pendingReturnTargets.get(playerId);
+        return pendingReturnTarget != null
+                && isTrackedInstanceWorld(currentWorld, pendingReturnTarget.instanceWorld());
+    }
+
+    private boolean teleportToStoredReturnPoint(@Nonnull UUID playerId,
+                                                @Nonnull Player player,
+                                                @Nonnull Ref<EntityStore> ref,
+                                                @Nonnull Store<EntityStore> store,
+                                                @Nullable Game game) {
+        World currentWorld = player.getWorld();
+        Transform returnPoint = null;
+        World returnWorld = null;
+        World instanceWorld = null;
+
+        if (game != null) {
+            Transform trackedReturnPoint = game.getReturnPoints().get(playerId);
+            if (trackedReturnPoint != null) {
+                returnPoint = trackedReturnPoint.clone();
+                returnWorld = game.getReturnWorlds().get(playerId);
+                instanceWorld = game.getInstanceWorld();
+            }
+        }
+
+        if (returnPoint == null) {
+            PendingReturnTarget pendingReturnTarget = pendingReturnTargets.get(playerId);
+            if (pendingReturnTarget != null) {
+                returnPoint = pendingReturnTarget.returnPoint().clone();
+                returnWorld = pendingReturnTarget.returnWorld();
+                instanceWorld = pendingReturnTarget.instanceWorld();
+            }
+        }
+
+        if (returnPoint == null || !isTrackedInstanceWorld(currentWorld, instanceWorld)) {
+            return false;
+        }
+
+        if (returnWorld == null) {
+            returnWorld = Universe.get().getDefaultWorld();
+        }
+        if (returnWorld == null) {
+            return false;
+        }
+
+        teleportPlayerToReturnPoint(ref, store, returnWorld, returnPoint);
+        clearPendingReturnTarget(playerId);
+        return true;
+    }
+
+    private void restoreHomeStateAfterReconnect(@Nonnull UUID playerId,
+                                                @Nonnull PlayerRef playerRef,
+                                                @Nonnull Player player,
+                                                @Nonnull Ref<EntityStore> ref,
+                                                @Nonnull Store<EntityStore> store) {
+        outsideDungeonNormalizedPlayers.add(playerId);
+
+        DeathComponent deathComponent = store.getComponent(ref, DeathComponent.getComponentType());
+        if (deathComponent != null) {
+            deathComponent.reset();
+        }
+        DeathStateController.clear(store, ref);
+        playerStateService.resetPlayerStatus(player, ref, store);
+
+        plugin.getDungeonMapLegendService().clear(playerRef);
+        plugin.getCameraService().restoreDefault(playerRef);
+        playerStateService.hideDungeonHuds(player, playerRef);
+        plugin.getInventoryLockService().unlock(player, playerId);
+        resetVirtualItemTracking(playerId);
+
+        if (inventoryService.hasSavedInventoryFile(playerId)) {
+            inventoryService.restorePlayerInventory(playerId, player, false);
+        }
+    }
+
+    private void openRejoinPopup(@Nonnull PlayerRef playerRef,
+                                 @Nonnull Ref<EntityStore> ref,
+                                 @Nonnull Store<EntityStore> store,
+                                 @Nonnull Player player) {
+        player.getPageManager().openCustomPage(ref, store, new RejoinDungeonPage(plugin, playerRef));
+        PartyUiPage.refreshOpenPages();
+    }
+
+    private void finalizeSoloReconnectOutside(@Nonnull Game game,
+                                              @Nonnull UUID playerId,
+                                              @Nonnull Ref<EntityStore> ref,
+                                              @Nonnull Store<EntityStore> store) {
+        clearReconnectTracking(playerId);
+        clearDisconnectedRejoinState(game, playerId);
+
+        PartyUiPage.refreshOpenPages();
+        LOGGER.info("Player " + playerId
+                + " reconnected alone with no players left in the dungeon. Ending abandoned run.");
+        endGame(game, true);
+    }
+
+    private void restoreDisconnectedDungeonLoadout(@Nonnull Game game,
+                                                   @Nonnull UUID playerId,
+                                                   @Nonnull PlayerRef playerRef,
+                                                   @Nonnull Player player) {
+        resetVirtualItemTracking(playerId);
+        plugin.getInventoryLockService().unlock(player, playerId);
+        inventoryService.clearPlayerInventory(player);
+
+        PlayerInventoryService.InventorySaveData snapshot = game.removeDisconnectedDungeonInventory(playerId);
+        if (snapshot != null) {
+            inventoryService.restoreDungeonInventory(playerId, player, snapshot);
+        } else {
+            DungeonConfig config = plugin.loadDungeonConfig();
+            inventoryService.giveStartEquipment(playerRef, player, config);
+            LOGGER.info("No disconnected dungeon inventory snapshot for " + playerId
+                    + "; falling back to start equipment.");
+        }
+
+        plugin.getInventoryLockService().lock(player, playerId);
+    }
+
     /**
      * Called after PlayerReadyEvent fires in the dungeon world to re-send
      * inventory with fresh virtual item definitions. During world transition
@@ -1114,16 +1306,16 @@ public final class GameManager {
 
         playerStateService.resetPlayerStatus(player, ref, store, null, true);
 
-        plugin.getInventoryLockService().unlock(player, playerId);
-        inventoryService.clearPlayerInventory(player);
         Game game = findGameForPlayer(playerId);
         if (game != null) {
-            game.removeDisconnectedDungeonInventory(playerId);
+            restoreDisconnectedDungeonLoadout(game, playerId, playerRef, player);
+        } else {
+            DungeonConfig config = plugin.loadDungeonConfig();
+            plugin.getInventoryLockService().unlock(player, playerId);
+            inventoryService.clearPlayerInventory(player);
+            inventoryService.giveStartEquipment(playerRef, player, config);
+            plugin.getInventoryLockService().lock(player, playerId);
         }
-        DungeonConfig config = plugin.loadDungeonConfig();
-        inventoryService.giveStartEquipment(playerRef, player, config);
-
-        plugin.getInventoryLockService().lock(player, playerId);
         plugin.getCameraService().forceReapply(playerRef);
         // Re-apply dungeon movement after forceReapply so the dungeon values win.
         playerStateService.applyDungeonMovementSettings(ref, store, playerRef);
@@ -1281,7 +1473,13 @@ public final class GameManager {
             return;
         }
 
-        restoreHomeStateAndShowPopup(game, playerId, playerRef, player, ref, store);
+        restoreHomeStateAfterReconnect(playerId, playerRef, player, ref, store);
+        if (shouldAutoExitSoloReconnect(game, playerId)) {
+            finalizeSoloReconnectOutside(game, playerId, ref, store);
+            return;
+        }
+
+        openRejoinPopup(playerRef, ref, store, player);
     }
 
     /**
@@ -1294,24 +1492,8 @@ public final class GameManager {
                                               @Nonnull Player player,
                                               @Nonnull Ref<EntityStore> ref,
                                               @Nonnull Store<EntityStore> store) {
-        outsideDungeonNormalizedPlayers.add(playerId);
-
-        DeathComponent deathComponent = store.getComponent(ref, DeathComponent.getComponentType());
-        if (deathComponent != null) deathComponent.reset();
-        DeathStateController.clear(store, ref);
-        playerStateService.resetPlayerStatus(player, ref, store);
-
-        plugin.getDungeonMapLegendService().clear(playerRef);
-        plugin.getCameraService().restoreDefault(playerRef);
-        playerStateService.hideDungeonHuds(player, playerRef);
-        plugin.getInventoryLockService().unlock(player, playerId);
-
-        if (inventoryService.hasSavedInventoryFile(playerId)) {
-            inventoryService.restorePlayerInventory(playerId, player, false);
-        }
-
-        player.getPageManager().openCustomPage(ref, store, new RejoinDungeonPage(plugin, playerRef));
-        PartyUiPage.refreshOpenPages();
+        restoreHomeStateAfterReconnect(playerId, playerRef, player, ref, store);
+        openRejoinPopup(playerRef, ref, store, player);
     }
 
     /**
@@ -1324,14 +1506,19 @@ public final class GameManager {
         Game game = partyId != null ? activeGames.get(partyId) : null;
 
         if (game == null || game.getState() == GameState.COMPLETE) {
+            clearReconnectTracking(playerId);
+            if (game != null) {
+                clearDisconnectedRejoinState(game, playerId);
+            }
             PlayerEventNotifier.showEventTitle(playerRef, "The dungeon run has ended.", true);
             return;
         }
 
         World instanceWorld = game.getInstanceWorld();
         if (instanceWorld == null) {
+            clearReconnectTracking(playerId);
             PlayerEventNotifier.showEventTitle(playerRef, "The dungeon instance is no longer available.", true);
-            game.removeDisconnectedPlayer(playerId);
+            clearDisconnectedRejoinState(game, playerId);
             return;
         }
 
@@ -1344,6 +1531,8 @@ public final class GameManager {
         if (!inventoryService.hasSavedInventoryFile(playerId)) {
             inventoryService.savePlayerInventory(playerId, player, game);
         }
+
+        clearPendingReturnTarget(playerId);
 
         pendingReconnectPlayers.add(playerId);
         pendingReadyRecoveryPlayers.add(playerId);
@@ -1374,10 +1563,11 @@ public final class GameManager {
         UUID partyId = playerToParty.get(playerId);
         Game game = partyId != null ? activeGames.get(partyId) : null;
 
+        clearReconnectTracking(playerId);
+        clearPendingReturnTarget(playerId);
+
         if (game != null) {
-            game.removeDisconnectedPlayer(playerId);
-            game.removeDisconnectedDungeonInventory(playerId);
-            game.removeDisconnectedPosition(playerId);
+            clearDisconnectedRejoinState(game, playerId);
         }
 
         if (inventoryService.hasSavedInventoryFile(playerId)) {
@@ -1423,17 +1613,7 @@ public final class GameManager {
         DeathStateController.clear(store, ref);
         playerStateService.resetPlayerStatus(player, ref, store, null, true);
 
-        // Reconnects always start from the base dungeon loadout.
-        plugin.getInventoryLockService().unlock(player, playerId);
-        inventoryService.clearPlayerInventory(player);
-        game.removeDisconnectedDungeonInventory(playerId);
-        DungeonConfig config = plugin.loadDungeonConfig();
-        inventoryService.giveStartEquipment(playerRef, player, config);
-
-        plugin.getInventoryLockService().lock(player, playerId);
-
-        WeaponVirtualItems.onPlayerDisconnect(playerId);
-        ArmorVirtualItems.onPlayerDisconnect(playerId);
+        restoreDisconnectedDungeonLoadout(game, playerId, playerRef, player);
 
         plugin.getCameraService().scheduleEnableOnNextReady(playerRef);
         playerStateService.applyDungeonMovementSettings(ref, store, playerRef);
@@ -1591,7 +1771,8 @@ public final class GameManager {
         Store<EntityStore> store = ref != null && ref.isValid() ? ref.getStore() : null;
         boolean inventoryLocked = plugin.getInventoryLockService().isLocked(playerId);
         boolean hasSavedInventory = inventoryService.hasSavedInventoryFile(playerId);
-        boolean shouldNormalize = inventoryLocked || hasSavedInventory;
+        boolean forceReturnTeleport = shouldForceReturnTeleport(playerId, player, game);
+        boolean shouldNormalize = inventoryLocked || hasSavedInventory || forceReturnTeleport;
         boolean deadComponentDead = false;
         boolean gamePlayerInInstance = game != null && game.isPlayerInInstance(playerId);
         boolean gamePlayerDead = game != null && game.isPlayerDead(playerId);
@@ -1633,6 +1814,7 @@ public final class GameManager {
                 + " instanceWorld=" + (game != null && game.getInstanceWorld() != null ? game.getInstanceWorld().getName() : "null")
                 + " inventoryLocked=" + inventoryLocked
                 + " hasSavedInventory=" + hasSavedInventory
+                + " forceReturnTeleport=" + forceReturnTeleport
                 + " deathComponentDead=" + deadComponentDead
                 + " gamePlayerInInstance=" + gamePlayerInInstance
                 + " gamePlayerDead=" + gamePlayerDead
@@ -1642,6 +1824,9 @@ public final class GameManager {
         plugin.getCameraService().restoreDefault(playerRef);
         playerStateService.hideDungeonHuds(player, playerRef);
         plugin.getInventoryLockService().unlock(player, playerId);
+        if (hasSavedInventory) {
+            resetVirtualItemTracking(playerId);
+        }
 
         if (hasSavedInventory) {
             boolean deleteAfterRestore = game == null || game.getState() == GameState.COMPLETE;
@@ -1657,8 +1842,17 @@ public final class GameManager {
             game.setPlayerInInstance(playerId, false);
         }
 
+        boolean teleportedOut = false;
+        if (ref != null && ref.isValid() && store != null) {
+            teleportedOut = teleportToStoredReturnPoint(playerId, player, ref, store, game);
+        }
+        if (!teleportedOut) {
+            clearPendingReturnTarget(playerId);
+        }
+
         LOGGER.info("Normalized player state for " + playerRef.getUsername()
-                + " upon arriving in non-dungeon world.");
+                + " upon arriving in non-dungeon world."
+                + " teleportedOut=" + teleportedOut);
         return true;
     }
 
@@ -1785,6 +1979,7 @@ public final class GameManager {
         if (!inventoryService.hasSavedInventoryFile(playerId)) {
             inventoryService.savePlayerInventory(playerId, player, game);
         }
+        resetVirtualItemTracking(playerId);
         plugin.getInventoryLockService().unlock(player, playerId);
         inventoryService.clearPlayerInventory(player);
         playerStateService.resetPlayerStatus(player, ref, store);
@@ -2078,6 +2273,7 @@ public final class GameManager {
                 plugin.getInventoryLockService().unlock(player, playerId);
 
                 if (hasSavedInventory) {
+                    resetVirtualItemTracking(playerId);
                     inventoryService.restorePlayerInventory(playerId, player, false);
                 }
 
@@ -2101,6 +2297,10 @@ public final class GameManager {
         reviveMarkerService.clear();
         outsideDungeonNormalizedPlayers.clear();
         pendingReadyRecoveryPlayers.clear();
+        pendingReconnectPlayers.clear();
+        pendingPostReadyResync.clear();
+        pendingRejoinDecision.clear();
+        pendingReturnTargets.clear();
     }
 
     // ────────────────────────────────────────────────

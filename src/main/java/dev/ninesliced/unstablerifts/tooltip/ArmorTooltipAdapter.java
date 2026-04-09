@@ -50,7 +50,9 @@ public final class ArmorTooltipAdapter implements PlayerPacketFilter {
                     playerUuid, item.itemId, item.metadata,
                     pendingItems, pendingTranslations);
             if (virtualId != null) {
-                item.itemId = virtualId;
+                ItemWithAllMetadata clonedItem = item.clone();
+                clonedItem.itemId = virtualId;
+                entry.setValue(clonedItem);
             }
         }
     }
@@ -218,7 +220,9 @@ public final class ArmorTooltipAdapter implements PlayerPacketFilter {
                             uuid, baseItemId, itemUpdate.item.metadata,
                             pendingItems, pendingTranslations);
                     if (virtualId != null && !alreadyVirtual) {
-                        itemUpdate.item.itemId = virtualId;
+                        ItemWithAllMetadata clonedItem = itemUpdate.item.clone();
+                        clonedItem.itemId = virtualId;
+                        itemUpdate.item = clonedItem;
                     }
                 } else if (comp instanceof EquipmentUpdate equipUpdate && entityStore != null) {
                     virtualizeEquipmentArmor(uuid, equipUpdate,
