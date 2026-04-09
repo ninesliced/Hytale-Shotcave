@@ -22,6 +22,7 @@
   "Categories": [
     "Items.Ingredients"
   ],
+  "Quality": "Legendary",
   "MaxStack": 1,
   "Tags": {
     "Type": [
@@ -33,7 +34,7 @@
     ]
   },
   "ItemEntity": {
-    "ParticleSystemId": null
+    "ParticleSystemId": "Drop_Legendary"
   },
   "ItemSoundSetId": "ISS_Items_Ingots",
   "DropOnDeath": false
