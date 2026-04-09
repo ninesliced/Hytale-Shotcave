@@ -705,35 +705,13 @@ public class DungeonGenerator {
                 mainConfig.getMinimumCorridorLength(),
                 mainConfig.getMaxRooms(), true);
 
-        int shopCount = mainConfig.getShopRooms().roll(random);
-        context.progressTracker().addPlannedRooms(shopCount);
-        int shopsPlaced = 0;
-        if (shopCount > 0 && !resolvedPools.shop.isEmpty()) {
-            for (int i = 0; i < shopCount && !deadEndExits.isEmpty(); i++) {
-                TrackedExit exit = removeExitOnUnusedBranch(deadEndExits, specialRoomBranches, false);
-                if (exit == null) {
-                    LOGGER.at(Level.WARNING).log("No eligible dead-end exits left for shop distinct from %s",
-                            specialRoomBranches);
-                    break;
-                }
-                if (tryPlaceRoom(context, resolvedPools.shop, exit, deadEndExits,
-                        "Shop", false, RoomType.SHOP)) {
-                    shopsPlaced++;
-                    context.progressTracker().roomPlaced();
-                    specialRoomBranches.add(exit.branchId());
-                } else {
-                    sealExit(context, exit.exit);
-                }
-            }
-        }
-        LOGGER.at(Level.INFO).log("Placed %d/%d shop rooms", shopsPlaced, shopCount);
-
+        // Keep treasure earlier in progression and reserve later special-room branches for shops.
         int treasureCount = mainConfig.getTreasureRooms().roll(random);
         context.progressTracker().addPlannedRooms(treasureCount);
         int treasuresPlaced = 0;
         if (treasureCount > 0 && !resolvedPools.treasure.isEmpty()) {
             for (int i = 0; i < treasureCount && !branchTerminalExits.isEmpty(); i++) {
-                TrackedExit exit = removeExitOnUnusedBranch(branchTerminalExits, specialRoomBranches, true);
+                TrackedExit exit = removeExitOnUnusedBranch(branchTerminalExits, specialRoomBranches, false);
                 if (exit == null) {
                     LOGGER.at(Level.WARNING).log("No eligible branch-terminal exits left for treasure distinct from %s",
                             specialRoomBranches);
@@ -751,6 +729,29 @@ public class DungeonGenerator {
             }
         }
         LOGGER.at(Level.INFO).log("Placed %d/%d treasure rooms", treasuresPlaced, treasureCount);
+
+        int shopCount = mainConfig.getShopRooms().roll(random);
+        context.progressTracker().addPlannedRooms(shopCount);
+        int shopsPlaced = 0;
+        if (shopCount > 0 && !resolvedPools.shop.isEmpty()) {
+            for (int i = 0; i < shopCount && !deadEndExits.isEmpty(); i++) {
+                TrackedExit exit = removeExitOnUnusedBranch(deadEndExits, specialRoomBranches, true);
+                if (exit == null) {
+                    LOGGER.at(Level.WARNING).log("No eligible dead-end exits left for shop distinct from %s",
+                            specialRoomBranches);
+                    break;
+                }
+                if (tryPlaceRoom(context, resolvedPools.shop, exit, deadEndExits,
+                        "Shop", false, RoomType.SHOP)) {
+                    shopsPlaced++;
+                    context.progressTracker().roomPlaced();
+                    specialRoomBranches.add(exit.branchId());
+                } else {
+                    sealExit(context, exit.exit);
+                }
+            }
+        }
+        LOGGER.at(Level.INFO).log("Placed %d/%d shop rooms", shopsPlaced, shopCount);
 
         List<String> importantGlobs = levelConfig.getImportantRooms();
         context.progressTracker().addPlannedRooms(importantGlobs.size());
