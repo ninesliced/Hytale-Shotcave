@@ -55,8 +55,8 @@
         },
         "minimumCorridorLength": 1,
         "mobsToSpawn": {
-          "min": 400,
-          "max": 400
+          "min": 250,
+          "max": 250
         },
         "treasureRooms": {
           "min": 1,
@@ -79,8 +79,8 @@
         },
         "minimumCorridorLength": 0,
         "mobsToSpawn": {
-          "min": 50,
-          "max": 100
+          "min": 30,
+          "max": 30
         }
       },
       "mobs": {
