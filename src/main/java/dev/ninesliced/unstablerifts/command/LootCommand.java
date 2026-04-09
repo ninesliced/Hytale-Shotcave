@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * /sc loot [rarity] — Spawns a random rolled weapon on the ground at the player's feet.
+ * /ur loot [rarity] — Spawns a random rolled weapon on the ground at the player's feet.
  * Optional rarity: common, uncommon, rare, epic, legendary, unique
  */
 public class LootCommand extends AbstractCommand {

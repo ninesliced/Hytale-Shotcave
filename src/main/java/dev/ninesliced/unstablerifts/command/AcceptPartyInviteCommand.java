@@ -18,6 +18,7 @@ public final class AcceptPartyInviteCommand extends AbstractPlayerCommand {
     public AcceptPartyInviteCommand(@Nonnull UnstableRifts plugin) {
         super("accept", "Accept your most recent active party invite");
         this.plugin = plugin;
+        this.addAliases("join");
     }
 
     @Override

@@ -67,7 +67,7 @@ public final class PartyManager {
     private static Message createInviteMessage(@Nonnull PlayerRef inviter, @Nonnull Party party) {
         return partyPrefix()
                 .insert(Message.raw(inviter.getUsername() + " invited you to join " + party.name + ". ").color("#dce6ef"))
-                .insert(Message.raw("Use /sc accept to join, or /sc party ui to open the party menu.").color("#58a6ff"));
+                .insert(Message.raw("Use /ur join to join, or /ur party ui to open the party menu.").color("#58a6ff"));
     }
 
     @Nonnull
