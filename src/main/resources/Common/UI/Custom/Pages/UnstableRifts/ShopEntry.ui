@@ -83,15 +83,30 @@ Group {
       Background: @SepColor;
     }
 
-    Label #ShopDetailText {
-      Text: "";
+    Group {
       Anchor: (Top: 4);
-      Style: LabelStyle(
-        FontSize: 11,
-        TextColor: @DetailColor,
-        HorizontalAlignment: Start,
-        VerticalAlignment: Start
-      );
+      LayoutMode: Left;
+
+      AssetImage #ShopDetailIcon {
+        Anchor: (Width: 64, Height: 64, Top: 0);
+        Visible: false;
+      }
+
+      Group {
+        Anchor: (Left: 6);
+        FlexWeight: 1;
+        LayoutMode: Top;
+
+        Label #ShopDetailText {
+          Text: "";
+          Style: LabelStyle(
+            FontSize: 11,
+            TextColor: @DetailColor,
+            HorizontalAlignment: Start,
+            VerticalAlignment: Start
+          );
+        }
+      }
     }
   }
 }

@@ -2,7 +2,6 @@ package dev.ninesliced.unstablerifts.hud;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.protocol.packets.interface_.HudComponent;
-import com.hypixel.hytale.server.core.asset.type.item.config.Item;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.inventory.InventoryComponent;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
@@ -12,6 +11,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.ninesliced.unstablerifts.UnstableRifts;
 import dev.ninesliced.unstablerifts.armor.*;
 import dev.ninesliced.unstablerifts.guns.*;
+import dev.ninesliced.unstablerifts.inventory.ItemIconResolver;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -85,7 +85,7 @@ public final class AmmoHudService {
                     LAST_STATE.put(uuid, state);
 
                     String displayName = definition != null ? definition.displayName() : extractWeaponName(heldItem);
-                    String iconPath = resolveIconPath(itemId);
+                    String iconPath = ItemIconResolver.resolveIconPath(itemId);
                     UnstableRiftsHud hud = new UnstableRiftsHud(playerRef, ammo, baseMaxAmmo, maxAmmo,
                             rarity, effect, category, definition, modifiers, displayName, iconPath, crouching);
 
@@ -310,19 +310,6 @@ public final class AmmoHudService {
         }
 
         return ArmorStatResolver.getTotalAmmoCapacityBonus(armorComponent.getInventory());
-    }
-
-    @Nullable
-    private static String resolveIconPath(@Nullable String itemId) {
-        if (itemId == null || itemId.isBlank()) return null;
-        Item item = Item.getAssetMap().getAsset(itemId);
-        if (item != null) {
-            String icon = item.getIcon();
-            if (icon != null && !icon.isBlank()) {
-                return icon;
-            }
-        }
-        return null;
     }
 
     @Nullable

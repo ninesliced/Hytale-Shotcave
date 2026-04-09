@@ -31,6 +31,7 @@ import dev.ninesliced.unstablerifts.dungeon.Game;
 import dev.ninesliced.unstablerifts.guns.*;
 import dev.ninesliced.unstablerifts.hud.AmmoHudService;
 import dev.ninesliced.unstablerifts.inventory.InventoryLockService;
+import dev.ninesliced.unstablerifts.inventory.ItemIconResolver;
 import com.hypixel.hytale.protocol.packets.inventory.UpdatePlayerInventory;
 
 import javax.annotation.Nonnull;
@@ -175,6 +176,12 @@ public final class ShopPage extends InteractiveCustomUIPage<ShopPage.ShopEventDa
                                   @Nonnull ShopEntry entry, @Nullable ItemStack itemStack) {
         if (itemStack == null) return;
         String detailsPath = itemPath + " #ShopEntryDetails";
+        String iconPath = ItemIconResolver.resolveIconPath(itemStack.getItemId());
+
+        if (iconPath != null) {
+            ui.set(detailsPath + " #ShopDetailIcon.AssetPath", iconPath);
+            ui.set(detailsPath + " #ShopDetailIcon.Visible", true);
+        }
 
         switch (entry.getType()) {
             case WEAPON -> buildWeaponDetails(ui, detailsPath, itemStack);

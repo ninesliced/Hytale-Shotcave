@@ -3,7 +3,6 @@ package dev.ninesliced.unstablerifts.pickup;
 import com.hypixel.hytale.component.*;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.RefSystem;
-import com.hypixel.hytale.server.core.asset.type.item.config.Item;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.modules.entity.item.ItemComponent;
 import com.hypixel.hytale.server.core.modules.entity.item.PreventPickup;
@@ -12,6 +11,7 @@ import dev.ninesliced.unstablerifts.armor.ArmorDefinition;
 import dev.ninesliced.unstablerifts.armor.ArmorDefinitions;
 import dev.ninesliced.unstablerifts.guns.WeaponDefinition;
 import dev.ninesliced.unstablerifts.guns.WeaponDefinitions;
+import dev.ninesliced.unstablerifts.inventory.ItemIconResolver;
 import dev.ninesliced.unstablerifts.shop.ShopDisplayItemComponent;
 
 import javax.annotation.Nonnull;
@@ -70,21 +70,6 @@ public final class ItemDropSystem extends RefSystem<EntityStore> {
         return name.replace('_', ' ');
     }
 
-    @Nullable
-    private static String resolveIconPath(@Nonnull String itemId) {
-        try {
-            Item item = Item.getAssetMap().getAsset(itemId);
-            if (item != null) {
-                String icon = item.getIcon();
-                if (icon != null && !icon.isBlank()) {
-                    return icon;
-                }
-            }
-        } catch (Exception ignored) {
-        }
-        return null;
-    }
-
     @Override
     public void onEntityAdded(
             @Nonnull Ref<EntityStore> ref,
@@ -111,7 +96,7 @@ public final class ItemDropSystem extends RefSystem<EntityStore> {
         }
 
         String displayName = resolveDisplayName(itemId);
-        String iconPath = resolveIconPath(itemId);
+        String iconPath = ItemIconResolver.resolveIconPath(itemId);
 
         boolean isFKey = ItemPickupConfig.isFKeyPickup(itemId);
         boolean isScoreCollect = ItemPickupConfig.isScoreCollect(itemId);
