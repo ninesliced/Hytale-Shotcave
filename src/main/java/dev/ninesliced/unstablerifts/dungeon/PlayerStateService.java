@@ -14,7 +14,9 @@ import com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType;
 import com.hypixel.hytale.server.core.modules.interaction.InteractionModule;
 import com.hypixel.hytale.server.core.modules.interaction.InteractionSimulationHandler;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import dev.ninesliced.unstablerifts.UnstableRifts;
 import dev.ninesliced.unstablerifts.armor.ArmorChargeComponent;
 import dev.ninesliced.unstablerifts.hud.*;
 import dev.ninesliced.unstablerifts.systems.DeathComponent;
@@ -163,6 +165,29 @@ public final class PlayerStateService {
         s.collisionExpulsionForce = 0.04f;
 
         movementManager.update(playerRef.getPacketHandler());
+    }
+
+    public void reapplyDungeonMovementProfile(@Nonnull Ref<EntityStore> ref,
+                                              @Nonnull Store<EntityStore> store,
+                                              @Nonnull PlayerRef playerRef) {
+        UnstableRifts plugin = UnstableRifts.getInstance();
+        if (plugin != null) {
+            plugin.getCameraService().setEnabled(playerRef, true);
+            plugin.getCameraService().forceReapply(playerRef);
+        }
+
+        applyDungeonMovementSettings(ref, store, playerRef);
+
+        World world = store.getExternalData().getWorld();
+        if (world != null) {
+            world.execute(() -> {
+                Ref<EntityStore> delayedRef = playerRef.getReference();
+                if (delayedRef != null && delayedRef.isValid()) {
+                    Store<EntityStore> delayedStore = delayedRef.getStore();
+                    applyDungeonMovementSettings(delayedRef, delayedStore, playerRef);
+                }
+            });
+        }
     }
 
     public void restoreDefaultMovementSettings(@Nonnull Ref<EntityStore> ref,

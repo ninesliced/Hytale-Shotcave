@@ -289,12 +289,8 @@ public final class ReviveTickSystem extends EntityTickingSystem<EntityStore> {
                 Player deadPlayer = dStore.getComponent(dRef, Player.getComponentType());
                 if (deadPlayer != null) {
                     gameManager.getInventoryService().restoreDeathInventory(deadPlayer, deadPlayerRef);
-                    gameManager.getPlayerStateService().resetPlayerStatus(deadPlayer, dRef, dStore, commandBuffer);
-                    gameManager.getPlayerStateService().applyDungeonMovementSettings(dRef, dStore, deadPlayerRef);
-                    UnstableRifts unstablerifts = UnstableRifts.getInstance();
-                    if (unstablerifts != null) {
-                        unstablerifts.getCameraService().setEnabled(deadPlayerRef, true);
-                    }
+                    gameManager.getPlayerStateService().resetPlayerStatus(deadPlayer, dRef, dStore, commandBuffer, true);
+                    gameManager.getPlayerStateService().reapplyDungeonMovementProfile(dRef, dStore, deadPlayerRef);
                 }
             }
         }

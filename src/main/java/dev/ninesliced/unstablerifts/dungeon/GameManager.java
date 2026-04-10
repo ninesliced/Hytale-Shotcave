@@ -2358,7 +2358,7 @@ public final class GameManager {
             DeathStateController.clear(store, ref);
 
             // Restore health/stamina
-            playerStateService.resetPlayerStatus(player, ref, store);
+            playerStateService.resetPlayerStatus(player, ref, store, null, true);
 
             // Discard the death snapshot — level-change revive gives fresh start equipment
             inventoryService.discardDeathInventory(playerId);
@@ -2370,8 +2370,7 @@ public final class GameManager {
             plugin.getInventoryLockService().lock(player, playerId);
 
             // Re-apply dungeon movement and camera
-            playerStateService.applyDungeonMovementSettings(ref, store, playerRef);
-            plugin.getCameraService().setEnabled(playerRef, true);
+            playerStateService.reapplyDungeonMovementProfile(ref, store, playerRef);
         }
 
         game.clearDeadPlayers();
