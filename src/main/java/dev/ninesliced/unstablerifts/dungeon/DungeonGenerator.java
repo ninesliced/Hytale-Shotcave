@@ -657,6 +657,7 @@ public class DungeonGenerator {
                 levelConfig,
                 resolvedPools,
                 new HashSet<>(),
+                new HashSet<>(),
                 new BranchCounter(),
                 progressTracker
         );
@@ -692,6 +693,7 @@ public class DungeonGenerator {
         RoomData spawnRoom = buildRoomData(level, RoomType.SPAWN, spawnData, spawnPaste, 0,
                 Collections.emptyList(), 0, "main");
         level.addRoom(spawnRoom);
+        context.usedRoomPrefabs().add(spawnPath);
 
         List<TrackedExit> spawnExits = collectTrackedExits(spawnData, spawnPaste, 0, spawnRoom, 0, "main");
         LOGGER.at(Level.INFO).log("Spawn placed at %s, %d exit(s)", spawnPaste, spawnExits.size());
@@ -1274,8 +1276,12 @@ public class DungeonGenerator {
             return false;
         }
 
-        List<Path> shuffled = new ArrayList<>(roomPaths);
-        Collections.shuffle(shuffled, context.random());
+        RoomSelectionPool selectionPool = selectRoomCandidates(context, roomPaths);
+        List<Path> shuffled = selectionPool.candidates();
+        if (selectionPool.reusingPlacedRooms()) {
+            LOGGER.at(Level.INFO).log("[%s] Unique prefab pool exhausted for type %s, rerolling from %d previously used room(s)",
+                    label, roomType, shuffled.size());
+        }
 
         OpenExit exit = trackedExit.exit;
         Vector3i pastePos = new Vector3i(exit.worldX, exit.worldY, exit.worldZ);
@@ -1313,6 +1319,7 @@ public class DungeonGenerator {
                 trackedExit.parent.addChild(roomData);
             }
             context.level().addRoom(roomData);
+            context.usedRoomPrefabs().add(chosen);
 
             List<TrackedExit> exits = collectTrackedExits(data, pastePos, pasteRot, roomData, branchDepth, branchId);
             newExitsOut.addAll(exits);
@@ -1335,6 +1342,7 @@ public class DungeonGenerator {
                         trackedExit.parent.addChild(roomData);
                     }
                     context.level().addRoom(roomData);
+                    context.usedRoomPrefabs().add(chosen);
                     List<TrackedExit> exits = collectTrackedExits(data, pastePos, pasteRot, roomData, branchDepth, branchId);
                     newExitsOut.addAll(exits);
                     LOGGER.at(Level.WARNING).log("[%s] force-placed %s at %s", label, chosen.getFileName(), pastePos);
@@ -1349,6 +1357,32 @@ public class DungeonGenerator {
                 label, attempts, overlapFailures, pasteFailures, unreadablePrefabs);
         sealExit(context, exit);
         return false;
+    }
+
+    @Nonnull
+    private RoomSelectionPool selectRoomCandidates(@Nonnull GenerationContext context,
+                                                   @Nonnull List<Path> roomPaths) {
+        List<Path> distinctPaths = dedupePaths(roomPaths);
+        List<Path> unusedPaths = new ArrayList<>();
+        List<Path> usedPaths = new ArrayList<>();
+
+        for (Path path : distinctPaths) {
+            if (context.usedRoomPrefabs().contains(path)) {
+                usedPaths.add(path);
+            } else {
+                unusedPaths.add(path);
+            }
+        }
+
+        boolean reusingPlacedRooms = unusedPaths.isEmpty();
+        List<Path> candidates = reusingPlacedRooms ? new ArrayList<>(usedPaths) : new ArrayList<>(unusedPaths);
+        Collections.shuffle(candidates, context.random());
+        return new RoomSelectionPool(candidates, reusingPlacedRooms);
+    }
+
+    @Nonnull
+    private static List<Path> dedupePaths(@Nonnull List<Path> paths) {
+        return new ArrayList<>(new LinkedHashSet<>(paths));
     }
 
     @Nonnull
@@ -2017,6 +2051,9 @@ public class DungeonGenerator {
             List<Path> branchCorridor, List<Path> branchChallenge) {
     }
 
+    private record RoomSelectionPool(List<Path> candidates, boolean reusingPlacedRooms) {
+    }
+
     private record GenerationContext(
             @Nonnull World world,
             @Nonnull Store<EntityStore> store,
@@ -2025,6 +2062,7 @@ public class DungeonGenerator {
             @Nonnull DungeonConfig.LevelConfig levelConfig,
             @Nonnull ResolvedPools resolvedPools,
             @Nonnull Set<Long> occupiedBlocks,
+            @Nonnull Set<Path> usedRoomPrefabs,
             @Nonnull BranchCounter branchCounter,
             @Nonnull GenerationProgressTracker progressTracker) {
 
