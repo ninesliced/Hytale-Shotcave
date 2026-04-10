@@ -3,7 +3,7 @@
     "UnstableRifts_Props_Crate_Level1": {
       "minRarity": "BASIC",
       "maxRarity": "UNIQUE",
-      "weaponChance": 0.25,
+      "weaponChance": 0.30,
       "coinMin": 1,
       "coinMax": 3,
       "ammoChance": 0.10,
