@@ -20,15 +20,13 @@ import com.hypixel.hytale.server.npc.NPCPlugin;
 import com.hypixel.hytale.server.npc.entities.NPCEntity;
 import dev.ninesliced.unstablerifts.armor.ArmorDefinition;
 import dev.ninesliced.unstablerifts.armor.ArmorDefinitions;
+import dev.ninesliced.unstablerifts.armor.ArmorItemMetadata;
 import dev.ninesliced.unstablerifts.armor.ArmorLootRoller;
 import dev.ninesliced.unstablerifts.dungeon.Game;
 import dev.ninesliced.unstablerifts.dungeon.Level;
 import dev.ninesliced.unstablerifts.dungeon.RoomData;
 import dev.ninesliced.unstablerifts.dungeon.RoomType;
-import dev.ninesliced.unstablerifts.guns.WeaponDefinition;
-import dev.ninesliced.unstablerifts.guns.WeaponDefinitions;
-import dev.ninesliced.unstablerifts.guns.WeaponLootRoller;
-import dev.ninesliced.unstablerifts.guns.WeaponRarity;
+import dev.ninesliced.unstablerifts.guns.*;
 import dev.ninesliced.unstablerifts.pickup.ItemPickupTracker;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
@@ -106,11 +104,7 @@ public final class ShopService {
             }
 
             List<ShopEntry> entries = generateShopEntries(room);
-            inventories.add(new ShopRoomInventory(
-                    room,
-                    entries,
-                    room.getShopRefreshCost(),
-                    room.getShopRefreshCount()));
+            inventories.add(new ShopRoomInventory(room, entries));
         }
 
         UUID partyId = game.getPartyId();
@@ -223,13 +217,15 @@ public final class ShopService {
             ShopEntry entry = inventory.entries().get(entryIndex);
             if (entry.isSold()) return null;
 
+            int price = entry.getPrice();
+
             synchronized (game) {
-                if (game.getMoney() < entry.getPrice()) return null;
-                game.addMoney(-entry.getPrice());
+                if (game.getMoney() < price) return null;
+                game.addMoney(-price);
             }
 
-            entry.setSold(true);
-            return new PurchaseResult(entry, entry.getItemStack());
+            entry.recordPurchase();
+            return new PurchaseResult(entry, entry.getItemStack(), price);
         }
     }
 
@@ -247,7 +243,7 @@ public final class ShopService {
     }
 
     public void removeSoldDisplay(@Nullable ShopEntry entry, @Nullable Store<EntityStore> store) {
-        if (entry == null) {
+        if (entry == null || !entry.isSold()) {
             return;
         }
         removeDisplayItem(entry, store);
@@ -282,24 +278,19 @@ public final class ShopService {
         List<ShopEntry> refreshedEntries;
 
         synchronized (inventory) {
-            if (inventory.maxRefreshes() <= 0) {
-                return ShopRefreshResult.DISABLED;
-            }
-            if (inventory.refreshesRemaining() <= 0) {
-                return ShopRefreshResult.NO_REFRESHES_REMAINING;
-            }
+            int refreshCost = inventory.refreshCost();
 
             synchronized (game) {
-                if (game.getMoney() < inventory.refreshCost()) {
+                if (game.getMoney() < refreshCost) {
                     return ShopRefreshResult.INSUFFICIENT_FUNDS;
                 }
-                game.addMoney(-inventory.refreshCost());
+                game.addMoney(-refreshCost);
             }
 
             previousEntries = new ArrayList<>(inventory.entries());
             refreshedEntries = generateShopEntries(inventory.room(), previousEntries, true);
             inventory.replaceEntries(refreshedEntries);
-            inventory.consumeRefresh();
+            inventory.recordRefresh();
         }
 
         if (store != null) {
@@ -358,10 +349,48 @@ public final class ShopService {
             ItemStack item = preferDifferentRolls
                     ? generateRefreshedItem(slot, previousItem)
                     : generateItem(slot);
-            entries.add(new ShopEntry(slot.itemType(), slot.price(), item));
+            entries.add(new ShopEntry(
+                    slot.itemType(),
+                    resolveEntryBasePrice(room, slot, item),
+                    resolveEntryRepeatPriceStep(room, slot.itemType()),
+                    item));
         }
 
         return entries;
+    }
+
+    private int resolveEntryBasePrice(@Nonnull RoomData room,
+                                      @Nonnull RoomData.ShopItemSlot slot,
+                                      @Nullable ItemStack itemStack) {
+        return switch (slot.itemType()) {
+            case WEAPON -> getWeaponPrice(room, itemStack);
+            case ARMOR -> getArmorPrice(room, itemStack);
+            case AMMO, HEAL -> Math.max(0, room.getShopItemPriceStep());
+        };
+    }
+
+    private int resolveEntryRepeatPriceStep(@Nonnull RoomData room,
+                                            @Nonnull ShopItemType itemType) {
+        return switch (itemType) {
+            case AMMO, HEAL -> Math.max(0, room.getShopItemPriceStep());
+            default -> 0;
+        };
+    }
+
+    private int getWeaponPrice(@Nonnull RoomData room,
+                               @Nullable ItemStack itemStack) {
+        WeaponRarity rarity = itemStack != null ? GunItemMetadata.getRarity(itemStack) : WeaponRarity.BASIC;
+        return getRarityPrice(rarity, room.getShopWeaponPriceStep());
+    }
+
+    private int getArmorPrice(@Nonnull RoomData room,
+                              @Nullable ItemStack itemStack) {
+        WeaponRarity rarity = itemStack != null ? ArmorItemMetadata.getRarity(itemStack) : WeaponRarity.BASIC;
+        return getRarityPrice(rarity, room.getShopArmorPriceStep());
+    }
+
+    private int getRarityPrice(@Nonnull WeaponRarity rarity, int priceStep) {
+        return Math.max(0, rarity.ordinal()) * Math.max(0, priceStep);
     }
 
     @Nullable
@@ -791,12 +820,12 @@ public final class ShopService {
      */
     public enum ShopRefreshResult {
         SUCCESS,
-        DISABLED,
-        NO_REFRESHES_REMAINING,
         INSUFFICIENT_FUNDS
     }
 
-    public record PurchaseResult(@Nonnull ShopEntry entry, @Nullable ItemStack itemStack) {
+    public record PurchaseResult(@Nonnull ShopEntry entry,
+                                 @Nullable ItemStack itemStack,
+                                 int pricePaid) {
     }
 
     public static final class ShopRoomInventory {
@@ -804,20 +833,14 @@ public final class ShopService {
         private final RoomData room;
         @Nonnull
         private final List<ShopEntry> entries;
-        private final int refreshCost;
-        private final int maxRefreshes;
-        private int refreshesRemaining;
+        private int refreshCount;
         private boolean initialEntryRefreshPending = true;
 
         public ShopRoomInventory(@Nonnull RoomData room,
-                                 @Nonnull List<ShopEntry> entries,
-                                 int refreshCost,
-                                 int maxRefreshes) {
+                                 @Nonnull List<ShopEntry> entries) {
             this.room = room;
             this.entries = new ArrayList<>(entries);
-            this.refreshCost = Math.max(0, refreshCost);
-            this.maxRefreshes = Math.max(0, maxRefreshes);
-            this.refreshesRemaining = this.maxRefreshes;
+            this.refreshCount = 0;
         }
 
         @Nonnull
@@ -831,19 +854,7 @@ public final class ShopService {
         }
 
         public int refreshCost() {
-            return refreshCost;
-        }
-
-        public int maxRefreshes() {
-            return maxRefreshes;
-        }
-
-        public int refreshesRemaining() {
-            return refreshesRemaining;
-        }
-
-        public boolean hasRefreshesConfigured() {
-            return maxRefreshes > 0;
+            return Math.max(0, room.getShopRefreshPriceStep()) * (refreshCount + 1);
         }
 
         private void replaceEntries(@Nonnull List<ShopEntry> refreshedEntries) {
@@ -851,10 +862,8 @@ public final class ShopService {
             entries.addAll(refreshedEntries);
         }
 
-        private void consumeRefresh() {
-            if (refreshesRemaining > 0) {
-                refreshesRemaining--;
-            }
+        private void recordRefresh() {
+            refreshCount++;
         }
 
         private boolean consumeInitialEntryRefresh() {

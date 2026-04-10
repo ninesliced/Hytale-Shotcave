@@ -9,6 +9,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 
+import dev.ninesliced.unstablerifts.shop.ShopKeeperData;
 import dev.ninesliced.unstablerifts.shop.ShopItemData;
 import dev.ninesliced.unstablerifts.shop.ShopItemType;
 
@@ -76,7 +77,10 @@ public final class RoomData {
     private Vector3i shopKeeperPosition;
     private double shopActionRange = 5.0;
     private float shopKeeperYaw = 0.0f;
-    private int shopRefreshCost = 0;
+    private int shopRefreshPriceStep = ShopKeeperData.DEFAULT_REFRESH_PRICE_STEP;
+    private int shopWeaponPriceStep = ShopKeeperData.DEFAULT_WEAPON_PRICE_STEP;
+    private int shopArmorPriceStep = ShopKeeperData.DEFAULT_ARMOR_PRICE_STEP;
+    private int shopItemPriceStep = ShopKeeperData.DEFAULT_ITEM_PRICE_STEP;
     private int shopRefreshCount = 0;
 
     // ── Lock door prefab blocks (pasted at runtime, removed on clear) ──
@@ -775,12 +779,44 @@ public final class RoomData {
         this.shopActionRange = range;
     }
 
+    public int getShopRefreshPriceStep() {
+        return shopRefreshPriceStep;
+    }
+
+    public void setShopRefreshPriceStep(int step) {
+        this.shopRefreshPriceStep = Math.max(0, step);
+    }
+
     public int getShopRefreshCost() {
-        return shopRefreshCost;
+        return getShopRefreshPriceStep();
     }
 
     public void setShopRefreshCost(int cost) {
-        this.shopRefreshCost = Math.max(0, cost);
+        setShopRefreshPriceStep(cost);
+    }
+
+    public int getShopWeaponPriceStep() {
+        return shopWeaponPriceStep;
+    }
+
+    public void setShopWeaponPriceStep(int step) {
+        this.shopWeaponPriceStep = Math.max(0, step);
+    }
+
+    public int getShopArmorPriceStep() {
+        return shopArmorPriceStep;
+    }
+
+    public void setShopArmorPriceStep(int step) {
+        this.shopArmorPriceStep = Math.max(0, step);
+    }
+
+    public int getShopItemPriceStep() {
+        return shopItemPriceStep;
+    }
+
+    public void setShopItemPriceStep(int step) {
+        this.shopItemPriceStep = Math.max(0, step);
     }
 
     public int getShopRefreshCount() {

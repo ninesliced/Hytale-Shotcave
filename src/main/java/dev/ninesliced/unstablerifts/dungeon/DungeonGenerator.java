@@ -189,8 +189,10 @@ public class DungeonGenerator {
                             JsonObject shopKeeperComp = getSerializedComponent(serializedComponents, "ShopKeeperData");
                             double range = 5.0;
                             double yawDegrees = rotationIndexToYawDegrees(sRot);
-                            int refreshCost = 0;
-                            int refreshCount = 0;
+                            int refreshPriceStep = dev.ninesliced.unstablerifts.shop.ShopKeeperData.DEFAULT_REFRESH_PRICE_STEP;
+                            int weaponPriceStep = dev.ninesliced.unstablerifts.shop.ShopKeeperData.DEFAULT_WEAPON_PRICE_STEP;
+                            int armorPriceStep = dev.ninesliced.unstablerifts.shop.ShopKeeperData.DEFAULT_ARMOR_PRICE_STEP;
+                            int itemPriceStep = dev.ninesliced.unstablerifts.shop.ShopKeeperData.DEFAULT_ITEM_PRICE_STEP;
                             if (shopKeeperComp != null) {
                                 String rawRange = getSerializedString(shopKeeperComp, "ActionRange");
                                 if (rawRange != null) {
@@ -209,19 +211,42 @@ public class DungeonGenerator {
                                 String rawRefreshCost = getSerializedString(shopKeeperComp, "RefreshCost");
                                 if (rawRefreshCost != null) {
                                     try {
-                                        refreshCost = Math.max(0, Integer.parseInt(rawRefreshCost));
+                                        refreshPriceStep = Math.max(0, Integer.parseInt(rawRefreshCost));
                                     } catch (NumberFormatException ignored) {
                                     }
                                 }
-                                String rawRefreshCount = getSerializedString(shopKeeperComp, "RefreshCount");
-                                if (rawRefreshCount != null) {
+                                String rawWeaponPriceStep = getSerializedString(shopKeeperComp, "WeaponPriceStep");
+                                if (rawWeaponPriceStep != null) {
                                     try {
-                                        refreshCount = Math.max(0, Integer.parseInt(rawRefreshCount));
+                                        weaponPriceStep = Math.max(0, Integer.parseInt(rawWeaponPriceStep));
+                                    } catch (NumberFormatException ignored) {
+                                    }
+                                }
+                                String rawArmorPriceStep = getSerializedString(shopKeeperComp, "ArmorPriceStep");
+                                if (rawArmorPriceStep != null) {
+                                    try {
+                                        armorPriceStep = Math.max(0, Integer.parseInt(rawArmorPriceStep));
+                                    } catch (NumberFormatException ignored) {
+                                    }
+                                }
+                                String rawItemPriceStep = getSerializedString(shopKeeperComp, "ItemPriceStep");
+                                if (rawItemPriceStep != null) {
+                                    try {
+                                        itemPriceStep = Math.max(0, Integer.parseInt(rawItemPriceStep));
                                     } catch (NumberFormatException ignored) {
                                     }
                                 }
                             }
-                            shopKeepers.add(new ShopKeeperLocal(x, y, z, range, yawDegrees, refreshCost, refreshCount));
+                            shopKeepers.add(new ShopKeeperLocal(
+                                    x,
+                                    y,
+                                    z,
+                                    range,
+                                    yawDegrees,
+                                    refreshPriceStep,
+                                    weaponPriceStep,
+                                    armorPriceStep,
+                                    itemPriceStep));
                         }
                         if (markerType == MarkerType.SHOP_ITEM) {
                             JsonObject shopItemComp = getSerializedComponent(serializedComponents, "ShopItemData");
@@ -1473,8 +1498,10 @@ public class DungeonGenerator {
             roomData.setShopKeeperPosition(new Vector3i(wx, wy, wz));
             roomData.setShopActionRange(sk.actionRange);
             roomData.setShopKeeperYaw((float) Math.toRadians(sk.yawDegrees) + rotationIndexToYaw(rot));
-            roomData.setShopRefreshCost(sk.refreshCost);
-            roomData.setShopRefreshCount(sk.refreshCount);
+            roomData.setShopRefreshPriceStep(sk.refreshPriceStep);
+            roomData.setShopWeaponPriceStep(sk.weaponPriceStep);
+            roomData.setShopArmorPriceStep(sk.armorPriceStep);
+            roomData.setShopItemPriceStep(sk.itemPriceStep);
         }
 
         for (ShopItemLocal si : data.shopItems()) {
@@ -2005,8 +2032,10 @@ public class DungeonGenerator {
     private record ShopKeeperLocal(int x, int y, int z,
                                    double actionRange,
                                    double yawDegrees,
-                                   int refreshCost,
-                                   int refreshCount) {
+                                   int refreshPriceStep,
+                                   int weaponPriceStep,
+                                   int armorPriceStep,
+                                   int itemPriceStep) {
     }
 
     private record ShopItemLocal(int x, int y, int z,

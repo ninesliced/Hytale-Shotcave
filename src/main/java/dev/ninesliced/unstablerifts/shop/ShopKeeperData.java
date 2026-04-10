@@ -11,16 +11,25 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Block component that stores shopkeeper configuration on a UnstableRifts_Shop_Keeper block.
+ * Block component that stores shopkeeper and room-level shop pricing configuration
+ * on a UnstableRifts_Shop_Keeper block.
  * Persists through chunk save/load and prefab save/load.
  */
 public class ShopKeeperData implements Component<ChunkStore> {
+
+    public static final int DEFAULT_REFRESH_PRICE_STEP = 25;
+    public static final int DEFAULT_WEAPON_PRICE_STEP = 50;
+    public static final int DEFAULT_ARMOR_PRICE_STEP = 50;
+    public static final int DEFAULT_ITEM_PRICE_STEP = 25;
 
     @Nonnull
     public static final BuilderCodec<ShopKeeperData> CODEC = BuilderCodec.builder(ShopKeeperData.class, ShopKeeperData::new)
             .append(new KeyedCodec<>("ActionRange", Codec.STRING), (d, v) -> d.actionRange = v, d -> d.actionRange).add()
             .append(new KeyedCodec<>("RotationYaw", Codec.STRING), (d, v) -> d.rotationYaw = v, d -> d.rotationYaw).add()
             .append(new KeyedCodec<>("RefreshCost", Codec.STRING), (d, v) -> d.refreshCost = v, d -> d.refreshCost).add()
+        .append(new KeyedCodec<>("WeaponPriceStep", Codec.STRING), (d, v) -> d.weaponPriceStep = v, d -> d.weaponPriceStep).add()
+        .append(new KeyedCodec<>("ArmorPriceStep", Codec.STRING), (d, v) -> d.armorPriceStep = v, d -> d.armorPriceStep).add()
+        .append(new KeyedCodec<>("ItemPriceStep", Codec.STRING), (d, v) -> d.itemPriceStep = v, d -> d.itemPriceStep).add()
             .append(new KeyedCodec<>("RefreshCount", Codec.STRING), (d, v) -> d.refreshCount = v, d -> d.refreshCount).add()
             .build();
 
@@ -33,6 +42,12 @@ public class ShopKeeperData implements Component<ChunkStore> {
     @Nullable
     private String refreshCost;
     @Nullable
+    private String weaponPriceStep;
+    @Nullable
+    private String armorPriceStep;
+    @Nullable
+    private String itemPriceStep;
+    @Nullable
     private String refreshCount;
 
     public ShopKeeperData() {
@@ -41,11 +56,17 @@ public class ShopKeeperData implements Component<ChunkStore> {
     public ShopKeeperData(@Nullable String actionRange,
                           @Nullable String rotationYaw,
                           @Nullable String refreshCost,
-                          @Nullable String refreshCount) {
+                          @Nullable String refreshCount,
+                          @Nullable String weaponPriceStep,
+                          @Nullable String armorPriceStep,
+                          @Nullable String itemPriceStep) {
         this.actionRange = actionRange;
         this.rotationYaw = rotationYaw;
         this.refreshCost = refreshCost;
         this.refreshCount = refreshCount;
+        this.weaponPriceStep = weaponPriceStep;
+        this.armorPriceStep = armorPriceStep;
+        this.itemPriceStep = itemPriceStep;
     }
 
     public static ComponentType<ChunkStore, ShopKeeperData> getComponentType() {
@@ -90,12 +111,34 @@ public class ShopKeeperData implements Component<ChunkStore> {
     }
 
     public int parseRefreshCost() {
-        if (refreshCost == null || refreshCost.isBlank()) return 0;
-        try {
-            return Math.max(0, Integer.parseInt(refreshCost));
-        } catch (NumberFormatException e) {
-            return 0;
-        }
+        return parseNonNegativeInt(refreshCost, DEFAULT_REFRESH_PRICE_STEP);
+    }
+
+    @Nullable
+    public String getWeaponPriceStep() {
+        return weaponPriceStep;
+    }
+
+    public int parseWeaponPriceStep() {
+        return parseNonNegativeInt(weaponPriceStep, DEFAULT_WEAPON_PRICE_STEP);
+    }
+
+    @Nullable
+    public String getArmorPriceStep() {
+        return armorPriceStep;
+    }
+
+    public int parseArmorPriceStep() {
+        return parseNonNegativeInt(armorPriceStep, DEFAULT_ARMOR_PRICE_STEP);
+    }
+
+    @Nullable
+    public String getItemPriceStep() {
+        return itemPriceStep;
+    }
+
+    public int parseItemPriceStep() {
+        return parseNonNegativeInt(itemPriceStep, DEFAULT_ITEM_PRICE_STEP);
     }
 
     @Nullable
@@ -104,17 +147,30 @@ public class ShopKeeperData implements Component<ChunkStore> {
     }
 
     public int parseRefreshCount() {
-        if (refreshCount == null || refreshCount.isBlank()) return 0;
+        return parseNonNegativeInt(refreshCount, 0);
+    }
+
+    private static int parseNonNegativeInt(@Nullable String value, int fallback) {
+        if (value == null || value.isBlank()) {
+            return fallback;
+        }
         try {
-            return Math.max(0, Integer.parseInt(refreshCount));
+            return Math.max(0, Integer.parseInt(value.trim()));
         } catch (NumberFormatException e) {
-            return 0;
+            return fallback;
         }
     }
 
     @Override
     @Nullable
     public Component<ChunkStore> clone() {
-        return new ShopKeeperData(this.actionRange, this.rotationYaw, this.refreshCost, this.refreshCount);
+        return new ShopKeeperData(
+                this.actionRange,
+                this.rotationYaw,
+                this.refreshCost,
+                this.refreshCount,
+                this.weaponPriceStep,
+                this.armorPriceStep,
+                this.itemPriceStep);
     }
 }

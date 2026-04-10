@@ -27,11 +27,11 @@ Group #ShopKeeperConfigRoot {
   }
 
   Group #ShopKeeperConfigCenter {
-    Anchor: (Width: 340, Height: 322);
+    Anchor: (Width: 360, Height: 396);
     LayoutMode: Middle;
 
     Group #ShopKeeperConfigPanel {
-      Anchor: (Width: 340, Height: 322);
+      Anchor: (Width: 360, Height: 396);
       Background: @PanelBg;
       LayoutMode: Top;
       Padding: (Horizontal: 20, Vertical: 14);
@@ -98,13 +98,13 @@ Group #ShopKeeperConfigRoot {
         LayoutMode: Left;
 
         Label {
-          Text: "Refresh Cost";
-          Anchor: (Width: 120, Height: 28);
+          Text: "Refresh Step";
+          Anchor: (Width: 140, Height: 28);
           Style: LabelStyle(FontSize: 12, TextColor: @LabelColor, RenderBold: true, HorizontalAlignment: Start, VerticalAlignment: Center);
         }
 
-        TextField #RefreshCostInput {
-          PlaceholderText: "0";
+        TextField #RefreshPriceStepInput {
+          PlaceholderText: "25";
           Anchor: (Width: 160, Height: 26);
           Style: InputFieldStyle(FontSize: 12, TextColor: @ValueColor);
           PlaceholderStyle: InputFieldStyle(FontSize: 12, TextColor: #556070);
@@ -113,19 +113,61 @@ Group #ShopKeeperConfigRoot {
         }
       }
 
-      // ── Refresh Uses ──
+      // ── Weapon Price Step ──
       Group {
         Anchor: (Height: 30, Top: 10);
         LayoutMode: Left;
 
         Label {
-          Text: "Refresh Uses";
-          Anchor: (Width: 120, Height: 28);
+          Text: "Weapon Step";
+          Anchor: (Width: 140, Height: 28);
           Style: LabelStyle(FontSize: 12, TextColor: @LabelColor, RenderBold: true, HorizontalAlignment: Start, VerticalAlignment: Center);
         }
 
-        TextField #RefreshCountInput {
-          PlaceholderText: "0";
+        TextField #WeaponPriceStepInput {
+          PlaceholderText: "50";
+          Anchor: (Width: 160, Height: 26);
+          Style: InputFieldStyle(FontSize: 12, TextColor: @ValueColor);
+          PlaceholderStyle: InputFieldStyle(FontSize: 12, TextColor: #556070);
+          Background: @InputBg;
+          Padding: (Left: 6, Right: 6);
+        }
+      }
+
+      // ── Armor Price Step ──
+      Group {
+        Anchor: (Height: 30, Top: 10);
+        LayoutMode: Left;
+
+        Label {
+          Text: "Armor Step";
+          Anchor: (Width: 140, Height: 28);
+          Style: LabelStyle(FontSize: 12, TextColor: @LabelColor, RenderBold: true, HorizontalAlignment: Start, VerticalAlignment: Center);
+        }
+
+        TextField #ArmorPriceStepInput {
+          PlaceholderText: "50";
+          Anchor: (Width: 160, Height: 26);
+          Style: InputFieldStyle(FontSize: 12, TextColor: @ValueColor);
+          PlaceholderStyle: InputFieldStyle(FontSize: 12, TextColor: #556070);
+          Background: @InputBg;
+          Padding: (Left: 6, Right: 6);
+        }
+      }
+
+      // ── Item Price Step ──
+      Group {
+        Anchor: (Height: 30, Top: 10);
+        LayoutMode: Left;
+
+        Label {
+          Text: "Item Step";
+          Anchor: (Width: 140, Height: 28);
+          Style: LabelStyle(FontSize: 12, TextColor: @LabelColor, RenderBold: true, HorizontalAlignment: Start, VerticalAlignment: Center);
+        }
+
+        TextField #ItemPriceStepInput {
+          PlaceholderText: "25";
           Anchor: (Width: 160, Height: 26);
           Style: InputFieldStyle(FontSize: 12, TextColor: @ValueColor);
           PlaceholderStyle: InputFieldStyle(FontSize: 12, TextColor: #556070);

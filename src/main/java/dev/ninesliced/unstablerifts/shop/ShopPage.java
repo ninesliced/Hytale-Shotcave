@@ -90,21 +90,18 @@ public final class ShopPage extends InteractiveCustomUIPage<ShopPage.ShopEventDa
     }
 
     private void buildRefreshControls(@Nonnull UICommandBuilder ui, @Nonnull UIEventBuilder events) {
-        boolean enabled = inventory.hasRefreshesConfigured() && inventory.refreshesRemaining() > 0;
         Message buttonText = Message.raw(buildRefreshButtonText());
         ui.set("#ShopRefreshBtn.TextSpans", buttonText);
         ui.set("#ShopRefreshBtnDisabled.TextSpans", buttonText);
-        ui.set("#ShopRefreshBtn.Visible", enabled);
-        ui.set("#ShopRefreshBtnDisabled.Visible", !enabled);
+        ui.set("#ShopRefreshBtn.Visible", true);
+        ui.set("#ShopRefreshBtnDisabled.Visible", false);
 
-        if (enabled) {
-            events.addEventBinding(
-                    CustomUIEventBindingType.Activating,
-                    "#ShopRefreshBtn",
-                    new EventData().put(ShopEventData.KEY_ACTION, "REFRESH"),
-                    false
-            );
-        }
+        events.addEventBinding(
+            CustomUIEventBindingType.Activating,
+            "#ShopRefreshBtn",
+            new EventData().put(ShopEventData.KEY_ACTION, "REFRESH"),
+            false
+        );
     }
 
     private void buildItemList(@Nonnull UICommandBuilder ui, @Nonnull UIEventBuilder events) {
@@ -347,11 +344,7 @@ public final class ShopPage extends InteractiveCustomUIPage<ShopPage.ShopEventDa
 
         ShopService.ShopRefreshResult result = plugin.getShopService().tryRefresh(game, inventory, store);
         String message = switch (result) {
-            case SUCCESS -> inventory.refreshesRemaining() > 0
-                    ? "Shop refreshed! " + inventory.refreshesRemaining() + " refreshes left."
-                    : "Shop refreshed! No refreshes left.";
-            case DISABLED -> "This shop cannot be refreshed.";
-            case NO_REFRESHES_REMAINING -> "No refreshes remaining!";
+            case SUCCESS -> "Shop refreshed!";
             case INSUFFICIENT_FUNDS -> "Not enough coins to refresh!";
         };
 
@@ -658,7 +651,7 @@ public final class ShopPage extends InteractiveCustomUIPage<ShopPage.ShopEventDa
         String costText = inventory.refreshCost() > 0
                 ? inventory.refreshCost() + "c"
                 : "free";
-        return "REFRESH " + costText.toUpperCase() + " x" + inventory.refreshesRemaining();
+        return "REFRESH " + costText.toUpperCase();
     }
 
     private static int parseIntSafe(String s, int fallback) {

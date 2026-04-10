@@ -90,20 +90,20 @@ Group #ShopItemConfigRoot {
         }
       }
 
-      // ── Price ──
+      // ── Legacy Price ──
       Group {
         Anchor: (Height: 30, Top: 4);
         LayoutMode: Left;
 
         Label {
-          Text: "Price";
-          Anchor: (Width: 90, Height: 28);
+          Text: "Legacy Price";
+          Anchor: (Width: 110, Height: 28);
           Style: LabelStyle(FontSize: 12, TextColor: @LabelColor, RenderBold: true, HorizontalAlignment: Start, VerticalAlignment: Center);
         }
 
         TextField #PriceInput {
           PlaceholderText: "10";
-          Anchor: (Width: 186, Height: 26);
+          Anchor: (Width: 166, Height: 26);
           Style: InputFieldStyle(FontSize: 12, TextColor: @ValueColor);
           PlaceholderStyle: InputFieldStyle(FontSize: 12, TextColor: #556070);
           Background: @InputBg;

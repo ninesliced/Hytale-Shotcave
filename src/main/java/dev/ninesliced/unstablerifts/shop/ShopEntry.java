@@ -14,18 +14,25 @@ import javax.annotation.Nullable;
 public final class ShopEntry {
 
     private final ShopItemType type;
-    private final int price;
+    private final int basePrice;
+    private final int repeatPriceStep;
     @Nullable
     private final ItemStack itemStack;
     @Nullable
     private Ref<EntityStore> displayRef;
+    private int purchaseCount;
     private boolean sold;
 
-    public ShopEntry(@Nonnull ShopItemType type, int price, @Nullable ItemStack itemStack) {
+    public ShopEntry(@Nonnull ShopItemType type,
+                     int basePrice,
+                     int repeatPriceStep,
+                     @Nullable ItemStack itemStack) {
         this.type = type;
-        this.price = price;
+        this.basePrice = Math.max(0, basePrice);
+        this.repeatPriceStep = Math.max(0, repeatPriceStep);
         this.itemStack = itemStack;
         this.displayRef = null;
+        this.purchaseCount = 0;
         this.sold = false;
     }
 
@@ -35,7 +42,11 @@ public final class ShopEntry {
     }
 
     public int getPrice() {
-        return price;
+        return basePrice + (purchaseCount * repeatPriceStep);
+    }
+
+    public boolean isRepeatPurchasable() {
+        return repeatPriceStep > 0;
     }
 
     @Nullable
@@ -54,6 +65,14 @@ public final class ShopEntry {
 
     public boolean isSold() {
         return sold;
+    }
+
+    public void recordPurchase() {
+        if (isRepeatPurchasable()) {
+            purchaseCount++;
+            return;
+        }
+        sold = true;
     }
 
     public void setSold(boolean sold) {
