@@ -2,8 +2,8 @@
   "crates": {
     "UnstableRifts_Props_Crate_Level1": {
       "minRarity": "BASIC",
-      "maxRarity": "RARE",
-      "weaponChance": 0.35,
+      "maxRarity": "UNIQUE",
+      "weaponChance": 0.25,
       "coinMin": 1,
       "coinMax": 3,
       "ammoChance": 0.10,
@@ -18,11 +18,20 @@
         "Weapon_Crystal_Musket_Fire_UnstableRifts",
         "Weapon_Crystal_Musket_Ice_UnstableRifts",
         "Weapon_Crystal_Musket_Lightning_UnstableRifts",
-        "Weapon_Crystal_Musket_Void_UnstableRifts"
+        "Weapon_Crystal_Musket_Void_UnstableRifts",
+        "Weapon_Kweebec_Launcher_UnstableRifts",
+        "Weapon_Crystal_Blunderbuss_Acid_UnstableRifts",
+        "Weapon_Crystal_Blunderbuss_Fire_UnstableRifts",
+        "Weapon_Crystal_Blunderbuss_Ice_UnstableRifts",
+        "Weapon_Crystal_Blunderbuss_Lightning_UnstableRifts",
+        "Weapon_Crystal_Blunderbuss_Void_UnstableRifts",
+        "Weapon_Corrupted_Shotgun_UnstableRifts",
+        "Weapon_Taser_UnstableRifts",
+        "Weapon_Voidlance_UnstableRifts"
       ],
       "armorChance": 0.30,
       "armorMinRarity": "BASIC",
-      "armorMaxRarity": "RARE",
+      "armorMaxRarity": "UNIQUE",
       "armorWhitelist": [
         "Armor_Crystal_Head_UnstableRifts",
         "Armor_Crystal_Chest_UnstableRifts",

@@ -7,11 +7,11 @@
   "maxRarity": "UNCOMMON",
   "spawnWeight": 15,
   "baseStats": {
-    "range": 20,
-    "spread": 16.0,
-    "pellets": 6,
+    "range": 24,
+    "spread": 14.0,
+    "pellets": 8,
     "knockback": 1.5,
-    "precision": 25
+    "precision": 30
   },
   "primary": {
     "id": "UnstableRifts_Blunderbuss_Primary",
@@ -31,8 +31,8 @@
     "maxAmmo": 60
   },
   "damage": {
-    "id": "UnstableRifts_Blunderbuss_Projectile_Hit",
-    "amount": 6,
+    "id": "UnstableRifts_Crystal_Blunderbuss_Projectile_Hit",
+    "amount": 8,
     "type": "Projectile",
     "worldSfx": "SFX_Blunderbuss_Hit",
     "localSfx": "SFX_Blunderbuss_Hit",
