@@ -85,7 +85,7 @@ For the full command list, see the [wiki command page](https://wiki.hytalemoddin
 
 - [Wiki Home](https://wiki.hytalemodding.dev/mod/unstable-rifts)
 - [Getting Started](https://wiki.hytalemodding.dev/mod/unstable-rifts/getting-started-1)
-- [Lore](https://wiki.hytalemodding.dev/mod/unstable-rifts/lore-1)
+- [Lore](https://wiki.hytalemodding.dev/mod/unstable-rifts/lore)
 - [Weapons](https://wiki.hytalemodding.dev/mod/unstable-rifts/weapons-1)
 - [Dungeon Levels](https://wiki.hytalemodding.dev/mod/unstable-rifts/dungeon-levels-1)
 - [Party System](https://wiki.hytalemodding.dev/mod/unstable-rifts/party-system-1)
