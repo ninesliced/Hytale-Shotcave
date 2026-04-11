@@ -13,6 +13,12 @@ draft: false
 |---|---|
 | **Version** | 1.0.0 |
 | **Authors** | Theobosse, Paralaxe |
+| **Builds by** | Palomote72 |
+| **NPC Design** | That_Worm, TheCommando315 |
+| **NPC animations** | TheCommando315, danilerts |
+| **Custom Weapons** | kill_dill |
+| **Props and items** | Sylano |
+| **Other** | Xenap |
 | **Players** | 1 - 4 (Co-op) |
 | **Weapons** | 19 |
 | **Armor Sets** | 6 (24 pieces) |

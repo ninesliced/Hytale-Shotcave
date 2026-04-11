@@ -103,7 +103,7 @@ The mod ships with its own assets, so players can jump in and start using the ne
 - **Created by:** Theobosse and Paralaxe
 - **Builds by:** Palomote72
 - **NPC Design:** That_Worm and TheCommando315
-- **NPC animations:** TheCommanddo315 and danilerts
+- **NPC animations:** TheCommando315 and danilerts
 - **Custom Weapons:** kill_dill
 - **Props and items:** Sylano
 - **Other:** Xenap
