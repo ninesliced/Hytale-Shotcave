@@ -8,8 +8,10 @@ draft: false
 # HUD and Interface
 
 Unstable Rifts replaces the default Hytale HUD with a custom interface designed for the top-down dungeon crawler experience. All HUD elements can be toggled with `/ur togglehud`.
+
 ![Full HUD Overview](images/hud/hud_overview.png)
 _Complete HUD layout during gameplay_
+
 ---
 
 ## HUD Elements

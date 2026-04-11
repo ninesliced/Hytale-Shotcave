@@ -19,6 +19,7 @@ _Kweebec Seedling_
 _DeadWood Seedling_
 ![Industrial Hazmat](images/enemies/industrial_hazmat.png)
 _Industrial Hazmat (Toxic Launcher)_
+
 ---
 
 ## DeadWood Enemies

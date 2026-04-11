@@ -8,10 +8,12 @@ draft: false
 # Dungeon Levels
 
 The dungeon is procedurally generated each run. Rooms connect via corridors, with branching paths, locked doors, and special rooms scattered throughout. No two runs are the same.
+
 ![Dungeon Generation Example](images/dungeon_generation.png)
 _Example of a procedurally generated dungeon layout_
 ![Dungeon Map View](images/dungeon_map.png)
 _In-game dungeon map showing explored rooms_
+
 ---
 
 ## Level 1: Kweebec

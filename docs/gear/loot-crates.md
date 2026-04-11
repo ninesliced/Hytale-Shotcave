@@ -8,6 +8,7 @@ draft: false
 # Loot and Crates
 
 Crates are destructible containers scattered throughout dungeon rooms. Break them to receive weapons, armor, ammo, healing items, and coins. Higher-tier crates found deeper in the dungeon yield better loot.
+
 ![Standard Crate](images/crates/crate_standard.png)
 _Standard Crate_
 ![Level 1 Crate](images/crates/crate_level1.png)
@@ -18,6 +19,7 @@ _Level 2 Crate_
 _Level 3 Crate_
 ![Large Crate (2x2)](images/crates/crate_2x2.png)
 _Large Crate (2x2)_
+
 ---
 
 ## Crate Tiers Overview

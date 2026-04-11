@@ -15,7 +15,6 @@ Unstable Rifts has 6 armor sets, each with 4 pieces (Head, Chest, Arms, Legs). W
 
 | Set | Ability | Effect | Rarity Range | Weight |
 |-----|---------|--------|-------------|--------|
-
 | Crystal | BERSERKER | Increased damage output when low on health | Basic -- Legendary | 15 |
 | Vine | REGENERATION | Passive health regeneration over time | Basic -- Legendary | 15 |
 | Shale | GUARDIAN | Damage absorption shield that blocks incoming hits | Uncommon -- Unique | 12 |
