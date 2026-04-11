@@ -81,16 +81,22 @@ All muskets share identical base stats. The Lightning and Void variants are hard
 ## Elemental Blunderbusses
 
 Blunderbusses are short-range spread weapons that fire 8 pellets per shot. Each variant has a locked element.
+
 ![Acid Blunderbuss](images/weapons/blunderbuss_acid.png)
 _Acid Blunderbuss_
+
 ![Fire Blunderbuss](images/weapons/blunderbuss_fire.png)
 _Fire Blunderbuss_
+
 ![Ice Blunderbuss](images/weapons/blunderbuss_ice.png)
 _Ice Blunderbuss_
+
 ![Lightning Blunderbuss](images/weapons/blunderbuss_lightning.png)
 _Lightning Blunderbuss_
+
 ![Void Blunderbuss](images/weapons/blunderbuss_void.png)
 _Void Blunderbuss_
+
 | Variant | Element | Category | Damage | Cooldown | Reload | Ammo | Range | Spread | Min Rarity | Weight |
 |---------|---------|----------|--------|----------|--------|------|-------|--------|-----------|--------|
 | Blunderbuss (Acid) | ACID | LASER | 8 | 1.05s | 1.25s | 60 | 24 | 14.0 | <span class="rarity-rare">Rare</span> | 5 |
