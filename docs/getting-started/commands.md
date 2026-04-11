@@ -1,6 +1,6 @@
 ---
 title: "Commands"
-order: 2
+order: 3
 published: true
 draft: false
 ---

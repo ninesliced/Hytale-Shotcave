@@ -11,6 +11,12 @@ Unstable Rifts is a top-down co-op dungeon mode. You and your team enter a porta
 
 ![Gameplay Overview](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/general/gameplay_overview.png)
 
+## Story Setup
+
+The Industrial faction has invaded Orbis and is attacking the Kweebecs to steal resources and take control of the land. The rifts you enter are part of that invasion, and each completed run pushes the enemy back.
+
+Many Kweebecs have already been lost to an unknown plague that turns them into DeadWood. If you want the full story, read [Lore](lore-1).
+
 ---
 
 ## How to Play
@@ -109,6 +115,7 @@ Coins drop from enemies and crates. They are shared across the entire party and 
 
 ## Next Steps
 
+- [Lore](lore-1) -- Learn why the invasion started and what the rifts mean
 - [Weapons](weapons-1) -- Learn about the 19 available weapons
 - [Armor Sets](armor-sets-1) -- Find out about armor set bonuses
 - [Dungeon Levels](dungeon-levels-1) -- Explore what awaits in each level

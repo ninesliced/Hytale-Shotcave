@@ -26,6 +26,12 @@ _Unstable Rifts -- roguelike shooter in Hytale_
 _Top-down dungeon gameplay with a party_
 ---
 
+## Story
+
+The Industrial faction has invaded Orbis to strip it of its resources. Their first major target is the Kweebecs, whose villages are being burned, looted, and destroyed.
+
+Many Kweebecs have been captured, enslaved, or infected by an unknown plague that twists them into DeadWood. The player enters the rifts left behind by the invaders, clears the dungeon, and fights back before the Kweebecs are fully overrun.
+
 ## Wiki Pages
 
 ### Getting Started
@@ -33,6 +39,10 @@ _Top-down dungeon gameplay with a party_
 #### [Getting Started](getting-started-1)
 
 How to play, starting equipment, and basic gameplay loop.
+
+#### [Lore](lore-1)
+
+The story behind the invasion, the Kweebecs, the DeadWood, and your mission.
 
 #### [Installation](installation-1)
 
