@@ -32,13 +32,19 @@ The Industrial faction has invaded Orbis to strip it of its resources. Their fir
 
 Many Kweebecs have been captured, enslaved, or infected by an unknown plague that twists them into DeadWood. The player enters the rifts left behind by the invaders, clears the dungeon, and fights back before the Kweebecs are fully overrun.
 
+## Quick Start
+
+You can begin by finding an Ancient Party Portal in a Kweebec village, crafting your own portal, or opening the party menu with `/ur party ui`.
+
+From there, create or join a party, invite friends, and start the dungeon run together.
+
 ## Wiki Pages
 
 ### Getting Started
 
 #### [Getting Started](getting-started-1)
 
-How to play, starting equipment, and basic gameplay loop.
+How to start from a village portal, a crafted portal, or `/ur party ui`, plus the basic gameplay loop.
 
 #### [Lore](lore-1)
 

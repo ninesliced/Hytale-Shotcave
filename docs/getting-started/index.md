@@ -19,13 +19,26 @@ Many Kweebecs have already been lost to an unknown plague that turns them into D
 
 ---
 
+## How To Start A Run
+
+You can start playing in three main ways:
+
+1. **Find an Ancient Party Portal** in a Kweebec village.
+2. **Craft your own portal** and place it yourself.
+3. **Open `/ur party ui`** to create or manage a party directly from the interface.
+
+After that, create a party, invite friends, and launch the run.
+
+---
+
 ## How to Play
 
-1. **Form a Party** -- Use `/unstablerifts party create` or interact with the Ancient Party Portal item.
-2. **Enter the Dungeon** -- The party leader starts the run with `/unstablerifts party start`.
-3. **Fight Through Rooms** -- Clear enemies, break crates for loot, and find the boss room.
-4. **Defeat the Boss** -- Each level ends with a boss fight. Defeat it to unlock the exit portal.
-5. **Progress or Exit** -- Step through the portal to advance to the next level or return to the lobby.
+1. **Form a Party** -- Use a village portal, a crafted portal, or `/ur party ui` to create or manage your group.
+2. **Invite Friends** -- Invite other players from the party menu or with `/ur party invite <player>`.
+3. **Enter the Dungeon** -- The party leader starts the run from the party UI or with `/unstablerifts party start`.
+4. **Fight Through Rooms** -- Clear enemies, break crates for loot, and find the boss room.
+5. **Defeat the Boss** -- Each level ends with a boss fight. Defeat it to unlock the exit portal.
+6. **Progress or Exit** -- Step through the portal to advance to the next level or return to the lobby.
 
 ![Ancient Party Portal](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/getting-started/ancient_party_portal.png)
 ![Dungeon Entrance](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/getting-started/dungeon_entrance.png)

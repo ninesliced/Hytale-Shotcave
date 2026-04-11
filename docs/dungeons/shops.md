@@ -57,8 +57,9 @@ See [Getting Started](getting-started-1#coins) for detailed coin drop rates.
 - Base prices are set when the run starts.
 - One-time purchase items become unavailable after being bought.
 - Repeatable items (like consumables) get more expensive each time you buy them:
+- Price = Base Price + (Purchase Count x Price Step)
 
-$$\text{Price} = \text{Base Price} + (\text{Purchase Count} \times \text{Price Step})$$
+Example: if an item starts at 50 coins and the price step is 10, then after buying it 2 times the new price becomes 70.
 
 ---
 

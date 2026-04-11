@@ -18,10 +18,11 @@ _Ancient Party Portal -- used to create a party_
 
 ## Quick Start
 
-1. Create a party: `/ur party create` (or `/ur party create public` for a public party)
-2. Invite friends: `/ur party invite <player>`
-3. Friends accept: `/ur accept`
-4. Start the run: `/ur party start`
+1. Start from an Ancient Party Portal, a crafted portal, or `/ur party ui`
+2. Create a party: `/ur party create` (or `/ur party create public` for a public party)
+3. Invite friends: `/ur party invite <player>`
+4. Friends accept: `/ur accept`
+5. Start the run: `/ur party start` or use the party UI
 
 ---
 
