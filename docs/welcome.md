@@ -7,7 +7,7 @@ draft: false
 
 # Unstable Rifts
 
-> A top-down roguelike dungeon shooter for Hytale. Fight through procedurally generated levels with up to 4 players, collect weapons and armor, and defeat bosses to progress.
+> A top-down dungeon shooter for Hytale. Play solo or with up to 4 players, find better gear, and beat the boss to move forward.
 
 |  |  |
 |---|---|
@@ -46,42 +46,42 @@ Full command reference for players and server administrators.
 
 #### [Weapons](weapons-1)
 
-All 19 weapons -- stats, rarities, elemental effects, and categories.
+All 19 weapons, with easy stat tables and what each weapon is good at.
 
 #### [Rarity, Modifiers & Effects](rarity-and-modifiers)
 
-Rarity tiers, modifier types, elemental effects, and how drops are rolled.
+Simple guide to rarity, effects, and bonus stats on weapon drops.
 
 #### [Armor Sets](armor-sets-1)
 
-6 armor sets, set abilities, stat breakdowns, and rarity ranges.
+All armor sets, what they do, and which one fits your playstyle.
 
 #### [Loot and Crates](loot-crates-1)
 
-Crate tiers, drop tables, weapon and armor pool details.
+Crate types, loot chances, and what gear you can get from each one.
 
 ### Dungeons and Combat
 
 #### [Dungeon Levels](dungeon-levels-1)
 
-Level layouts, room types, mob pools, and generation details.
+Level flow, room types, and what to expect as you go deeper.
 
 #### [Enemies and Bosses](enemies-bosses-1)
 
-All enemy types, boss mechanics, attack patterns, and ally NPCs.
+Enemy and boss overview with clear, practical combat info.
 
 #### [Shops](shops-1)
 
-In-dungeon shops, purchasing, and available items.
+How shops work, what you can buy, and when to spend your coins.
 
 ### Systems
 
 #### [Party System](party-system-1)
 
-Party creation, invites, privacy, reconnection, and shared resources.
+How to play with friends: invites, party rules, and reconnect behavior.
 
 #### [HUD and Interface](hud-interface-1)
 
-All HUD elements -- ammo, boss health, party status, revive prompts, and map.
+What each HUD element means during a run.
 ---
 Unstable Rifts v1.0.0 -- by Theobosse and Paralaxe -- [curseforge.com](https://www.curseforge.com)

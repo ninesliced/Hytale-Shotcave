@@ -7,7 +7,7 @@ draft: false
 
 # Dungeon Levels
 
-The dungeon is procedurally generated each run. Rooms connect via corridors, with branching paths, locked doors, and special rooms scattered throughout. No two runs are the same.
+Each run builds a fresh dungeon layout. Rooms connect with corridors, side paths, locked doors, and special rooms. No two runs are exactly the same.
 
 ![Dungeon Generation Example](images/dungeon_generation.png)
 _Example of a procedurally generated dungeon layout_
@@ -18,7 +18,7 @@ _In-game dungeon map showing explored rooms_
 
 ## Level 1: Kweebec
 
-A corrupted forest overrun by twisted DeadWood creatures and radioactive wildlife.
+A corrupted forest full of DeadWood enemies and radioactive wildlife.
 ![Kweebec Entrance](images/kweebec_entrance.png)
 _The Kweebec level entrance room_
 ![Kweebec Combat](images/kweebec_combat.png)
@@ -54,7 +54,7 @@ _Fighting DeadWood mobs in the Kweebec level_
 | Radioactive Wolf | 5 | Fast pack animal |
 | Industrial Nosuit | 3 | Unarmored worker |
 
-**Total Weight:** 65. Each mob's spawn chance = its weight / 65.
+**Total Weight:** 65. Bigger weight means that enemy appears more often.
 
 ### Decorative Props
 
@@ -81,7 +81,7 @@ _Radioactive barrels -- breakable environmental hazards_
 
 ## Level 2: Desert
 
-An arid industrial wasteland with hazardous enemies and tougher encounters.
+A dry industrial zone with tougher enemies and harder fights.
 ![Desert Entrance](images/desert_entrance.png)
 _The Desert level entrance room_
 ![Desert Combat](images/desert_combat.png)
@@ -107,7 +107,7 @@ _Fighting industrial enemies in the Desert level_
 |-------|-------------|-------|
 | Industrial Hazmat (Toxic Launcher) | 3 | Ranged toxic projectile attacker |
 
-All Kweebec level enemies also appear in the Desert level with the same weights. Desert branches are longer and contain their own challenge rooms.
+All Kweebec enemies can also appear in Desert. Desert side paths are longer and include their own challenge rooms.
 
 ---
 
@@ -144,7 +144,7 @@ _Shop room with the shopkeeper NPC_
 
 ## Dungeon Generation
 
-Each run creates a unique layout by:
+The game builds each run in this order:
 
 1. Placing the spawn room
 2. Building the main corridor path up to the max room count
@@ -153,8 +153,9 @@ Each run creates a unique layout by:
 5. Generating branch paths from splitter positions
 6. Placing the boss room at the end of the main path
 7. Connecting rooms with doors based on type assignments
-8. Distributing mobs across the level based on the weighted pool
-**Note:** Branch paths are shorter than the main path and contain fewer mobs, but can still hold challenge rooms (Desert level branches always include one).
+8. Spawning enemies using the level's weight table
+
+> **Note:** Side paths are usually shorter and have fewer enemies, but they can still include challenge rooms.
 ---
 
 ## Level Comparison

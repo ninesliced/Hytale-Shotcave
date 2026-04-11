@@ -7,13 +7,13 @@ draft: false
 
 # Weapons
 
-Unstable Rifts features 19 weapons across four categories: Laser, Bullet, Melee, and Summoning. Weapons drop from crates, enemies, and shops with random rarity rolls.
+Unstable Rifts has 19 weapons in four groups: Laser, Bullet, Melee, and Summoning. You get them from crates, enemies, and shops.
 
 ---
 
 ## Rarity Tiers
 
-Each weapon rolls a rarity tier when dropped that scales its base stats:
+When a weapon drops, it gets a rarity. Higher rarity usually means better stats.
 
 | Tier | Badge | Drop Frequency |
 |------|-------|----------------|
@@ -24,7 +24,7 @@ Each weapon rolls a rarity tier when dropped that scales its base stats:
 | Legendary | <span class="rarity-legendary">Legendary</span> | Very rare |
 | Unique | <span class="rarity-unique">Unique</span> | Extremely rare |
 
-Higher rarity increases damage, ammo capacity, and reload speed.
+In short: higher rarity = stronger weapon.
 
 ---
 
@@ -58,7 +58,7 @@ _Rifle_
 
 ## Elemental Muskets
 
-Muskets are long-range, high-damage laser weapons. Each variant is locked to a specific element.
+Muskets are long-range weapons with high damage. Each one always uses a fixed element.
 ![Fire Musket](images/weapons/musket_fire.png)
 _Fire Musket_
 ![Ice Musket](images/weapons/musket_ice.png)
@@ -74,13 +74,13 @@ _Void Musket_
 | Musket (Lightning) | <span class="effect-electricity">ELECTRICITY</span> | 26 | 1.4s | 1.25s | 50 | 60 | <span class="rarity-epic">Epic</span> | 5 |
 | Musket (Void) | <span class="effect-void">VOID</span> | 26 | 1.4s | 1.25s | 50 | 60 | <span class="rarity-epic">Epic</span> | 5 |
 
-All muskets share identical base stats. The Lightning and Void variants are harder to find, starting at Epic rarity.
+All muskets share the same base stats. Lightning and Void versions are rarer.
 
 ---
 
 ## Elemental Blunderbusses
 
-Blunderbusses are short-range spread weapons that fire 8 pellets per shot. Each variant has a locked element.
+Blunderbusses are close-range spread weapons that fire 8 pellets per shot. Each version has its own fixed element.
 
 ![Acid Blunderbuss](images/weapons/blunderbuss_acid.png)
 _Acid Blunderbuss_
@@ -125,19 +125,19 @@ Weapons with a locked element always apply that effect on hit:
 
 ### Taser
 
-The Taser fires electrified shots that chain to nearby enemies. It only drops at Epic rarity or above, making it one of the rarer weapons.
+The Taser shoots electricity that jumps to nearby enemies. It is a rare drop (Epic+).
 
 ### Voidlance
 
-A void-powered long-range weapon. Its base damage is not defined in the standard way -- it uses a special projectile system. Only drops at Epic rarity.
+A long-range void weapon. It uses a custom projectile setup and drops at Epic rarity.
 
 ### Corrupted Shotgun
 
-The most destructive spread weapon in the game. Fires 32 pellets per shot with both <span class="effect-acid">Acid</span> and <span class="effect-void">Void</span> effects. Extremely rare, dropping only at Epic or Unique rarity with a spawn weight of 3.
+One of the strongest spread weapons in the game. It fires 32 pellets with both <span class="effect-acid">Acid</span> and <span class="effect-void">Void</span> effects. Very rare.
 
 ### Kweebec Launcher
 
-A summoning weapon that spawns a friendly Kweebec ally instead of firing projectiles. The summoned Kweebec has 36 HP, deals 12 damage, and persists for 600 ticks. Only drops at Epic rarity.
+This weapon summons a friendly Kweebec instead of shooting bullets. The summon has 36 HP, deals 12 damage, and lasts 600 ticks. Drops at Epic rarity.
 
 ![Taser](images/weapons/taser.png)
 _Taser -- chains to nearby enemies_

@@ -7,7 +7,7 @@ draft: false
 
 # Party System
 
-Unstable Rifts is designed for cooperative play. The party system lets you team up with up to 3 other players before entering the dungeon.
+Unstable Rifts is built for co-op. The party system lets you team up with up to 3 other players before entering the dungeon.
 
 ![Party UI](images/party/party_ui.png)
 _Party management UI showing member list and controls_
@@ -64,9 +64,9 @@ All coins earned during a dungeon run are added to a shared team pool. Any party
 
 ### Reconnection
 
-If a party member disconnects during a dungeon run, they are tracked as a disconnected member. When they reconnect to the server, they are automatically returned to the dungeon at their last position.
+If a player disconnects during a run, the game keeps their slot. When they reconnect, they are sent back into the run.
 
-The party member count always includes both active and disconnected members. This prevents new players from joining an in-progress run to fill a disconnected player's slot.
+Disconnected players still count as party members, so another player cannot take that slot mid-run.
 
 ### Party UI
 
@@ -83,11 +83,12 @@ The party management UI (`/ur party ui`) provides:
 
 When the leader starts the run:
 
-1. All online party members are teleported to the dungeon instance
+1. All online party members are teleported into the dungeon
 2. Each player's return position is saved for after the run
 3. Starting equipment is distributed (Pistol + Crystal Sword)
-4. The dungeon begins generating
-**Note:** Only online members are teleported. Disconnected members will be teleported when they reconnect.
+4. The run starts
+
+> **Note:** Only players who are online are teleported immediately. Disconnected players rejoin when they reconnect.
 ---
 
 ## Party Lifecycle

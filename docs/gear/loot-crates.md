@@ -7,7 +7,7 @@ draft: false
 
 # Loot and Crates
 
-Crates are destructible containers scattered throughout dungeon rooms. Break them to receive weapons, armor, ammo, healing items, and coins. Higher-tier crates found deeper in the dungeon yield better loot.
+Crates are breakable loot boxes found in dungeon rooms. Break them to get weapons, armor, ammo, healing, and coins. Better crates show up deeper in the run.
 
 ![Standard Crate](images/crates/crate_standard.png)
 _Standard Crate_
@@ -52,7 +52,7 @@ The most common crate found in early dungeon rooms.
 
 ## Level 1 Crate
 
-Found in the Kweebec level. Same base drops as Standard but with a wider rarity range and access to all weapons.
+Found in Kweebec. Similar to Standard crates, but with a wider rarity range and more weapon options.
 
 | Property | Value |
 |----------|-------|
@@ -68,7 +68,7 @@ Found in the Kweebec level. Same base drops as Standard but with a wider rarity 
 
 ## Level 2 Crate
 
-Found in mid-game rooms. Higher minimum rarity and better drop rates.
+Found in mid-run rooms. Better drop rates and better minimum rarity.
 
 | Property | Value |
 |----------|-------|
@@ -84,7 +84,7 @@ Found in mid-game rooms. Higher minimum rarity and better drop rates.
 
 ## Level 3 Crate
 
-The best standard crate. Found in late-game rooms with the highest drop rates and rarity floor.
+The best regular crate. Found late in the run with the best drop rates.
 
 | Property | Value |
 |----------|-------|
@@ -95,12 +95,13 @@ The best standard crate. Found in late-game rooms with the highest drop rates an
 **Weapon Pool:** All 19 weapons
 
 **Armor Pool:** All 6 sets -- Crystal, Vine, Shale, Bone, Void, Warden
-**Note:** Level 3 crates are the only standard crate that can drop Void and Warden armor pieces.
+
+> **Note:** Level 3 crates are the only regular crates that can drop Void and Warden armor.
 ---
 
 ## Large Crate (2x2)
 
-A physically larger crate that takes up a 2x2 block space. Higher ammo and healing rates than Standard, and broader rarity than Level 1.
+A larger 2x2 crate with better ammo/heal rates than Standard crates.
 
 | Property | Value |
 |----------|-------|
@@ -116,7 +117,7 @@ A physically larger crate that takes up a 2x2 block space. Higher ammo and heali
 
 ## Destructible Props
 
-In addition to loot crates, the dungeon contains environmental objects that can be destroyed:
+The dungeon also has breakable world objects:
 
 | Object | Description |
 |--------|-------------|
@@ -130,14 +131,14 @@ _Rusted Radioactive Barrel_
 
 ## Loot Progression
 
-As you advance through the dungeon, crate quality improves:
+As you go deeper, crate quality improves:
 
 | Progression | Available Crates | Best Possible Rarity | Armor Sets Available |
 |-------------|-----------------|---------------------|---------------------|
 | Early Rooms | Standard, Level 1 | <span class="rarity-unique">Unique</span> | Crystal, Vine |
 | Mid Rooms | Level 2, Large | <span class="rarity-epic">Epic</span> | Crystal, Vine, Shale, Bone |
 
- Seek out Level 3 crates for the best chance at Void and Warden armor. Large (2x2) crates are also valuable for their high coin drops and 50% weapon chance.
+> **Tip:** Look for Level 3 crates if you want Void or Warden armor. Large 2x2 crates are also great for coins and weapon rolls.
 ---
 
 ## Related Pages

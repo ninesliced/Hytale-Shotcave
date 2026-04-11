@@ -29,7 +29,7 @@ _Shop purchase interface showing item details_
 
 ## Payment
 
-Shops use the shared team coin pool. Any party member can make purchases, and the cost is deducted from the team's total.
+Shops use shared party coins. Any teammate can buy items, and the cost comes from the same coin pool.
 
 | Source | Description |
 |--------|-------------|
@@ -54,9 +54,9 @@ See [Getting Started](getting-started-1#coins) for detailed coin drop rates.
 
 ## Pricing
 
-- Base prices are determined when the dungeon generates.
+- Base prices are set when the run starts.
 - One-time purchase items become unavailable after being bought.
-- Repeatable items (consumables) increase in price with each purchase:
+- Repeatable items (like consumables) get more expensive each time you buy them:
 
 $$\text{Price} = \text{Base Price} + (\text{Purchase Count} \times \text{Price Step})$$
 
@@ -64,14 +64,14 @@ $$\text{Price} = \text{Base Price} + (\text{Purchase Count} \times \text{Price S
 
 ## Shop Refresh
 
-Some shop rooms include a refresh option that regenerates the available item stock:
+Some shops have a refresh button to reroll the item list:
 
 | Property | Description |
 |----------|-------------|
 | Refresh Cost | Costs team coins (varies by room) |
-| Effect | Regenerates all unsold items with new random rolls |
+| Effect | Rerolls all unsold items |
 
- If the shop doesn't have the weapon or armor you need, try refreshing the stock. The refresh re-rolls all items, including their rarity and elemental effects.
+> **Tip:** If you do not like the current items, refresh the shop to roll a new list.
 ---
 
 ## Shop Details

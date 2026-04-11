@@ -7,7 +7,7 @@ draft: false
 
 # HUD and Interface
 
-Unstable Rifts replaces the default Hytale HUD with a custom interface designed for the top-down dungeon crawler experience. All HUD elements can be toggled with `/ur togglehud`.
+Unstable Rifts uses a custom HUD made for top-down dungeon play. You can show or hide it with `/ur togglehud`.
 
 ![Full HUD Overview](images/hud/hud_overview.png)
 _Complete HUD layout during gameplay_
@@ -18,13 +18,13 @@ _Complete HUD layout during gameplay_
 
 ### Ammo Display
 
-Shows your current weapon's ammunition count and reload status. Updates in real-time as you fire and reload.
+Shows current ammo and reload state. It updates as you shoot and reload.
 ![Ammo HUD](images/hud/ammo_display.png)
 _Ammo counter with reload indicator_
 
 ### Boss Health Bar
 
-Appears during boss fights. Shows the boss name, current health, and health percentage. The bar color changes based on remaining HP:
+Shows during boss fights. It displays the boss name and remaining health. Color changes as HP gets low:
 
 | Health Range | Color |
 |-------------|-------|
@@ -37,13 +37,13 @@ _Boss health bar during the Forklift fight_
 
 ### Dungeon Info
 
-Displays the current dungeon name, level, and room information in the corner of the screen.
+Shows dungeon name, level, and room info in a corner of the screen.
 ![Dungeon Info](images/hud/dungeon_info.png)
 _Dungeon info panel showing level name and progress_
 
 ### Party Status
 
-Shows all party members with their health bars, names, and connection status. Disconnected members appear grayed out.
+Shows all party members, their HP, and connection status. Disconnected players appear grayed out.
 ![Party Status](images/hud/party_status.png)
 _Party status panel with 4 members_
 
@@ -75,7 +75,7 @@ _Challenge room progress indicator_
 
 ## Dungeon Map
 
-The dungeon map shows a top-down view of the dungeon layout as you explore it. Rooms are revealed as you enter them.
+The map shows the dungeon from above. Rooms appear as you discover them.
 ![Dungeon Map Full](images/hud/dungeon_map_full.png)
 _Dungeon map showing explored and unexplored rooms_
 ![Dungeon Map Minimap](images/hud/dungeon_map_mini.png)

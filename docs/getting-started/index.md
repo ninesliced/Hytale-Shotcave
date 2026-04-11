@@ -7,7 +7,7 @@ draft: false
 
 # Getting Started
 
-Unstable Rifts is a fully custom game mode that transforms Hytale into a top-down cooperative dungeon crawler. Players form a party, enter a portal, and fight through procedurally generated rooms filled with enemies, loot crates, shops, and bosses.
+Unstable Rifts is a top-down co-op dungeon mode. You and your team enter a portal, clear rooms, grab loot, visit shops, and beat the boss.
 
 ![Gameplay Overview](images/gameplay_overview.png)
 
@@ -44,15 +44,15 @@ Every player spawns with two weapons at the beginning of each run:
 
 ### Exploration
 
-Each dungeon is procedurally generated with a main path and branching side paths. Rooms connect via corridors with different door types that may require keys or triggers to open.
+Each run builds a fresh dungeon layout. You follow a main path, with side paths for extra loot and fights.
 
 ### Combat
 
-Use the top-down camera to aim and shoot enemies. Switch between weapons based on the situation -- use ranged weapons for groups and the Crystal Sword for close encounters.
+Use the top-down view to aim and shoot. Swap weapons based on distance: guns for space, sword when enemies get close.
 
 ### Loot
 
-Break crates scattered throughout rooms to find weapons, armor, ammo, healing items, and coins. Higher-tier crates found deeper in the dungeon contain better loot.
+Break crates for weapons, armor, ammo, healing, and coins. Better crates appear later in the run.
 
 ### Shops
 

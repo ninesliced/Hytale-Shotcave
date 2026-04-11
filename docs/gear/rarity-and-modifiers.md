@@ -6,13 +6,13 @@ published: true
 
 # Rarity, Modifiers & Effects
 
-Every weapon in Unstable Rifts is generated at runtime with a rarity tier, optional elemental effect, and a set of random stat modifiers. No two drops are guaranteed to be identical.
+Every weapon drop can have three parts: a rarity tier, an element effect, and bonus stats (modifiers). So two drops of the same weapon can still feel different.
 
 ---
 
 ## Rarity Tiers
 
-Rarity is rolled from a weighted table each time a weapon spawns. Higher tiers are rarer but carry better effects and more modifier slots.
+When a weapon drops, the game rolls its rarity from a weighted list. Higher tiers are harder to get, but they give more power.
 
 | Tier | Spawn Chance | Modifier Slots | Effect Chance | Effect DoT Duration | Glow |
 |------|:-----------:|:--------------:|:-------------:|:-------------------:|------|
@@ -23,7 +23,7 @@ Rarity is rolled from a weighted table each time a weapon spawns. Higher tiers a
 | <span class="rarity-legendary">Legendary</span> | 5% | 4 | 50% | 0.85 s | Gold |
 | <span class="rarity-unique">Unique</span> | 2% | 5 | 100% | 1.00 s | Red |
 
-**Effect DoT Duration** is the base 0.5 s plus a rarity bonus (Uncommon +0.05 s, Rare +0.1 s, Epic +0.2 s, Legendary +0.35 s, Unique +0.5 s).
+**Effect duration** starts at 0.5 s and grows with rarity.
 
 > [!NOTE]
 > BASIC weapons always drop without an effect or any modifiers. UNIQUE weapons always carry a damage effect.
@@ -32,7 +32,7 @@ Rarity is rolled from a weighted table each time a weapon spawns. Higher tiers a
 
 ## Elemental Effects
 
-When the effect roll succeeds, one of five effects is chosen at random (equal 20% weight each). Weapons with a *locked* effect (e.g. all Muskets) always apply that effect regardless of rarity.
+If a weapon passes its effect roll, one of the 5 effects below is picked at random. Some weapons (like Muskets) have a fixed effect and always use that one.
 
 | Effect | Trail | Entity Status | Description |
 |--------|-------|--------------|-------------|
@@ -42,13 +42,13 @@ When the effect roll succeeds, one of five effects is chosen at random (equal 20
 | <span class="effect-void">VOID</span> | Purple | `UnstableRifts_Void_Portal_DOT` | Inflicts void corruption, dealing periodic void damage. |
 | <span class="effect-acid">ACID</span> | Green | `UnstableRifts_Poison` | Poisons the target, dealing damage over time. |
 
-The DoT duration shown in the rarity table above applies to all five effects equally — higher rarity weapons inflict longer-lasting status effects.
+Higher rarity means effects last longer.
 
 ---
 
 ## Weapon Modifiers
 
-Modifiers are bonus stats rolled onto a weapon when it has available modifier slots (Uncommon and above). Each slot rolls an independent modifier type from the eligible pool for the weapon's category.
+Modifiers are extra stat boosts. Weapons start getting modifier slots at Uncommon rarity. Each slot rolls one random bonus that matches that weapon type.
 
 | Modifier | Display Name | Applies To | Rolled Bonus |
 |----------|-------------|-----------|:------------:|
@@ -65,18 +65,18 @@ Modifiers are bonus stats rolled onto a weapon when it has available modifier sl
 
 ### Modifier Eligibility Rules
 
-Certain modifiers are automatically excluded based on the weapon's base stats:
+Some modifiers are skipped automatically when they do not make sense for that weapon:
 
-- **Precision** — excluded on weapons with spread ≤ 0.05 (lasers or pinpoint weapons gain nothing from it).
-- **Pellets** — excluded on single-shot weapons (base pellets ≤ 1).
-- **Knockback** — excluded on weapons with no base knockback.
+- **Precision** is skipped on very accurate weapons (spread ≤ 0.05).
+- **Pellets** is skipped on single-shot weapons (pellets ≤ 1).
+- **Knockback** is skipped if the weapon has no base knockback.
 
-This means modifier pools vary per weapon. A weapon with no spread, 1 pellet, and no knockback loses three potential modifier types, making remaining modifiers more likely to be rolled again if a weapon has multiple slots.
+So each weapon has its own valid modifier pool.
 
 ---
 
 ## Rolling Summary
 
-1. **Rarity** is drawn from the weighted table (BASIC 45 %, UNCOMMON 25 %, …). A minimum rarity floor per weapon definition prevents a strong weapon from rolling too low.
-2. **Effect** — if the weapon has a locked effect it is always applied; otherwise the rarity's effect chance determines whether a random effect is rolled.
-3. **Modifiers** — one modifier is drawn per available slot from the eligible pool for that weapon category, with the value rolled uniformly in the listed range and rounded to 2 decimal places.
+1. **Rarity:** the game rolls a tier from the rarity table.
+2. **Effect:** fixed-effect weapons keep their element; others roll by rarity chance.
+3. **Modifiers:** each modifier slot rolls one valid bonus for that weapon type.

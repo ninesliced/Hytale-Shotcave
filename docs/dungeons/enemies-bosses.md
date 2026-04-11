@@ -7,7 +7,7 @@ draft: false
 
 # Enemies and Bosses
 
-The dungeon is populated with hostile mobs, a powerful boss, and a few friendly allies. Each enemy type has unique behavior, stats, and drop tables.
+You will fight many enemy types in the dungeon, plus one boss. Each enemy has different behavior and drops.
 
 ![DeadWood Rootling](images/enemies/deadwood_rootling.png)
 ![DeadWood Sproutling](images/enemies/deadwood_sproutling.png)
@@ -24,7 +24,7 @@ _Industrial Hazmat (Toxic Launcher)_
 
 ## DeadWood Enemies
 
-The DeadWood are corrupted tree creatures that make up the bulk of the dungeon's hostile population. They come in three size classes, each with armed variants.
+DeadWood are corrupted tree enemies and make up most fights. They come in different sizes and weapon variants.
 
 ### Rootlings
 
@@ -167,7 +167,7 @@ _Forklift throwing a radioactive barrel_
 | Barrel Toss | Throws radioactive barrel | Projectile damage |
 | Charge | High-speed bull rush | Contact damage |
 
-The Forklift prioritizes movement-based attacks (weight: 6 moving, 2 direct, 1 strafe), making it difficult to pin down.
+The Forklift moves a lot and is hard to keep in one place.
 
 #### Drops
 
@@ -185,7 +185,7 @@ A friendly NPC can fight alongside the player:
 
 ### Kweebec Seedling (Ally)
 
-A small Kweebec summoned by the Kweebec Launcher weapon. Rushes enemies and explodes on contact.
+A small ally summoned by the Kweebec Launcher. It rushes enemies and explodes on contact.
 ![Kweebec Ally](images/allies/kweebec_seedling_ally.png)
 _Friendly Kweebec Seedling -- summoned by the Kweebec Launcher_
 | Stat | Value |
