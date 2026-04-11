@@ -9,15 +9,15 @@ draft: false
 
 You will fight many enemy types in the dungeon, plus one boss. Each enemy has different behavior and drops.
 
-![DeadWood Rootling](../img/enemies/rootling.png)
-![DeadWood Sproutling](../img/enemies/sproutling.png)
-![Radioactive Wolf](../img/enemies/wolf_radioactive.png)
-![Industrial Nosuit](../img/enemies/industrial_nosuit.png)
-![Kweebec Seedling](../img/enemies/kweebec_seedling.png)
+![DeadWood Rootling](../../img/enemies/rootling.png)
+![DeadWood Sproutling](../../img/enemies/sproutling.png)
+![Radioactive Wolf](../../img/enemies/wolf_radioactive.png)
+![Industrial Nosuit](../../img/enemies/industrial_nosuit.png)
+![Kweebec Seedling](../../img/enemies/kweebec_seedling.png)
 _Kweebec Seedling_
-![DeadWood Seedling](../img/enemies/seedling.png)
+![DeadWood Seedling](../../img/enemies/seedling.png)
 _DeadWood Seedling_
-![Industrial Hazmat](../img/enemies/hazmat_toxic.png)
+![Industrial Hazmat](../../img/enemies/hazmat_toxic.png)
 _Industrial Hazmat (Toxic Launcher)_
 
 ---
@@ -142,7 +142,7 @@ The dungeon ends with a boss fight. The boss room is always the last room on the
 ### Boss: Forklift
 
 A massive industrial machine that charges at players with devastating speed.
-![Boss Forklift](../img/bosses/forklift.png)
+![Boss Forklift](../../img/bosses/forklift.png)
 _Boss Forklift_
 | Stat | Value |
 |------|-------|
@@ -182,7 +182,7 @@ A friendly NPC can fight alongside the player:
 ### Kweebec Seedling (Ally)
 
 A small ally summoned by the Kweebec Launcher. It rushes enemies and explodes on contact.
-![Kweebec Ally](../img/allies/kweebec_seedling.png)
+![Kweebec Ally](../../img/allies/kweebec_seedling.png)
 _Friendly Kweebec Seedling -- summoned by the Kweebec Launcher_
 | Stat | Value |
 |------|-------|
