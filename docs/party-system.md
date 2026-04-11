@@ -5,8 +5,6 @@ published: true
 draft: false
 ---
 
-
-
 # Party System
 
 Unstable Rifts is designed for cooperative play. The party system lets you team up with up to 3 other players before entering the dungeon.

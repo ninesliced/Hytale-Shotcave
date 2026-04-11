@@ -5,8 +5,6 @@ published: true
 draft: false
 ---
 
-
-
 # Shops
 
 Each dungeon level contains one shop room with a shopkeeper NPC. Shops are safe zones -- no enemies will spawn in a shop room.
@@ -70,8 +68,8 @@ Some shop rooms include a refresh option that regenerates the available item sto
 |----------|-------------|
 | Refresh Cost | Costs team coins (varies by room) |
 | Effect | Regenerates all unsold items with new random rolls |
-| Limit | Available based on room configuration |
-**Tip:** If the shop doesn't have the weapon or armor you need, try refreshing the stock. The refresh re-rolls all items, including their rarity and elemental effects.
+
+ If the shop doesn't have the weapon or armor you need, try refreshing the stock. The refresh re-rolls all items, including their rarity and elemental effects.
 ---
 
 ## Shop Details

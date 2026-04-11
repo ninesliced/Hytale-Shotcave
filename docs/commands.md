@@ -5,8 +5,6 @@ published: true
 draft: false
 ---
 
-
-
 # Commands
 
 All commands use the base command `/unstablerifts` with the alias `/ur`.
@@ -32,6 +30,7 @@ All commands use the base command `/unstablerifts` with the alias `/ur`.
 | `/ur party start` | -- | Launch party into a dungeon instance (leader only) |
 | `/ur party ui` | -- | Open the party management UI |
 **Note:** Party invites expire after 5 minutes. The maximum party size is 4 players.
+
 ### Dungeon Commands
 
 | Command | Arguments | Description |

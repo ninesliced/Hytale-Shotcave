@@ -5,8 +5,6 @@ published: true
 draft: false
 ---
 
-
-
 # Installation
 
 This page covers everything a server owner needs to set up and configure Unstable Rifts.

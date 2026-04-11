@@ -5,8 +5,6 @@ published: true
 draft: false
 ---
 
-
-
 # Weapons
 
 Unstable Rifts features 19 weapons across four categories: Laser, Bullet, Melee, and Summoning. Weapons drop from crates, enemies, and shops with random rarity rolls.
@@ -31,6 +29,7 @@ Higher rarity increases damage, ammo capacity, and reload speed.
 ---
 
 ## Standard Weapons
+
 ![Pistol](images/weapons/pistol.png)
 _Pistol_
 ![Crystal Sword](images/weapons/crystal_sword.png)

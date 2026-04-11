@@ -5,8 +5,6 @@ published: true
 draft: false
 ---
 
-
-
 # Dungeon Levels
 
 The dungeon is procedurally generated each run. Rooms connect via corridors, with branching paths, locked doors, and special rooms scattered throughout. No two runs are the same.
@@ -23,6 +21,7 @@ A corrupted forest overrun by twisted DeadWood creatures and radioactive wildlif
 _The Kweebec level entrance room_
 ![Kweebec Combat](images/kweebec_combat.png)
 _Fighting DeadWood mobs in the Kweebec level_
+
 ### Layout
 
 | Property | Value |
@@ -85,6 +84,7 @@ An arid industrial wasteland with hazardous enemies and tougher encounters.
 _The Desert level entrance room_
 ![Desert Combat](images/desert_combat.png)
 _Fighting industrial enemies in the Desert level_
+
 ### Layout
 
 | Property | Value |
@@ -110,6 +110,7 @@ All Kweebec level enemies also appear in the Desert level with the same weights.
 ---
 
 ## Room Types
+
 ### Gameplay Rooms
 
 | Room Type | Description |
@@ -122,6 +123,7 @@ All Kweebec level enemies also appear in the Desert level with the same weights.
 | Boss | Final room with the level boss |
 | Branch | Side path rooms off the main path |
 | Wall | Dead-end seals |
+
 ### Door Types
 
 | Door Type | Description |

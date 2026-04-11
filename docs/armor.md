@@ -23,7 +23,6 @@ Unstable Rifts has 6 armor sets, each with 4 pieces (Head, Chest, Arms, Legs). W
 | Void | PURIFICATION | Immune to negative status effects | Rare -- Unique | 10 |
 | Warden | WARDEN | Reflects damage back to attackers + high knockback | Rare -- Unique | 10 |
 
-
 > **Tip:** Mix and match pieces from different sets if you need the individual stats, but you'll lose the set bonus. Full sets are always stronger when synergized with the right weapons.
 
 ---

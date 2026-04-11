@@ -5,8 +5,6 @@ published: true
 draft: false
 ---
 
-
-
 # Loot and Crates
 
 Crates are destructible containers scattered throughout dungeon rooms. Break them to receive weapons, armor, ammo, healing items, and coins. Higher-tier crates found deeper in the dungeon yield better loot.
@@ -136,8 +134,8 @@ As you advance through the dungeon, crate quality improves:
 |-------------|-----------------|---------------------|---------------------|
 | Early Rooms | Standard, Level 1 | <span class="rarity-unique">Unique</span> | Crystal, Vine |
 | Mid Rooms | Level 2, Large | <span class="rarity-epic">Epic</span> | Crystal, Vine, Shale, Bone |
-| Late Rooms | Level 3 | <span class="rarity-unique">Unique</span> | All 6 sets |
-**Tip:** Seek out Level 3 crates for the best chance at Void and Warden armor. Large (2x2) crates are also valuable for their high coin drops and 50% weapon chance.
+
+ Seek out Level 3 crates for the best chance at Void and Warden armor. Large (2x2) crates are also valuable for their high coin drops and 50% weapon chance.
 ---
 
 ## Related Pages

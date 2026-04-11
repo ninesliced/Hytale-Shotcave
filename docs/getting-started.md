@@ -9,7 +9,6 @@ draft: false
 
 Unstable Rifts is a fully custom game mode that transforms Hytale into a top-down cooperative dungeon crawler. Players form a party, enter a portal, and fight through procedurally generated rooms filled with enemies, loot crates, shops, and bosses.
 
-
 ![Gameplay Overview](images/gameplay_overview.png)
 
 ---
@@ -21,7 +20,6 @@ Unstable Rifts is a fully custom game mode that transforms Hytale into a top-dow
 3. **Fight Through Rooms** -- Clear enemies, break crates for loot, and find the boss room.
 4. **Defeat the Boss** -- Each level ends with a boss fight. Defeat it to unlock the exit portal.
 5. **Progress or Exit** -- Step through the portal to advance to the next level or return to the lobby.
-
 
 ![Ancient Party Portal](images/ancient_party_portal.png)
 ![Dungeon Entrance](images/dungeon_entrance.png)
@@ -37,7 +35,9 @@ Every player spawns with two weapons at the beginning of each run:
 |------|------|-------------|
 | Primary | Pistol | Reliable sidearm for close to medium range combat |
 | Secondary | Crystal Sword | Melee weapon for close-range combat |
+
 **Tip:** You can find better weapons by breaking crates, defeating enemies, or purchasing from shops inside the dungeon.
+
 ---
 
 ## Core Gameplay Loop
@@ -67,10 +67,13 @@ The final room of each level contains a boss. Defeating the boss opens a portal 
 ## Revive System
 
 If you die during a run, a revive marker appears at your death location. Any party member can hold **F** near the marker to revive you within a 30-second window. If no one revives you in time, you are removed from the dungeon.
+
 ![Revive Marker](images/mechanics/revive_marker.png)
 _Revive marker at a player's death location_
+
 ![Revive in Progress](images/mechanics/revive_progress.png)
 _Reviving a downed teammate_
+
 ---
 
 ## Camera Controls
