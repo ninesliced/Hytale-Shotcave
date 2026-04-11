@@ -9,7 +9,7 @@ draft: false
 
 Unstable Rifts is a top-down co-op dungeon mode. You and your team enter a portal, clear rooms, grab loot, visit shops, and beat the boss.
 
-![Gameplay Overview](images/gameplay_overview.png)
+![Gameplay Overview](../img/general/gameplay_overview.png)
 
 ---
 
@@ -21,9 +21,9 @@ Unstable Rifts is a top-down co-op dungeon mode. You and your team enter a porta
 4. **Defeat the Boss** -- Each level ends with a boss fight. Defeat it to unlock the exit portal.
 5. **Progress or Exit** -- Step through the portal to advance to the next level or return to the lobby.
 
-![Ancient Party Portal](images/ancient_party_portal.png)
-![Dungeon Entrance](images/dungeon_entrance.png)
-![Top-Down Camera](images/top_camera.png)
+![Ancient Party Portal](../img/getting-started/ancient_party_portal.png)
+![Dungeon Entrance](../img/getting-started/dungeon_entrance.png)
+![Top-Down Camera](../img/getting-started/top_camera.png)
 
 ---
 
@@ -66,13 +66,7 @@ The final room of each level contains a boss. Defeating the boss opens a portal 
 
 ## Revive System
 
-If you die during a run, a revive marker appears at your death location. Any party member can hold **F** near the marker to revive you within a 30-second window. If no one revives you in time, you are removed from the dungeon.
-
-![Revive Marker](images/mechanics/revive_marker.png)
-_Revive marker at a player's death location_
-
-![Revive in Progress](images/mechanics/revive_progress.png)
-_Reviving a downed teammate_
+If you die during a run, a revive marker appears where you fell. A teammate can hold **F** near it to bring you back within 30 seconds. If nobody revives you in time, you are removed from the dungeon.
 
 ---
 

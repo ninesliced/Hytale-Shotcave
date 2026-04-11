@@ -9,15 +9,15 @@ draft: false
 
 Crates are breakable loot boxes found in dungeon rooms. Break them to get weapons, armor, ammo, healing, and coins. Better crates show up deeper in the run.
 
-![Standard Crate](images/crates/crate_standard.png)
+![Standard Crate](../img/crates/crate.png)
 _Standard Crate_
-![Level 1 Crate](images/crates/crate_level1.png)
+![Level 1 Crate](../img/crates/crate.png)
 _Level 1 Crate_
-![Level 2 Crate](images/crates/crate_level2.png)
+![Level 2 Crate](../img/crates/crate.png)
 _Level 2 Crate_
-![Level 3 Crate](images/crates/crate_level3.png)
+![Level 3 Crate](../img/crates/crate.png)
 _Level 3 Crate_
-![Large Crate (2x2)](images/crates/crate_2x2.png)
+![Large Crate (2x2)](../img/crates/crate.png)
 _Large Crate (2x2)_
 
 ---
@@ -123,10 +123,8 @@ The dungeon also has breakable world objects:
 |--------|-------------|
 | Radioactive Barrel | Explodes when destroyed, damaging nearby enemies |
 | Rusted Radioactive Barrel | Decayed variant, same explosion behavior |
-![Radioactive Barrel](images/props/radioactive_barrel.png)
-_Radioactive Barrel -- explodes on destruction_
-![Rusted Barrel](images/props/rusted_barrel.png)
-_Rusted Radioactive Barrel_
+![Radioactive Barrels](../img/props/radioactive_barrels.png)
+_Radioactive barrels in the dungeon_
 ---
 
 ## Loot Progression

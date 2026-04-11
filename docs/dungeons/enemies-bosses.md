@@ -9,15 +9,15 @@ draft: false
 
 You will fight many enemy types in the dungeon, plus one boss. Each enemy has different behavior and drops.
 
-![DeadWood Rootling](images/enemies/deadwood_rootling.png)
-![DeadWood Sproutling](images/enemies/deadwood_sproutling.png)
-![Radioactive Wolf](images/enemies/radioactive_wolf.png)
-![Industrial Nosuit](images/enemies/industrial_nosuit.png)
-![Kweebec Seedling](images/enemies/kweebec_seedling.png)
+![DeadWood Rootling](../img/enemies/rootling.png)
+![DeadWood Sproutling](../img/enemies/sproutling.png)
+![Radioactive Wolf](../img/enemies/wolf_radioactive.png)
+![Industrial Nosuit](../img/enemies/industrial_nosuit.png)
+![Kweebec Seedling](../img/enemies/kweebec_seedling.png)
 _Kweebec Seedling_
-![DeadWood Seedling](images/enemies/deadwood_seedling.png)
+![DeadWood Seedling](../img/enemies/seedling.png)
 _DeadWood Seedling_
-![Industrial Hazmat](images/enemies/industrial_hazmat.png)
+![Industrial Hazmat](../img/enemies/hazmat_toxic.png)
 _Industrial Hazmat (Toxic Launcher)_
 
 ---
@@ -142,12 +142,8 @@ The dungeon ends with a boss fight. The boss room is always the last room on the
 ### Boss: Forklift
 
 A massive industrial machine that charges at players with devastating speed.
-![Boss Forklift](images/bosses/forklift_idle.png)
-_Boss Forklift -- idle stance_
-![Forklift Dash Attack](images/bosses/forklift_dash.png)
-_Forklift performing its multi-hit dash attack_
-![Forklift Barrel Toss](images/bosses/forklift_barrel.png)
-_Forklift throwing a radioactive barrel_
+![Boss Forklift](../img/bosses/forklift.png)
+_Boss Forklift_
 | Stat | Value |
 |------|-------|
 | Health | 2,500 HP |
@@ -186,7 +182,7 @@ A friendly NPC can fight alongside the player:
 ### Kweebec Seedling (Ally)
 
 A small ally summoned by the Kweebec Launcher. It rushes enemies and explodes on contact.
-![Kweebec Ally](images/allies/kweebec_seedling_ally.png)
+![Kweebec Ally](../img/allies/kweebec_seedling.png)
 _Friendly Kweebec Seedling -- summoned by the Kweebec Launcher_
 | Stat | Value |
 |------|-------|

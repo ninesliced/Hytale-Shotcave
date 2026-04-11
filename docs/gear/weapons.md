@@ -30,13 +30,13 @@ In short: higher rarity = stronger weapon.
 
 ## Standard Weapons
 
-![Pistol](images/weapons/pistol.png)
+![Pistol](../img/weapons/pistol.png)
 _Pistol_
-![Crystal Sword](images/weapons/crystal_sword.png)
+![Crystal Sword](../img/weapons/crystal_sword.png)
 _Crystal Sword_
-![Assault Rifle](images/weapons/assault_rifle.png)
+![Assault Rifle](../img/weapons/assault_rifle.png)
 _Assault Rifle_
-![Rifle](images/weapons/rifle.png)
+![Rifle](../img/weapons/rifle.png)
 _Rifle_
 | Weapon | Category | Damage | Cooldown | Reload | Ammo | Range | Spread | Pellets | Rarity Range | Weight |
 |--------|----------|--------|----------|--------|------|-------|--------|---------|-------------|--------|
@@ -59,13 +59,13 @@ _Rifle_
 ## Elemental Muskets
 
 Muskets are long-range weapons with high damage. Each one always uses a fixed element.
-![Fire Musket](images/weapons/musket_fire.png)
+![Fire Musket](../img/weapons/musket_fire.png)
 _Fire Musket_
-![Ice Musket](images/weapons/musket_ice.png)
+![Ice Musket](../img/weapons/musket_ice.png)
 _Ice Musket_
-![Lightning Musket](images/weapons/musket_lightning.png)
+![Lightning Musket](../img/weapons/musket_lightning.png)
 _Lightning Musket_
-![Void Musket](images/weapons/musket_void.png)
+![Void Musket](../img/weapons/musket_void.png)
 _Void Musket_
 | Variant | Element | Damage | Cooldown | Reload | Ammo | Range | Min Rarity | Weight |
 |---------|---------|--------|----------|--------|------|-------|-----------|--------|
@@ -82,19 +82,19 @@ All muskets share the same base stats. Lightning and Void versions are rarer.
 
 Blunderbusses are close-range spread weapons that fire 8 pellets per shot. Each version has its own fixed element.
 
-![Acid Blunderbuss](images/weapons/blunderbuss_acid.png)
+![Acid Blunderbuss](../img/weapons/blunderbuss_acid.png)
 _Acid Blunderbuss_
 
-![Fire Blunderbuss](images/weapons/blunderbuss_fire.png)
+![Fire Blunderbuss](../img/weapons/blunderbuss_fire.png)
 _Fire Blunderbuss_
 
-![Ice Blunderbuss](images/weapons/blunderbuss_ice.png)
+![Ice Blunderbuss](../img/weapons/blunderbuss_ice.png)
 _Ice Blunderbuss_
 
-![Lightning Blunderbuss](images/weapons/blunderbuss_lightning.png)
+![Lightning Blunderbuss](../img/weapons/blunderbuss_lightning.png)
 _Lightning Blunderbuss_
 
-![Void Blunderbuss](images/weapons/blunderbuss_void.png)
+![Void Blunderbuss](../img/weapons/blunderbuss_void.png)
 _Void Blunderbuss_
 
 | Variant | Element | Category | Damage | Cooldown | Reload | Ammo | Range | Spread | Min Rarity | Weight |
@@ -111,13 +111,13 @@ _Void Blunderbuss_
 
 Weapons with a locked element always apply that effect on hit:
 
-| Element | Effect | Image |
-|---------|--------|-------|
-| <span class="effect-fire">FIRE</span> | Damage over time, burns the target | ![Fire](images/effects/effect_fire.png) |
-| <span class="effect-ice">ICE</span> | Slows the target's movement speed | ![Ice](images/effects/effect_ice.png) |
-| <span class="effect-electricity">ELECTRICITY</span> | Chains damage to nearby enemies | ![Electricity](images/effects/effect_electricity.png) |
-| <span class="effect-void">VOID</span> | Weakens target defense | ![Void](images/effects/effect_void.png) |
-| <span class="effect-acid">ACID</span> | Corrodes target, reducing armor | ![Acid](images/effects/effect_acid.png) |
+| Element | Effect |
+|---------|--------|
+| <span class="effect-fire">FIRE</span> | Damage over time, burns the target |
+| <span class="effect-ice">ICE</span> | Slows the target's movement speed |
+| <span class="effect-electricity">ELECTRICITY</span> | Chains damage to nearby enemies |
+| <span class="effect-void">VOID</span> | Weakens target defense |
+| <span class="effect-acid">ACID</span> | Corrodes target, reducing armor |
 
 ---
 
@@ -139,16 +139,16 @@ One of the strongest spread weapons in the game. It fires 32 pellets with both <
 
 This weapon summons a friendly Kweebec instead of shooting bullets. The summon has 36 HP, deals 12 damage, and lasts 600 ticks. Drops at Epic rarity.
 
-![Taser](images/weapons/taser.png)
+![Taser](../img/weapons/taser.png)
 _Taser -- chains to nearby enemies_
 
-![Voidlance](images/weapons/voidlance.png)
+![Voidlance](../img/weapons/voidlance.png)
 _Voidlance -- void-powered range weapon_
 
-![Corrupted Shotgun](images/weapons/corrupted_shotgun.png)
+![Corrupted Shotgun](../img/weapons/corrupted_shotgun.png)
 _Corrupted Shotgun -- 32 pellets per shot_
 
-![Kweebec Launcher](images/weapons/kweebec_launcher.png)
+![Kweebec Launcher](../img/weapons/kweebec_launcher.png)
 _Kweebec Launcher -- summons a friendly Kweebec_
 
 ---

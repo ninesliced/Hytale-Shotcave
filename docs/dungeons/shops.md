@@ -9,10 +9,10 @@ draft: false
 
 Each dungeon level contains one shop room with a shopkeeper NPC. Shops are safe zones -- no enemies will spawn in a shop room.
 
-![Shop Room](images/shop/shop_room.png)
+![Shop Room](../img/shop/shop_room.png)
 _A shop room with the shopkeeper NPC and displayed items_
-![Shop UI](images/shop/shop_ui.png)
-_Shop purchase interface showing item details_
+![Shopkeeper](../img/shop/shopkeeper.png)
+_The shopkeeper NPC_
 
 ---
 

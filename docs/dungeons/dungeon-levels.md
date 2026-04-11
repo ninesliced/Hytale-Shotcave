@@ -9,9 +9,9 @@ draft: false
 
 Each run builds a fresh dungeon layout. Rooms connect with corridors, side paths, locked doors, and special rooms. No two runs are exactly the same.
 
-![Dungeon Generation Example](images/dungeon_generation.png)
+![Dungeon Generation Example](../img/dungeons/dungeon_generation.png)
 _Example of a procedurally generated dungeon layout_
-![Dungeon Map View](images/dungeon_map.png)
+![Dungeon Map View](../img/dungeons/dungeon_map.png)
 _In-game dungeon map showing explored rooms_
 
 ---
@@ -19,9 +19,9 @@ _In-game dungeon map showing explored rooms_
 ## Level 1: Kweebec
 
 A corrupted forest full of DeadWood enemies and radioactive wildlife.
-![Kweebec Entrance](images/kweebec_entrance.png)
+![Kweebec Entrance](../img/dungeons/kweebec_entrance.png)
 _The Kweebec level entrance room_
-![Kweebec Combat](images/kweebec_combat.png)
+![Kweebec Combat](../img/dungeons/kweebec_combat.png)
 _Fighting DeadWood mobs in the Kweebec level_
 
 ### Layout
@@ -73,19 +73,15 @@ The Kweebec level includes themed environmental props:
 | Ruined Kweebec Stool | Broken stool |
 | Ruined Kweebec Table | Damaged table |
 | Ruined Kweebec Wardrobe | Ruined wardrobe |
-![Kweebec Props](images/props/kweebec_props.png)
+![Kweebec Props](../img/props/kweebec_props.png)
 _Ruined Kweebec furniture props in a dungeon room_
-![Radioactive Barrels](images/props/radioactive_barrels.png)
+![Radioactive Barrels](../img/props/radioactive_barrels.png)
 _Radioactive barrels -- breakable environmental hazards_
 ---
 
 ## Level 2: Desert
 
 A dry industrial zone with tougher enemies and harder fights.
-![Desert Entrance](images/desert_entrance.png)
-_The Desert level entrance room_
-![Desert Combat](images/desert_combat.png)
-_Fighting industrial enemies in the Desert level_
 
 ### Layout
 
@@ -134,11 +130,11 @@ All Kweebec enemies can also appear in Desert. Desert side paths are longer and 
 | Activation Door | Opens when a nearby trigger is activated |
 | Lock Door | Locked until a specific condition is met |
 | Sealed Door | Permanently sealed passage |
-![Challenge Room](images/challenge_room.png)
+![Challenge Room](../img/dungeons/challenge_room.png)
 _A challenge room with mob spawners_
-![Treasure Room](images/treasure_room.png)
+![Treasure Room](../img/dungeons/treasure_room.png)
 _A treasure room behind a key door_
-![Shop Room](images/shop_room.png)
+![Shop Room](../img/dungeons/shop_room.png)
 _Shop room with the shopkeeper NPC_
 ---
 
