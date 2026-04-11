@@ -235,6 +235,32 @@
 .prose .rarity-legendary { background: #c28b2e; color: #ffffff; }
 .prose .rarity-unique { background: #b73a62; color: #ffffff; }
 
+/* Weapon effect label colors */
+.prose .effect-fire {
+  color: #ff8b5e;
+  font-weight: 700;
+}
+
+.prose .effect-ice {
+  color: #86d9ff;
+  font-weight: 700;
+}
+
+.prose .effect-electricity {
+  color: #ffd54a;
+  font-weight: 700;
+}
+
+.prose .effect-void {
+  color: #bd8dff;
+  font-weight: 700;
+}
+
+.prose .effect-acid {
+  color: #8adf6b;
+  font-weight: 700;
+}
+
 /* Button styling: sober dark theme, including next/previous navigation */
 button,
 [data-slot="button"],

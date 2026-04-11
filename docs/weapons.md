@@ -50,7 +50,10 @@ _Rifle_
 | Voidlance | BULLET | -- | 1.2s | 1.4s | 100 | 40 | 0 | 1 | <span class="rarity-epic">Epic</span> | 5 |
 | Corrupted Shotgun | BULLET | 5 | 2.2s | 2.2s | 60 | 20 | 34.0 | 32 | <span class="rarity-epic">Epic</span> -- <span class="rarity-unique">Unique</span> | 3 |
 | Kweebec Launcher | SUMMON | -- | 1.5s | 3.0s | 50 | 30 | 0 | 1 | <span class="rarity-epic">Epic</span> | 15 |
-**Crystal Sword** is always available as starting equipment. It uses no ammo and has a built-in knockback of 1.5.
+
+> [!NOTE]
+> **Crystal Sword** is always available as starting equipment. It uses no ammo and has a built-in knockback of 1.5.
+
 ---
 
 ## Elemental Muskets
@@ -95,7 +98,10 @@ _Void Blunderbuss_
 | Blunderbuss (Ice) | ICE | LASER | 8 | 1.05s | 1.25s | 60 | 24 | 14.0 | <span class="rarity-epic">Epic</span> | 5 |
 | Blunderbuss (Lightning) | ELECTRICITY | LASER | 8 | 1.05s | 1.25s | 60 | 24 | 14.0 | <span class="rarity-epic">Epic</span> | 5 |
 | Blunderbuss (Void) | VOID | BULLET | 8 | 1.05s | 1.25s | 60 | 24 | 14.0 | <span class="rarity-epic">Epic</span> | 5 |
-**Note:** The Void Blunderbuss is categorized as BULLET, unlike the other elemental blunderbusses which are LASER.
+
+> [!NOTE]
+> The Void Blunderbuss is categorized as **BULLET**, unlike the other elemental blunderbusses which are **LASER**.
+
 ---
 
 ## Elemental Effects
@@ -104,11 +110,11 @@ Weapons with a locked element always apply that effect on hit:
 
 | Element | Effect | Image |
 |---------|--------|-------|
-| FIRE | Damage over time, burns the target | ![Fire](images/effects/effect_fire.png) |
-| ICE | Slows the target's movement speed | ![Ice](images/effects/effect_ice.png) |
-| ELECTRICITY | Chains damage to nearby enemies | ![Electricity](images/effects/effect_electricity.png) |
-| VOID | Weakens target defense | ![Void](images/effects/effect_void.png) |
-| ACID | Corrodes target, reducing armor | ![Acid](images/effects/effect_acid.png) |
+| <span class="effect-fire">FIRE</span> | Damage over time, burns the target | ![Fire](images/effects/effect_fire.png) |
+| <span class="effect-ice">ICE</span> | Slows the target's movement speed | ![Ice](images/effects/effect_ice.png) |
+| <span class="effect-electricity">ELECTRICITY</span> | Chains damage to nearby enemies | ![Electricity](images/effects/effect_electricity.png) |
+| <span class="effect-void">VOID</span> | Weakens target defense | ![Void](images/effects/effect_void.png) |
+| <span class="effect-acid">ACID</span> | Corrodes target, reducing armor | ![Acid](images/effects/effect_acid.png) |
 
 ---
 
@@ -129,14 +135,19 @@ The most destructive spread weapon in the game. Fires 32 pellets per shot with b
 ### Kweebec Launcher
 
 A summoning weapon that spawns a friendly Kweebec ally instead of firing projectiles. The summoned Kweebec has 36 HP, deals 12 damage, and persists for 600 ticks. Only drops at Epic rarity.
+
 ![Taser](images/weapons/taser.png)
 _Taser -- chains to nearby enemies_
+
 ![Voidlance](images/weapons/voidlance.png)
 _Voidlance -- void-powered range weapon_
+
 ![Corrupted Shotgun](images/weapons/corrupted_shotgun.png)
 _Corrupted Shotgun -- 32 pellets per shot_
+
 ![Kweebec Launcher](images/weapons/kweebec_launcher.png)
 _Kweebec Launcher -- summons a friendly Kweebec_
+
 ---
 
 ## Weapon Categories
