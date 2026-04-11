@@ -10,7 +10,7 @@ draft: false
 Each run builds a fresh dungeon layout. Rooms connect with corridors, side paths, locked doors, and special rooms. No two runs are exactly the same.
 
 ![Dungeon Generation Example](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/dungeons/dungeon_generation.png)
-_Example of a procedurally generated dungeon layout_
+_Example of level 1 possible rooms_
 ![Dungeon Map View](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/dungeons/dungeon_map.png)
 _In-game dungeon map showing explored rooms_
 

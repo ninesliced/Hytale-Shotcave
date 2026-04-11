@@ -124,7 +124,7 @@ The dungeon also has breakable world objects:
 | Radioactive Barrel | Explodes when destroyed, damaging nearby enemies |
 | Rusted Radioactive Barrel | Decayed variant, same explosion behavior |
 ![Radioactive Barrels](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/props/radioactive_barrels.png)
-_Radioactive barrels in the dungeon_
+_Radioactive barrels_
 ---
 
 ## Loot Progression

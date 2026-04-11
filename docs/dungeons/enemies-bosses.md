@@ -10,23 +10,41 @@ draft: false
 You will fight many enemy types in the dungeon, plus one boss. Each enemy has different behavior and drops.
 
 ![DeadWood Rootling](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/enemies/rootling.png)
+
 _DeadWood Rootling -- the most common enemy type_
+
 ![DeadWood Sproutling](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/enemies/sproutling.png)
+
 _DeadWood Sproutling -- smaller and faster than Rootlings_
+
 ![Radioactive Wolf](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/enemies/wolf_radioactive.png)
+
 _Radioactive Wolf -- fast pack hunter_
+
 ![Industrial Nosuit](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/enemies/industrial_nosuit.png)
+
 _Industrial Nosuit -- unarmored worker enemy_
+
 ![Kweebec Seedling](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/enemies/kweebec_seedling.png)
+
 _Kweebec Seedling -- small explosive enemy_
+
 ![DeadWood Seedling](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/enemies/seedling.png)
+
 _DeadWood Seedling -- larger DeadWood with more health_
+
 ![Industrial Hazmat](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/enemies/hazmat.png)
+
 _Industrial Hazmat -- close range industrial enemy_
+
 ![Industrial Hazmat (FlameThrower)](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/enemies/hazmat_flamethrower.png)
+
 _Industrial Hazmat (FlameThrower) -- ranged industrial enemy_
+
 ![Industrial Hazmat (Toxic Launcher)](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/enemies/hazmat_toxic.png)
+
 _Industrial Hazmat (Toxic Launcher) -- ranged industrial enemy_
+
 
 ---
 
@@ -169,7 +187,9 @@ The dungeon ends with a boss fight. The boss room is always the last room on the
 
 A massive industrial machine that charges at players with devastating speed.
 ![Boss Forklift](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/bosses/forklift.png)
+
 _Boss Forklift_
+
 | Stat | Value |
 |------|-------|
 | Health | 2,500 HP |
@@ -209,7 +229,9 @@ A friendly NPC can fight alongside the player:
 
 A small ally summoned by the Kweebec Launcher. It rushes enemies and explodes on contact.
 ![Kweebec Ally](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/allies/kweebec_seedling.png)
+
 _Friendly Kweebec Seedling -- summoned by the Kweebec Launcher_
+
 | Stat | Value |
 |------|-------|
 | Health | 36 HP |

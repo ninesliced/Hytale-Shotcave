@@ -19,6 +19,7 @@ _Complete HUD layout during gameplay_
 ### Ammo Display
 
 Shows current ammo and reload state. It updates as you shoot and reload.
+
 ![Ammo HUD](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/hud/ammo_hud.png)
 _Ammo counter with reload indicator_
 
@@ -32,19 +33,24 @@ Shows during boss fights. It displays the boss name and remaining health. Color 
 | 50-75% | Yellow |
 | 25-50% | Orange |
 | 0-25% | Red |
+
 ![Boss Health Bar](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/hud/boss_health.png)
 _Boss health bar during the Forklift fight_
 
 ### Dungeon Info
 
 Shows dungeon name, level, and room info in a corner of the screen.
+
 ![Dungeon Info](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/hud/dungeon_info.png)
+
 _Dungeon info panel showing level name and progress_
 
 ### Party Status
 
 Shows all party members, their HP, and connection status. Disconnected players appear grayed out.
+
 ![Party Status](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/hud/party_status.png)
+
 _Party status panel with 4 members_
 
 ### Death and Revive
@@ -65,8 +71,11 @@ Appears when a portal is available after the boss is defeated. It tells you when
 ## Challenge HUD
 
 During challenge rooms, a special HUD element appears showing the room's objective and progress.
+
 ![Challenge HUD](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/hud/challenge_hud.png)
+
 _Challenge room progress indicator_
+
 ---
 
 ## Dungeon Map
