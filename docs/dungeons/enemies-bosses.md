@@ -9,42 +9,6 @@ draft: false
 
 You will fight many enemy types in the dungeon, plus one boss. Each enemy has different behavior and drops.
 
-![DeadWood Rootling](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/enemies/rootling.png)
-
-_DeadWood Rootling -- the most common enemy type_
-
-![DeadWood Sproutling](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/enemies/sproutling.png)
-
-_DeadWood Sproutling -- smaller and faster than Rootlings_
-
-![Radioactive Wolf](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/enemies/wolf_radioactive.png)
-
-_Radioactive Wolf -- fast pack hunter_
-
-![Industrial Nosuit](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/enemies/industrial_nosuit.png)
-
-_Industrial Nosuit -- unarmored worker enemy_
-
-![Kweebec Seedling](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/enemies/kweebec_seedling.png)
-
-_Kweebec Seedling -- small explosive enemy_
-
-![DeadWood Seedling](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/enemies/seedling.png)
-
-_DeadWood Seedling -- larger DeadWood with more health_
-
-![Industrial Hazmat](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/enemies/hazmat.png)
-
-_Industrial Hazmat -- close range industrial enemy_
-
-![Industrial Hazmat (FlameThrower)](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/enemies/hazmat_flamethrower.png)
-
-_Industrial Hazmat (FlameThrower) -- ranged industrial enemy_
-
-![Industrial Hazmat (Toxic Launcher)](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/enemies/hazmat_toxic.png)
-
-_Industrial Hazmat (Toxic Launcher) -- ranged industrial enemy_
-
 
 ---
 
@@ -53,6 +17,10 @@ _Industrial Hazmat (Toxic Launcher) -- ranged industrial enemy_
 DeadWood are corrupted tree enemies and make up most fights. They come in different sizes and weapon variants.
 
 ### Rootlings
+
+![DeadWood Rootling](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/enemies/rootling.png)
+
+_DeadWood Rootling -- the most common enemy type_
 
 Medium-sized DeadWood. The most common enemy type.
 
@@ -68,6 +36,10 @@ Medium-sized DeadWood. The most common enemy type.
 
 ### Sproutlings
 
+![DeadWood Sproutling](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/enemies/sproutling.png)
+
+_DeadWood Sproutling -- smaller and faster than Rootlings_
+
 Smaller, faster DeadWood. Same variants as Rootlings.
 
 | Variant | Weapon | Spawn Weight |
@@ -79,7 +51,11 @@ Smaller, faster DeadWood. Same variants as Rootlings.
 
 ### Seedlings
 
-Larger DeadWood with more health. Less common than Rootlings and Sproutlings.
+![DeadWood Seedling](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/enemies/seedling.png)
+
+_DeadWood Seedling -- larger DeadWood with more health_
+
+Smaller DeadWood. Less common than Rootlings and Sproutlings.
 
 | Variant | Spawn Weight |
 |---------|-------------|
@@ -98,6 +74,10 @@ Larger DeadWood with more health. Less common than Rootlings and Sproutlings.
 ## Wildlife
 
 ### Radioactive Wolf
+
+![Radioactive Wolf](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/enemies/wolf_radioactive.png)
+
+_Radioactive Wolf -- fast pack hunter_
 
 Fast pack hunters that can close distance quickly. One of the more dangerous regular enemies.
 
@@ -120,6 +100,10 @@ Fast pack hunters that can close distance quickly. One of the more dangerous reg
 
 ### Nosuit
 
+![Industrial Nosuit](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/enemies/industrial_nosuit.png)
+
+_Industrial Nosuit -- unarmored worker enemy_
+
 Unarmored industrial workers. Rarer but tougher than DeadWood.
 
 | Stat | Value |
@@ -131,6 +115,10 @@ Unarmored industrial workers. Rarer but tougher than DeadWood.
 
 ### Hazmat
 
+![Industrial Hazmat](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/enemies/hazmat.png)
+
+_Industrial Hazmat -- close range industrial enemy_
+
 A close-range industrial enemy that attacks with his fist.
 
 | Stat | Value |
@@ -140,6 +128,10 @@ A close-range industrial enemy that attacks with his fist.
 
 ### Hazmat (FlameThrower)
 
+![Industrial Hazmat (FlameThrower)](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/enemies/hazmat_flamethrower.png)
+
+_Industrial Hazmat (FlameThrower) -- ranged industrial enemy_
+
 A close-range industrial enemy that attacks with a flamethrower.
 
 | Stat | Value |
@@ -148,6 +140,10 @@ A close-range industrial enemy that attacks with a flamethrower.
 | Attack Type | Ranged flames projectile |
 
 ### Hazmat (Toxic Launcher)
+
+![Industrial Hazmat (Toxic Launcher)](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/enemies/hazmat_toxic.png)
+
+_Industrial Hazmat (Toxic Launcher) -- ranged industrial enemy_
 
 A ranged industrial enemy exclusive to the Desert level. Fires toxic projectiles from a distance.
 
@@ -163,19 +159,6 @@ A ranged industrial enemy exclusive to the Desert level. Fires toxic projectiles
 | Coins | 55% | 1-4 |
 | Ammo | 20% | 1 |
 | Healing | 15% | 1 |
-
----
-
-## Kweebec Seedling (Enemy)
-
-A small explosive Kweebec that rushes toward players and detonates. Use ranged weapons to eliminate them before they reach you.
-
-| Stat | Value |
-|------|-------|
-| Detection | 32 blocks |
-| Alert Range | 56 blocks |
-| Spawn Weight | 3 |
-| Behavior | Rush and explode |
 
 ---
 

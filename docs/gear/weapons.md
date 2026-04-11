@@ -130,31 +130,36 @@ Weapons with a locked element always apply that effect on hit:
 
 ### Taser
 
+![Taser](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/weapons/taser.png)
+
+_Taser -- chains to nearby enemies_
+
+
 The Taser shoots electricity that jumps to nearby enemies. It is a rare drop (Epic+).
 
 ### Voidlance
+
+![Voidlance](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/weapons/voidlance.png)
+
+_Voidlance -- void-powered range weapon_
 
 A long-range void weapon. It uses a custom projectile setup and drops at Epic rarity.
 
 ### Corrupted Shotgun
 
+![Corrupted Shotgun](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/weapons/corrupted_shotgun.png)
+
+_Corrupted Shotgun -- 32 pellets per shot_
+
 One of the strongest spread weapons in the game. It fires 32 pellets with both <span class="effect-acid">Acid</span> and <span class="effect-void">Void</span> effects. Very rare.
 
 ### Kweebec Launcher
 
-This weapon summons a friendly Kweebec instead of shooting bullets. The summon has 36 HP, deals 12 damage, and lasts 600 ticks. Drops at Epic rarity.
-
-![Taser](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/weapons/taser.png)
-_Taser -- chains to nearby enemies_
-
-![Voidlance](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/weapons/voidlance.png)
-_Voidlance -- void-powered range weapon_
-
-![Corrupted Shotgun](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/weapons/corrupted_shotgun.png)
-_Corrupted Shotgun -- 32 pellets per shot_
-
 ![Kweebec Launcher](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/weapons/kweebec_launcher.png)
+
 _Kweebec Launcher -- summons a friendly Kweebec_
+
+This weapon summons a friendly Kweebec instead of shooting bullets. The summon has 36 HP, deals 12 damage, and lasts 600 ticks. Drops at Epic rarity.
 
 ---
 
