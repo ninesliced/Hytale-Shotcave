@@ -26,11 +26,11 @@ _Large Crate (2x2)_
 
 | Crate | Rarity Range | Weapon % | Armor % | Ammo % | Heal % | Coins |
 |-------|-------------|----------|---------|--------|--------|-------|
-| Standard | <span class="rarity-basic">Basic</span> -- <span class="rarity-rare">Rare</span> | 30% | 25% | 10% | 8% | 1-3 |
-| Level 1 | <span class="rarity-basic">Basic</span> -- <span class="rarity-unique">Unique</span> | 30% | 30% | 10% | 8% | 1-3 |
-| Level 2 | <span class="rarity-uncommon">Uncommon</span> -- <span class="rarity-epic">Epic</span> | 50% | 40% | 14% | 12% | 2-5 |
-| Level 3 | <span class="rarity-rare">Rare</span> -- <span class="rarity-unique">Unique</span> | 65% | 55% | 20% | 16% | 3-7 |
-| Large (2x2) | <span class="rarity-basic">Basic</span> -- <span class="rarity-epic">Epic</span> | 50% | 40% | 16% | 14% | 3-7 |
+| Standard | <span class="rarity-basic">Basic</span> - <span class="rarity-rare">Rare</span> | 30% | 25% | 10% | 8% | 1-3 |
+| Level 1 | <span class="rarity-basic">Basic</span> - <span class="rarity-unique">Unique</span> | 30% | 30% | 10% | 8% | 1-3 |
+| Level 2 | <span class="rarity-uncommon">Uncommon</span> - <span class="rarity-epic">Epic</span> | 50% | 40% | 14% | 12% | 2-5 |
+| Level 3 | <span class="rarity-rare">Rare</span> - <span class="rarity-unique">Unique</span> | 65% | 55% | 20% | 16% | 3-7 |
+| Large (2x2) | <span class="rarity-basic">Basic</span> - <span class="rarity-epic">Epic</span> | 50% | 40% | 16% | 14% | 3-7 |
 
 ---
 
@@ -40,8 +40,8 @@ The most common crate found in early dungeon rooms.
 
 | Property | Value |
 |----------|-------|
-| Weapon Rarity | <span class="rarity-basic">Basic</span> -- <span class="rarity-rare">Rare</span> |
-| Armor Rarity | <span class="rarity-basic">Basic</span> -- <span class="rarity-rare">Rare</span> |
+| Weapon Rarity | <span class="rarity-basic">Basic</span> - <span class="rarity-rare">Rare</span> |
+| Armor Rarity | <span class="rarity-basic">Basic</span> - <span class="rarity-rare">Rare</span> |
 | Coins | 1-3 |
 
 **Weapon Pool:** Pistol, Crystal Sword, Blunderbuss, Assault Rifle, Rifle, Blitzer Crystal, Fire/Ice/Lightning/Void Muskets
@@ -56,8 +56,8 @@ Found in Kweebec. Similar to Standard crates, but with a wider rarity range and 
 
 | Property | Value |
 |----------|-------|
-| Weapon Rarity | <span class="rarity-basic">Basic</span> -- <span class="rarity-unique">Unique</span> |
-| Armor Rarity | <span class="rarity-basic">Basic</span> -- <span class="rarity-unique">Unique</span> |
+| Weapon Rarity | <span class="rarity-basic">Basic</span> - <span class="rarity-unique">Unique</span> |
+| Armor Rarity | <span class="rarity-basic">Basic</span> - <span class="rarity-unique">Unique</span> |
 | Coins | 1-3 |
 
 **Weapon Pool:** All 19 weapons including Corrupted Shotgun, Taser, Voidlance, Kweebec Launcher, and all Elemental Blunderbusses
@@ -72,8 +72,8 @@ Found in mid-run rooms. Better drop rates and better minimum rarity.
 
 | Property | Value |
 |----------|-------|
-| Weapon Rarity | <span class="rarity-uncommon">Uncommon</span> -- <span class="rarity-epic">Epic</span> |
-| Armor Rarity | <span class="rarity-uncommon">Uncommon</span> -- <span class="rarity-epic">Epic</span> |
+| Weapon Rarity | <span class="rarity-uncommon">Uncommon</span> - <span class="rarity-epic">Epic</span> |
+| Armor Rarity | <span class="rarity-uncommon">Uncommon</span> - <span class="rarity-epic">Epic</span> |
 | Coins | 2-5 |
 
 **Weapon Pool:** 17 weapons (excludes Taser and Voidlance)
@@ -88,13 +88,13 @@ The best regular crate. Found late in the run with the best drop rates.
 
 | Property | Value |
 |----------|-------|
-| Weapon Rarity | <span class="rarity-rare">Rare</span> -- <span class="rarity-unique">Unique</span> |
-| Armor Rarity | <span class="rarity-rare">Rare</span> -- <span class="rarity-unique">Unique</span> |
+| Weapon Rarity | <span class="rarity-rare">Rare</span> - <span class="rarity-unique">Unique</span> |
+| Armor Rarity | <span class="rarity-rare">Rare</span> - <span class="rarity-unique">Unique</span> |
 | Coins | 3-7 |
 
 **Weapon Pool:** All 19 weapons
 
-**Armor Pool:** All 6 sets -- Crystal, Vine, Shale, Bone, Void, Warden
+**Armor Pool:** All 6 sets - Crystal, Vine, Shale, Bone, Void, Warden
 
 > **Note:** Level 3 crates are the only regular crates that can drop Void and Warden armor.
 ---
@@ -105,8 +105,8 @@ A larger 2x2 crate with better ammo/heal rates than Standard crates.
 
 | Property | Value |
 |----------|-------|
-| Weapon Rarity | <span class="rarity-basic">Basic</span> -- <span class="rarity-epic">Epic</span> |
-| Armor Rarity | <span class="rarity-basic">Basic</span> -- <span class="rarity-epic">Epic</span> |
+| Weapon Rarity | <span class="rarity-basic">Basic</span> - <span class="rarity-epic">Epic</span> |
+| Armor Rarity | <span class="rarity-basic">Basic</span> - <span class="rarity-epic">Epic</span> |
 | Coins | 3-7 |
 
 **Weapon Pool:** 17 weapons (same as Level 2)
@@ -141,7 +141,7 @@ As you go deeper, crate quality improves:
 
 ## Related Pages
 
-- [Weapons](weapons-1) -- What weapons can drop
-- [Armor Sets](armor-sets-1) -- What armor can drop
-- [Dungeon Levels](dungeon-levels-1) -- Where each crate tier appears
-- [Enemies and Bosses](enemies-and-bosses-1) -- Enemy drop tables
+- [Weapons](weapons-1) - What weapons can drop
+- [Armor Sets](armor-sets-1) - What armor can drop
+- [Dungeon Levels](dungeon-levels-1) - Where each crate tier appears
+- [Enemies and Bosses](enemies-and-bosses-1) - Enemy drop tables

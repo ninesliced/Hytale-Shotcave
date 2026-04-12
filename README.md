@@ -1,7 +1,5 @@
 # Unstable Rifts
 
-<img width="1600" alt="Unstable Rifts Banner" src="https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/general/unstablerifts_logo.png" />
-
 **Turn Hytale into a top-down co-op roguelike shooter with dungeon runs, guns, armor sets, bosses, and a mission to save the Kweebecs from total invasion.**
 
 ---
@@ -100,13 +98,13 @@ The mod ships with its own assets, so players can jump in and start using the ne
 
 ## Credits
 
-- **Created by:** Theobosse and Paralaxe
-- **Builds by:** Palomote72
-- **NPC Design:** That_Worm and TheCommando315
-- **NPC animations:** TheCommando315 and danilerts
-- **Custom Weapons:** kill_dill
-- **Props and items:** Sylano
-- **Other:** Xenap
+- **Created by:** [Theobosse](https://github.com/TheodoreBillotte) and [Paralaxe](https://github.com/Louis-rollet)
+- **Builds by:** [Palomote72](https://x.com/Palomote75)
+- **NPC Design by:** [That_Worm](https://linktr.ee/thatworm) and [TheCommando315](https://x.com/PolloMadafaka)
+- **NPC animations by:** [TheCommando315](https://x.com/PolloMadafaka) and danilerts
+- **Custom Weapons by:** [kill_dill](https://ko-fi.com/killdill)
+- **Props and items by:** [Sylano](https://sylano.artstation.com/)
+- **Other minor contributions by:** Xenap
 - **Team:** [Ninesliced](https://ninesliced.com/)
 
 ---

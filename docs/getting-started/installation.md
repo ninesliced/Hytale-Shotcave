@@ -128,6 +128,6 @@ Understanding the instance lifecycle helps with debugging and monitoring:
 
 ## Related Pages
 
-- [Commands](commands-1) -- Full command reference (player and admin)
-- [Dungeon Levels](dungeon-levels-1) -- Level configuration details
-- [Loot and Crates](loot-and-crates-1) -- Crate loot configuration
+- [Commands](commands-1) - Full command reference (player and admin)
+- [Dungeon Levels](dungeon-levels-1) - Level configuration details
+- [Loot and Crates](loot-and-crates-1) - Crate loot configuration

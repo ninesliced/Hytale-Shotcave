@@ -18,7 +18,7 @@ _Complete HUD layout during gameplay_
 
 ### Ammo Display
 
-Shows current ammo and reload state. It updates as you shoot and reload.
+Shows current ammo and reload state. It updates as you shoot and reload. You can see the details of the items you have equipped with the crouch key. The ammo display will show the weapon stats details.
 
 ![Ammo HUD](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/hud/ammo_hud.png)
 _Ammo counter with reload indicator_
@@ -66,6 +66,7 @@ When a player dies, a revive prompt appears for nearby teammates. The HUD shows:
 ### Portal Prompt
 
 Appears when a portal is available after the boss is defeated. It tells you when it is time to move on.
+
 ---
 
 ## Challenge HUD
@@ -112,7 +113,7 @@ _Map legend_
 
 ## Related Pages
 
-- [Getting Started](getting-started-1) -- Camera controls and basics
-- [Party System](party-system-1) -- Party status details
-- [Enemies and Bosses](enemies-bosses-1) -- Boss health bar context
-- [Dungeon Levels](dungeon-levels-1) -- Room types shown on the map
+- [Getting Started](getting-started-1) - Camera controls and basics
+- [Party System](party-system-1) - Party status details
+- [Enemies and Bosses](enemies-and-bosses-1) - Boss health bar context
+- [Dungeon Levels](dungeon-levels-1) - Room types shown on the map

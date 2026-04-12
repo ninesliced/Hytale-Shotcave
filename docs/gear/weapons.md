@@ -46,15 +46,15 @@ _Blunderbuss_
 | Weapon | Category | Damage | Cooldown | Reload | Ammo | Range | Spread | Pellets | Rarity Range | Weight |
 |--------|----------|--------|----------|--------|------|-------|--------|---------|-------------|--------|
 | Pistol | LASER | 14 | 0.2s | 0.7s | 120 | 45 | 0 | 1 | <span class="rarity-basic">Basic</span> | 20 |
-| Crystal Sword | MELEE | 18 | 0.25s | -- | -- | 0 | 0 | 1 | <span class="rarity-basic">Basic</span> | 20 |
-| Assault Rifle | LASER | 15 | 1.0s | 1.0s | 180 | 35 | 3.0 | 3 | <span class="rarity-basic">Basic</span> -- <span class="rarity-unique">Unique</span> | 10 |
-| Rifle | LASER | 18 | 1.0s | 1.0s | 140 | 40 | 2.4 | 1 | <span class="rarity-basic">Basic</span> -- <span class="rarity-unique">Unique</span> | 8 |
-| Blitzer Crystal | LASER | 8 | 3.0s | 1.4s | 50 | 35 | 0 | 1 | <span class="rarity-basic">Basic</span> -- <span class="rarity-unique">Unique</span> | 10 |
-| Blunderbuss | LASER | 8 | 1.1s | 1.3s | 60 | 24 | 14.0 | 8 | <span class="rarity-basic">Basic</span> -- <span class="rarity-uncommon">Uncommon</span> | 15 |
+| Crystal Sword | MELEE | 18 | 0.25s | - | - | 0 | 0 | 1 | <span class="rarity-basic">Basic</span> | 20 |
+| Assault Rifle | LASER | 15 | 1.0s | 1.0s | 180 | 35 | 3.0 | 3 | <span class="rarity-basic">Basic</span> - <span class="rarity-unique">Unique</span> | 10 |
+| Rifle | LASER | 18 | 1.0s | 1.0s | 140 | 40 | 2.4 | 1 | <span class="rarity-basic">Basic</span> - <span class="rarity-unique">Unique</span> | 8 |
+| Blitzer Crystal | LASER | 8 | 3.0s | 1.4s | 50 | 35 | 0 | 1 | <span class="rarity-basic">Basic</span> - <span class="rarity-unique">Unique</span> | 10 |
+| Blunderbuss | LASER | 8 | 1.1s | 1.3s | 60 | 24 | 14.0 | 8 | <span class="rarity-basic">Basic</span> - <span class="rarity-uncommon">Uncommon</span> | 15 |
 | Taser | LASER | 10 | 0.8s | 1.0s | 80 | 30 | 0 | 1 | <span class="rarity-epic">Epic</span> | 5 |
-| Voidlance | BULLET | -- | 1.2s | 1.4s | 100 | 40 | 0 | 1 | <span class="rarity-epic">Epic</span> | 5 |
-| Corrupted Shotgun | LASER | 5 | 2.2s | 2.2s | 60 | 20 | 34.0 | 32 | <span class="rarity-epic">Epic</span> -- <span class="rarity-unique">Unique</span> | 3 |
-| Kweebec Launcher | SUMMON | -- | 1.5s | 3.0s | 50 | 30 | 0 | 1 | <span class="rarity-epic">Epic</span> | 15 |
+| Voidlance | BULLET | - | 1.2s | 1.4s | 100 | 40 | 0 | 1 | <span class="rarity-epic">Epic</span> | 5 |
+| Corrupted Shotgun | LASER | 5 | 2.2s | 2.2s | 60 | 20 | 34.0 | 32 | <span class="rarity-epic">Epic</span> - <span class="rarity-unique">Unique</span> | 3 |
+| Kweebec Launcher | SUMMON | - | 1.5s | 3.0s | 50 | 30 | 0 | 1 | <span class="rarity-epic">Epic</span> | 15 |
 
 > [!NOTE]
 > **Crystal Sword** is always available as starting equipment. It uses no ammo and has a built-in knockback of 1.5.
@@ -132,7 +132,7 @@ Weapons with a locked element always apply that effect on hit:
 
 ![Taser](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/weapons/taser.png)
 
-_Taser -- chains to nearby enemies_
+_Taser - chains to nearby enemies_
 
 
 The Taser shoots electricity that jumps to nearby enemies. It is a rare drop (Epic+).
@@ -141,7 +141,7 @@ The Taser shoots electricity that jumps to nearby enemies. It is a rare drop (Ep
 
 ![Voidlance](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/weapons/voidlance.png)
 
-_Voidlance -- void-powered range weapon_
+_Voidlance - void-powered range weapon_
 
 A long-range void weapon. It uses a custom projectile setup and drops at Epic rarity.
 
@@ -149,7 +149,7 @@ A long-range void weapon. It uses a custom projectile setup and drops at Epic ra
 
 ![Corrupted Shotgun](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/weapons/corrupted_shotgun.png)
 
-_Corrupted Shotgun -- 32 pellets per shot_
+_Corrupted Shotgun - 32 pellets per shot_
 
 One of the strongest spread weapons in the game. It fires 32 pellets with both <span class="effect-acid">Acid</span> and <span class="effect-void">Void</span> effects. Very rare.
 
@@ -157,7 +157,7 @@ One of the strongest spread weapons in the game. It fires 32 pellets with both <
 
 ![Kweebec Launcher](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/weapons/kweebec_launcher.png)
 
-_Kweebec Launcher -- summons a friendly Kweebec_
+_Kweebec Launcher - summons a friendly Kweebec_
 
 This weapon summons a friendly Kweebec instead of shooting bullets. The summon has 36 HP, deals 12 damage, and lasts 600 ticks. Drops at Epic rarity.
 
@@ -176,7 +176,7 @@ This weapon summons a friendly Kweebec instead of shooting bullets. The summon h
 
 ## Related Pages
 
-- [Getting Started](getting-started-1) -- Starting equipment and basics
-- [Armor Sets](armor-sets-1) -- Defensive gear and set bonuses
-- [Loot and Crates](loot-crates-1) -- Where to find weapons
-- [Enemies and Bosses](enemies-bosses-1) -- What you'll be fighting
+- [Getting Started](getting-started-1) - Starting equipment and basics
+- [Armor Sets](armor-sets-1) - Defensive gear and set bonuses
+- [Loot and Crates](loot-and-crates-1) - Where to find weapons
+- [Enemies and Bosses](enemies-and-bosses-1) - What you'll be fighting
