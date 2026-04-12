@@ -7,7 +7,7 @@ draft: false
 
 # Shops
 
-Each dungeon level contains one shop room with a shopkeeper NPC. Shops are safe zones -- no enemies will spawn in a shop room.
+Each dungeon level contains one shop room with a shopkeeper NPC. Shops are safe zones - no enemies will spawn in a shop room.
 
 ![Shop Room](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/shop/shop_room.png)
 _A shop room with the shopkeeper NPC and displayed items_
@@ -86,7 +86,7 @@ Some shops have a refresh button to reroll the item list:
 
 ## Related Pages
 
-- [Weapons](weapons-1) -- Weapon stats and rarity tiers
-- [Armor Sets](armor-sets-1) -- Armor stats and set bonuses
-- [Getting Started](getting-started-1) -- Coin economy basics
-- [Dungeon Levels](dungeon-levels-1) -- Shop room placement
+- [Weapons](weapons-1) - Weapon stats and rarity tiers
+- [Armor Sets](armor-sets-1) - Armor stats and set bonuses
+- [Getting Started](getting-started-1) - Coin economy basics
+- [Dungeon Levels](dungeon-levels-1) - Shop room placement

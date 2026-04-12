@@ -12,7 +12,7 @@ Unstable Rifts is built for co-op. The party system lets you team up with up to 
 ![Party UI](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/party/party_ui.png)
 _Party management UI showing member list and controls_
 ![Party Portal](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/getting-started/ancient_party_portal.png)
-_Ancient Party Portal -- used to create a party_
+_Ancient Party Portal - used to create a party_
 
 ---
 
@@ -53,7 +53,7 @@ _Ancient Party Portal -- used to create a party_
 | Invite expiry | 5 minutes |
 | Privacy options | Public (anyone can join) / Private (invite only) |
 | Party name | Auto-generated: "{Leader}'s Party" |
-| Leader transfer | Not supported -- if leader leaves, party is disbanded |
+| Leader transfer | Not supported - if leader leaves, party is disbanded |
 
 ---
 
@@ -106,6 +106,6 @@ When the leader starts the run:
 
 ## Related Pages
 
-- [Commands](commands-1) -- Full command reference
-- [Getting Started](getting-started-1) -- How to play
-- [HUD and Interface](hud-interface-1) -- Party status HUD elements
+- [Commands](commands-1) - Full command reference
+- [Getting Started](getting-started-1) - How to play
+- [HUD and Interface](hud-interface-1) - Party status HUD elements

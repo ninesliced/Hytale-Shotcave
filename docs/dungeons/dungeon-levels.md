@@ -76,7 +76,7 @@ The Kweebec level includes themed environmental props:
 ![Kweebec Props](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/props/kweebec_props.png)
 _Ruined Kweebec furniture props in a dungeon room_
 ![Radioactive Barrels](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/props/radioactive_barrels.png)
-_Radioactive barrels -- breakable environmental hazards_
+_Radioactive barrels - breakable environmental hazards_
 ---
 
 ## Level 2: Desert
@@ -172,7 +172,7 @@ The game builds each run in this order:
 
 ## Related Pages
 
-- [Enemies and Bosses](enemies-and-bosses-1) -- Detailed enemy stats and boss mechanics
-- [Loot and Crates](loot-and-crates-1) -- What drops in each level
-- [Shops](shops-1) -- In-dungeon shop mechanics
-- [HUD and Interface](hud-and-interface-1) -- Dungeon map and minimap features
+- [Enemies and Bosses](enemies-and-bosses-1) - Detailed enemy stats and boss mechanics
+- [Loot and Crates](loot-and-crates-1) - What drops in each level
+- [Shops](shops-1) - In-dungeon shop mechanics
+- [HUD and Interface](hud-and-interface-1) - Dungeon map and minimap features

@@ -33,12 +33,12 @@ After that, create a party, invite friends, and launch the run.
 
 ## How to Play
 
-1. **Form a Party** -- Use a village portal, a crafted portal, or `/ur party ui` to create or manage your group.
-2. **Invite Friends** -- Invite other players from the party menu or with `/ur party invite <player>`.
-3. **Enter the Dungeon** -- The party leader starts the run from the party UI or with `/unstablerifts party start`.
-4. **Fight Through Rooms** -- Clear enemies, break crates for loot, and find the boss room.
-5. **Defeat the Boss** -- Each level ends with a boss fight. Defeat it to unlock the exit portal.
-6. **Progress or Exit** -- Step through the portal to advance to the next level or return to the lobby.
+1. **Form a Party** - Use a village portal, a crafted portal, or `/ur party ui` to create or manage your group.
+2. **Invite Friends** - Invite other players from the party menu or with `/ur party invite <player>`.
+3. **Enter the Dungeon** - The party leader starts the run from the party UI or with `/unstablerifts party start`.
+4. **Fight Through Rooms** - Clear enemies, break crates for loot, and find the boss room.
+5. **Defeat the Boss** - Each level ends with a boss fight. Defeat it to unlock the exit portal.
+6. **Progress or Exit** - Step through the portal to advance to the next level or return to the lobby.
 
 ![Ancient Party Portal](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/getting-started/ancient_party_portal.png)
 ![Dungeon Entrance](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/getting-started/dungeon_entrance.png)
@@ -128,9 +128,9 @@ Coins drop from enemies and crates. They are shared across the entire party and 
 
 ## Next Steps
 
-- [Lore](unstable-rifts/lore) -- Learn why the invasion started and what the rifts mean
-- [Weapons](unstable-rifts/weapons-1) -- Learn about the 19 available weapons
-- [Armor Sets](unstable-rifts/armor-sets-1) -- Find out about armor set bonuses
-- [Dungeon Levels](unstable-rifts/dungeon-levels-1) -- Explore what awaits in each level
-- [Party System](unstable-rifts/party-system-1) -- Team up with friends
-- [Commands](unstable-rifts/commands-1) -- Full command reference
+- [Lore](unstable-rifts/lore) - Learn why the invasion started and what the rifts mean
+- [Weapons](unstable-rifts/weapons-1) - Learn about the 19 available weapons
+- [Armor Sets](unstable-rifts/armor-sets-1) - Find out about armor set bonuses
+- [Dungeon Levels](unstable-rifts/dungeon-levels-1) - Explore what awaits in each level
+- [Party System](unstable-rifts/party-system-1) - Team up with friends
+- [Commands](unstable-rifts/commands-1) - Full command reference

@@ -112,7 +112,7 @@ _Map legend_
 
 ## Related Pages
 
-- [Getting Started](getting-started-1) -- Camera controls and basics
-- [Party System](party-system-1) -- Party status details
-- [Enemies and Bosses](enemies-bosses-1) -- Boss health bar context
-- [Dungeon Levels](dungeon-levels-1) -- Room types shown on the map
+- [Getting Started](getting-started-1) - Camera controls and basics
+- [Party System](party-system-1) - Party status details
+- [Enemies and Bosses](enemies-bosses-1) - Boss health bar context
+- [Dungeon Levels](dungeon-levels-1) - Room types shown on the map

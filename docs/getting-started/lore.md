@@ -90,6 +90,6 @@ The war for Orbis is still ongoing, but every rift you close matters.
 
 ## Related Pages
 
-- [Getting Started](getting-started-1) -- Learn the basic gameplay loop
-- [Dungeon Levels](dungeon-levels-1) -- See where the fighting happens
-- [Enemies and Bosses](enemies-and-bosses-1) -- Learn about the invaders and infected enemies
+- [Getting Started](getting-started-1) - Learn the basic gameplay loop
+- [Dungeon Levels](dungeon-levels-1) - See where the fighting happens
+- [Enemies and Bosses](enemies-and-bosses-1) - Learn about the invaders and infected enemies
