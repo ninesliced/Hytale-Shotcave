@@ -66,6 +66,7 @@ When a player dies, a revive prompt appears for nearby teammates. The HUD shows:
 ### Portal Prompt
 
 Appears when a portal is available after the boss is defeated. It tells you when it is time to move on.
+
 ---
 
 ## Challenge HUD
