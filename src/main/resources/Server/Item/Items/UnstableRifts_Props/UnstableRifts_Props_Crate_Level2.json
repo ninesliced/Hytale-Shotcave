@@ -8,10 +8,19 @@
   ],
   "BlockType": {
     "Material": "Solid",
-    "DrawType": "Cube",
+    "DrawType": "Model",
     "Opacity": "Transparent",
     "Group": "Props",
-    "RandomRotation": "YawStep1",
+    "CustomModel": "Blocks/UnstableRifts_Props/crate/Crate.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/UnstableRifts_Props/crate/Crate.png",
+        "Weight": 1
+      }
+    ],
+    "CustomModelScale": 1,
+    "HitboxType": "UnstableRifts_Props_Crate",
+    "VariantRotation": "NESW",
     "Gathering": {
       "Soft": {
         "DropList": "Empty",
@@ -20,14 +29,22 @@
     },
     "Flags": {},
     "BlockParticleSetId": "UnstableRifts_Props_Crate_Level2",
-    "Textures": [
-      {
-        "Weight": 1,
-        "All": "BlockTextures/UnstableRifts_Props_Crate.png"
-      }
-    ],
     "ParticleColor": "#4a4a4a",
-    "BlockSoundSetId": "Metal"
+    "BlockSoundSetId": "Metal",
+    "Support": {
+      "Down": [
+        {
+          "FaceType": "Full"
+        }
+      ]
+    },
+    "Supporting": {
+      "Up": [
+        {
+          "FaceType": "Full"
+        }
+      ]
+    }
   },
   "PlayerAnimationsId": "Block",
   "Tags": {
