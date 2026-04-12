@@ -1,7 +1,5 @@
 # Unstable Rifts
 
-<img width="1600" alt="Unstable Rifts Banner" src="https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/general/unstablerifts_logo.png" />
-
 **Turn Hytale into a top-down co-op roguelike shooter with dungeon runs, guns, armor sets, bosses, and a mission to save the Kweebecs from total invasion.**
 
 ---
