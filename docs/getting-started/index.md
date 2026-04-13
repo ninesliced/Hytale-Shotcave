@@ -92,6 +92,7 @@ If you die during a run, a revive marker appears where you fell. A teammate can 
 ## Camera Controls
 
 The game uses a fixed top-down camera. You can disable or fix it if any issue occurs with the camera using the `/unstablerifts topcamera` command.
+
 ---
 
 ## Coins
