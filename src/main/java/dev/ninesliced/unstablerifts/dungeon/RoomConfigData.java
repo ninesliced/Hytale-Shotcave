@@ -21,6 +21,8 @@ public class RoomConfigData implements Component<ChunkStore> {
             .append(new KeyedCodec<>("LockRoom", Codec.STRING), (d, v) -> d.lockRoom = v, d -> d.lockRoom).add()
             .append(new KeyedCodec<>("MobClearActivator", Codec.STRING), (d, v) -> d.mobClearActivator = v, d -> d.mobClearActivator).add()
             .append(new KeyedCodec<>("MobClearUnlockPercent", Codec.STRING), (d, v) -> d.mobClearUnlockPercent = v, d -> d.mobClearUnlockPercent).add()
+            .append(new KeyedCodec<>("LockTitle", Codec.STRING), (d, v) -> d.lockTitle = v, d -> d.lockTitle).add()
+            .append(new KeyedCodec<>("LockSubtitle", Codec.STRING), (d, v) -> d.lockSubtitle = v, d -> d.lockSubtitle).add()
             .append(new KeyedCodec<>("EnterTitle", Codec.STRING), (d, v) -> d.enterTitle = v, d -> d.enterTitle).add()
             .append(new KeyedCodec<>("EnterSubtitle", Codec.STRING), (d, v) -> d.enterSubtitle = v, d -> d.enterSubtitle).add()
             .append(new KeyedCodec<>("UnlockTitle", Codec.STRING), (d, v) -> d.unlockTitle = v, d -> d.unlockTitle).add()
@@ -34,6 +36,8 @@ public class RoomConfigData implements Component<ChunkStore> {
     @Nullable private String lockRoom;
     @Nullable private String mobClearActivator;
     @Nullable private String mobClearUnlockPercent;
+    @Nullable private String lockTitle;
+    @Nullable private String lockSubtitle;
     @Nullable private String enterTitle;
     @Nullable private String enterSubtitle;
     @Nullable private String unlockTitle;
@@ -53,9 +57,29 @@ public class RoomConfigData implements Component<ChunkStore> {
                           @Nullable String unlockSubtitle,
                           @Nullable String exitTitle,
                           @Nullable String exitSubtitle) {
+        this(lockRoom, mobClearActivator, mobClearUnlockPercent,
+                null, null,
+                enterTitle, enterSubtitle,
+                unlockTitle, unlockSubtitle,
+                exitTitle, exitSubtitle);
+    }
+
+    public RoomConfigData(@Nullable String lockRoom,
+                          @Nullable String mobClearActivator,
+                          @Nullable String mobClearUnlockPercent,
+                          @Nullable String lockTitle,
+                          @Nullable String lockSubtitle,
+                          @Nullable String enterTitle,
+                          @Nullable String enterSubtitle,
+                          @Nullable String unlockTitle,
+                          @Nullable String unlockSubtitle,
+                          @Nullable String exitTitle,
+                          @Nullable String exitSubtitle) {
         this.lockRoom = lockRoom;
         this.mobClearActivator = mobClearActivator;
         this.mobClearUnlockPercent = mobClearUnlockPercent;
+        this.lockTitle = lockTitle;
+        this.lockSubtitle = lockSubtitle;
         this.enterTitle = enterTitle;
         this.enterSubtitle = enterSubtitle;
         this.unlockTitle = unlockTitle;
@@ -96,6 +120,22 @@ public class RoomConfigData implements Component<ChunkStore> {
     }
 
     @Nonnull
+    public String getLockTitle() {
+        if (lockTitle != null) {
+            return lockTitle;
+        }
+        return isLockRoom() && enterTitle != null ? enterTitle : "";
+    }
+
+    @Nonnull
+    public String getLockSubtitle() {
+        if (lockSubtitle != null) {
+            return lockSubtitle;
+        }
+        return isLockRoom() && enterSubtitle != null ? enterSubtitle : "";
+    }
+
+    @Nonnull
     public String getEnterTitle() {
         return enterTitle != null ? enterTitle : "";
     }
@@ -129,6 +169,7 @@ public class RoomConfigData implements Component<ChunkStore> {
     @Nullable
     public Component<ChunkStore> clone() {
         return new RoomConfigData(this.lockRoom, this.mobClearActivator, this.mobClearUnlockPercent,
+                this.lockTitle, this.lockSubtitle,
                 this.enterTitle, this.enterSubtitle,
                 this.unlockTitle, this.unlockSubtitle,
                 this.exitTitle, this.exitSubtitle);

@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
 /**
  * Room configuration UI page for level designers.
  * Allows configuring: lock on enter, mob-clear unlock percentage,
- * and three configurable messages (enter, unlock, exit) each with title + subtitle.
+ * and three configurable messages (lock, unlock, exit) each with title + subtitle.
  */
 public final class RoomConfigPage extends InteractiveCustomUIPage<RoomConfigPage.RoomConfigEventData> {
 
@@ -41,8 +41,8 @@ public final class RoomConfigPage extends InteractiveCustomUIPage<RoomConfigPage
     private final BlockPosition blockPos;
     private boolean lockRoom = false;
     private String mobClearUnlockPercent = "0";
-    private String enterTitle = "";
-    private String enterSubtitle = "";
+    private String lockTitle = "";
+    private String lockSubtitle = "";
     private String unlockTitle = "";
     private String unlockSubtitle = "";
     private String exitTitle = "";
@@ -73,8 +73,8 @@ public final class RoomConfigPage extends InteractiveCustomUIPage<RoomConfigPage
     private void applyUIState(@Nonnull UICommandBuilder ui) {
         ui.set("#LockRoomToggle.Text", lockRoom ? "ON" : "OFF");
         ui.set("#MobClearPercentInput.Value", mobClearUnlockPercent);
-        ui.set("#EnterTitleInput.Value", enterTitle);
-        ui.set("#EnterSubtitleInput.Value", enterSubtitle);
+        ui.set("#LockTitleInput.Value", lockTitle);
+        ui.set("#LockSubtitleInput.Value", lockSubtitle);
         ui.set("#UnlockTitleInput.Value", unlockTitle);
         ui.set("#UnlockSubtitleInput.Value", unlockSubtitle);
         ui.set("#ExitTitleInput.Value", exitTitle);
@@ -91,17 +91,17 @@ public final class RoomConfigPage extends InteractiveCustomUIPage<RoomConfigPage
                         .put(RoomConfigEventData.KEY_ACTION, "MOB_CLEAR_PERCENT")
                         .put(RoomConfigEventData.KEY_VALUE, "#MobClearPercentInput.Value"), false);
 
-        // Enter message
+        // Lock message
         events.addEventBinding(
-                CustomUIEventBindingType.ValueChanged, "#EnterTitleInput",
+                CustomUIEventBindingType.ValueChanged, "#LockTitleInput",
                 new EventData()
-                        .put(RoomConfigEventData.KEY_ACTION, "ENTER_TITLE")
-                        .put(RoomConfigEventData.KEY_VALUE, "#EnterTitleInput.Value"), false);
+                        .put(RoomConfigEventData.KEY_ACTION, "LOCK_TITLE")
+                        .put(RoomConfigEventData.KEY_VALUE, "#LockTitleInput.Value"), false);
         events.addEventBinding(
-                CustomUIEventBindingType.ValueChanged, "#EnterSubtitleInput",
+                CustomUIEventBindingType.ValueChanged, "#LockSubtitleInput",
                 new EventData()
-                        .put(RoomConfigEventData.KEY_ACTION, "ENTER_SUBTITLE")
-                        .put(RoomConfigEventData.KEY_VALUE, "#EnterSubtitleInput.Value"), false);
+                        .put(RoomConfigEventData.KEY_ACTION, "LOCK_SUBTITLE")
+                        .put(RoomConfigEventData.KEY_VALUE, "#LockSubtitleInput.Value"), false);
 
         // Unlock message
         events.addEventBinding(
@@ -153,8 +153,8 @@ public final class RoomConfigPage extends InteractiveCustomUIPage<RoomConfigPage
 
         lockRoom = data.isLockRoom();
         mobClearUnlockPercent = String.valueOf(data.getMobClearUnlockPercent());
-        enterTitle = data.getEnterTitle();
-        enterSubtitle = data.getEnterSubtitle();
+        lockTitle = data.getLockTitle();
+        lockSubtitle = data.getLockSubtitle();
         unlockTitle = data.getUnlockTitle();
         unlockSubtitle = data.getUnlockSubtitle();
         exitTitle = data.getExitTitle();
@@ -179,7 +179,8 @@ public final class RoomConfigPage extends InteractiveCustomUIPage<RoomConfigPage
                 String.valueOf(lockRoom),
                 null,
                 mobClearUnlockPercent,
-                enterTitle, enterSubtitle,
+                lockTitle, lockSubtitle,
+                "", "",
                 unlockTitle, unlockSubtitle,
                 exitTitle, exitSubtitle
         );
@@ -207,8 +208,8 @@ public final class RoomConfigPage extends InteractiveCustomUIPage<RoomConfigPage
         switch (action) {
             case "TOGGLE_LOCK" -> { lockRoom = !lockRoom; refresh(); }
             case "MOB_CLEAR_PERCENT" -> { if (data.value != null) mobClearUnlockPercent = data.value; }
-            case "ENTER_TITLE" -> { if (data.value != null) enterTitle = data.value; }
-            case "ENTER_SUBTITLE" -> { if (data.value != null) enterSubtitle = data.value; }
+            case "LOCK_TITLE" -> { if (data.value != null) lockTitle = data.value; }
+            case "LOCK_SUBTITLE" -> { if (data.value != null) lockSubtitle = data.value; }
             case "UNLOCK_TITLE" -> { if (data.value != null) unlockTitle = data.value; }
             case "UNLOCK_SUBTITLE" -> { if (data.value != null) unlockSubtitle = data.value; }
             case "EXIT_TITLE" -> { if (data.value != null) exitTitle = data.value; }

@@ -54,6 +54,10 @@ public final class RoomData {
     private int mobClearUnlockPercent = 0;
     private boolean locked = false;
     @Nonnull
+    private String lockTitle = "";
+    @Nonnull
+    private String lockSubtitle = "";
+    @Nonnull
     private String enterTitle = "";
     @Nonnull
     private String enterSubtitle = "";
@@ -555,6 +559,24 @@ public final class RoomData {
 
     public void setLocked(boolean locked) {
         this.locked = locked;
+    }
+
+    @Nonnull
+    public String getLockTitle() {
+        return lockTitle;
+    }
+
+    public void setLockTitle(@Nonnull String lockTitle) {
+        this.lockTitle = lockTitle;
+    }
+
+    @Nonnull
+    public String getLockSubtitle() {
+        return lockSubtitle;
+    }
+
+    public void setLockSubtitle(@Nonnull String lockSubtitle) {
+        this.lockSubtitle = lockSubtitle;
     }
 
     @Nonnull

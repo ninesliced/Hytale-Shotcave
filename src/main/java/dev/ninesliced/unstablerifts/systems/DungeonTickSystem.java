@@ -21,6 +21,7 @@ import dev.ninesliced.unstablerifts.hud.DungeonInfoHud;
 import dev.ninesliced.unstablerifts.hud.PartyStatusHud;
 import dev.ninesliced.unstablerifts.hud.PortalPromptHudService;
 import dev.ninesliced.unstablerifts.party.PartyManager;
+import dev.ninesliced.unstablerifts.player.PlayerEventNotifier;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 
@@ -465,13 +466,11 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
         boolean roomChanged = previousRoom != room;
 
         if (roomChanged) {
-            // Broadcast exit message for the room the player just left.
+            // Enter/exit movement prompts are personal; lock/unlock prompts are party-wide.
             if (previousRoom != null) {
-                broadcastRoomMessage(unstablerifts, game, previousRoom.getExitTitle(), previousRoom.getExitSubtitle());
+                sendRoomMessageToPlayer(playerRef, previousRoom.getExitTitle(), previousRoom.getExitSubtitle());
             }
-
-            // Broadcast enter message for the new room.
-            broadcastRoomMessage(unstablerifts, game, room.getEnterTitle(), room.getEnterSubtitle());
+            sendRoomMessageToPlayer(playerRef, room.getEnterTitle(), room.getEnterSubtitle());
 
             if (room.getType() == RoomType.SHOP) {
                 World world = game.getInstanceWorld();
@@ -573,14 +572,19 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
         // Lock the room using prefab-based blockers only so we do not
         // race a plain block seal against the door prefab pass.
         World world = game.getInstanceWorld();
+        boolean sealed = false;
         if (world != null && levelConfig != null) {
             DungeonConfig.LevelConfig lc = levelConfig;
             room.setDoorsSealed(true);
+            sealed = true;
             world.execute(() -> {
                 DungeonGenerator.pasteConfiguredDoorMarkers(world, lc, room, EnumSet.of(DoorMode.ACTIVATOR), true);
                 DungeonGenerator.pasteLockDoor(world, lc, room, room.getAnchor(), room.getRotation());
                 DungeonGenerator.pasteSealDoorsAtRoomExits(world, lc, room);
             });
+        }
+        if (sealed) {
+            broadcastRoomMessage(unstablerifts, game, room.getLockTitle(), room.getLockSubtitle());
         }
 
         // Spawn ALL deferred mobs on room entry (pinned + random pool).
@@ -698,6 +702,17 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
         if (title.isEmpty() && subtitle.isEmpty()) return;
         unstablerifts.getGameManager().broadcastToParty(
                 game.getPartyId(), title.isEmpty() ? " " : title, subtitle.isEmpty() ? null : subtitle);
+    }
+
+    private static void sendRoomMessageToPlayer(@Nonnull PlayerRef playerRef,
+                                                @Nonnull String title,
+                                                @Nonnull String subtitle) {
+        if (title.isEmpty() && subtitle.isEmpty()) return;
+        PlayerEventNotifier.showEventTitle(
+                playerRef,
+                title.isEmpty() ? " " : title,
+                subtitle.isEmpty() ? null : subtitle,
+                true);
     }
 
     private boolean shouldRun(@Nonnull Map<UUID, Long> lastRunTimes,

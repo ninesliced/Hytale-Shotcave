@@ -104,9 +104,9 @@ Group #RoomConfigRoot {
         Background: #3a4560;
       }
 
-      // ═══ ENTER ROOM MESSAGE ═══
+      // ═══ LOCK ROOM MESSAGE ═══
       Label {
-        Text: "ENTER ROOM MESSAGE";
+        Text: "LOCK ROOM MESSAGE";
         Anchor: (Height: 20, Top: 8);
         Style: LabelStyle(FontSize: 11, TextColor: @SectionColor, RenderBold: true, RenderUppercase: true, HorizontalAlignment: Start, VerticalAlignment: Center);
       }
@@ -121,7 +121,7 @@ Group #RoomConfigRoot {
           Style: LabelStyle(FontSize: 12, TextColor: @LabelColor, HorizontalAlignment: Start, VerticalAlignment: Center);
         }
 
-        TextField #EnterTitleInput {
+        TextField #LockTitleInput {
           PlaceholderText: "...";
           Anchor: (Width: 285, Height: 26);
           Style: InputFieldStyle(FontSize: 12, TextColor: @ValueColor);
@@ -141,7 +141,7 @@ Group #RoomConfigRoot {
           Style: LabelStyle(FontSize: 12, TextColor: @LabelColor, HorizontalAlignment: Start, VerticalAlignment: Center);
         }
 
-        TextField #EnterSubtitleInput {
+        TextField #LockSubtitleInput {
           PlaceholderText: "...";
           Anchor: (Width: 285, Height: 26);
           Style: InputFieldStyle(FontSize: 12, TextColor: @ValueColor);

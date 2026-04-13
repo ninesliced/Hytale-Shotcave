@@ -338,6 +338,10 @@ public class DungeonGenerator {
         return component.get(key).getAsString();
     }
 
+    private static boolean isConfigured(@Nullable String value) {
+        return value != null && !value.isBlank();
+    }
+
     @Nonnull
     private static DoorMode readDoorMode(@Nonnull MarkerType markerType, @Nullable JsonObject serializedComponents) {
         String serializedMode = getSerializedString(getSerializedComponent(serializedComponents, "DoorData"), "Mode");
@@ -373,12 +377,26 @@ public class DungeonGenerator {
             return null;
         }
 
+        String lockRoom = getSerializedString(component, "LockRoom");
+        String enterTitle = getSerializedString(component, "EnterTitle");
+        String enterSubtitle = getSerializedString(component, "EnterSubtitle");
+        String lockTitle = getSerializedString(component, "LockTitle");
+        String lockSubtitle = getSerializedString(component, "LockSubtitle");
+        if ("true".equalsIgnoreCase(lockRoom) && !isConfigured(lockTitle) && !isConfigured(lockSubtitle)) {
+            lockTitle = enterTitle;
+            lockSubtitle = enterSubtitle;
+            enterTitle = "";
+            enterSubtitle = "";
+        }
+
         return new RoomConfigData(
-                getSerializedString(component, "LockRoom"),
+                lockRoom,
                 getSerializedString(component, "MobClearActivator"),
                 getSerializedString(component, "MobClearUnlockPercent"),
-                getSerializedString(component, "EnterTitle"),
-                getSerializedString(component, "EnterSubtitle"),
+                lockTitle,
+                lockSubtitle,
+                enterTitle,
+                enterSubtitle,
                 getSerializedString(component, "UnlockTitle"),
                 getSerializedString(component, "UnlockSubtitle"),
                 getSerializedString(component, "ExitTitle"),
@@ -1451,6 +1469,8 @@ public class DungeonGenerator {
                         if (cfg.hasMobClearUnlockPercentConfigured()) {
                             roomData.setMobClearUnlockPercent(cfg.getMobClearUnlockPercent());
                         }
+                        roomData.setLockTitle(cfg.getLockTitle());
+                        roomData.setLockSubtitle(cfg.getLockSubtitle());
                         roomData.setEnterTitle(cfg.getEnterTitle());
                         roomData.setEnterSubtitle(cfg.getEnterSubtitle());
                         roomData.setUnlockTitle(cfg.getUnlockTitle());

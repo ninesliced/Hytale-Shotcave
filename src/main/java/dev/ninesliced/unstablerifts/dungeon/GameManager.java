@@ -406,7 +406,9 @@ public final class GameManager {
         DungeonConfig.LevelConfig levelConfig = resolveCurrentLevelConfig(config, game);
 
         world.execute(() -> {
-            if (!sealBossRoom(game, bossRoom, world, levelConfig)) {
+            if (sealBossRoom(game, bossRoom, world, levelConfig)) {
+                broadcastRoomMessage(game, bossRoom.getLockTitle(), bossRoom.getLockSubtitle());
+            } else {
                 LOGGER.warning("Boss room " + bossRoom.getAnchor()
                         + " has no configured door prefabs to seal for level "
                         + (levelConfig != null ? levelConfig.getSelector() : "<unknown>"));
@@ -2467,6 +2469,13 @@ public final class GameManager {
                 }
             }
         }
+    }
+
+    private void broadcastRoomMessage(@Nonnull Game game,
+                                      @Nonnull String title,
+                                      @Nonnull String subtitle) {
+        if (title.isEmpty() && subtitle.isEmpty()) return;
+        broadcastToParty(game.getPartyId(), title.isEmpty() ? " " : title, subtitle.isEmpty() ? null : subtitle);
     }
 
     /**
