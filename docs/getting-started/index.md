@@ -91,15 +91,7 @@ If you die during a run, a revive marker appears where you fell. A teammate can 
 
 ## Camera Controls
 
-The game uses a fixed top-down camera. You can rotate the camera using the `/unstablerifts topcamera` command. Four rotation angles are available:
-
-| Rotation | Angle |
-|----------|-------|
-| 0 | 0 degrees (default) |
-| 1 | 90 degrees |
-| 2 | 180 degrees |
-| 3 | 270 degrees |
-
+The game uses a fixed top-down camera. You can disable or fix it if any issue occurs with the camera using the `/unstablerifts topcamera` command.
 ---
 
 ## Coins
