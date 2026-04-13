@@ -55,7 +55,7 @@ Every player spawns with two weapons at the beginning of each run:
 | Primary | Pistol | Reliable sidearm for close to medium range combat |
 | Secondary | Crystal Sword | Melee weapon for close-range combat |
 
-**Tip:** You can find better weapons by breaking crates, defeating enemies, or purchasing from shops inside the dungeon.
+**Tip:** You can find better weapons by breaking crates or purchasing from shops inside the dungeon.
 
 ---
 
