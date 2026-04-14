@@ -233,6 +233,8 @@ public final class MobSpawningService {
         String displayName;
         if (mobId.startsWith("Boss_Forklift")) {
             displayName = "Forklift";
+        } else if (mobId.startsWith("Boss_Excavator")) {
+            displayName = "Excavator";
         } else if (mobId.startsWith("Boss_Zombie_Commander")) {
             displayName = "Zombie Commander";
         } else {
