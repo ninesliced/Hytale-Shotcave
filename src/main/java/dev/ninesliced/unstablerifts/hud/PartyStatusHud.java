@@ -223,25 +223,28 @@ public final class PartyStatusHud extends CustomUIHud {
                         // Health stat may not be available for all entity types
                     }
 
-                    // ── Read first active effect ──
+                    // ── Read first active effect (skip dungeon circle visuals) ──
                     try {
                         EffectControllerComponent effectController =
                                 store.getComponent(ref, EffectControllerComponent.getComponentType());
                         if (effectController != null) {
                             ActiveEntityEffect[] activeEffects = effectController.getAllActiveEntityEffects();
-                            if (activeEffects != null && activeEffects.length > 0) {
-                                ActiveEntityEffect first = activeEffects[0];
-                                int effectIndex = first.getEntityEffectIndex();
-                                EntityEffect effectAsset = EntityEffect.getAssetMap().getAsset(effectIndex);
-                                if (effectAsset != null) {
+                            if (activeEffects != null) {
+                                for (ActiveEntityEffect active : activeEffects) {
+                                    int effectIndex = active.getEntityEffectIndex();
+                                    EntityEffect effectAsset = EntityEffect.getAssetMap().getAsset(effectIndex);
+                                    if (effectAsset == null) continue;
+                                    String id = effectAsset.getId();
+                                    if (id != null && id.startsWith("Dungeon_")) continue;
                                     String dispName = effectAsset.getName();
                                     effectName = (dispName != null && !dispName.isEmpty())
                                             ? dispName
-                                            : effectAsset.getId();
+                                            : id;
+                                    effectIsDebuff = active.isDebuff();
+                                    effectInfinite = active.isInfinite();
+                                    effectRemaining = Math.max(0, Math.round(active.getRemainingDuration()));
+                                    break;
                                 }
-                                effectIsDebuff = first.isDebuff();
-                                effectInfinite = first.isInfinite();
-                                effectRemaining = Math.max(0, Math.round(first.getRemainingDuration()));
                             }
                         }
                     } catch (Exception e) {

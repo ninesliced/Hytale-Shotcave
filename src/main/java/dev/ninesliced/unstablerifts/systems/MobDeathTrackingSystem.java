@@ -7,6 +7,8 @@ import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.npc.entities.NPCEntity;
 import dev.ninesliced.unstablerifts.UnstableRifts;
+import dev.ninesliced.unstablerifts.dungeon.DungeonCircleEffectService;
+import dev.ninesliced.unstablerifts.dungeon.DungeonMobCircleComponent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -54,6 +56,9 @@ public final class MobDeathTrackingSystem extends RefSystem<EntityStore> {
                                @Nonnull RemoveReason reason,
                                @Nonnull Store<EntityStore> store,
                                @Nonnull CommandBuffer<EntityStore> commandBuffer) {
+        DungeonCircleEffectService.removeEnemyCircle(ref, commandBuffer);
+        commandBuffer.tryRemoveComponent(ref, DungeonMobCircleComponent.getComponentType());
+
         UUID uuid = refToUuid.remove(ref);
         if (uuid == null || reason != RemoveReason.REMOVE) return;
 

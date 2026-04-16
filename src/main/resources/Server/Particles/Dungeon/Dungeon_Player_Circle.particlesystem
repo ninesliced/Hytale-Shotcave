@@ -1,0 +1,12 @@
+{
+  "Spawners": [
+    {
+      "SpawnerId": "Dungeon_Player_Circle",
+      "PositionOffset": { "Y": 0.05 },
+      "FixedRotation": true
+    }
+  ],
+  "CullDistance": 100.0,
+  "IsImportant": true,
+  "$Comment": "Player visibility circle for dungeons"
+}

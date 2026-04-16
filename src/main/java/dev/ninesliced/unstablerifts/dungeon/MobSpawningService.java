@@ -46,6 +46,10 @@ public final class MobSpawningService {
         dungeonMobRegistry.put(uuid, room);
     }
 
+    public boolean isDungeonMob(@Nonnull UUID uuid) {
+        return dungeonMobRegistry.containsKey(uuid);
+    }
+
     /**
      * Called by MobDeathTrackingSystem when an NPC entity is permanently removed.
      * Increments the kill counter for the owning room.
@@ -214,6 +218,7 @@ public final class MobSpawningService {
             if (mobRef != null) {
                 KweebecScaleHelper.applyScale(store, mobRef, mobId);
                 applyBossDisplayName(store, mobRef, mobId);
+                store.ensureAndGetComponent(mobRef, DungeonMobCircleComponent.getComponentType());
                 room.addSpawnedMob(mobRef);
                 UUIDComponent uuidComp = store.getComponent(mobRef, UUIDComponent.getComponentType());
                 if (uuidComp != null) {

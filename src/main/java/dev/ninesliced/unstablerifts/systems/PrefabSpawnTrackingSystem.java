@@ -10,6 +10,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.npc.components.SpawnMarkerReference;
 import com.hypixel.hytale.server.npc.entities.NPCEntity;
 import dev.ninesliced.unstablerifts.UnstableRifts;
+import dev.ninesliced.unstablerifts.dungeon.DungeonMobCircleComponent;
 import dev.ninesliced.unstablerifts.dungeon.Game;
 import dev.ninesliced.unstablerifts.dungeon.GameManager;
 import dev.ninesliced.unstablerifts.dungeon.Level;
@@ -73,7 +74,12 @@ public final class PrefabSpawnTrackingSystem extends EntityTickingSystem<EntityS
         }
 
         if (npcRef.isValid()) {
+            if (room.hasSpawnedMob(npcRef)) {
+                return;
+            }
+
             room.addSpawnedMob(npcRef);
+            store.ensureAndGetComponent(npcRef, DungeonMobCircleComponent.getComponentType());
             GameManager gameManager = unstablerifts.getGameManager();
             UUIDComponent uuidComp = store.getComponent(npcRef, UUIDComponent.getComponentType());
             if (uuidComp != null) {

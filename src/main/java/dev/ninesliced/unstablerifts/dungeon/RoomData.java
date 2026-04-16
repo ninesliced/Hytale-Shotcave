@@ -261,6 +261,11 @@ public final class RoomData {
         addSpawnedMob(ref);
     }
 
+    public boolean hasSpawnedMob(@Nonnull Ref<EntityStore> ref) {
+        UUID refUuid = tryResolveUuid(ref);
+        return findTrackedMob(ref, refUuid) != null;
+    }
+
     public boolean hasPrefabMobMarkerNear(@Nonnull Vector3d position, double maxDistanceSq) {
         for (Vector3d markerPosition : prefabMobMarkerPositions) {
             double dx = markerPosition.x - position.x;
