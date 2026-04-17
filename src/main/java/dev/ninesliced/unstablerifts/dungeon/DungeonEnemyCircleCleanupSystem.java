@@ -43,5 +43,6 @@ public final class DungeonEnemyCircleCleanupSystem extends DeathSystems.OnDeathS
                                  @Nonnull CommandBuffer<EntityStore> commandBuffer) {
         DungeonCircleEffectService.removeEnemyCircle(ref, commandBuffer);
         commandBuffer.tryRemoveComponent(ref, DungeonMobCircleComponent.getComponentType());
+        commandBuffer.tryRemoveComponent(ref, DungeonMobScaleComponent.getComponentType());
     }
 }

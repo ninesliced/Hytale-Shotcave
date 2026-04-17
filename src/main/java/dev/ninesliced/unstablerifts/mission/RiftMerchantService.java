@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import com.hypixel.hytale.component.ArchetypeChunk;
 import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
@@ -84,6 +85,40 @@ public final class RiftMerchantService {
     public void onWorldRemoved(@Nonnull World world) {
         initializedWorlds.remove(world);
         spawnedMerchants.entrySet().removeIf(e -> !e.getValue().isValid());
+    }
+
+    /**
+     * Called when a party portal block is destroyed.
+     * Removes the associated merchant NPC and the persisted position.
+     */
+    public void onPortalDestroyed(@Nonnull World world, int bx, int by, int bz) {
+        long key = packPos(bx, by, bz);
+        if (!knownPortals.remove(key)) {
+            return;
+        }
+        save();
+
+        Ref<EntityStore> merchantRef = spawnedMerchants.remove(key);
+        if (merchantRef != null && merchantRef.isValid()) {
+            world.execute(() -> {
+                if (merchantRef.isValid()) {
+                    Store<EntityStore> store = world.getEntityStore().getStore();
+                    store.removeEntity(merchantRef, RemoveReason.REMOVE);
+                }
+            });
+        } else {
+            // No tracked ref — scan for any nearby merchant and remove it
+            world.execute(() -> {
+                Store<EntityStore> store = world.getEntityStore().getStore();
+                NPCPlugin npcPlugin = NPCPlugin.get();
+                int roleIndex = npcPlugin.getIndex(MERCHANT_ROLE);
+                Vector3d center = new Vector3d(bx + 2.5, by + 1.0, bz + 0.5);
+                Ref<EntityStore> found = findNearbyMerchant(store, npcPlugin, center, roleIndex);
+                if (found != null && found.isValid()) {
+                    store.removeEntity(found, RemoveReason.REMOVE);
+                }
+            });
+        }
     }
 
     public void shutdown() {
