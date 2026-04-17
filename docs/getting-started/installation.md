@@ -15,7 +15,7 @@ This page covers everything a server owner needs to set up and configure Unstabl
 
 | Requirement | Value |
 |---|---|
-| Server Version | `2026.04.09-7243e82f8` or compatible |
+| Server Version | `2026.04.16-5a18e075d` or compatible |
 | Dependencies | None |
 | Asset Pack | Included (auto-loaded) |
 
