@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.0.1 - Patch Update (2026-04-17)
+
+### Bug Fixes
+
+- Fixed latest hytale update breaking commands
+
+- Added mobs/player circles to better see them in the environment
+
 ## v1.0.0 - Initial Release (2026-04-13)
 
 Unstable Rifts launches as a full top-down co-op roguelike shooter experience for Hytale.
