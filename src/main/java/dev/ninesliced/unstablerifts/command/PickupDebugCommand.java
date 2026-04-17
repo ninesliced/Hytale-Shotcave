@@ -37,6 +37,16 @@ public class PickupDebugCommand extends AbstractCommandCollection {
         this.addSubCommand(new Clear());
     }
 
+    @Override
+    protected boolean canGeneratePermission() {
+        return false;
+    }
+
+    @Override
+    protected String generatePermissionNode() {
+        return "";
+    }
+
     /**
      * Lists tracked items with position/distance info, optionally filtered to
      * nearby only.
@@ -139,6 +149,16 @@ public class PickupDebugCommand extends AbstractCommandCollection {
         }
 
         @Override
+        protected boolean canGeneratePermission() {
+            return false;
+        }
+
+        @Override
+        protected String generatePermissionNode() {
+            return "";
+        }
+
+        @Override
         protected void executeSync(@Nonnull CommandContext context) {
             int totalTracked = ItemPickupTracker.size();
             Collection<ItemPickupTracker.TrackedItem> all = ItemPickupTracker.getAll();
@@ -184,6 +204,16 @@ public class PickupDebugCommand extends AbstractCommandCollection {
         }
 
         @Override
+        protected boolean canGeneratePermission() {
+            return false;
+        }
+
+        @Override
+        protected String generatePermissionNode() {
+            return "";
+        }
+
+        @Override
         protected void execute(
                 @Nonnull CommandContext context,
                 @Nonnull Store<EntityStore> store,
@@ -199,6 +229,16 @@ public class PickupDebugCommand extends AbstractCommandCollection {
 
         Nearby() {
             super("nearby", "List only tracked items within the pickup radius");
+        }
+
+        @Override
+        protected boolean canGeneratePermission() {
+            return false;
+        }
+
+        @Override
+        protected String generatePermissionNode() {
+            return "";
         }
 
         @Override
@@ -219,6 +259,16 @@ public class PickupDebugCommand extends AbstractCommandCollection {
 
         Prune() {
             super("prune", "Force-prune stale (invalid ref) entries from the tracker");
+        }
+
+        @Override
+        protected boolean canGeneratePermission() {
+            return false;
+        }
+
+        @Override
+        protected String generatePermissionNode() {
+            return "";
         }
 
         @Override
@@ -246,6 +296,16 @@ public class PickupDebugCommand extends AbstractCommandCollection {
 
         Clear() {
             super("clear", "Clear all tracked entries");
+        }
+
+        @Override
+        protected boolean canGeneratePermission() {
+            return false;
+        }
+
+        @Override
+        protected String generatePermissionNode() {
+            return "";
         }
 
         @Override
