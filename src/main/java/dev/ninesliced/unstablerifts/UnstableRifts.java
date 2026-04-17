@@ -278,6 +278,10 @@ public class UnstableRifts extends JavaPlugin {
                 this.getEntityStoreRegistry().registerComponent(ShopDisplayItemComponent.class, ShopDisplayItemComponent::new);
         ShopDisplayItemComponent.setComponentType(shopDisplayItemComponentType);
 
+        ComponentType<EntityStore, DungeonMobCircleComponent> dungeonMobCircleComponentType =
+            this.getEntityStoreRegistry().registerComponent(DungeonMobCircleComponent.class, DungeonMobCircleComponent::new);
+        DungeonMobCircleComponent.setComponentType(dungeonMobCircleComponentType);
+
         return new RegisteredComponentTypes(playerRefComponentType, deathComponentType, rollComponentType, armorChargeComponentType);
     }
 
@@ -324,6 +328,8 @@ public class UnstableRifts extends JavaPlugin {
         this.getEntityStoreRegistry().registerSystem(new PrefabSpawnTrackingSystem());
         this.getEntityStoreRegistry().registerSystem(new MobDeathTrackingSystem());
         this.getEntityStoreRegistry().registerSystem(new NPCScaleHolderSystem());
+        this.getEntityStoreRegistry().registerSystem(new DungeonEnemyCircleSystem());
+        this.getEntityStoreRegistry().registerSystem(new DungeonEnemyCircleCleanupSystem());
         this.getEntityStoreRegistry().registerSystem(new ShopDisplayCleanupSystem());
 
         this.getEntityStoreRegistry().registerSystem(

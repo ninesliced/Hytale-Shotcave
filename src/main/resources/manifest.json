@@ -1,7 +1,7 @@
 {
   "Group": "ninesliced",
   "Name": "Unstable Rifts",
-  "Version": "1.0.0",
+  "Version": "1.0.1",
   "Description": "Unstable Rifts is a RogueLike shooter in Hytale.",
   "Authors": [
     {
@@ -14,7 +14,7 @@
     }
   ],
   "Website": "https://ninesliced.com",
-  "ServerVersion": "2026.04.09-7243e82f8",
+  "ServerVersion": "2026.04.16-5a18e075d",
   "Dependencies": {},
   "DisabledByDefault": false,
   "IncludesAssetPack": true,

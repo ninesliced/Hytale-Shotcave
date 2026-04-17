@@ -41,6 +41,16 @@ public class CoinCommand extends AbstractCommandCollection {
         this.addSubCommand(new ListAll());
     }
 
+    @Override
+    protected boolean canGeneratePermission() {
+        return false;
+    }
+
+    @Override
+    protected String generatePermissionNode() {
+        return "";
+    }
+
     @Nullable
     private static Game resolveDungeonGame(@Nonnull PlayerRef playerRef, @Nonnull World world) {
         UnstableRifts plugin = UnstableRifts.getInstance();
@@ -65,6 +75,16 @@ public class CoinCommand extends AbstractCommandCollection {
 
         Get() {
             super("get", "Show your current coins or dungeon team money");
+        }
+
+        @Override
+        protected boolean canGeneratePermission() {
+            return false;
+        }
+
+        @Override
+        protected String generatePermissionNode() {
+            return "";
         }
 
         @Override
@@ -96,6 +116,16 @@ public class CoinCommand extends AbstractCommandCollection {
 
         Set() {
             super("set", "Set your coins or active dungeon team money to a specific value");
+        }
+
+        @Override
+        protected boolean canGeneratePermission() {
+            return false;
+        }
+
+        @Override
+        protected String generatePermissionNode() {
+            return "";
         }
 
         @Override
@@ -136,6 +166,16 @@ public class CoinCommand extends AbstractCommandCollection {
 
         Add() {
             super("add", "Add coins to your score or active dungeon team money");
+        }
+
+        @Override
+        protected boolean canGeneratePermission() {
+            return false;
+        }
+
+        @Override
+        protected String generatePermissionNode() {
+            return "";
         }
 
         @Override
@@ -182,6 +222,16 @@ public class CoinCommand extends AbstractCommandCollection {
         }
 
         @Override
+        protected boolean canGeneratePermission() {
+            return false;
+        }
+
+        @Override
+        protected String generatePermissionNode() {
+            return "";
+        }
+
+        @Override
         protected void execute(
                 @Nonnull CommandContext context,
                 @Nonnull Store<EntityStore> store,
@@ -209,6 +259,16 @@ public class CoinCommand extends AbstractCommandCollection {
 
         ListAll() {
             super("all", "List all players' coin scores");
+        }
+
+        @Override
+        protected boolean canGeneratePermission() {
+            return false;
+        }
+
+        @Override
+        protected String generatePermissionNode() {
+            return "";
         }
 
         @Override

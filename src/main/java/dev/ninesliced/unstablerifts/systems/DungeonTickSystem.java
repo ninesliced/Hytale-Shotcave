@@ -6,12 +6,15 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
+import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
+import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.npc.entities.NPCEntity;
 import dev.ninesliced.unstablerifts.UnstableRifts;
 import dev.ninesliced.unstablerifts.camera.TopCameraService;
 import dev.ninesliced.unstablerifts.dungeon.*;
@@ -42,14 +45,25 @@ import java.util.logging.Logger;
  */
 public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
 
+    private static final Query<EntityStore> ENEMY_CIRCLE_QUERY = Query.and(
+            NPCEntity.getComponentType(),
+            UUIDComponent.getComponentType(),
+            TransformComponent.getComponentType());
+
     private static final Logger LOGGER = Logger.getLogger(DungeonTickSystem.class.getName());
     private static final double BOSS_ROOM_WALK_THRESHOLD = 10.0;
+    private static final double ENEMY_CIRCLE_RADIUS_SQ = 256.0 * 256.0;
     private static final int LOCKED_ROOM_ENTRY_MARGIN = 5;
     private static final long LOGIC_UPDATE_INTERVAL_MS = 200L;
     private static final long HUD_UPDATE_INTERVAL_MS = 400L;
+    private static final long PLAYER_CIRCLE_APPLY_DELAY_MS = 750L;
+    private static final long PLAYER_CIRCLE_REFRESH_INTERVAL_MS = 250L;
+    private static final long ENEMY_CIRCLE_MAINTENANCE_INTERVAL_MS = 250L;
 
     private final Map<UUID, Long> lastLogicUpdateByParty = new ConcurrentHashMap<>();
+    private final Map<UUID, Long> lastEnemyCircleMaintenanceByParty = new ConcurrentHashMap<>();
     private final Map<UUID, Long> lastHudUpdateByPlayer = new ConcurrentHashMap<>();
+    private final Map<UUID, Long> nextPlayerCircleApplyByPlayer = new ConcurrentHashMap<>();
     /**
      * Tracks which room each player is currently in, for room-enter detection.
      */
@@ -83,11 +97,13 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
         Game game = gameManager.findGameForPlayer(playerRef.getUuid());
         if (game == null) {
             lastHudUpdateByPlayer.remove(playerRef.getUuid());
+            nextPlayerCircleApplyByPlayer.remove(playerRef.getUuid());
             playerCurrentRoom.remove(playerRef.getUuid());
             bossEntryProgressByPlayer.remove(playerRef.getUuid());
             unstablerifts.getPortalInteractionService().clearPlayer(playerRef.getUuid());
             gameManager.normalizeOutsideDungeonState(playerRef, player, null, commandBuffer);
             unstablerifts.getCameraService().restoreDefault(playerRef);
+            DungeonCircleEffectService.removePlayerCircle(ref, commandBuffer);
             DungeonInfoHud.hideHud(player, playerRef);
             PartyStatusHud.hideHud(player, playerRef);
             BossFightHud.hideHud(player, playerRef);
@@ -99,10 +115,13 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
         if (game.getState() != GameState.ACTIVE && game.getState() != GameState.BOSS
                 && game.getState() != GameState.TRANSITIONING) {
             lastHudUpdateByPlayer.remove(playerRef.getUuid());
+            nextPlayerCircleApplyByPlayer.remove(playerRef.getUuid());
+            lastEnemyCircleMaintenanceByParty.remove(game.getPartyId());
             bossEntryProgressByPlayer.remove(playerRef.getUuid());
             unstablerifts.getPortalInteractionService().clearPlayer(playerRef.getUuid());
             gameManager.normalizeOutsideDungeonState(playerRef, player, game, commandBuffer);
             unstablerifts.getCameraService().restoreDefault(playerRef);
+            DungeonCircleEffectService.removePlayerCircle(ref, commandBuffer);
             DungeonInfoHud.hideHud(player, playerRef);
             PartyStatusHud.hideHud(player, playerRef);
             BossFightHud.hideHud(player, playerRef);
@@ -112,10 +131,13 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
 
         if (game.getInstanceWorld() == null || player.getWorld() != game.getInstanceWorld()) {
             lastHudUpdateByPlayer.remove(playerRef.getUuid());
+            nextPlayerCircleApplyByPlayer.remove(playerRef.getUuid());
+            lastEnemyCircleMaintenanceByParty.remove(game.getPartyId());
             bossEntryProgressByPlayer.remove(playerRef.getUuid());
             unstablerifts.getPortalInteractionService().clearPlayer(playerRef.getUuid());
             gameManager.normalizeOutsideDungeonState(playerRef, player, game, commandBuffer);
             unstablerifts.getCameraService().restoreDefault(playerRef);
+            DungeonCircleEffectService.removePlayerCircle(ref, commandBuffer);
             DungeonInfoHud.hideHud(player, playerRef);
             PartyStatusHud.hideHud(player, playerRef);
             BossFightHud.hideHud(player, playerRef);
@@ -127,11 +149,23 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
         long now = System.currentTimeMillis();
         Level level = game.getCurrentLevel();
 
+        Long nextPlayerCircleApply = nextPlayerCircleApplyByPlayer.get(playerRef.getUuid());
+        DeathComponent death = store.getComponent(ref, DeathComponent.getComponentType());
+        if (death != null && death.isDead()) {
+            DungeonCircleEffectService.removePlayerCircle(ref, commandBuffer);
+        } else if (nextPlayerCircleApply == null) {
+            nextPlayerCircleApplyByPlayer.put(playerRef.getUuid(), now + PLAYER_CIRCLE_APPLY_DELAY_MS);
+            DungeonCircleEffectService.removePlayerCircle(ref, commandBuffer);
+        } else if (now >= nextPlayerCircleApply) {
+            DungeonCircleEffectService.applyPlayerCircle(ref, commandBuffer);
+            nextPlayerCircleApplyByPlayer.put(playerRef.getUuid(), now + PLAYER_CIRCLE_REFRESH_INTERVAL_MS);
+        }
+
         // Smoothly rotate camera to match corridor direction when the player enters a new room.
         updateCameraForRoom(ref, store, game, unstablerifts.getCameraService(), playerRef);
 
         // Detect player entering a locked room -> seal doors.
-        detectRoomEntry(ref, store, game, unstablerifts, config, playerRef);
+        detectRoomEntry(ref, store, game, unstablerifts, config, playerRef, commandBuffer);
 
         RoomData currentRoom = level != null ? resolveCurrentRoom(ref, store, level) : null;
         RoomData hudRoom = level != null ? resolveChallengeHudRoom(ref, store, level, currentRoom) : null;
@@ -155,6 +189,11 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
         } else {
             unstablerifts.getPortalInteractionService().clearPlayer(playerRef.getUuid());
             PortalPromptHudService.hide(player, playerRef);
+        }
+
+        if (level != null
+                && shouldRun(lastEnemyCircleMaintenanceByParty, game.getPartyId(), now, ENEMY_CIRCLE_MAINTENANCE_INTERVAL_MS)) {
+            maintainEnemyCircles(game, commandBuffer);
         }
 
         // Run shared dungeon logic once per party cadence instead of once per entity.
@@ -198,6 +237,84 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
                 });
             }
         }
+    }
+
+    private void maintainEnemyCircles(@Nonnull Game game,
+                                      @Nonnull CommandBuffer<EntityStore> commandBuffer) {
+        UnstableRifts unstablerifts = UnstableRifts.getInstance();
+        if (unstablerifts == null) {
+            return;
+        }
+
+        List<Vector3d> playerPositions = new ArrayList<>();
+        for (UUID playerId : game.getPlayersInInstance()) {
+            PlayerRef playerRef = Universe.get().getPlayer(playerId);
+            if (playerRef == null || !playerRef.isValid()) {
+                continue;
+            }
+
+            Ref<EntityStore> playerEntityRef = playerRef.getReference();
+            if (playerEntityRef == null || !playerEntityRef.isValid()) {
+                continue;
+            }
+
+            TransformComponent transform = playerEntityRef.getStore().getComponent(
+                    playerEntityRef, TransformComponent.getComponentType());
+            if (transform != null) {
+                playerPositions.add(new Vector3d(transform.getPosition()));
+            }
+        }
+
+        if (playerPositions.isEmpty()) {
+            return;
+        }
+
+        commandBuffer.run(entityStore -> entityStore.forEachChunk(ENEMY_CIRCLE_QUERY, (archetypeChunk, enemyCommandBuffer) -> {
+            for (int i = 0; i < archetypeChunk.size(); i++) {
+                UUIDComponent uuidComponent = archetypeChunk.getComponent(i, UUIDComponent.getComponentType());
+                TransformComponent transform = archetypeChunk.getComponent(i, TransformComponent.getComponentType());
+                if (uuidComponent == null || transform == null) {
+                    continue;
+                }
+
+                if (!unstablerifts.getGameManager().getMobSpawningService().isDungeonMob(uuidComponent.getUuid())) {
+                    continue;
+                }
+
+                Vector3d npcPos = transform.getPosition();
+                if (!isNearAnyPlayer(npcPos, playerPositions)) {
+                    continue;
+                }
+
+                Ref<EntityStore> mobRef = archetypeChunk.getReferenceTo(i);
+                if (!mobRef.isValid()) {
+                    continue;
+                }
+
+                boolean dead = entityStore.getArchetype(mobRef).contains(
+                        com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent.getComponentType());
+                if (dead) {
+                    DungeonCircleEffectService.removeEnemyCircle(mobRef, enemyCommandBuffer);
+                    enemyCommandBuffer.tryRemoveComponent(mobRef, DungeonMobCircleComponent.getComponentType());
+                    continue;
+                }
+
+                DungeonCircleEffectService.applyEnemyCircle(mobRef, enemyCommandBuffer);
+            }
+        }));
+    }
+
+    private boolean isNearAnyPlayer(@Nonnull Vector3d npcPos,
+                                    @Nonnull List<Vector3d> playerPositions) {
+        for (Vector3d playerPos : playerPositions) {
+            double dx = npcPos.x - playerPos.x;
+            double dy = npcPos.y - playerPos.y;
+            double dz = npcPos.z - playerPos.z;
+            if (dx * dx + dy * dy + dz * dz <= ENEMY_CIRCLE_RADIUS_SQ) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void updateHuds(@Nonnull Player player, @Nonnull PlayerRef playerRef,
@@ -448,7 +565,8 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
                                  @Nonnull Game game,
                                  @Nonnull UnstableRifts unstablerifts,
                                  @Nonnull DungeonConfig config,
-                                 @Nonnull PlayerRef playerRef) {
+                                 @Nonnull PlayerRef playerRef,
+                                 @Nonnull CommandBuffer<EntityStore> commandBuffer) {
         Level level = game.getCurrentLevel();
         if (level == null) return;
 
@@ -472,6 +590,8 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
             }
             sendRoomMessageToPlayer(playerRef, room.getEnterTitle(), room.getEnterSubtitle());
 
+            refreshEnemyCirclesForRoom(room, commandBuffer);
+
             if (room.getType() == RoomType.SHOP) {
                 World world = game.getInstanceWorld();
                 if (world != null) {
@@ -492,6 +612,31 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
                 && ((!room.isLocked() && roomChanged) || room.isDoorsSealed())) {
             room.setChallengeActive(true);
         }
+    }
+
+    private void refreshEnemyCirclesForRoom(@Nonnull RoomData room,
+                                            @Nonnull CommandBuffer<EntityStore> commandBuffer) {
+        List<Ref<EntityStore>> roomMobs = room.getSpawnedMobs();
+        if (roomMobs.isEmpty()) {
+            return;
+        }
+
+        commandBuffer.run(entityStore -> {
+            for (Ref<EntityStore> mobRef : roomMobs) {
+                if (!mobRef.isValid()) {
+                    continue;
+                }
+
+                boolean dead = entityStore.getArchetype(mobRef).contains(
+                        com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent.getComponentType());
+                if (dead) {
+                    DungeonCircleEffectService.removeEnemyCircle(mobRef, entityStore);
+                    continue;
+                }
+
+                DungeonCircleEffectService.applyEnemyCircle(mobRef, entityStore);
+            }
+        });
     }
 
     private void trySealLockedRoomInsideTriggerBox(int px, int py, int pz,

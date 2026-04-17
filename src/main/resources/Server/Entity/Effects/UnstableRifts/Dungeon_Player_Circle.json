@@ -1,0 +1,15 @@
+{
+  "ApplicationEffects": {
+    "Particles": [
+      {
+        "SystemId": "Dungeon_Player_Circle",
+        "TargetEntityPart": "Entity",
+        "DetachedFromModel": false
+      }
+    ]
+  },
+  "OverlapBehavior": "Ignore",
+  "RemovalBehavior": "Complete",
+  "Infinite": false,
+  "Duration": 2
+}

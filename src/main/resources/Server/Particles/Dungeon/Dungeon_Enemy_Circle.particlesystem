@@ -1,0 +1,12 @@
+{
+  "Spawners": [
+    {
+      "SpawnerId": "Dungeon_Enemy_Circle",
+      "PositionOffset": { "Y": 0.05 },
+      "FixedRotation": true
+    }
+  ],
+  "CullDistance": 100.0,
+  "IsImportant": true,
+  "$Comment": "Enemy visibility circle for dungeons"
+}

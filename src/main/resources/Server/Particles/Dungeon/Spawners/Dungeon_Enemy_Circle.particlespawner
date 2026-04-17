@@ -1,0 +1,39 @@
+{
+  "RenderMode": "Erosion",
+  "ParticleRotationInfluence": "None",
+  "ParticleRotateWithSpawner": true,
+  "MaxConcurrentParticles": 1,
+  "ParticleLifeSpan": { "Min": 2.0, "Max": 2.0 },
+  "SpawnRate": { "Min": 1.0, "Max": 1.0 },
+  "SpawnBurst": true,
+  "TotalParticles": { "Min": 1, "Max": 1 },
+  "CameraOffset": -0.2,
+  "Particle": {
+    "Texture": "Particles/Textures/Enemies_circle.png",
+    "ScaleRatioConstraint": "OneToOne",
+    "UVOption": "None",
+    "SoftParticles": "Disable",
+    "Animation": {
+      "0": {
+        "Opacity": 0.95,
+        "Color": "#ffffff",
+        "Rotation": {
+          "X": { "Min": 0, "Max": 0 },
+          "Y": { "Min": 0, "Max": 0 },
+          "Z": { "Min": 0, "Max": 0 }
+        }
+      },
+      "100": { "Opacity": 0.95, "Color": "#ffffff" }
+    },
+    "InitialAnimationFrame": {
+      "Scale": { "X": { "Min": 0.08, "Max": 0.08 } },
+      "Opacity": 0.95,
+      "Rotation": {
+        "X": { "Min": 90.0, "Max": 90.0 },
+        "Y": { "Min": 0, "Max": 0 },
+        "Z": { "Min": 0, "Max": 0 }
+      }
+    }
+  },
+  "LinearFiltering": true
+}
