@@ -111,6 +111,8 @@ public final class CrateLootConfig {
         private String armorMaxRarity;
         @SerializedName("armorWhitelist")
         private List<String> armorWhitelist;
+        @SerializedName("rarityWeights")
+        private Map<String, Double> rarityWeights;
 
         @Nonnull
         public WeaponRarity getMinRarity() {
@@ -164,6 +166,15 @@ public final class CrateLootConfig {
         @Nonnull
         public List<String> getArmorWhitelist() {
             return armorWhitelist != null ? armorWhitelist : List.of();
+        }
+
+        /**
+         * Returns custom rarity weight overrides (e.g. {"BASIC": 0.50, "UNCOMMON": 0.30, "RARE": 0.20}).
+         * If null or empty, the default WeaponRarity.roll() distribution is used.
+         */
+        @Nullable
+        public Map<String, Double> getRarityWeights() {
+            return rarityWeights;
         }
     }
 }

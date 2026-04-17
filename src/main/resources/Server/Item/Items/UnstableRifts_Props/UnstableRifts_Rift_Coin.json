@@ -1,0 +1,39 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.UnstableRifts_Rift_Coin.name",
+    "Description": "server.items.UnstableRifts_Rift_Coin.description"
+  },
+  "Icon": "Icons/ItemsGenerated/coin.png",
+  "Model": "Resources/Materials/Ingot.blockymodel",
+  "Texture": "Resources/Materials/Ingot_Textures/Gold.png",
+  "Scale": 0.5,
+  "PlayerAnimationsId": "Item",
+  "IconProperties": {
+    "Scale": 1,
+    "Translation": [
+      0,
+      -3
+    ],
+    "Rotation": [
+      22.5,
+      45,
+      22.5
+    ]
+  },
+  "Categories": [
+    "Items.Ingredients"
+  ],
+  "Quality": "Uncommon",
+  "MaxStack": 99,
+  "Tags": {
+    "Type": [
+      "UnstableRifts",
+      "Currency"
+    ]
+  },
+  "ItemEntity": {
+    "ParticleSystemId": "Drop_Uncommon"
+  },
+  "ItemSoundSetId": "ISS_Items_Ingots",
+  "DropOnDeath": false
+}

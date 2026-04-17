@@ -233,6 +233,114 @@
         "Armor_Bone_Legs_UnstableRifts",
         "Armor_Bone_Boots_UnstableRifts"
       ]
+    },
+    "UnstableRifts_Shop_Crate_T1": {
+      "minRarity": "BASIC",
+      "maxRarity": "RARE",
+      "weaponChance": 1.0,
+      "coinMin": 0,
+      "coinMax": 0,
+      "ammoChance": 0.0,
+      "healChance": 0.0,
+      "rarityWeights": {
+        "BASIC": 0.50,
+        "UNCOMMON": 0.30,
+        "RARE": 0.20
+      },
+      "weaponWhitelist": [
+        "Weapon_Pistol_UnstableRifts",
+        "Weapon_Crystal_Sword_UnstableRifts",
+        "Weapon_Blunderbuss_UnstableRifts",
+        "Weapon_Assault_Rifle_UnstableRifts",
+        "Weapon_Rifle_UnstableRifts",
+        "Weapon_Blitzer_Crystal_UnstableRifts",
+        "Weapon_Crystal_Musket_Fire_UnstableRifts",
+        "Weapon_Crystal_Musket_Ice_UnstableRifts",
+        "Weapon_Crystal_Musket_Lightning_UnstableRifts",
+        "Weapon_Crystal_Musket_Void_UnstableRifts",
+        "Weapon_Kweebec_Launcher_UnstableRifts",
+        "Weapon_Crystal_Blunderbuss_Acid_UnstableRifts",
+        "Weapon_Crystal_Blunderbuss_Fire_UnstableRifts",
+        "Weapon_Crystal_Blunderbuss_Ice_UnstableRifts",
+        "Weapon_Crystal_Blunderbuss_Lightning_UnstableRifts",
+        "Weapon_Crystal_Blunderbuss_Void_UnstableRifts",
+        "Weapon_Corrupted_Shotgun_UnstableRifts",
+        "Weapon_Taser_UnstableRifts",
+        "Weapon_Voidlance_UnstableRifts"
+      ],
+      "armorChance": 0.0
+    },
+    "UnstableRifts_Shop_Crate_T2": {
+      "minRarity": "UNCOMMON",
+      "maxRarity": "LEGENDARY",
+      "weaponChance": 1.0,
+      "coinMin": 0,
+      "coinMax": 0,
+      "ammoChance": 0.0,
+      "healChance": 0.0,
+      "rarityWeights": {
+        "UNCOMMON": 0.10,
+        "RARE": 0.50,
+        "EPIC": 0.30,
+        "LEGENDARY": 0.10
+      },
+      "weaponWhitelist": [
+        "Weapon_Pistol_UnstableRifts",
+        "Weapon_Crystal_Sword_UnstableRifts",
+        "Weapon_Blunderbuss_UnstableRifts",
+        "Weapon_Assault_Rifle_UnstableRifts",
+        "Weapon_Rifle_UnstableRifts",
+        "Weapon_Blitzer_Crystal_UnstableRifts",
+        "Weapon_Crystal_Musket_Fire_UnstableRifts",
+        "Weapon_Crystal_Musket_Ice_UnstableRifts",
+        "Weapon_Crystal_Musket_Lightning_UnstableRifts",
+        "Weapon_Crystal_Musket_Void_UnstableRifts",
+        "Weapon_Kweebec_Launcher_UnstableRifts",
+        "Weapon_Crystal_Blunderbuss_Acid_UnstableRifts",
+        "Weapon_Crystal_Blunderbuss_Fire_UnstableRifts",
+        "Weapon_Crystal_Blunderbuss_Ice_UnstableRifts",
+        "Weapon_Crystal_Blunderbuss_Lightning_UnstableRifts",
+        "Weapon_Crystal_Blunderbuss_Void_UnstableRifts",
+        "Weapon_Corrupted_Shotgun_UnstableRifts",
+        "Weapon_Taser_UnstableRifts",
+        "Weapon_Voidlance_UnstableRifts"
+      ],
+      "armorChance": 0.0
+    },
+    "UnstableRifts_Shop_Crate_T3": {
+      "minRarity": "LEGENDARY",
+      "maxRarity": "UNIQUE",
+      "weaponChance": 1.0,
+      "coinMin": 0,
+      "coinMax": 0,
+      "ammoChance": 0.0,
+      "healChance": 0.0,
+      "rarityWeights": {
+        "LEGENDARY": 0.60,
+        "UNIQUE": 0.40
+      },
+      "weaponWhitelist": [
+        "Weapon_Pistol_UnstableRifts",
+        "Weapon_Crystal_Sword_UnstableRifts",
+        "Weapon_Blunderbuss_UnstableRifts",
+        "Weapon_Assault_Rifle_UnstableRifts",
+        "Weapon_Rifle_UnstableRifts",
+        "Weapon_Blitzer_Crystal_UnstableRifts",
+        "Weapon_Crystal_Musket_Fire_UnstableRifts",
+        "Weapon_Crystal_Musket_Ice_UnstableRifts",
+        "Weapon_Crystal_Musket_Lightning_UnstableRifts",
+        "Weapon_Crystal_Musket_Void_UnstableRifts",
+        "Weapon_Kweebec_Launcher_UnstableRifts",
+        "Weapon_Crystal_Blunderbuss_Acid_UnstableRifts",
+        "Weapon_Crystal_Blunderbuss_Fire_UnstableRifts",
+        "Weapon_Crystal_Blunderbuss_Ice_UnstableRifts",
+        "Weapon_Crystal_Blunderbuss_Lightning_UnstableRifts",
+        "Weapon_Crystal_Blunderbuss_Void_UnstableRifts",
+        "Weapon_Corrupted_Shotgun_UnstableRifts",
+        "Weapon_Taser_UnstableRifts",
+        "Weapon_Voidlance_UnstableRifts"
+      ],
+      "armorChance": 0.0
     }
   }
 }

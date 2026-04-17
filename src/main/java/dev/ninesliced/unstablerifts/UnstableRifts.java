@@ -79,6 +79,8 @@ public class UnstableRifts extends JavaPlugin {
     private final PortalService portalService = new PortalService();
     private final PortalInteractionService portalInteractionService = new PortalInteractionService(this);
     private final ShopService shopService = new ShopService();
+    private final dev.ninesliced.unstablerifts.mission.MissionService missionService = new dev.ninesliced.unstablerifts.mission.MissionService();
+    private final dev.ninesliced.unstablerifts.mission.RiftMerchantService riftMerchantService = new dev.ninesliced.unstablerifts.mission.RiftMerchantService();
 
     private Path dungeonConfigPath;
 
@@ -110,6 +112,8 @@ public class UnstableRifts extends JavaPlugin {
         registerSystems(componentTypes);
         registerEventHandlers();
         registerCommands();
+        registerNpcActions();
+        this.riftMerchantService.init(this.getDataDirectory());
         startRuntimes();
     }
 
@@ -121,6 +125,7 @@ public class UnstableRifts extends JavaPlugin {
         this.shopPromptHudRuntime.stop();
         this.portalInteractionService.clearAll();
         PortalPromptHudService.clearAll();
+        this.riftMerchantService.shutdown();
         this.gameManager.shutdown();
         instance = null;
         super.shutdown();
@@ -190,6 +195,7 @@ public class UnstableRifts extends JavaPlugin {
 
     private void onWorldRemoved(@Nonnull RemoveWorldEvent event) {
         this.gameManager.onInstanceWorldRemoved(event.getWorld());
+        this.riftMerchantService.onWorldRemoved(event.getWorld());
     }
 
     private void registerPageCodecs() {
@@ -282,6 +288,17 @@ public class UnstableRifts extends JavaPlugin {
             this.getEntityStoreRegistry().registerComponent(DungeonMobCircleComponent.class, DungeonMobCircleComponent::new);
         DungeonMobCircleComponent.setComponentType(dungeonMobCircleComponentType);
 
+        ComponentType<EntityStore, dev.ninesliced.unstablerifts.mission.MissionDataComponent> missionDataComponentType =
+            this.getEntityStoreRegistry().registerComponent(
+                dev.ninesliced.unstablerifts.mission.MissionDataComponent.class,
+                "MissionData",
+                dev.ninesliced.unstablerifts.mission.MissionDataComponent.CODEC);
+        dev.ninesliced.unstablerifts.mission.MissionDataComponent.setComponentType(missionDataComponentType);
+        
+        ComponentType<EntityStore, DungeonMobScaleComponent> dungeonMobScaleComponentType =
+            this.getEntityStoreRegistry().registerComponent(DungeonMobScaleComponent.class, DungeonMobScaleComponent::new);
+        DungeonMobScaleComponent.setComponentType(dungeonMobScaleComponentType);
+
         return new RegisteredComponentTypes(playerRefComponentType, deathComponentType, rollComponentType, armorChargeComponentType);
     }
 
@@ -330,6 +347,7 @@ public class UnstableRifts extends JavaPlugin {
         this.getEntityStoreRegistry().registerSystem(new NPCScaleHolderSystem());
         this.getEntityStoreRegistry().registerSystem(new DungeonEnemyCircleSystem());
         this.getEntityStoreRegistry().registerSystem(new DungeonEnemyCircleCleanupSystem());
+        this.getEntityStoreRegistry().registerSystem(new DungeonEnemyScaleSystem());
         this.getEntityStoreRegistry().registerSystem(new ShopDisplayCleanupSystem());
 
         this.getEntityStoreRegistry().registerSystem(
@@ -359,6 +377,9 @@ public class UnstableRifts extends JavaPlugin {
         this.getEntityStoreRegistry().registerSystem(new CrateBreakDropSystem());
         this.getEntityStoreRegistry().registerSystem(new CoinCollectionSystem());
         this.getEntityStoreRegistry().registerSystem(new KeyItemCollectionSystem());
+        this.getEntityStoreRegistry().registerSystem(new PortalMerchantSpawnSystem());
+        this.getEntityStoreRegistry().registerSystem(new PortalDestroySystem());
+        this.getEntityStoreRegistry().registerSystem(new AmmoAutoUseSystem());
 
         this.getEntityStoreRegistry().registerSystem(new ArmorChargeSystem());
         this.getEntityStoreRegistry().registerSystem(
@@ -388,6 +409,13 @@ public class UnstableRifts extends JavaPlugin {
     private void registerCommands() {
         this.getCommandRegistry().registerCommand(new UnstableRiftsCommand(this));
         this.getCommandRegistry().registerCommand(new PartyCommand(this));
+        this.getCommandRegistry().registerCommand(new dev.ninesliced.unstablerifts.command.MissionCommand());
+    }
+
+    private void registerNpcActions() {
+        com.hypixel.hytale.server.npc.NPCPlugin.get()
+                .registerCoreComponentType("OpenRiftMerchant",
+                        dev.ninesliced.unstablerifts.mission.BuilderActionOpenRiftMerchant::new);
     }
 
     private void startRuntimes() {
@@ -462,6 +490,16 @@ public class UnstableRifts extends JavaPlugin {
     @Nonnull
     public ShopService getShopService() {
         return this.shopService;
+    }
+
+    @Nonnull
+    public dev.ninesliced.unstablerifts.mission.MissionService getMissionService() {
+        return this.missionService;
+    }
+
+    @Nonnull
+    public dev.ninesliced.unstablerifts.mission.RiftMerchantService getRiftMerchantService() {
+        return this.riftMerchantService;
     }
 
     @NonNullDecl

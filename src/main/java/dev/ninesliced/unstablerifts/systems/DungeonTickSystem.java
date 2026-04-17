@@ -296,6 +296,7 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
                 if (dead) {
                     DungeonCircleEffectService.removeEnemyCircle(mobRef, enemyCommandBuffer);
                     enemyCommandBuffer.tryRemoveComponent(mobRef, DungeonMobCircleComponent.getComponentType());
+                    enemyCommandBuffer.tryRemoveComponent(mobRef, DungeonMobScaleComponent.getComponentType());
                     continue;
                 }
 

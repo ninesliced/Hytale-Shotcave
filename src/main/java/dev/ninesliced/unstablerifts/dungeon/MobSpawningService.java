@@ -217,6 +217,7 @@ public final class MobSpawningService {
             Ref<EntityStore> mobRef = mobResult != null ? mobResult.first() : null;
             if (mobRef != null) {
                 KweebecScaleHelper.applyScale(store, mobRef, mobId);
+                applyScaleMarker(store, mobRef, mobId);
                 applyBossDisplayName(store, mobRef, mobId);
                 store.ensureAndGetComponent(mobRef, DungeonMobCircleComponent.getComponentType());
                 room.addSpawnedMob(mobRef);
@@ -229,6 +230,19 @@ public final class MobSpawningService {
         } catch (Exception e) {
             LOGGER.log(java.util.logging.Level.WARNING, "Failed to spawn mob: " + mobId, e);
             return null;
+        }
+    }
+
+    private void applyScaleMarker(@Nonnull Store<EntityStore> store,
+                                  @Nonnull Ref<EntityStore> mobRef,
+                                  @Nonnull String mobId) {
+        float scale = KweebecScaleHelper.getScaleForRole(mobId);
+        if (scale <= 0f) return;
+
+        DungeonMobScaleComponent marker = store.ensureAndGetComponent(
+                mobRef, DungeonMobScaleComponent.getComponentType());
+        if (marker != null) {
+            marker.setTargetScale(scale);
         }
     }
 

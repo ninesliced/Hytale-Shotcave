@@ -902,6 +902,21 @@ public final class GameManager {
                 .map(Map.Entry::getKey)
                 .toList();
 
+        // ── Aggregate kill counts from room data for mission tracking ──
+        int totalEnemyKills = 0;
+        int totalBossRoomKills = 0;
+        for (Level level : game.getLevels()) {
+            for (RoomData room : level.getRooms()) {
+                int kills = room.getConfirmedKillCount();
+                totalEnemyKills += kills;
+                if (room.getType() == RoomType.BOSS) {
+                    totalBossRoomKills += kills;
+                }
+            }
+        }
+        game.addTotalKills(totalEnemyKills);
+        game.addBossKills(totalBossRoomKills);
+
         for (UUID playerId : partyMembers) {
             reviveMarkerService.despawnReviveMarker(playerId);
             inventoryService.removeDeathSnapshot(playerId);
@@ -951,6 +966,14 @@ public final class GameManager {
                 }
 
                 playerStateService.hideDungeonHuds(player, playerRef);
+
+                // ── Update mission progress for this player ──
+                boolean dungeonCompleted = !forced && game.getVictoryTimestamp() > 0;
+                int enemyKills = game.getTotalKills();
+                int bossKills = game.getBossKills();
+                plugin.getMissionService().updateProgress(
+                        playerRef, store, ref,
+                        enemyKills, bossKills, dungeonCompleted);
 
                 boolean physicallyInInstance = player.getWorld() == game.getInstanceWorld();
                 boolean treatAsInInstance = wasInInstance || physicallyInInstance;

@@ -6,6 +6,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -225,6 +226,61 @@ public final class WeaponLootRoller {
 
         if (eligible.isEmpty()) {
             // Last resort: use the global pool
+            return rollRandom();
+        }
+
+        WeaponDefinition def = eligible.get(rng.nextInt(eligible.size()));
+        return rollForWithRarity(def, rarity);
+    }
+
+    /**
+     * Rolls a weapon using explicit rarity weights instead of the default WeaponRarity
+     * distribution. Used by shop crates with custom rarity distributions.
+     *
+     * @param rarityWeights map of rarity name → weight (e.g. {"BASIC": 0.50, "RARE": 0.30})
+     * @param whitelist     weapon IDs allowed to spawn
+     */
+    @Nonnull
+    public static ItemStack rollFromCrateWithWeights(@Nonnull Map<String, Double> rarityWeights,
+                                                     @Nonnull List<String> whitelist) {
+        ThreadLocalRandom rng = ThreadLocalRandom.current();
+
+        // Roll rarity from custom weights
+        double total = 0;
+        for (double w : rarityWeights.values()) total += w;
+        double roll = rng.nextDouble() * total;
+        double cumulative = 0;
+        WeaponRarity rarity = WeaponRarity.BASIC;
+        for (Map.Entry<String, Double> entry : rarityWeights.entrySet()) {
+            cumulative += entry.getValue();
+            if (roll < cumulative) {
+                rarity = WeaponRarity.fromString(entry.getKey());
+                break;
+            }
+        }
+
+        // Build weighted pool: weapon must be whitelisted AND minRarity <= rolled rarity
+        List<WeaponDefinition> eligible = new ArrayList<>();
+        for (WeaponDefinition def : WeaponDefinitions.getAll()) {
+            if (whitelist.contains(def.itemId())
+                    && def.minRarity().ordinal() <= rarity.ordinal()) {
+                for (int i = 0; i < def.spawnWeight(); i++) {
+                    eligible.add(def);
+                }
+            }
+        }
+
+        if (eligible.isEmpty()) {
+            for (WeaponDefinition def : WeaponDefinitions.getAll()) {
+                if (whitelist.contains(def.itemId())) {
+                    for (int i = 0; i < def.spawnWeight(); i++) {
+                        eligible.add(def);
+                    }
+                }
+            }
+        }
+
+        if (eligible.isEmpty()) {
             return rollRandom();
         }
 

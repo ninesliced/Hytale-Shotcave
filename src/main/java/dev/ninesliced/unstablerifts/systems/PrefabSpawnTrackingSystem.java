@@ -11,6 +11,7 @@ import com.hypixel.hytale.server.npc.components.SpawnMarkerReference;
 import com.hypixel.hytale.server.npc.entities.NPCEntity;
 import dev.ninesliced.unstablerifts.UnstableRifts;
 import dev.ninesliced.unstablerifts.dungeon.DungeonMobCircleComponent;
+import dev.ninesliced.unstablerifts.dungeon.DungeonMobScaleComponent;
 import dev.ninesliced.unstablerifts.dungeon.Game;
 import dev.ninesliced.unstablerifts.dungeon.GameManager;
 import dev.ninesliced.unstablerifts.dungeon.Level;
@@ -80,6 +81,19 @@ public final class PrefabSpawnTrackingSystem extends EntityTickingSystem<EntityS
 
             room.addSpawnedMob(npcRef);
             store.ensureAndGetComponent(npcRef, DungeonMobCircleComponent.getComponentType());
+
+            NPCEntity npc = archetypeChunk.getComponent(index, NPCEntity.getComponentType());
+            if (npc != null) {
+                float scale = KweebecScaleHelper.getScaleForRole(npc.getRoleName());
+                if (scale > 0f) {
+                    DungeonMobScaleComponent scaleMarker = store.ensureAndGetComponent(
+                            npcRef, DungeonMobScaleComponent.getComponentType());
+                    if (scaleMarker != null) {
+                        scaleMarker.setTargetScale(scale);
+                    }
+                }
+            }
+
             GameManager gameManager = unstablerifts.getGameManager();
             UUIDComponent uuidComp = store.getComponent(npcRef, UUIDComponent.getComponentType());
             if (uuidComp != null) {

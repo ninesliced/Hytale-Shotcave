@@ -3,7 +3,10 @@
     "UnstableRifts_Props_Crate_Level1",
     "UnstableRifts_Props_Crate_Level2",
     "UnstableRifts_Props_Crate_Level3",
-    "UnstableRifts_Props_Crate_2x2"
+    "UnstableRifts_Props_Crate_2x2",
+    "UnstableRifts_Shop_Crate_T1",
+    "UnstableRifts_Shop_Crate_T2",
+    "UnstableRifts_Shop_Crate_T3"
   ],
   "barrels": [
     "UnstableRifts_Props_Radioactive_Barrel",

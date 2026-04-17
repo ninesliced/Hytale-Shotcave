@@ -1,0 +1,20 @@
+{
+  "questPool": [
+    { "id": "kill_25_enemies",    "type": "KILL_ENEMIES",      "target": 25,  "rewardCoins": 5,   "displayName": "Pest Control",        "description": "Kill 25 enemies." },
+    { "id": "kill_50_enemies",    "type": "KILL_ENEMIES",      "target": 50,  "rewardCoins": 10,  "displayName": "Exterminator",        "description": "Kill 50 enemies." },
+    { "id": "kill_100_enemies",   "type": "KILL_ENEMIES",      "target": 100, "rewardCoins": 20,  "displayName": "Slaughter House",     "description": "Kill 100 enemies." },
+    { "id": "kill_200_enemies",   "type": "KILL_ENEMIES",      "target": 200, "rewardCoins": 40,  "displayName": "Mass Extinction",     "description": "Kill 200 enemies." },
+    { "id": "kill_500_enemies",   "type": "KILL_ENEMIES",      "target": 500, "rewardCoins": 80,  "displayName": "Rift Purger",         "description": "Kill 500 enemies." },
+    { "id": "kill_3_bosses",      "type": "KILL_BOSSES",       "target": 3,   "rewardCoins": 10,  "displayName": "Boss Slayer",         "description": "Kill 3 bosses." },
+    { "id": "kill_5_bosses",      "type": "KILL_BOSSES",       "target": 5,   "rewardCoins": 20,  "displayName": "Boss Hunter",         "description": "Kill 5 bosses." },
+    { "id": "kill_10_bosses",     "type": "KILL_BOSSES",       "target": 10,  "rewardCoins": 40,  "displayName": "Boss Terminator",     "description": "Kill 10 bosses." },
+    { "id": "kill_25_bosses",     "type": "KILL_BOSSES",       "target": 25,  "rewardCoins": 80,  "displayName": "Boss Annihilator",    "description": "Kill 25 bosses." },
+    { "id": "complete_1_dungeon", "type": "COMPLETE_DUNGEONS", "target": 1,   "rewardCoins": 5,   "displayName": "First Clear",         "description": "Complete 1 dungeon." },
+    { "id": "complete_3_dungeons","type": "COMPLETE_DUNGEONS", "target": 3,   "rewardCoins": 15,  "displayName": "Rift Runner",         "description": "Complete 3 dungeons." },
+    { "id": "complete_5_dungeons","type": "COMPLETE_DUNGEONS", "target": 5,   "rewardCoins": 30,  "displayName": "Rift Explorer",       "description": "Complete 5 dungeons." },
+    { "id": "complete_10_dungeons","type": "COMPLETE_DUNGEONS","target": 10,  "rewardCoins": 60,  "displayName": "Rift Veteran",        "description": "Complete 10 dungeons." },
+    { "id": "complete_20_dungeons","type": "COMPLETE_DUNGEONS","target": 20,  "rewardCoins": 100, "displayName": "Rift Master",         "description": "Complete 20 dungeons." }
+  ],
+  "activeQuestCount": 3,
+  "skipCostCoins": 10
+}
