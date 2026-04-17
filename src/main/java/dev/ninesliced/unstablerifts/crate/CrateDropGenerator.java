@@ -7,6 +7,7 @@ import dev.ninesliced.unstablerifts.guns.WeaponLootRoller;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -57,7 +58,10 @@ public final class CrateDropGenerator {
 
         if (rng.nextDouble() < entry.getWeaponChance()) {
             List<String> whitelist = entry.getWeaponWhitelist();
-            if (!whitelist.isEmpty()) {
+            Map<String, Double> rarityWeights = entry.getRarityWeights();
+            if (rarityWeights != null && !rarityWeights.isEmpty() && !whitelist.isEmpty()) {
+                drops.add(WeaponLootRoller.rollFromCrateWithWeights(rarityWeights, whitelist));
+            } else if (!whitelist.isEmpty()) {
                 drops.add(WeaponLootRoller.rollFromCrate(
                         entry.getMinRarity(), entry.getMaxRarity(), whitelist));
             } else {
@@ -76,5 +80,36 @@ public final class CrateDropGenerator {
         }
 
         return drops;
+    }
+
+    /**
+     * Returns true if the given item ID is a shop crate (opened from inventory, not broken as block).
+     */
+    public static boolean isShopCrate(@Nonnull String itemId) {
+        return "UnstableRifts_Shop_Crate_T1".equals(itemId)
+                || "UnstableRifts_Shop_Crate_T2".equals(itemId)
+                || "UnstableRifts_Shop_Crate_T3".equals(itemId);
+    }
+
+    /**
+     * Generates a single weapon drop from a shop crate item ID using its custom rarity weights.
+     */
+    @Nonnull
+    public static List<ItemStack> generateShopCrateDrops(@Nonnull String itemId) {
+        CrateLootConfig.CrateLootEntry entry = CrateLootConfig.getCrateConfig(itemId);
+        if (entry == null) return List.of();
+
+        List<String> whitelist = entry.getWeaponWhitelist();
+        Map<String, Double> rarityWeights = entry.getRarityWeights();
+
+        if (whitelist.isEmpty()) return List.of();
+
+        ItemStack weapon;
+        if (rarityWeights != null && !rarityWeights.isEmpty()) {
+            weapon = WeaponLootRoller.rollFromCrateWithWeights(rarityWeights, whitelist);
+        } else {
+            weapon = WeaponLootRoller.rollFromCrate(entry.getMinRarity(), entry.getMaxRarity(), whitelist);
+        }
+        return List.of(weapon);
     }
 }

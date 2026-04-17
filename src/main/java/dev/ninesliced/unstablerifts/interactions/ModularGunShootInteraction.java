@@ -34,6 +34,10 @@ import com.hypixel.hytale.server.core.util.TargetUtil;
 import dev.ninesliced.unstablerifts.guns.*;
 import dev.ninesliced.unstablerifts.logging.UnstableRiftsLog;
 import dev.ninesliced.unstablerifts.systems.DamageEffectRuntime;
+import dev.ninesliced.unstablerifts.UnstableRifts;
+import dev.ninesliced.unstablerifts.dungeon.Game;
+import dev.ninesliced.unstablerifts.dungeon.GameState;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
 import org.joml.Vector2d;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
@@ -356,9 +360,19 @@ public final class ModularGunShootInteraction extends SimpleInteraction {
 
         Vector3d assistedBaseDir = null;
         if (this.aimAssist) {
-            Vector3d rawLook = getShotDirection(commandBuffer, context.getEntity());
-            assistedBaseDir = AimAssistHelper.computeAssistedDirectionNearest(
-                    commandBuffer, context, start, rawLook, effectiveRange);
+            // Only apply aim assist inside an active dungeon
+            UnstableRifts riftPlugin = UnstableRifts.getInstance();
+            PlayerRef shooterRef = commandBuffer.getComponent(context.getEntity(), PlayerRef.getComponentType());
+            Game activeGame = riftPlugin != null && shooterRef != null
+                    ? riftPlugin.getGameManager().findGameForPlayer(shooterRef.getUuid())
+                    : null;
+            boolean inActiveDungeon = activeGame != null
+                    && (activeGame.getState() == GameState.ACTIVE || activeGame.getState() == GameState.BOSS);
+            if (inActiveDungeon) {
+                Vector3d rawLook = getShotDirection(commandBuffer, context.getEntity());
+                assistedBaseDir = AimAssistHelper.computeAssistedDirectionNearest(
+                        commandBuffer, context, start, rawLook, effectiveRange);
+            }
         }
 
         final int shotRange = effectiveRange;

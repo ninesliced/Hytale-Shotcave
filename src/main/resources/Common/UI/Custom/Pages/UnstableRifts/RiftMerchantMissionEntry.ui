@@ -1,0 +1,119 @@
+// ─────────────────────────────────────────────
+//  UnstableRifts — Rift Merchant Quest Entry
+//  Appended once per active quest in the quest list.
+// ─────────────────────────────────────────────
+
+@EntryBg = #161a22;
+@LabelColor = #8fa4b8;
+@ValueColor = #e8ecf0;
+@RewardColor = #f0d060;
+@ProgressBg = #1a1e26;
+@ProgressFill = #4488FF;
+@SepColor = #2a3040;
+@ClaimBtnBg = #2a6030;
+@ClaimBtnHover = #3a8045;
+@SkipBtnBg = #6a3030;
+@SkipBtnHover = #8a4040;
+@BtnText = #e8ecf0;
+@BtnLabelStyle = LabelStyle(FontSize: 11, TextColor: @BtnText, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center);
+@ClaimBtnStyle = TextButtonStyle(
+  Default: (Background: @ClaimBtnBg, LabelStyle: @BtnLabelStyle),
+  Hovered: (Background: @ClaimBtnHover, LabelStyle: @BtnLabelStyle),
+  Pressed: (Background: @ClaimBtnBg, LabelStyle: @BtnLabelStyle)
+);
+@SkipBtnStyle = TextButtonStyle(
+  Default: (Background: @SkipBtnBg, LabelStyle: @BtnLabelStyle),
+  Hovered: (Background: @SkipBtnHover, LabelStyle: @BtnLabelStyle),
+  Pressed: (Background: @SkipBtnBg, LabelStyle: @BtnLabelStyle)
+);
+
+Group {
+  Anchor: (Top: 4);
+  LayoutMode: Top;
+  Background: @EntryBg;
+  Padding: (Horizontal: 12, Vertical: 8);
+
+  // ── Top row: quest name + reward ──
+  Group {
+    Anchor: (Height: 22);
+    LayoutMode: Left;
+
+    Label #MissionName {
+      Text: "Quest Name";
+      Anchor: (Height: 22);
+      FlexWeight: 1;
+      Style: LabelStyle(
+        FontName: "Secondary",
+        FontSize: 13,
+        TextColor: @ValueColor,
+        RenderBold: true,
+        HorizontalAlignment: Start,
+        VerticalAlignment: Center,
+        ShrinkTextToFit: true,
+        MinShrinkTextToFitFontSize: 10
+      );
+    }
+
+    Label #MissionReward {
+      Text: "0 Rift Coins";
+      Anchor: (Width: 110, Height: 22, Left: 6);
+      Style: LabelStyle(
+        FontSize: 11,
+        TextColor: @RewardColor,
+        RenderBold: true,
+        HorizontalAlignment: End,
+        VerticalAlignment: Center
+      );
+    }
+  }
+
+  // ── Description ──
+  Label #MissionDesc {
+    Text: "";
+    Anchor: (Height: 16, Top: 2);
+    Style: LabelStyle(FontSize: 10, TextColor: @LabelColor, HorizontalAlignment: Start, VerticalAlignment: Center);
+  }
+
+  // ── Progress bar ──
+  Group {
+    Anchor: (Height: 14, Top: 4);
+    LayoutMode: Left;
+
+    Group {
+      Anchor: (Height: 12);
+      FlexWeight: 1;
+      Background: @ProgressBg;
+
+      Group #MissionProgressFill {
+        Anchor: (Left: 0, Top: 0, Width: 0, Height: 12);
+        Background: @ProgressFill;
+      }
+    }
+
+    Label #MissionProgress {
+      Text: "0 / 0";
+      Anchor: (Width: 70, Height: 14, Left: 6);
+      Style: LabelStyle(FontSize: 10, TextColor: @ValueColor, HorizontalAlignment: End, VerticalAlignment: Center);
+    }
+  }
+
+  // ── Claim / Skip buttons row ──
+  Group {
+    Anchor: (Height: 26, Top: 4);
+    LayoutMode: Left;
+
+    TextButton #MissionClaimBtn {
+      Text: "CLAIM";
+      Anchor: (Width: 70, Height: 24);
+      Style: @ClaimBtnStyle;
+      Visible: false;
+    }
+
+    TextButton #MissionSkipBtn {
+      Text: "SKIP (10 coins)";
+      Anchor: (Width: 120, Height: 24);
+      Style: @SkipBtnStyle;
+      Visible: false;
+    }
+  }
+}

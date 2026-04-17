@@ -110,6 +110,26 @@ public final class Game {
      */
     private long victoryTimestamp = 0;
 
+    /**
+     * Total enemy kills across all rooms in this run (team-wide).
+     */
+    private int totalKills = 0;
+
+    /**
+     * Total boss kills in this run (team-wide).
+     */
+    private int bossKills = 0;
+
+    /**
+     * Per-player kill counts for mission attribution.
+     */
+    private final Map<UUID, Integer> playerKills = new HashMap<>();
+
+    /**
+     * Per-player boss kill counts for mission attribution.
+     */
+    private final Map<UUID, Integer> playerBossKills = new HashMap<>();
+
     public Game(@Nonnull UUID partyId) {
         this.partyId = partyId;
         this.startTime = System.currentTimeMillis();
@@ -458,5 +478,49 @@ public final class Game {
 
     public void setPreSpawnedRooms(@Nonnull Set<RoomData> preSpawnedRooms) {
         this.preSpawnedRooms = preSpawnedRooms;
+    }
+
+    // ── Kill tracking (missions) ──
+
+    public int getTotalKills() {
+        return totalKills;
+    }
+
+    public void addTotalKills(int count) {
+        this.totalKills += count;
+    }
+
+    public int getBossKills() {
+        return bossKills;
+    }
+
+    public void addBossKills(int count) {
+        this.bossKills += count;
+    }
+
+    public int getPlayerKills(@Nonnull UUID playerId) {
+        return playerKills.getOrDefault(playerId, 0);
+    }
+
+    public void addPlayerKill(@Nonnull UUID playerId, int count) {
+        playerKills.merge(playerId, count, Integer::sum);
+    }
+
+    public int getPlayerBossKills(@Nonnull UUID playerId) {
+        return playerBossKills.getOrDefault(playerId, 0);
+    }
+
+    public void addPlayerBossKill(@Nonnull UUID playerId, int count) {
+        playerBossKills.merge(playerId, count, Integer::sum);
+    }
+
+    @Nonnull
+    public Map<UUID, Integer> getPlayerKills() {
+        return Collections.unmodifiableMap(playerKills);
+    }
+
+    @Nonnull
+    public Map<UUID, Integer> getPlayerBossKills() {
+        return Collections.unmodifiableMap(playerBossKills);
     }
 }

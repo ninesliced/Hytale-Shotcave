@@ -1,0 +1,121 @@
+// ─────────────────────────────────────────────
+//  UnstableRifts — Rift Merchant Page
+//  Missions overview + Shop access button.
+// ─────────────────────────────────────────────
+
+@PanelBg = #1a1e26(0.92);
+@TitleColor = #f0d060;
+@LabelColor = #8fa4b8;
+@ValueColor = #e8ecf0;
+@GoldColor = #f0d060;
+@BtnBg = #2a3040;
+@BtnHover = #3a4560;
+@BtnText = #e8ecf0;
+@ClaimBtnBg = #2a6030;
+@ClaimBtnHover = #3a8045;
+@ShopBtnBg = #4a2a80;
+@ShopBtnHover = #6a3aa0;
+@SepColor = #2a3040;
+@ProgressBarBg = #1a1e26;
+@ProgressBarFill = #4488FF;
+@BtnLabelStyle = LabelStyle(FontSize: 12, TextColor: @BtnText, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center);
+@BtnStyle = TextButtonStyle(
+  Default: (Background: @BtnBg, LabelStyle: @BtnLabelStyle),
+  Hovered: (Background: @BtnHover, LabelStyle: @BtnLabelStyle),
+  Pressed: (Background: @BtnBg, LabelStyle: @BtnLabelStyle)
+);
+@ClaimBtnStyle = TextButtonStyle(
+  Default: (Background: @ClaimBtnBg, LabelStyle: @BtnLabelStyle),
+  Hovered: (Background: @ClaimBtnHover, LabelStyle: @BtnLabelStyle),
+  Pressed: (Background: @ClaimBtnBg, LabelStyle: @BtnLabelStyle)
+);
+@ShopBtnStyle = TextButtonStyle(
+  Default: (Background: @ShopBtnBg, LabelStyle: @BtnLabelStyle),
+  Hovered: (Background: @ShopBtnHover, LabelStyle: @BtnLabelStyle),
+  Pressed: (Background: @ShopBtnBg, LabelStyle: @BtnLabelStyle)
+);
+
+Group #MerchantPageRoot {
+  Anchor: (Left: 0, Top: 0, Right: 0, Bottom: 0);
+
+  // Overlay background
+  Group {
+    Anchor: (Left: 0, Top: 0, Right: 0, Bottom: 0);
+    Background: #000000(0.5);
+  }
+
+  Group #MerchantPageCenter {
+    Anchor: (Width: 480, Height: 560);
+
+    Group #MerchantPagePanel {
+      Anchor: (Left: 0, Top: 0, Right: 0, Bottom: 0);
+      Background: @PanelBg;
+      LayoutMode: Top;
+      Padding: (Horizontal: 20, Vertical: 14);
+
+      // ── Header ──
+      Group {
+        Anchor: (Height: 30);
+        LayoutMode: Left;
+
+        Label #MerchantTitle {
+          Text: "RIFT MERCHANT";
+          Anchor: (Width: 280, Height: 28);
+          Style: LabelStyle(
+            FontName: "Secondary",
+            FontSize: 17,
+            TextColor: @TitleColor,
+            RenderBold: true,
+            RenderUppercase: true,
+            HorizontalAlignment: Start,
+            VerticalAlignment: Center
+          );
+        }
+      }
+
+      // ── Separator ──
+      Group {
+        Anchor: (Height: 1, Top: 6);
+        Background: @SepColor;
+      }
+
+      // ── Subtitle ──
+      Label {
+        Text: "Complete quests to earn Rift Coins.";
+        Anchor: (Height: 20, Top: 4);
+        Style: LabelStyle(
+          FontSize: 11,
+          TextColor: @LabelColor,
+          HorizontalAlignment: Start,
+          VerticalAlignment: Center
+        );
+      }
+
+      // ── Scrollable Mission List ──
+      Group #MissionList {
+        Anchor: (Top: 6);
+        FlexWeight: 1;
+        LayoutMode: TopScrolling;
+        Padding: (Right: 6);
+      }
+
+      // ── Bottom Buttons ──
+      Group {
+        Anchor: (Height: 44, Top: 8);
+        LayoutMode: Center;
+
+        TextButton #MerchantShopBtn {
+          Text: "OPEN SHOP";
+          Anchor: (Width: 160, Height: 34);
+          Style: @ShopBtnStyle;
+        }
+
+        TextButton #MerchantCloseBtn {
+          Text: "CLOSE";
+          Anchor: (Width: 140, Height: 34, Left: 10);
+          Style: @BtnStyle;
+        }
+      }
+    }
+  }
+}
