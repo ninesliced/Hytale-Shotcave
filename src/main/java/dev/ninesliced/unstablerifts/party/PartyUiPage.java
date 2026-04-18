@@ -12,6 +12,7 @@ import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
+import com.hypixel.hytale.server.core.permissions.PermissionsModule;
 import com.hypixel.hytale.server.core.ui.DropdownEntryInfo;
 import com.hypixel.hytale.server.core.ui.LocalizableString;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
@@ -36,6 +37,7 @@ public final class PartyUiPage extends InteractiveCustomUIPage<PartyUiPage.UiEve
     private static final String LAYOUT_PATH = "Pages/UnstableRiftsParty/PartyPortal.ui";
     private static final String MEMBER_ITEM_PATH = "Pages/UnstableRiftsParty/PartyMemberItem.ui";
     private static final String PARTY_ITEM_PATH = "Pages/UnstableRiftsParty/PartyListItem.ui";
+    private static final String ADMIN_PERMISSION = "unstablerifts.admin";
     private static final long OPEN_PAGE_REFRESH_INTERVAL_MS = 1000L;
     private static final Map<UUID, PartyUiPage> OPEN_PAGES = new ConcurrentHashMap<>();
     @Nullable
@@ -85,6 +87,19 @@ public final class PartyUiPage extends InteractiveCustomUIPage<PartyUiPage.UiEve
     @Nonnull
     private static String safeValue(@Nullable String value) {
         return value == null ? "" : value.trim();
+    }
+
+    private static boolean isAdmin(@Nullable Player player) {
+        if (player == null) {
+            return false;
+        }
+        PermissionsModule permissions = PermissionsModule.get();
+        if (permissions == null) {
+            return false;
+        }
+        UUID uuid = player.getUuid();
+        Set<String> groups = permissions.getGroupsForUser(uuid);
+        return groups.contains("OP") || permissions.hasPermission(uuid, ADMIN_PERMISSION);
     }
 
     @Override
@@ -155,16 +170,26 @@ public final class PartyUiPage extends InteractiveCustomUIPage<PartyUiPage.UiEve
             ui.set("#LeaveButton.Visible", !leader);
             ui.set("#PrivacyButton.Text", currentParty.privacy() == PartyPrivacy.PUBLIC ? "MAKE PRIVATE" : "MAKE PUBLIC");
 
+            boolean canSelectDungeon = canStart && isAdmin(viewer);
+
             bindClick(events, "#PrivacyButton", Action.TOGGLE_PRIVACY);
-            bindClickWithValue(events, "#StartButton", Action.START, "#DungeonDropdown.Value");
+            bindClick(events, "#StartButton", Action.START);
             bindClick(events, "#TeleportButton", Action.TELEPORT);
             bindClick(events, "#DisbandButton", Action.DISBAND);
             bindClick(events, "#LeaveButton", Action.LEAVE);
             bindClickWithValue(events, "#InviteButton", Action.INVITE, "#InvitePlayerDropdown.Value");
 
-            ui.set("#DungeonSelectSection.Visible", canStart);
-            if (canStart) {
+            ui.set("#DungeonSelectSection.Visible", canSelectDungeon);
+            if (canSelectDungeon) {
                 buildDungeonDropdown(ui, currentParty.selectedLevelSelector());
+                events.addEventBinding(
+                        CustomUIEventBindingType.ValueChanged,
+                        "#DungeonDropdown",
+                        new EventData()
+                                .put(UiEventData.KEY_ACTION, Action.SELECT_LEVEL.name())
+                                .append(UiEventData.KEY_VALUE, "#DungeonDropdown.Value"),
+                        false
+                );
             }
 
             buildInviteCandidates(ui, inviteCandidates);
@@ -217,10 +242,13 @@ public final class PartyUiPage extends InteractiveCustomUIPage<PartyUiPage.UiEve
             case KICK -> result = manager.kick(this.playerRef, safeValue(data.targetId));
             case LEAVE -> result = manager.leave(this.playerRef);
             case DISBAND -> result = manager.disband(this.playerRef);
-            case START -> {
-                manager.setSelectedLevel(this.playerRef, safeValue(data.value));
-                result = manager.startParty(this.playerRef);
+            case SELECT_LEVEL -> {
+                if (isAdmin(player)) {
+                    manager.setSelectedLevel(this.playerRef, safeValue(data.value));
+                }
+                return;
             }
+            case START -> result = manager.startParty(this.playerRef);
             case TELEPORT -> result = this.plugin.getGameManager().teleportPlayerToDungeon(this.playerRef);
             default -> {
             }
@@ -270,8 +298,25 @@ public final class PartyUiPage extends InteractiveCustomUIPage<PartyUiPage.UiEve
                 return;
             }
 
+            if (!needsPeriodicRefresh()) {
+                return;
+            }
+
             refresh(ref, store);
         });
+    }
+
+    private boolean needsPeriodicRefresh() {
+        PartyManager manager = this.plugin.getPartyManager();
+        if (!manager.getInviteSnapshots(this.playerRef.getUuid()).isEmpty()) {
+            return true;
+        }
+        PartyManager.PartySnapshot currentParty = manager.getPartySnapshot(this.playerRef.getUuid());
+        if (currentParty == null) {
+            return false;
+        }
+        var game = this.plugin.getGameManager().findGameForParty(java.util.UUID.fromString(currentParty.id()));
+        return game != null && game.getState() != dev.ninesliced.unstablerifts.dungeon.GameState.COMPLETE;
     }
 
     private void buildMembers(@Nonnull UICommandBuilder ui,
@@ -426,6 +471,7 @@ public final class PartyUiPage extends InteractiveCustomUIPage<PartyUiPage.UiEve
         LEAVE,
         DISBAND,
         TELEPORT,
+        SELECT_LEVEL,
         START;
 
         @Nullable
