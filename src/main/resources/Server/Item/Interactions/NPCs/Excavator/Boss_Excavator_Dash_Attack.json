@@ -1,0 +1,108 @@
+{
+  "$Comment": "Excavator Dash: long sustained charge forward with repeated force pulses and body-contact damage. Matches Forklift pattern.",
+  "Type": "Simple",
+  "RunTime": 0.3,
+  "Effects": {
+    "ItemPlayerAnimationsId": "Excavator_Default",
+    "ItemAnimationId": "Dash",
+    "WorldSoundEventId": "SFX_Light_Melee_T2_Swing",
+    "MovementEffects": { "DisableAll": true }
+  },
+  "Next": {
+    "Type": "Repeat",
+    "Repeat": 6,
+    "Effects": {
+      "ItemPlayerAnimationsId": "Excavator_Default",
+      "ItemAnimationId": "Dash",
+      "MovementEffects": { "DisableAll": true }
+    },
+    "ForkInteractions": {
+      "Interactions": [
+        {
+          "Type": "Parallel",
+          "Interactions": [
+            {
+              "Interactions": [
+                {
+                  "Type": "Selector",
+                  "RunTime": 0.24,
+                  "Selector": {
+                    "Id": "Stab",
+                    "TestLineOfSight": true,
+                    "ExtendTop": 2.5,
+                    "ExtendLeft": 3,
+                    "ExtendRight": 3,
+                    "ExtendBottom": 1,
+                    "StartDistance": 0.0,
+                    "EndDistance": 4
+                  },
+                  "HitEntity": {
+                    "Interactions": [
+                      {
+                        "Type": "Replace",
+                        "Var": "Dash_Damage",
+                        "DefaultOk": true,
+                        "DefaultValue": { "Interactions": ["Boss_Excavator_Dash_Damage"] }
+                      }
+                    ]
+                  },
+                  "Next": { "Type": "Simple", "RunTime": 0.0 }
+                }
+              ]
+            },
+            {
+              "Interactions": [
+                {
+                  "Type": "Selector",
+                  "RunTime": 0.24,
+                  "Selector": { "Id": "AOECircle", "Range": 3 },
+                  "HitEntity": {
+                    "Interactions": [
+                      {
+                        "Type": "Replace",
+                        "Var": "Dash_Damage",
+                        "DefaultOk": true,
+                        "DefaultValue": { "Interactions": ["Boss_Excavator_Dash_Damage"] }
+                      }
+                    ]
+                  },
+                  "Next": { "Type": "Simple", "RunTime": 0.0 }
+                }
+              ]
+            },
+            {
+              "Interactions": [
+                {
+                  "Type": "ApplyForce",
+                  "Force": 15000,
+                  "Direction": { "X": 0, "Y": 0, "Z": -8.5 },
+                  "AdjustVertical": false,
+                  "Effects": {
+                    "ItemAnimationId": "Dash",
+                    "ItemPlayerAnimationsId": "Excavator_Default",
+                    "MovementEffects": { "DisableAll": true }
+                  },
+                  "ChangeVelocityType": "Add",
+                  "WaitForGround": false,
+                  "WaitForCollision": false,
+                  "VelocityConfig": {
+                    "AirResistance": 0.998,
+                    "AirResistanceMax": 0.995,
+                    "GroundResistance": 0.998,
+                    "GroundResistanceMax": 0.995,
+                    "Threshold": 3.0,
+                    "Style": "Linear"
+                  },
+                  "GroundCheckDelay": 0.0,
+                  "RunTime": 0.24,
+                  "VerticalClamp": [-1.2, 1.2],
+                  "Next": { "Type": "Simple", "RunTime": 0.8 }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

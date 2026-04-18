@@ -1,0 +1,125 @@
+{
+  "$Comment": "Excavator Big Arm: 1s total. Arm thrusts forward 7z at 0.42s, sweeps 7x wide at 0.58s, returns.",
+  "Type": "Simple",
+  "RunTime": 0.0,
+  "Effects": {
+    "ItemPlayerAnimationsId": "Excavator_Default",
+    "ItemAnimationId": "BigArm",
+    "WorldSoundEventId": "SFX_Light_Melee_T2_Swing",
+    "MovementEffects": { "DisableAll": true },
+    "Particles": [
+      { "SystemId": "Boss_Zone_Warning_Effect", "TargetEntityPart": "Entity", "Scale": 2.5 }
+    ]
+  },
+  "Next": {
+    "$Comment": "Wind-up until 0.42s",
+    "Type": "Simple",
+    "RunTime": 0.42,
+    "Next": {
+      "Type": "Parallel",
+      "Interactions": [
+        {
+          "$Comment": "Phase 1 at 0.42s: forward thrust 12z deep, ~5x wide",
+          "Interactions": [
+            {
+              "Type": "Selector",
+              "RunTime": 0.12,
+              "Selector": {
+                "Id": "Stab",
+                "TestLineOfSight": true,
+                "ExtendTop": 2.5,
+                "ExtendLeft": 2.5,
+                "ExtendRight": 2.5,
+                "ExtendBottom": 1,
+                "StartDistance": 1,
+                "EndDistance": 12
+              },
+              "HitEntity": {
+                "Interactions": [
+                  {
+                    "Type": "Replace",
+                    "Var": "Big_Arm_Damage",
+                    "DefaultOk": true,
+                    "DefaultValue": { "Interactions": ["Boss_Excavator_Big_Arm_Damage"] }
+                  }
+                ]
+              },
+              "Next": {
+                "$Comment": "Gap to 0.58s (0.58 - 0.42 - 0.12 = 0.04s)",
+                "Type": "Simple",
+                "RunTime": 0.04,
+                "Next": {
+                  "Type": "Parallel",
+                  "Interactions": [
+                    {
+                      "$Comment": "Phase 2 at 0.58s: wide sweep 12x, 12z",
+                      "Interactions": [
+                        {
+                          "Type": "Selector",
+                          "RunTime": 0.15,
+                          "Selector": {
+                            "Id": "Horizontal",
+                            "Direction": "ToRight",
+                            "TestLineOfSight": true,
+                            "ExtendTop": 2.5,
+                            "ExtendBottom": 1,
+                            "StartDistance": 0.5,
+                            "EndDistance": 12,
+                            "Length": 180,
+                            "RollOffset": -30,
+                            "YawStartOffset": 0
+                          },
+                          "HitEntity": {
+                            "Interactions": [
+                              {
+                                "Type": "Replace",
+                                "Var": "Big_Arm_Damage",
+                                "DefaultOk": true,
+                                "DefaultValue": { "Interactions": ["Boss_Excavator_Big_Arm_Damage"] }
+                              }
+                            ]
+                          },
+                          "Next": {
+                            "$Comment": "Recovery (1.0 - 0.58 - 0.15 = 0.27s)",
+                            "Type": "Simple",
+                            "RunTime": 0.27
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "Interactions": [
+                        {
+                          "Type": "Simple",
+                          "RunTime": 0.42,
+                          "Effects": {
+                            "WorldSoundEventId": "SFX_Unarmed_Swing",
+                            "Particles": [
+                              { "SystemId": "Boss_Zone_Impact_Effect", "TargetEntityPart": "Entity" }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "Interactions": [
+            {
+              "Type": "Simple",
+              "RunTime": 0.2,
+              "Effects": {
+                "ItemAnimationId": "BigArm",
+                "WorldSoundEventId": "SFX_Unarmed_Swing"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

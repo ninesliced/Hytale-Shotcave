@@ -1,0 +1,5 @@
+{
+  "Tags": { "Attack": ["Melee"] },
+  "Cooldown": { "Cooldown": 5.0 },
+  "Interactions": ["Boss_Excavator_Leap_Force"]
+}

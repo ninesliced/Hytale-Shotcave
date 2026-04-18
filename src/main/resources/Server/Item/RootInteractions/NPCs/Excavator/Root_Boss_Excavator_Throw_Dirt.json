@@ -1,0 +1,4 @@
+{
+  "Interactions": ["Boss_Excavator_Throw_Dirt"],
+  "Tags": { "Attack": ["Ranged"] }
+}

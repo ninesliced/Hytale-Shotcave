@@ -1,0 +1,27 @@
+{
+  "$Comment": "Excavator Barrel Toss: wind-up with ThrowDirt animation, then launch a radioactive barrel projectile (reuses Forklift barrel).",
+  "Type": "Simple",
+  "RunTime": 0.5,
+  "Effects": {
+    "ItemPlayerAnimationsId": "Excavator_Default",
+    "ItemAnimationId": "ThrowDirt",
+    "WorldSoundEventId": "SFX_Unarmed_Swing",
+    "MovementEffects": { "DisableAll": true }
+  },
+  "Next": {
+    "Type": "Serial",
+    "Interactions": [
+      {
+        "Type": "LaunchProjectile",
+        "ProjectileId": "Forklift_Radioactive_Barrel",
+        "Effects": {
+          "WorldSoundEventId": "SFX_Goblin_Lobber_Bomb_Death"
+        }
+      },
+      {
+        "Type": "Simple",
+        "RunTime": 0.75
+      }
+    ]
+  }
+}

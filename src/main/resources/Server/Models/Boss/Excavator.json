@@ -1,123 +1,49 @@
 {
   "Model": "NPC/Boss/Excavator/model/excavator.blockymodel",
   "Texture": "NPC/Boss/Excavator/model/excavator.png",
-  "EyeHeight": 3.5,
+  "EyeHeight": 5.5,
   "HitBox": {
-    "Max": {
-      "X": 1.375,
-      "Y": 4,
-      "Z": 1.375
-    },
-    "Min": {
-      "X": -1.375,
-      "Y": 0,
-      "Z": -1.375
-    }
+    "Max": { "X": 2.0, "Y": 7, "Z": 1.5 },
+    "Min": { "X": -2.0, "Y": 0, "Z": -1.5 }
   },
   "MinScale": 1,
   "MaxScale": 1,
   "Camera": {
-    "PositionOffset": {
-      "X": 0.5,
-      "Y": 0.5,
-      "Z": 4
-    }
+    "PositionOffset": { "X": 0.5, "Y": 1.0, "Z": 6 }
   },
   "AnimationSets": {
     "Idle": {
-      "Animations": [
-        {
-          "Animation": "NPC/Boss/Forklift/Animations/idle.blockyanim",
-          "BlendingDuration": 0.2,
-          "Speed": 1
-        }
-      ]
+      "Animations": [{ "Animation": "NPC/Boss/Excavator/Animations/idle.blockyanim", "BlendingDuration": 0.2, "Speed": 1 }]
     },
     "Walk": {
-      "Animations": [
-        {
-          "Animation": "NPC/Boss/Forklift/Animations/walk.blockyanim",
-          "Speed": 1
-        }
-      ]
+      "Animations": [{ "Animation": "NPC/Boss/Excavator/Animations/walk.blockyanim", "Speed": 1 }]
     },
     "WalkBackward": {
-      "Animations": [
-        {
-          "Animation": "NPC/Boss/Forklift/Animations/walk.blockyanim",
-          "Speed": 1
-        }
-      ]
+      "Animations": [{ "Animation": "NPC/Boss/Excavator/Animations/walk.blockyanim", "Speed": 1 }]
     },
     "Run": {
-      "Animations": [
-        {
-          "Animation": "NPC/Boss/Forklift/Animations/walk.blockyanim",
-          "Speed": 1.5
-        }
-      ]
+      "Animations": [{ "Animation": "NPC/Boss/Excavator/Animations/walk.blockyanim", "Speed": 1.5 }]
     },
     "Alerted": {
-      "Animations": [
-        {
-          "Animation": "NPC/Boss/Forklift/Animations/idle.blockyanim",
-          "Looping": false
-        }
-      ]
+      "Animations": [{ "Animation": "NPC/Boss/Excavator/Animations/idle.blockyanim", "Looping": false }]
     },
     "Fall": {
-      "Animations": [
-        {
-          "Animation": "NPC/Boss/Forklift/Animations/idle.blockyanim",
-          "BlendingDuration": 0.4,
-          "Looping": true
-        }
-      ]
+      "Animations": [{ "Animation": "NPC/Boss/Excavator/Animations/jump.blockyanim", "BlendingDuration": 0.4, "Looping": true }]
     },
     "Hurt": {
-      "Animations": [
-        {
-          "Animation": "NPC/Boss/Forklift/Animations/idle.blockyanim",
-          "BlendingDuration": 0.1,
-          "Looping": false
-        }
-      ]
+      "Animations": [{ "Animation": "NPC/Boss/Excavator/Animations/idle.blockyanim", "BlendingDuration": 0.1, "Looping": false }]
     },
     "Death": {
-      "Animations": [
-        {
-          "Animation": "NPC/Boss/Forklift/Animations/idle.blockyanim",
-          "Looping": false
-        }
-      ]
+      "Animations": [{ "Animation": "NPC/Boss/Excavator/Animations/dead.blockyanim", "Looping": false }]
     },
     "Jump": {
-      "Animations": [
-        {
-          "Animation": "NPC/Boss/Forklift/Animations/idle.blockyanim",
-          "BlendingDuration": 0.2,
-          "Looping": false
-        }
-      ]
+      "Animations": [{ "Animation": "NPC/Boss/Excavator/Animations/jump.blockyanim", "BlendingDuration": 0.2, "Looping": true }]
     },
     "JumpWalk": {
-      "Animations": [
-        {
-          "Animation": "NPC/Boss/Forklift/Animations/walk.blockyanim",
-          "BlendingDuration": 0.2,
-          "Looping": false
-        }
-      ]
+      "Animations": [{ "Animation": "NPC/Boss/Excavator/Animations/walk.blockyanim", "BlendingDuration": 0.2, "Looping": false }]
     },
     "JumpRun": {
-      "Animations": [
-        {
-          "Animation": "NPC/Boss/Forklift/Animations/walk.blockyanim",
-          "BlendingDuration": 0.2,
-          "Speed": 1.5,
-          "Looping": false
-        }
-      ]
+      "Animations": [{ "Animation": "NPC/Boss/Excavator/Animations/walk.blockyanim", "BlendingDuration": 0.2, "Speed": 1.5, "Looping": false }]
     }
   }
 }

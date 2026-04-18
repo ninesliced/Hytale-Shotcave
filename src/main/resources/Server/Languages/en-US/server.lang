@@ -92,3 +92,4 @@ items.UnstableRifts_Shop_Crate_T3.name=Elite Weapon Crate
 items.UnstableRifts_Shop_Crate_T3.description=Contains a random weapon. Legendary to Unique quality.
 barter.rift_merchant.title=Rift Merchant
 items.UnstableRifts_Ammo_Item.name=Gun Ammo
+npcRoles.Boss_Excavator.name=Excavator

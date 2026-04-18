@@ -1,0 +1,68 @@
+{
+  "$Comment": "Excavator Smash: 1s total. Arm smashes ground at 0.5s. Damage zone 6z deep, 4x wide in front.",
+  "Type": "Simple",
+  "RunTime": 0.5,
+  "Effects": {
+    "ItemPlayerAnimationsId": "Excavator_Default",
+    "ItemAnimationId": "Smash",
+    "WorldSoundEventId": "SFX_Light_Melee_T2_Swing",
+    "MovementEffects": { "DisableAll": true },
+    "Particles": [
+      { "SystemId": "Boss_Zone_Warning_Effect", "TargetEntityPart": "Entity", "PositionOffset": { "Z": -3 }, "Scale": 2.5 }
+    ]
+  },
+  "Next": {
+    "Type": "Parallel",
+    "Interactions": [
+      {
+        "$Comment": "Damage at 0.5s: arm hits ground, 6z forward, 4x wide",
+        "Interactions": [
+          {
+            "Type": "Selector",
+            "RunTime": 0.15,
+            "Selector": {
+              "Id": "Stab",
+              "TestLineOfSight": true,
+              "ExtendTop": 2,
+              "ExtendLeft": 2,
+              "ExtendRight": 2,
+              "ExtendBottom": 1,
+              "StartDistance": 0.5,
+              "EndDistance": 6
+            },
+            "HitEntity": {
+              "Interactions": [
+                {
+                  "Type": "Replace",
+                  "Var": "Smash_Damage",
+                  "DefaultOk": true,
+                  "DefaultValue": { "Interactions": ["Boss_Excavator_Smash_Damage"] }
+                }
+              ]
+            },
+            "Next": {
+              "$Comment": "Recovery (1.0 - 0.5 - 0.15 = 0.35s)",
+              "Type": "Simple",
+              "RunTime": 0.35
+            }
+          }
+        ]
+      },
+      {
+        "Interactions": [
+          {
+            "Type": "Simple",
+            "RunTime": 0.15,
+            "Effects": {
+              "WorldSoundEventId": "SFX_Mace_T2_Impact",
+              "CameraEffect": "Boss_Impact_Heavy",
+              "Particles": [
+                { "SystemId": "Impact_Mace_Charged", "PositionOffset": { "Y": 0.5, "Z": -3 }, "TargetEntityPart": "Entity", "Scale": 1.6 }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

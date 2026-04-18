@@ -1,0 +1,76 @@
+{
+  "Animations": {
+    "Smash": {
+      "ThirdPerson": "NPC/Boss/Excavator/Animations/attack_smash.blockyanim",
+      "ThirdPersonMoving": "NPC/Boss/Excavator/Animations/attack_smash.blockyanim",
+      "Speed": 1,
+      "Looping": false
+    },
+    "BigArm": {
+      "ThirdPerson": "NPC/Boss/Excavator/Animations/attack_arm_big.blockyanim",
+      "ThirdPersonMoving": "NPC/Boss/Excavator/Animations/attack_arm_big.blockyanim",
+      "Speed": 1,
+      "Looping": false
+    },
+    "SmallArm": {
+      "ThirdPerson": "NPC/Boss/Excavator/Animations/attarck_small_arm.blockyanim",
+      "ThirdPersonMoving": "NPC/Boss/Excavator/Animations/attarck_small_arm.blockyanim",
+      "Speed": 1,
+      "Looping": false
+    },
+    "ThrowDirt": {
+      "ThirdPerson": "NPC/Boss/Excavator/Animations/attack_thow_dirt.blockyanim",
+      "ThirdPersonMoving": "NPC/Boss/Excavator/Animations/attack_thow_dirt.blockyanim",
+      "Speed": 1,
+      "Looping": false
+    },
+    "Spin": {
+      "ThirdPerson": "NPC/Boss/Excavator/Animations/attack_spin.blockyanim",
+      "ThirdPersonMoving": "NPC/Boss/Excavator/Animations/attack_spin.blockyanim",
+      "Speed": 1,
+      "Looping": false
+    },
+    "Dash": {
+      "ThirdPerson": "NPC/Boss/Excavator/Animations/dash.blockyanim",
+      "ThirdPersonMoving": "NPC/Boss/Excavator/Animations/dash.blockyanim",
+      "Speed": 1,
+      "Looping": true
+    },
+    "JumpStart": {
+      "ThirdPerson": "NPC/Boss/Excavator/Animations/jump_start.blockyanim",
+      "ThirdPersonMoving": "NPC/Boss/Excavator/Animations/jump_start.blockyanim",
+      "Speed": 1,
+      "Looping": false
+    },
+    "JumpAir": {
+      "ThirdPerson": "NPC/Boss/Excavator/Animations/jump.blockyanim",
+      "ThirdPersonMoving": "NPC/Boss/Excavator/Animations/jump.blockyanim",
+      "Speed": 1,
+      "Looping": true
+    },
+    "JumpArrive": {
+      "ThirdPerson": "NPC/Boss/Excavator/Animations/jump_arrives.blockyanim",
+      "ThirdPersonMoving": "NPC/Boss/Excavator/Animations/jump_arrives.blockyanim",
+      "Speed": 1,
+      "Looping": false
+    },
+    "Dead": {
+      "ThirdPerson": "NPC/Boss/Excavator/Animations/dead.blockyanim",
+      "ThirdPersonMoving": "NPC/Boss/Excavator/Animations/dead.blockyanim",
+      "Speed": 1,
+      "Looping": false
+    }
+  },
+  "WiggleWeights": {
+    "Pitch": 2,
+    "PitchDeceleration": 0.1,
+    "Roll": 0.1,
+    "RollDeceleration": 0.1,
+    "X": 3,
+    "XDeceleration": 0.1,
+    "Y": 0.1,
+    "YDeceleration": 0.1,
+    "Z": 0.1,
+    "ZDeceleration": 0.1
+  }
+}
