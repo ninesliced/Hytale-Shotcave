@@ -6,9 +6,7 @@ import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior;
 import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
-import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
-import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
-import com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType;
+import com.hypixel.hytale.server.core.entity.entities.player.movement.MovementManager;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
@@ -152,13 +150,13 @@ public final class ArmorAbilityBuffSystem {
     private static void applySpeedBuff(@Nonnull Ref<EntityStore> ref,
                                        @Nonnull ComponentAccessor<EntityStore> accessor,
                                        float multiplier) {
-        EntityStatMap statMap = accessor.getComponent(ref, EntityStatMap.getComponentType());
-        if (statMap == null) return;
-        int speedIdx = EntityStatType.getAssetMap().getIndex("MovementSpeed");
-        if (speedIdx < 0) return;
-        EntityStatValue speedStat = statMap.get(speedIdx);
-        if (speedStat == null) return;
-        float baseSpeed = speedStat.get();
-        statMap.setStatValue(speedIdx, baseSpeed * multiplier);
+        MovementManager movementManager = accessor.getComponent(ref, MovementManager.getComponentType());
+        if (movementManager == null) return;
+        PlayerRef playerRef = accessor.getComponent(ref, PlayerRef.getComponentType());
+        if (playerRef == null) return;
+
+        // Dungeon base speed is 10.0f (set by PlayerStateService.applyDungeonMovementSettings)
+        movementManager.getSettings().baseSpeed = 10.0f * multiplier;
+        movementManager.update(playerRef.getPacketHandler());
     }
 }
