@@ -96,7 +96,8 @@
         "Kweebec_DeadWood_Seedling": 4,
         "Kweebec_Seedling": 3,
         "Wolf_Radioactive": 5
-      }
+      },
+      "nextLevel": "desert"
     },
     {
       "id": "desert",
