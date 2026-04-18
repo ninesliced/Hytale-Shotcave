@@ -1,46 +1,34 @@
 {
   "Type": "Variant",
-  "Reference": "Template_Boss_Forklift",
+  "Reference": "Template_Boss_Excavator",
   "Modify": {
     "Appearance": "Excavator",
     "NameTranslationKey": "bettermobs.npcRoles.Boss_Excavator.name",
-    "MaxHealth": 2500,
-    "MaxSpeed": 7.5,
-    "ViewRange": 22,
-    "AlertedRange": 28,
-    "AlertedTime": [
-      1,
-      2
-    ],
-    "Attack": "Root_Boss_Forklift_Fork_Attack",
-    "TurnSingleAttack": "Root_Boss_Forklift_Turn_Single",
-    "TurnDoubleAttack": "Root_Boss_Forklift_Turn_Double",
-    "LeapAttack": "Root_Boss_Forklift_Leap_Attack",
-    "AttackDistance": 4.8,
-    "AttackPauseRange": [
-      0.3,
-      0.6
-    ],
-    "LeapDistance": 7.2,
-    "ChaseRelativeSpeed": 1.35,
+    "MaxHealth": 3000,
+    "MaxSpeed": 7,
+    "ViewRange": 24,
+    "AlertedRange": 30,
+    "AlertedTime": [1, 2],
+    "SmashAttack": "Root_Boss_Excavator_Smash_Attack",
+    "BigArmAttack": "Root_Boss_Excavator_Big_Arm_Attack",
+    "SmallArmAttack": "Root_Boss_Excavator_Small_Arm_Attack",
+    "SpinAttack": "Root_Boss_Excavator_Spin_Attack",
+    "LeapAttack": "Root_Boss_Excavator_Leap_Attack",
+    "AttackDistance": 5.5,
+    "AttackPauseRange": [0.3, 0.6],
+    "LeapDistance": 8,
+    "ChaseRelativeSpeed": 1.2,
     "CombatStrafeWeight": 1,
     "CombatDirectWeight": 2,
-    "CombatAlwaysMovingWeight": 6,
-    "CombatMovingRelativeSpeed": 1.3,
-    "CombatBackwardsRelativeSpeed": 1.1,
-    "DesiredAttackDistanceRange": [
-      2.4,
-      4.2
-    ],
-    "CombatBackOffDurationRange": [
-      1.5,
-      2.5
-    ],
-    "CombatStrafingDurationRange": [
-      1,
-      3
-    ],
+    "CombatAlwaysMovingWeight": 5,
+    "CombatMovingRelativeSpeed": 1.2,
+    "CombatBackwardsRelativeSpeed": 0.9,
+    "DesiredAttackDistanceRange": [2.5, 5],
+    "CombatBackOffDurationRange": [1.5, 2.5],
+    "CombatStrafingDurationRange": [1, 3],
+    "SearchTimeRange": [6, 10],
+    "ConfusedTimeRange": [0.5, 1.5],
     "UseCombatActionEvaluator": true,
-    "_CombatConfig": "CAE_Boss_Forklift"
+    "_CombatConfig": "CAE_Boss_Excavator"
   }
 }

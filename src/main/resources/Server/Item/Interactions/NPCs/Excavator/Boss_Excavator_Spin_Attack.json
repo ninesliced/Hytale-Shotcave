@@ -1,0 +1,167 @@
+{
+  "$Comment": "Excavator Spin: ~1s total. Directional 360 sweep at 9 block range. Right(0.17s) → Left(0.43s) → Behind(0.58s) → Done(0.78s).",
+  "Type": "Simple",
+  "RunTime": 0.0,
+  "Effects": {
+    "ItemPlayerAnimationsId": "Excavator_Default",
+    "ItemAnimationId": "Spin",
+    "WorldSoundEventId": "SFX_Light_Melee_T2_Swing",
+    "MovementEffects": { "DisableAll": true },
+    "Particles": [
+      { "SystemId": "Boss_Zone_Warning_Effect", "TargetEntityPart": "Entity", "Scale": 3.5 }
+    ]
+  },
+  "Next": {
+    "Type": "Parallel",
+    "Interactions": [
+      {
+        "$Comment": "Damage sweep: 4 directional phases around the boss",
+        "Interactions": [
+          {
+            "Type": "Serial",
+            "Interactions": [
+              {
+                "$Comment": "Phase 1 (0-0.17s): Right side sweep toward front",
+                "Type": "Selector",
+                "RunTime": 0.17,
+                "Selector": {
+                  "Id": "Horizontal",
+                  "Direction": "ToLeft",
+                  "TestLineOfSight": false,
+                  "ExtendTop": 3,
+                  "ExtendBottom": 1.5,
+                  "StartDistance": 0.5,
+                  "EndDistance": 9,
+                  "Length": 90,
+                  "RollOffset": 0,
+                  "YawStartOffset": -90
+                },
+                "HitEntity": {
+                  "Interactions": [
+                    {
+                      "Type": "Replace",
+                      "Var": "Spin_Damage",
+                      "DefaultOk": true,
+                      "DefaultValue": { "Interactions": ["Boss_Excavator_Spin_Damage"] }
+                    }
+                  ]
+                }
+              },
+              {
+                "$Comment": "Phase 2 (0.17-0.43s): Front sweep toward left side",
+                "Type": "Selector",
+                "RunTime": 0.26,
+                "Selector": {
+                  "Id": "Horizontal",
+                  "Direction": "ToLeft",
+                  "TestLineOfSight": false,
+                  "ExtendTop": 3,
+                  "ExtendBottom": 1.5,
+                  "StartDistance": 0.5,
+                  "EndDistance": 9,
+                  "Length": 90,
+                  "RollOffset": 0,
+                  "YawStartOffset": 0
+                },
+                "HitEntity": {
+                  "Interactions": [
+                    {
+                      "Type": "Replace",
+                      "Var": "Spin_Damage",
+                      "DefaultOk": true,
+                      "DefaultValue": { "Interactions": ["Boss_Excavator_Spin_Damage"] }
+                    }
+                  ]
+                }
+              },
+              {
+                "$Comment": "Phase 3 (0.43-0.58s): Left side sweep toward behind",
+                "Type": "Selector",
+                "RunTime": 0.15,
+                "Selector": {
+                  "Id": "Horizontal",
+                  "Direction": "ToLeft",
+                  "TestLineOfSight": false,
+                  "ExtendTop": 3,
+                  "ExtendBottom": 1.5,
+                  "StartDistance": 0.5,
+                  "EndDistance": 9,
+                  "Length": 90,
+                  "RollOffset": 0,
+                  "YawStartOffset": 90
+                },
+                "HitEntity": {
+                  "Interactions": [
+                    {
+                      "Type": "Replace",
+                      "Var": "Spin_Damage",
+                      "DefaultOk": true,
+                      "DefaultValue": { "Interactions": ["Boss_Excavator_Spin_Damage"] }
+                    }
+                  ]
+                }
+              },
+              {
+                "$Comment": "Phase 4 (0.58-0.78s): Behind sweep back to right",
+                "Type": "Selector",
+                "RunTime": 0.20,
+                "Selector": {
+                  "Id": "Horizontal",
+                  "Direction": "ToLeft",
+                  "TestLineOfSight": false,
+                  "ExtendTop": 3,
+                  "ExtendBottom": 1.5,
+                  "StartDistance": 0.5,
+                  "EndDistance": 9,
+                  "Length": 90,
+                  "RollOffset": 0,
+                  "YawStartOffset": 180
+                },
+                "HitEntity": {
+                  "Interactions": [
+                    {
+                      "Type": "Replace",
+                      "Var": "Spin_Damage",
+                      "DefaultOk": true,
+                      "DefaultValue": { "Interactions": ["Boss_Excavator_Spin_Damage"] }
+                    }
+                  ]
+                },
+                "Next": {
+                  "$Comment": "Recovery (1.0 - 0.78 = 0.22s)",
+                  "Type": "Simple",
+                  "RunTime": 0.22
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "$Comment": "Sound and particle effects during spin",
+        "Interactions": [
+          {
+            "Type": "Simple",
+            "RunTime": 0.17,
+            "Effects": {
+              "WorldSoundEventId": "SFX_Unarmed_Swing",
+              "Particles": [
+                { "SystemId": "Boss_Zone_Impact_Effect", "TargetEntityPart": "Entity" }
+              ]
+            }
+          },
+          {
+            "Type": "Simple",
+            "RunTime": 0.41,
+            "Effects": {
+              "WorldSoundEventId": "SFX_Unarmed_Swing",
+              "Particles": [
+                { "SystemId": "Impact_Mace_Charged", "TargetEntityPart": "Entity", "TargetNodeName": "Hip", "Scale": 1.6 }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

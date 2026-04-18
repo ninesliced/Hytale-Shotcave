@@ -1,0 +1,57 @@
+{
+  "$Comment": "Excavator leap smash: landing impact with 7x wide, 4z deep damage zone and particles. 0.5s total (jump_arrives).",
+  "Type": "Simple",
+  "Effects": {
+    "ItemPlayerAnimationsId": "Excavator_Default",
+    "ItemAnimationId": "JumpArrive",
+    "ClearAnimationOnFinish": false,
+    "CameraEffect": "Boss_Impact_Heavy"
+  },
+  "RunTime": 0.0,
+  "Next": {
+    "Type": "Parallel",
+    "Interactions": [
+      {
+        "Interactions": [
+          {
+            "Type": "Selector",
+            "RunTime": 0.05,
+            "Selector": {
+              "Id": "AOECylinder",
+              "Range": 7,
+              "Offset": { "Y": -1 },
+              "Height": 4
+            },
+            "HitEntity": {
+              "Interactions": [
+                {
+                  "Type": "Replace",
+                  "DefaultOk": true,
+                  "DefaultValue": { "Interactions": ["Boss_Excavator_Leap_Smash_Damage"] },
+                  "Var": "Leap_Smash_Damage"
+                }
+              ]
+            },
+            "Next": { "Type": "Simple", "RunTime": 0.45 }
+          }
+        ]
+      },
+      {
+        "Interactions": [
+          {
+            "Type": "Simple",
+            "RunTime": 0.5,
+            "Effects": {
+              "WorldSoundEventId": "SFX_Mace_T2_Impact",
+              "CameraEffect": "Boss_Impact_Heavy",
+              "Particles": [
+                { "SystemId": "Boss_Zone_Impact_Effect", "TargetEntityPart": "Entity" },
+                { "SystemId": "Impact_Mace_Charged", "PositionOffset": { "Y": 0.5 }, "TargetEntityPart": "Entity", "Scale": 2.2 }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -14,7 +14,7 @@
     }
   ],
   "Website": "https://ninesliced.com",
-  "ServerVersion": "2026.04.16-5a18e075d",
+  "ServerVersion": "2026.04.17-c2d518cc9",
   "Dependencies": {},
   "DisabledByDefault": false,
   "IncludesAssetPack": true,

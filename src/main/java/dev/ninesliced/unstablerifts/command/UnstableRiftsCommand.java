@@ -26,6 +26,7 @@ public class UnstableRiftsCommand extends AbstractCommand {
         this.addSubCommand(GearDropCommand.armor());
         this.addSubCommand(GearDropCommand.armorSet());
         this.addSubCommand(new ToggleHudCommand());
+        this.addSubCommand(new SpawnBossCommand());
     }
 
     @Override

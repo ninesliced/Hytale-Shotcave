@@ -1,0 +1,61 @@
+{
+  "$Comment": "Excavator Small Arm: 0.75s total. Quick jab at 0.25s, 5z forward, 3x wide.",
+  "Type": "Simple",
+  "RunTime": 0.25,
+  "Effects": {
+    "ItemPlayerAnimationsId": "Excavator_Default",
+    "ItemAnimationId": "SmallArm",
+    "WorldSoundEventId": "SFX_Unarmed_Swing",
+    "MovementEffects": { "DisableAll": true }
+  },
+  "Next": {
+    "Type": "Parallel",
+    "Interactions": [
+      {
+        "$Comment": "Damage at 0.25s: small arm jab, 5z forward, 3x wide",
+        "Interactions": [
+          {
+            "Type": "Selector",
+            "RunTime": 0.15,
+            "Selector": {
+              "Id": "Stab",
+              "TestLineOfSight": true,
+              "ExtendTop": 2,
+              "ExtendLeft": 1.5,
+              "ExtendRight": 1.5,
+              "ExtendBottom": 1,
+              "StartDistance": 0.5,
+              "EndDistance": 5
+            },
+            "HitEntity": {
+              "Interactions": [
+                {
+                  "Type": "Replace",
+                  "Var": "Small_Arm_Damage",
+                  "DefaultOk": true,
+                  "DefaultValue": { "Interactions": ["Boss_Excavator_Small_Arm_Damage"] }
+                }
+              ]
+            },
+            "Next": {
+              "$Comment": "Recovery (0.75 - 0.25 - 0.15 = 0.35s)",
+              "Type": "Simple",
+              "RunTime": 0.35
+            }
+          }
+        ]
+      },
+      {
+        "Interactions": [
+          {
+            "Type": "Simple",
+            "RunTime": 0.15,
+            "Effects": {
+              "WorldSoundEventId": "SFX_Unarmed_Impact"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
