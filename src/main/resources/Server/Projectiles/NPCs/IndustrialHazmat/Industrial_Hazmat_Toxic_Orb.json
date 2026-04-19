@@ -18,8 +18,8 @@
   "ExplosionConfig": {
     "DamageEntities": true,
     "DamageBlocks": false,
-    "EntityDamageRadius": 3,
-    "EntityDamageFalloff": 0.5,
+    "EntityDamageRadius": 0.75,
+    "EntityDamageFalloff": 1.0,
     "Knockback": {
       "Type": "Point",
       "VelocityConfig": {

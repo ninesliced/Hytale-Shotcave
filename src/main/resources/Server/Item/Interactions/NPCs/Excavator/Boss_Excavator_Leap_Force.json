@@ -14,7 +14,7 @@
     },
     {
       "Type": "ApplyForce",
-      "Force": 8000,
+      "Force": 10000,
       "Direction": { "X": 0, "Y": 0.5, "Z": -25 },
       "AdjustVertical": false,
       "Effects": {

@@ -1,13 +1,13 @@
 {
   "Appearance": "Forklift_Radioactive_Barrel",
-  "VerticalCenterShot": 0.35,
+  "VerticalCenterShot": 0.6,
   "HorizontalCenterShot": 0.0,
   "DepthShot": 1.35,
   "PitchAdjustShot": true,
   "SticksVertically": true,
   "MuzzleVelocity": 28,
   "TerminalVelocity": 34,
-  "Gravity": 10,
+  "Gravity": 6,
   "Damage": 0,
   "DeathEffectsOnHit": true,
   "BounceSoundEventId": "SFX_Bomb_Fire_Goblin_Bounce",
@@ -19,8 +19,8 @@
   "ExplosionConfig": {
     "DamageEntities": true,
     "DamageBlocks": false,
-    "BlockDamageRadius": 20,
-    "EntityDamageRadius": 5,
+    "BlockDamageRadius": 3,
+    "EntityDamageRadius": 1.5,
     "EntityDamageFalloff": 1.0,
     "Knockback": {
       "Type": "Point",
