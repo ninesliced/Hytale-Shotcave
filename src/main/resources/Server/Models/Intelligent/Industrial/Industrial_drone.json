@@ -1,0 +1,145 @@
+{
+  "Model": "NPC/Intelligent/Industrial_drone/Model/drone.blockymodel",
+  "Texture": "NPC/Intelligent/Industrial_drone/Model/drone.png",
+  "EyeHeight": 1.0,
+  "HitBox": {
+    "Max": { "X": 0.8, "Y": 1.4, "Z": 0.8 },
+    "Min": { "X": -0.8, "Y": 0, "Z": -0.8 }
+  },
+  "DefaultAttachments": [],
+  "AnimationSets": {
+    "Idle": {
+      "Animations": [
+        {
+          "Animation": "NPC/Intelligent/Industrial_drone/Animations/Idle.blockyanim",
+          "BlendingDuration": 0.2,
+          "Speed": 1.0
+        }
+      ]
+    },
+    "Walk": {
+      "Animations": [
+        {
+          "Animation": "NPC/Intelligent/Industrial_drone/Animations/Move.blockyanim",
+          "Speed": 1.0
+        }
+      ]
+    },
+    "WalkBackward": {
+      "Animations": [
+        {
+          "Animation": "NPC/Intelligent/Industrial_drone/Animations/Move.blockyanim",
+          "Speed": 1.0
+        }
+      ]
+    },
+    "Run": {
+      "Animations": [
+        {
+          "Animation": "NPC/Intelligent/Industrial_drone/Animations/Move.blockyanim",
+          "Speed": 1.2
+        }
+      ]
+    },
+    "Alerted": {
+      "Animations": [
+        {
+          "Animation": "NPC/Intelligent/Industrial_drone/Animations/Ascend.blockyanim",
+          "Looping": false,
+          "Speed": 1.0
+        }
+      ]
+    },
+    "FlyIdle": {
+      "Animations": [
+        {
+          "Animation": "NPC/Intelligent/Industrial_drone/Animations/Idle.blockyanim",
+          "BlendingDuration": 0.2,
+          "Speed": 1.0
+        }
+      ]
+    },
+    "Fly": {
+      "Animations": [
+        {
+          "Animation": "NPC/Intelligent/Industrial_drone/Animations/Move.blockyanim",
+          "Speed": 1.0
+        }
+      ]
+    },
+    "FlyBackward": {
+      "Animations": [
+        {
+          "Animation": "NPC/Intelligent/Industrial_drone/Animations/Move.blockyanim",
+          "Speed": 1.0
+        }
+      ]
+    },
+    "FlyFast": {
+      "Animations": [
+        {
+          "Animation": "NPC/Intelligent/Industrial_drone/Animations/Dash.blockyanim",
+          "Speed": 1.0
+        }
+      ]
+    },
+    "Jump": {
+      "Animations": [
+        {
+          "Animation": "NPC/Intelligent/Industrial_drone/Animations/Ascend.blockyanim",
+          "Speed": 1.0
+        }
+      ]
+    },
+    "Fall": {
+      "Animations": [
+        {
+          "Animation": "NPC/Intelligent/Industrial_drone/Animations/Idle.blockyanim",
+          "Speed": 1.0
+        }
+      ]
+    },
+    "Hurt": {
+      "Animations": [
+        {
+          "Animation": "NPC/Intelligent/Industrial_drone/Animations/Idle_Empy.blockyanim",
+          "Looping": false,
+          "Speed": 1.0
+        }
+      ]
+    },
+    "Death": {
+      "Animations": [
+        {
+          "Animation": "NPC/Intelligent/Industrial_drone/Animations/Die.blockyanim",
+          "Looping": false,
+          "Speed": 1.0
+        }
+      ]
+    },
+    "FluidIdle": {
+      "Animations": [
+        {
+          "Animation": "NPC/Intelligent/Industrial_drone/Animations/Idle.blockyanim",
+          "Speed": 0.5
+        }
+      ]
+    },
+    "SwimIdle": {
+      "Animations": [
+        {
+          "Animation": "NPC/Intelligent/Industrial_drone/Animations/Idle.blockyanim",
+          "Speed": 0.5
+        }
+      ]
+    },
+    "Swim": {
+      "Animations": [
+        {
+          "Animation": "NPC/Intelligent/Industrial_drone/Animations/Move.blockyanim",
+          "Speed": 0.6
+        }
+      ]
+    }
+  }
+}

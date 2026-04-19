@@ -192,7 +192,8 @@
         "Kweebec_DeadWood_Seedling": 4,
         "Kweebec_Seedling": 3,
         "Wolf_Radioactive": 5,
-        "Industrial_Hazmat_ToxicLauncher": 3
+        "Industrial_Hazmat_ToxicLauncher": 3,
+        "Industrial_Drone": 4
       },
       "nextLevel": null
     }

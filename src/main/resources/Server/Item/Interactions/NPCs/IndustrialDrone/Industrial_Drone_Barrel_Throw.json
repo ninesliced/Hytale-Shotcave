@@ -1,0 +1,29 @@
+{
+  "$Comment": "Industrial Drone barrel throw: wind-up with Attack animation, then launch a radioactive barrel projectile.",
+  "Type": "Simple",
+  "RunTime": 0.4,
+  "Effects": {
+    "ItemPlayerAnimationsId": "Industrial_Drone_Default",
+    "ItemAnimationId": "Attack",
+    "ClearAnimationOnFinish": true,
+    "MovementEffects": {
+      "DisableAll": true
+    }
+  },
+  "Next": {
+    "Type": "Serial",
+    "Interactions": [
+      {
+        "Type": "LaunchProjectile",
+        "ProjectileId": "Industrial_Drone_Radioactive_Barrel",
+        "Effects": {
+          "WorldSoundEventId": "SFX_Goblin_Lobber_Bomb_Death"
+        }
+      },
+      {
+        "Type": "Simple",
+        "RunTime": 0.6
+      }
+    ]
+  }
+}

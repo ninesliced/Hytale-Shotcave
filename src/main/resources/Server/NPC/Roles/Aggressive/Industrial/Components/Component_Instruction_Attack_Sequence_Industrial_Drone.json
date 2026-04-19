@@ -1,0 +1,53 @@
+{
+  "Class": "Instruction",
+  "Interface": "Hytale.Instruction.AttackSequence",
+  "Type": "Component",
+  "Parameters": {
+    "AttackDistance": {
+      "Value": 15,
+      "Description": "The range for barrel throw attacks"
+    },
+    "CombatRelativeTurnSpeed": {
+      "Value": 2.0,
+      "Description": "Modifier that decides turn speed difference in combat"
+    }
+  },
+  "Content": {
+    "Sensor": {
+      "Type": "Target",
+      "Range": {
+        "Compute": "AttackDistance"
+      },
+      "Filters": [
+        {
+          "Type": "LineOfSight"
+        }
+      ]
+    },
+    "ActionsBlocking": true,
+    "Actions": [
+      {
+        "Type": "Attack",
+        "Attack": "Root_Industrial_Drone_Barrel_Throw",
+        "BallisticMode": "Short",
+        "AimingTimeRange": [1.0, 1.5],
+        "AttackPauseRange": [2.5, 3.5]
+      },
+      {
+        "Type": "Attack",
+        "Attack": "Root_Industrial_Drone_Barrel_Throw",
+        "BallisticMode": "Short",
+        "AttackPauseRange": [2.0, 3.0]
+      }
+    ],
+    "HeadMotion": {
+      "Type": "Aim",
+      "RelativeTurnSpeed": {
+        "Compute": "CombatRelativeTurnSpeed"
+      },
+      "HitProbability": 0.65,
+      "Spread": 0.4,
+      "Deflection": true
+    }
+  }
+}

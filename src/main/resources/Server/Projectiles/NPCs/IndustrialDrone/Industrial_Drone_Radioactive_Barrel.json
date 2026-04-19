@@ -1,0 +1,38 @@
+{
+  "$Comment": "Industrial Drone radioactive barrel projectile. Smaller and slower than the Forklift boss barrel.",
+  "Appearance": "Forklift_Radioactive_Barrel",
+  "VerticalCenterShot": 0.35,
+  "HorizontalCenterShot": 0.0,
+  "DepthShot": 1.0,
+  "PitchAdjustShot": true,
+  "SticksVertically": true,
+  "MuzzleVelocity": 20,
+  "TerminalVelocity": 28,
+  "Gravity": 8,
+  "Damage": 0,
+  "DeathEffectsOnHit": true,
+  "BounceSoundEventId": "SFX_Bomb_Fire_Goblin_Bounce",
+  "HitSoundEventId": "SFX_Goblin_Lobber_Bomb_Death",
+  "MissSoundEventId": "SFX_Goblin_Lobber_Bomb_Death",
+  "DeathSoundEventId": "SFX_Goblin_Lobber_Bomb_Death",
+  "DeadTimeMiss": 0,
+  "DeadTime": 0,
+  "ExplosionConfig": {
+    "DamageEntities": true,
+    "DamageBlocks": false,
+    "EntityDamageRadius": 3.5,
+    "EntityDamageFalloff": 0.6,
+    "Knockback": {
+      "Type": "Point",
+      "VelocityConfig": {
+        "AirResistance": 0.97,
+        "AirResistanceMax": 0.96,
+        "GroundResistance": 0.94,
+        "GroundResistanceMax": 0.3,
+        "Threshold": 3.0
+      },
+      "Force": 4,
+      "VelocityType": "Set"
+    }
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "$Comment": "Industrial Drone dash: brief windup then surge forward. Repeating damage checks during the dash.",
+  "Type": "Serial",
+  "Interactions": [
+    {
+      "$Comment": "Windup before dash.",
+      "Type": "Simple",
+      "RunTime": 0.3,
+      "Effects": {
+        "ItemPlayerAnimationsId": "Industrial_Drone_Default",
+        "ItemAnimationId": "Dash",
+        "MovementEffects": {
+          "DisableAll": true
+        },
+        "WorldSoundEventId": "SFX_Unarmed_Swing"
+      }
+    },
+    {
+      "Type": "Parallel",
+      "Interactions": [
+        {
+          "$Comment": "Propel the drone forward toward the target.",
+          "Interactions": [
+            {
+              "Type": "ApplyForce",
+              "Force": 600,
+              "Direction": {
+                "X": 0,
+                "Y": 0,
+                "Z": -8.0
+              },
+              "AdjustVertical": false,
+              "ChangeVelocityType": "Set",
+              "WaitForGround": false,
+              "WaitForCollision": true,
+              "RunTime": 1.5,
+              "VelocityConfig": {
+                "AirResistance": 0.99,
+                "AirResistanceMax": 0.97,
+                "Threshold": 3.0
+              }
+            }
+          ]
+        },
+        {
+          "$Comment": "Repeating damage checks during the dash (3 checks over 1.5s).",
+          "Interactions": [
+            {
+              "Type": "Selector",
+              "RunTime": 0.5,
+              "Selector": {
+                "Id": "Stab",
+                "TestLineOfSight": true,
+                "ExtendTop": 0.8,
+                "ExtendLeft": 0.6,
+                "ExtendRight": 0.6,
+                "ExtendBottom": 0.8,
+                "StartDistance": 0.3,
+                "EndDistance": 2.5
+              },
+              "HitEntity": {
+                "Interactions": [
+                  "Industrial_Drone_Dash_Damage"
+                ]
+              }
+            },
+            {
+              "Type": "Selector",
+              "RunTime": 0.5,
+              "Selector": {
+                "Id": "Stab",
+                "TestLineOfSight": true,
+                "ExtendTop": 0.8,
+                "ExtendLeft": 0.6,
+                "ExtendRight": 0.6,
+                "ExtendBottom": 0.8,
+                "StartDistance": 0.3,
+                "EndDistance": 2.5
+              },
+              "HitEntity": {
+                "Interactions": [
+                  "Industrial_Drone_Dash_Damage"
+                ]
+              }
+            },
+            {
+              "Type": "Selector",
+              "RunTime": 0.5,
+              "Selector": {
+                "Id": "Stab",
+                "TestLineOfSight": true,
+                "ExtendTop": 0.8,
+                "ExtendLeft": 0.6,
+                "ExtendRight": 0.6,
+                "ExtendBottom": 0.8,
+                "StartDistance": 0.3,
+                "EndDistance": 2.5
+              },
+              "HitEntity": {
+                "Interactions": [
+                  "Industrial_Drone_Dash_Damage"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "Parent": "Default",
+  "Animations": {
+    "Attack": {
+      "ThirdPerson": "NPC/Intelligent/Industrial_drone/Animations/Attack.blockyanim",
+      "Speed": 1,
+      "Looping": false
+    },
+    "Dash": {
+      "ThirdPerson": "NPC/Intelligent/Industrial_drone/Animations/Dash.blockyanim",
+      "Speed": 1,
+      "Looping": true
+    },
+    "Ascend": {
+      "ThirdPerson": "NPC/Intelligent/Industrial_drone/Animations/Ascend.blockyanim",
+      "Speed": 1,
+      "Looping": false
+    }
+  }
+}

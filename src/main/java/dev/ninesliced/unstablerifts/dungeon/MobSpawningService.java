@@ -5,9 +5,12 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.modules.entity.component.DisplayNameComponent;
+import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.npc.NPCPlugin;
+import com.hypixel.hytale.server.npc.entities.NPCEntity;
+import com.hypixel.hytale.server.npc.movement.controllers.MotionControllerFly;
 import dev.ninesliced.unstablerifts.systems.KweebecScaleHelper;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
@@ -32,6 +35,11 @@ public final class MobSpawningService {
      * Max random XZ offset from the cluster center when spawning a mob.
      */
     private static final double CLUSTER_SPREAD = 2.5;
+    /**
+     * Y offset added to flying NPC spawn positions so the Fly controller
+     * starts in-air (its canSteer requires isInAir).
+     */
+    private static final double FLY_SPAWN_ELEVATION = 4.0;
 
     /**
      * Maps each dungeon mob UUID to the room it belongs to.
@@ -219,6 +227,7 @@ public final class MobSpawningService {
                 KweebecScaleHelper.applyScale(store, mobRef, mobId);
                 applyScaleMarker(store, mobRef, mobId);
                 applyBossDisplayName(store, mobRef, mobId);
+                elevateFlyingMob(store, mobRef);
                 store.ensureAndGetComponent(mobRef, DungeonMobCircleComponent.getComponentType());
                 room.addSpawnedMob(mobRef);
                 UUIDComponent uuidComp = store.getComponent(mobRef, UUIDComponent.getComponentType());
@@ -230,6 +239,23 @@ public final class MobSpawningService {
         } catch (Exception e) {
             LOGGER.log(java.util.logging.Level.WARNING, "Failed to spawn mob: " + mobId, e);
             return null;
+        }
+    }
+
+    /**
+     * If the spawned NPC uses a Fly motion controller, elevate it above ground
+     * so the controller's canSteer() check passes (it requires isInAir()).
+     */
+    private void elevateFlyingMob(@Nonnull Store<EntityStore> store,
+                                  @Nonnull Ref<EntityStore> mobRef) {
+        NPCEntity npc = store.getComponent(mobRef, NPCEntity.getComponentType());
+        if (npc == null || npc.getRole() == null) return;
+        if (npc.getRole().getActiveMotionController() instanceof MotionControllerFly) {
+            TransformComponent transform = store.getComponent(mobRef, TransformComponent.getComponentType());
+            if (transform != null) {
+                Vector3d pos = transform.getPosition();
+                transform.setPosition(new Vector3d(pos.x, pos.y + FLY_SPAWN_ELEVATION, pos.z));
+            }
         }
     }
 
