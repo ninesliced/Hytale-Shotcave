@@ -12,9 +12,9 @@
     ]
   },
   "OverlapBehavior": "Overwrite",
-  "RemovalBehavior": "Complete",
+  "RemovalBehavior": "Duration",
   "Infinite": false,
   "Debuff": true,
   "StatusEffectIcon": "UI/StatusEffects/Poison.png",
-  "Duration": 2
+  "Duration": 1
 }

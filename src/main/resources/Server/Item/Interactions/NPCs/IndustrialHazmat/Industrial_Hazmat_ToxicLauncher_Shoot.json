@@ -28,13 +28,13 @@
           "Id": "Horizontal",
           "Direction": "ToRight",
           "TestLineOfSight": true,
-          "ExtendTop": 0.8,
-          "ExtendBottom": 0.5,
+          "ExtendTop": 0.4,
+          "ExtendBottom": 0.25,
           "StartDistance": 0.3,
           "EndDistance": 16,
-          "Length": 4,
+          "Length": 1.5,
           "RollOffset": 0,
-          "YawStartOffset": -2
+          "YawStartOffset": -0.75
         },
         "Effects": {
           "Particles": [
