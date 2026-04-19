@@ -40,6 +40,7 @@ public final class MobSpawningService {
      * starts in-air (its canSteer requires isInAir).
      */
     private static final double FLY_SPAWN_ELEVATION = 4.0;
+    private static final float MOB_SPAWN_YAW = (float) Math.PI;
 
     /**
      * Maps each dungeon mob UUID to the room it belongs to.
@@ -221,7 +222,8 @@ public final class MobSpawningService {
                                       @Nonnull Vector3d position,
                                       @Nonnull RoomData room) {
         try {
-            var mobResult = NPCPlugin.get().spawnNPC(store, mobId, null, position, Rotation3f.ZERO);
+            var mobResult = NPCPlugin.get().spawnNPC(
+                    store, mobId, null, position, new Rotation3f(0.0f, MOB_SPAWN_YAW, 0.0f));
             Ref<EntityStore> mobRef = mobResult != null ? mobResult.first() : null;
             if (mobRef != null) {
                 KweebecScaleHelper.applyScale(store, mobRef, mobId);
