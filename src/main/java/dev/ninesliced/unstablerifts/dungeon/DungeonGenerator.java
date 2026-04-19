@@ -745,8 +745,11 @@ public class DungeonGenerator {
         List<TrackedExit> deadEndExits = new ArrayList<>();
         List<TrackedExit> branchTerminalExits = new ArrayList<>();
         Set<String> specialRoomBranches = new HashSet<>();
+        List<TrackedExit> mainStartExits = new ArrayList<>(spawnExits);
 
-        buildBranch(context, spawnExits, deadEndExits, branchTerminalExits,
+        placeImportantRoomsOnMainPath(context, mainStartExits, deadEndExits, specialRoomBranches);
+
+        buildBranch(context, mainStartExits, deadEndExits, branchTerminalExits,
                 0, "main", mainConfig.getChallengeRooms(),
                 mainConfig.getMinimumCorridorLength(),
                 mainConfig.getMaxRooms(), true);
@@ -798,23 +801,6 @@ public class DungeonGenerator {
             }
         }
         LOGGER.at(Level.INFO).log("Placed %d/%d shop rooms", shopsPlaced, shopCount);
-
-        List<String> importantGlobs = levelConfig.getImportantRooms();
-        context.progressTracker().addPlannedRooms(importantGlobs.size());
-        int importantPlaced = 0;
-        for (String glob : importantGlobs) {
-            List<Path> importantPaths = DungeonConfig.resolveGlobs(List.of(glob));
-            if (importantPaths.isEmpty() || deadEndExits.isEmpty()) continue;
-            TrackedExit exit = deadEndExits.remove(random.nextInt(deadEndExits.size()));
-            if (tryPlaceRoom(context, importantPaths, exit, deadEndExits,
-                    "Important", true, RoomType.CHALLENGE)) {
-                importantPlaced++;
-                context.progressTracker().roomPlaced();
-            } else {
-                sealExit(context, exit.exit);
-            }
-        }
-        LOGGER.at(Level.INFO).log("Placed %d/%d important rooms", importantPlaced, importantGlobs.size());
 
         for (TrackedExit exit : deadEndExits) {
             sealExit(context, exit.exit);
@@ -921,6 +907,61 @@ public class DungeonGenerator {
             branchTerminalExits.addAll(state.currentExits);
         }
         deadEndExits.addAll(state.currentExits);
+    }
+
+    private void placeImportantRoomsOnMainPath(@Nonnull GenerationContext context,
+                                               @Nonnull List<TrackedExit> currentExits,
+                                               @Nonnull List<TrackedExit> deadEndExits,
+                                               @Nonnull Set<String> specialRoomBranches) {
+        List<String> importantGlobs = context.levelConfig().getImportantRooms();
+        context.progressTracker().addPlannedRooms(importantGlobs.size());
+        int importantPlaced = 0;
+
+        for (String glob : importantGlobs) {
+            List<Path> importantPaths = DungeonConfig.resolveGlobs(List.of(glob));
+            if (importantPaths.isEmpty()) {
+                LOGGER.at(Level.WARNING).log("No prefabs resolved for important room glob: %s", glob);
+                continue;
+            }
+            if (currentExits.isEmpty()) {
+                LOGGER.at(Level.WARNING).log("No main-path exits left for important room glob: %s", glob);
+                continue;
+            }
+
+            TrackedExit exit = currentExits.remove(context.random().nextInt(currentExits.size()));
+            List<TrackedExit> newExits = new ArrayList<>();
+            if (tryPlaceRoom(context, importantPaths, exit, newExits,
+                    "Important", true, RoomType.CHALLENGE, exit.branchDepth(), exit.branchId())) {
+                importantPlaced++;
+                context.progressTracker().roomPlaced();
+                specialRoomBranches.add(exit.branchId());
+
+                if (newExits.isEmpty()) {
+                    LOGGER.at(Level.WARNING).log("Important room glob %s placed with no continuation exits", glob);
+                    continue;
+                }
+
+                TrackedExit primary = removePrimaryContinuation(newExits, exit.exit().rotation());
+                currentExits.add(primary);
+                deadEndExits.addAll(newExits);
+            } else {
+                sealExit(context, exit.exit());
+            }
+        }
+
+        LOGGER.at(Level.INFO).log("Placed %d/%d important rooms", importantPlaced, importantGlobs.size());
+    }
+
+    @Nonnull
+    private TrackedExit removePrimaryContinuation(@Nonnull List<TrackedExit> exits, int incomingRotation) {
+        int bestIdx = 0;
+        for (int i = 0; i < exits.size(); i++) {
+            if (exits.get(i).exit().rotation() == incomingRotation) {
+                bestIdx = i;
+                break;
+            }
+        }
+        return exits.remove(bestIdx);
     }
 
     @Nonnull

@@ -115,6 +115,9 @@
         "challenge": [
           "UnstableRifts.Desert.Challenge.*"
         ],
+        "treasure": [
+          "UnstableRifts.Desert.Treasure.*"
+        ],
         "shop": [
           "UnstableRifts.Desert.Shop.*"
         ],
@@ -180,19 +183,18 @@
         }
       },
       "mobs": {
-        "Industrial_Nosuit": 3,
-        "Kweebec_DeadWood_Rootling": 10,
+        "Kweebec_DeadWood_Rootling": 5,
         "Kweebec_DeadWood_Rootling_Sword": 5,
         "Kweebec_DeadWood_Rootling_Axe": 5,
         "Kweebec_DeadWood_Rootling_Lance": 5,
-        "Kweebec_DeadWood_Sproutling": 10,
+        "Kweebec_DeadWood_Sproutling": 5,
         "Kweebec_DeadWood_Sproutling_Sword": 5,
         "Kweebec_DeadWood_Sproutling_Axe": 5,
         "Kweebec_DeadWood_Sproutling_Lance": 5,
         "Kweebec_DeadWood_Seedling": 4,
         "Kweebec_Seedling": 3,
         "Wolf_Radioactive": 5,
-        "Industrial_Hazmat_ToxicLauncher": 3,
+        "Industrial_Nosuit": 8,
         "Industrial_Drone": 4
       },
       "nextLevel": null
