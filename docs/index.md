@@ -25,10 +25,16 @@ draft: false
 | **Dungeon Levels** | 1 |
 | **Bosses** | 1 |
 | **Enemies** | 14+ types |
-| **Website** | [curseforge.com](https://www.curseforge.com) |
+| **Website** | [curseforge.com](https://www.curseforge.com/hytale/mods/unstable-rifts) |
 
 ![Gameplay Overview](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/general/gameplay_overview.png)
 _Top-down dungeon gameplay with a party_
+
+## Video
+
+[![Unstable Rifts Gameplay](https://img.youtube.com/vi/nLEJbjbvrg4/maxresdefault.jpg)](https://www.youtube.com/watch?v=nLEJbjbvrg4)
+
+_Click to watch gameplay footage_
 
 ---
 
