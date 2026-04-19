@@ -23,6 +23,7 @@ public final class GunItemMetadata {
     public static final String RARITY_KEY = "SC_Rarity";
     public static final String EFFECT_KEY = "SC_Effect";
     public static final String MODIFIERS_KEY = "SC_Mods";
+    public static final String ALTAR_KEY = "SC_Altar";
 
     /**
      * ThreadLocal damage multiplier set before forking to the damage interaction.
@@ -100,6 +101,17 @@ public final class GunItemMetadata {
             }
         }
         return total;
+    }
+
+    // ── Altar flag ─────────────────────────────────────────────────────
+
+    public static boolean isFromAltar(@Nonnull ItemStack stack) {
+        return getInt(stack, ALTAR_KEY, 0) != 0;
+    }
+
+    @Nonnull
+    public static ItemStack setFromAltar(@Nonnull ItemStack stack, boolean value) {
+        return stack.withMetadata(ALTAR_KEY, new BsonInt32(value ? 1 : 0));
     }
 
     // ── Ammo ───────────────────────────────────────────────────────────

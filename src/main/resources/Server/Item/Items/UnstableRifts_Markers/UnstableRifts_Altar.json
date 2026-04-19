@@ -1,0 +1,41 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.UnstableRifts_Altar.name",
+    "Description": "server.items.UnstableRifts_Altar.description"
+  },
+  "Icon": "Icons/ItemsGenerated/UnstableRifts_Marker_Altar.png",
+  "Quality": "Technical",
+  "Categories": [
+    "Tool.Block"
+  ],
+  "BlockType": {
+    "DrawType": "Cube",
+    "Textures": [
+      {
+        "Weight": 1,
+        "All": "BlockTextures/UnstableRifts_Marker_Altar.png"
+      }
+    ],
+    "Opacity": "Transparent",
+    "Group": "@Tech",
+    "State": {
+      "Id": "unstablerifts_altar"
+    },
+    "Flags": {
+      "IsUsable": false
+    },
+    "BlockParticleSetId": "Stone",
+    "BlockSoundSetId": "Stone"
+  },
+  "PlayerAnimationsId": "Block",
+  "Tags": {
+    "Type": [
+      "DungeonMarker",
+      "UnstableRifts"
+    ],
+    "Marker": [
+      "Altar"
+    ]
+  },
+  "ItemSoundSetId": "ISS_Blocks_Stone"
+}

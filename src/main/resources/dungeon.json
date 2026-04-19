@@ -47,8 +47,11 @@
           "UnstableRifts.Kweebec.Branch.*"
         ]
       },
+      "importantRooms": [
+        "UnstableRifts.Kweebec.Altar.*"
+      ],
       "main": {
-        "maxRooms": 5,
+        "maxRooms": 6,
         "challengeRooms": {
           "min": 2,
           "max": 2
@@ -77,7 +80,7 @@
           "min": 0,
           "max": 0
         },
-        "minimumCorridorLength": 0,
+        "minimumCorridorLength": 1,
         "mobsToSpawn": {
           "min": 30,
           "max": 30
@@ -137,6 +140,9 @@
           "UnstableRifts.Desert.Branch.*"
         ]
       },
+      "importantRooms": [
+        "UnstableRifts.Desert.Altar.*"
+      ],
       "main": {
         "maxRooms": 6,
         "challengeRooms": {
@@ -145,12 +151,12 @@
         },
         "minimumCorridorLength": 1,
         "mobsToSpawn": {
-          "min": 400,
-          "max": 400
+          "min": 300,
+          "max": 300
         },
         "treasureRooms": {
-          "min": 0,
-          "max": 0
+          "min": 1,
+          "max": 1
         },
         "shopRooms": {
           "min": 1,
@@ -159,18 +165,18 @@
       },
       "branch": {
         "splitterCount": {
-          "min": 1,
-          "max": 1
+          "min": 2,
+          "max": 2
         },
-        "maxRooms": 2,
+        "maxRooms": 1,
         "challengeRooms": {
-          "min": 1,
-          "max": 1
+          "min": 0,
+          "max": 0
         },
-        "minimumCorridorLength": 1,
+        "minimumCorridorLength": 0,
         "mobsToSpawn": {
-          "min": 50,
-          "max": 100
+          "min": 40,
+          "max": 40
         }
       },
       "mobs": {

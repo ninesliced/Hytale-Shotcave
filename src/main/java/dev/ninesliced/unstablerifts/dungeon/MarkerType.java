@@ -77,7 +77,11 @@ public enum MarkerType {
     /**
      * Shop item emplacement — defines an item slot sold in the shop.
      */
-    SHOP_ITEM("UnstableRifts_Shop_Item");
+    SHOP_ITEM("UnstableRifts_Shop_Item"),
+    /**
+     * Altar — replaced at runtime by a randomly rolled Unique-rarity weapon ground item.
+     */
+    ALTAR("UnstableRifts_Altar");
 
     private static final Map<String, MarkerType> BY_BLOCK_NAME = createLookup();
 

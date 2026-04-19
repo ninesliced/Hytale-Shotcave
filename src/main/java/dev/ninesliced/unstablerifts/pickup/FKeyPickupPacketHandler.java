@@ -183,6 +183,7 @@ public final class FKeyPickupPacketHandler implements PlayerPacketWatcher {
             ItemPickupConfig.applyPickupDelay(playerRef.getUuid());
 
             sendPickupNotification(playerRef, tracked, itemStack.getQuantity());
+            notifyAltarPickupIfApplicable(itemStack, playerRef);
 
         } else if (!remainder.equals(itemStack)) {
             // Partial pickup — update remaining stack and re-track.
@@ -272,6 +273,43 @@ public final class FKeyPickupPacketHandler implements PlayerPacketWatcher {
         ItemPickupConfig.applyPickupDelay(playerRef.getUuid());
 
         sendPickupNotification(playerRef, tracked, pickedItem.getQuantity());
+        notifyAltarPickupIfApplicable(pickedItem, playerRef);
+    }
+
+    private static void notifyAltarPickupIfApplicable(@Nonnull ItemStack pickedItem,
+                                                      @Nonnull PlayerRef playerRef) {
+        if (!GunItemMetadata.isFromAltar(pickedItem)) {
+            return;
+        }
+        UnstableRifts plugin = UnstableRifts.getInstance();
+        if (plugin == null) {
+            return;
+        }
+        Game game = plugin.getGameManager().findGameForPlayer(playerRef.getUuid());
+        if (game == null) {
+            return;
+        }
+        Level level = game.getCurrentLevel();
+        if (level == null) {
+            return;
+        }
+        Ref<EntityStore> playerEntityRef = playerRef.getReference();
+        if (playerEntityRef == null || !playerEntityRef.isValid()) {
+            return;
+        }
+        TransformComponent transform = playerEntityRef.getStore()
+                .getComponent(playerEntityRef, TransformComponent.getComponentType());
+        if (transform == null) {
+            return;
+        }
+        Vector3d pos = transform.getPosition();
+        RoomData room = level.findRoomAt((int) Math.floor(pos.x),
+                (int) Math.floor(pos.y),
+                (int) Math.floor(pos.z));
+        if (room == null) {
+            return;
+        }
+        plugin.getAltarService().handleAltarPickup(room, game, playerRef.getUsername());
     }
 
     private static void collectArmorLocked(@Nonnull ItemPickupTracker.TrackedItem tracked,

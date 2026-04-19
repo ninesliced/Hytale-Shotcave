@@ -602,6 +602,13 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
                     });
                 }
             }
+
+            if (!room.getAltarPositions().isEmpty()) {
+                World world = game.getInstanceWorld();
+                if (world != null) {
+                    unstablerifts.getAltarService().spawnAltarWeapons(room, world);
+                }
+            }
         }
 
         trySealLockedRoomInsideTriggerBox(px, py, pz, room, level, game, unstablerifts, config);
@@ -651,6 +658,10 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
         }
 
         if (unstablerifts.getDoorService().hasRemainingKeyDoors(level, room)) {
+            return;
+        }
+
+        if (!room.getAltarPositions().isEmpty() && !room.isAltarPickedUp()) {
             return;
         }
 

@@ -79,6 +79,8 @@ public class UnstableRifts extends JavaPlugin {
     private final PortalService portalService = new PortalService();
     private final PortalInteractionService portalInteractionService = new PortalInteractionService(this);
     private final ShopService shopService = new ShopService();
+    private final dev.ninesliced.unstablerifts.dungeon.AltarService altarService =
+            new dev.ninesliced.unstablerifts.dungeon.AltarService(this);
     private final dev.ninesliced.unstablerifts.mission.MissionService missionService = new dev.ninesliced.unstablerifts.mission.MissionService();
     private final dev.ninesliced.unstablerifts.mission.RiftMerchantService riftMerchantService = new dev.ninesliced.unstablerifts.mission.RiftMerchantService();
 
@@ -490,6 +492,11 @@ public class UnstableRifts extends JavaPlugin {
     @Nonnull
     public ShopService getShopService() {
         return this.shopService;
+    }
+
+    @Nonnull
+    public dev.ninesliced.unstablerifts.dungeon.AltarService getAltarService() {
+        return this.altarService;
     }
 
     @Nonnull

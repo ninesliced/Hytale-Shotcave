@@ -1480,6 +1480,7 @@ public class DungeonGenerator {
                     }
                 }
                 case ACTIVATION_ZONE -> roomData.addActivationZonePosition(worldPos);
+                case ALTAR -> roomData.addAltarPosition(worldPos);
                 default -> {
                 }
             }

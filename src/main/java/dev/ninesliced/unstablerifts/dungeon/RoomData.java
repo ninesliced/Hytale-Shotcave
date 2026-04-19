@@ -48,6 +48,11 @@ public final class RoomData {
     private final List<DoorMarker> doorMarkers = new ArrayList<>();
     private final List<Vector3i> activationZonePositions = new ArrayList<>();
     private final List<ChallengeObjective> challenges = new ArrayList<>();
+    // ── Altar system ──
+    private final List<Vector3i> altarPositions = new ArrayList<>();
+    private final List<Ref<EntityStore>> spawnedAltarItems = new ArrayList<>();
+    private boolean altarWeaponsSpawned = false;
+    private boolean altarPickedUp = false;
     private int branchDepth;
     private String branchId;
     private boolean mobClearUnlockPercentConfigured = false;
@@ -408,6 +413,44 @@ public final class RoomData {
 
     public void addKeySpawnerPosition(@Nonnull Vector3i pos) {
         keySpawnerPositions.add(pos);
+    }
+
+    @Nonnull
+    public List<Vector3i> getAltarPositions() {
+        return altarPositions;
+    }
+
+    public void addAltarPosition(@Nonnull Vector3i pos) {
+        altarPositions.add(pos);
+    }
+
+    @Nonnull
+    public List<Ref<EntityStore>> getSpawnedAltarItems() {
+        return spawnedAltarItems;
+    }
+
+    public void addSpawnedAltarItem(@Nonnull Ref<EntityStore> ref) {
+        spawnedAltarItems.add(ref);
+    }
+
+    public void clearSpawnedAltarItems() {
+        spawnedAltarItems.clear();
+    }
+
+    public boolean isAltarWeaponsSpawned() {
+        return altarWeaponsSpawned;
+    }
+
+    public void setAltarWeaponsSpawned(boolean value) {
+        this.altarWeaponsSpawned = value;
+    }
+
+    public boolean isAltarPickedUp() {
+        return altarPickedUp;
+    }
+
+    public void setAltarPickedUp(boolean value) {
+        this.altarPickedUp = value;
     }
 
     @Nonnull
