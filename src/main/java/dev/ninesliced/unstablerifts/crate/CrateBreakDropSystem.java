@@ -3,11 +3,13 @@ package dev.ninesliced.unstablerifts.crate;
 import com.hypixel.hytale.component.*;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.EntityEventSystem;
+import com.hypixel.hytale.math.shape.Box;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.event.events.ecs.BreakBlockEvent;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
+import com.hypixel.hytale.server.core.modules.entity.component.BoundingBox;
 import com.hypixel.hytale.server.core.modules.entity.item.ItemComponent;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -99,6 +101,11 @@ public final class CrateBreakDropSystem extends EntityEventSystem<EntityStore, B
             Holder<EntityStore>[] itemEntityHolders = ItemComponent.generateItemDrops(
                     entityStore, drops, dropPosition, Rotation3f.ZERO);
             if (itemEntityHolders.length > 0) {
+                Box defaultItemBox = Box.horizontallyCentered(0.9, 0.9, 0.9);
+                for (Holder<EntityStore> holder : itemEntityHolders) {
+                    holder.putComponent(BoundingBox.getComponentType(),
+                            new BoundingBox(defaultItemBox));
+                }
                 entityStore.addEntities(itemEntityHolders, AddReason.SPAWN);
             }
         });
