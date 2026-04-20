@@ -18,7 +18,7 @@
   "IsCompassUpdating": true,
   "IsTicking": true,
   "Seed": 0,
-  "IsGameTimePaused": false,
+  "IsGameTimePaused": true,
   "IsObjectiveMarkersEnabled": false,
   "IsAllNPCFrozen": false,
   "IsSavingPlayers": true,
