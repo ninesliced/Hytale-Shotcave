@@ -1236,16 +1236,7 @@ public class DungeonGenerator {
             context.progressTracker().roomPlaced();
             if (!newExits.isEmpty()) {
                 if (useSplitter && newExits.size() > 1) {
-                    // Pick the exit most aligned with the incoming direction as main continuation
-                    int incomingRot = exit.exit.rotation();
-                    int bestIdx = 0;
-                    for (int j = 0; j < newExits.size(); j++) {
-                        if (newExits.get(j).exit.rotation() == incomingRot) {
-                            bestIdx = j;
-                            break;
-                        }
-                    }
-                    TrackedExit primary = newExits.remove(bestIdx);
+                    TrackedExit primary = newExits.remove(context.random().nextInt(newExits.size()));
                     currentExits.add(primary);
                     // Defer branch exits — build them after the main path is complete
                     deferredBranchExits.addAll(newExits);
