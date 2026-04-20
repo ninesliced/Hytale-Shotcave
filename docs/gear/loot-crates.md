@@ -7,7 +7,9 @@ draft: false
 
 # Loot and Crates
 
-Crates are breakable loot boxes found in dungeon rooms. Break them to get weapons, armor, ammo, healing, and coins. Better crates show up deeper in the run.
+Most crates in Unstable Rifts are breakable loot boxes found in dungeon rooms. Break them to get weapons, armor, ammo, healing, and coins. Better crates show up deeper in the run.
+
+There are also 3 special **weapon crates** sold outside the dungeon by the Rift Merchant. These merchant crates do not drop armor, healing, ammo, or coins. They exist purely to roll random weapons.
 
 ![Standard Crate](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/crates/crate.png)
 _Standard Crate_
@@ -22,7 +24,7 @@ _Large Crate (2x2)_
 
 ---
 
-## Crate Tiers Overview
+## Dungeon Crate Tiers Overview
 
 | Crate | Rarity Range | Weapon % | Armor % | Ammo % | Heal % | Coins |
 |-------|-------------|----------|---------|--------|--------|-------|
@@ -30,23 +32,6 @@ _Large Crate (2x2)_
 | Level 1 | <span class="rarity-basic">Basic</span> - <span class="rarity-unique">Unique</span> | 30% | 30% | 10% | 8% | 1-3 |
 | Level 2 | <span class="rarity-uncommon">Uncommon</span> - <span class="rarity-epic">Epic</span> | 50% | 40% | 14% | 12% | 2-5 |
 | Level 3 | <span class="rarity-rare">Rare</span> - <span class="rarity-unique">Unique</span> | 65% | 55% | 20% | 16% | 3-7 |
-| Large (2x2) | <span class="rarity-basic">Basic</span> - <span class="rarity-epic">Epic</span> | 50% | 40% | 16% | 14% | 3-7 |
-
----
-
-## Standard Crate
-
-The most common crate found in early dungeon rooms.
-
-| Property | Value |
-|----------|-------|
-| Weapon Rarity | <span class="rarity-basic">Basic</span> - <span class="rarity-rare">Rare</span> |
-| Armor Rarity | <span class="rarity-basic">Basic</span> - <span class="rarity-rare">Rare</span> |
-| Coins | 1-3 |
-
-**Weapon Pool:** Pistol, Crystal Sword, Blunderbuss, Assault Rifle, Rifle, Blitzer Crystal, Fire/Ice/Lightning/Void Muskets
-
-**Armor Pool:** Crystal Set (Head, Chest, Legs, Boots), Vine Set (Head, Chest, Legs, Boots)
 
 ---
 
@@ -72,8 +57,8 @@ Found in mid-run rooms. Better drop rates and better minimum rarity.
 
 | Property | Value |
 |----------|-------|
-| Weapon Rarity | <span class="rarity-uncommon">Uncommon</span> - <span class="rarity-epic">Epic</span> |
-| Armor Rarity | <span class="rarity-uncommon">Uncommon</span> - <span class="rarity-epic">Epic</span> |
+| Weapon Rarity | <span class="rarity-uncommon">Uncommon</span> - <span class="rarity-unique">Unique</span> |
+| Armor Rarity | <span class="rarity-uncommon">Uncommon</span> - <span class="rarity-unique">Unique</span> |
 | Coins | 2-5 |
 
 **Weapon Pool:** 17 weapons (excludes Taser and Voidlance)
@@ -99,19 +84,56 @@ The best regular crate. Found late in the run with the best drop rates.
 > **Note:** Level 3 crates are the only regular crates that can drop Void and Warden armor.
 ---
 
-## Large Crate (2x2)
+## Rift Merchant Weapon Crates
 
-A larger 2x2 crate with better ammo/heal rates than Standard crates.
+These 3 crates are bought **outside the dungeon** from the Rift Merchant using **Rift Coins**.
+
+They are different from normal dungeon crates in one important way: they are **weapon-only**. They never roll armor, ammo, healing, or coin drops.
+
+| Crate | Cost | Stock | Rarity Range | Notes |
+|-------|------|-------|--------------|-------|
+| Standard Weapon Crate | 10 Rift Coins | 3 | <span class="rarity-basic">Basic</span> - <span class="rarity-rare">Rare</span> | Good early weapon roll |
+| Advanced Weapon Crate | 25 Rift Coins | 2 | <span class="rarity-uncommon">Uncommon</span> - <span class="rarity-legendary">Legendary</span> | Strong mid-to-late weapon roll |
+| Elite Weapon Crate | 50 Rift Coins | 1 | <span class="rarity-legendary">Legendary</span> - <span class="rarity-unique">Unique</span> | Best weapon crate sold by the merchant |
+
+### Standard Weapon Crate
+
+The cheapest Rift Merchant crate. It gives one random weapon and is meant to be the easiest way to get an upgrade outside dungeon runs.
 
 | Property | Value |
 |----------|-------|
-| Weapon Rarity | <span class="rarity-basic">Basic</span> - <span class="rarity-epic">Epic</span> |
-| Armor Rarity | <span class="rarity-basic">Basic</span> - <span class="rarity-epic">Epic</span> |
-| Coins | 3-7 |
+| Cost | 10 Rift Coins |
+| Stock | 3 per merchant refresh |
+| Weapon Rarity | <span class="rarity-basic">Basic</span> - <span class="rarity-rare">Rare</span> |
+| Other Loot | None |
 
-**Weapon Pool:** 17 weapons (same as Level 2)
+**Weapon Pool:** All 19 weapons
 
-**Armor Pool:** Crystal Set, Vine Set, Shale Set, Bone Set
+### Advanced Weapon Crate
+
+A more expensive merchant crate with a much stronger minimum rarity.
+
+| Property | Value |
+|----------|-------|
+| Cost | 25 Rift Coins |
+| Stock | 2 per merchant refresh |
+| Weapon Rarity | <span class="rarity-uncommon">Uncommon</span> - <span class="rarity-legendary">Legendary</span> |
+| Other Loot | None |
+
+**Weapon Pool:** All 19 weapons
+
+### Elite Weapon Crate
+
+The premium merchant crate. It is the best outside-dungeon weapon roll and focuses on high-end loot.
+
+| Property | Value |
+|----------|-------|
+| Cost | 50 Rift Coins |
+| Stock | 1 per merchant refresh |
+| Weapon Rarity | <span class="rarity-legendary">Legendary</span> - <span class="rarity-unique">Unique</span> |
+| Other Loot | None |
+
+**Weapon Pool:** 18 weapons (all except the base Blunderbuss)
 
 ---
 
@@ -137,11 +159,14 @@ As you go deeper, crate quality improves:
 | Mid Rooms | Level 2, Large | <span class="rarity-epic">Epic</span> | Crystal, Vine, Shale, Bone |
 
 > **Tip:** Look for Level 3 crates if you want Void or Warden armor. Large 2x2 crates are also great for coins and weapon rolls.
+
+Outside the dungeon, the Rift Merchant gives you another progression path through Standard, Advanced, and Elite Weapon Crates bought with Rift Coins.
 ---
 
 ## Related Pages
 
 - [Weapons](weapons-1) - What weapons can drop
 - [Armor Sets](armor-sets-1) - What armor can drop
+- [Shops](shops-1) - Rift Merchant crates and in-dungeon shops
 - [Dungeon Levels](dungeon-levels-1) - Where each crate tier appears
 - [Enemies and Bosses](enemies-and-bosses-1) - Enemy drop tables

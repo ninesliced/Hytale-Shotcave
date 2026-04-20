@@ -17,10 +17,10 @@ import javax.annotation.Nullable;
  */
 public class ShopKeeperData implements Component<ChunkStore> {
 
-    public static final int DEFAULT_REFRESH_PRICE_STEP = 25;
-    public static final int DEFAULT_WEAPON_PRICE_STEP = 50;
-    public static final int DEFAULT_ARMOR_PRICE_STEP = 50;
-    public static final int DEFAULT_ITEM_PRICE_STEP = 25;
+    public static final int DEFAULT_REFRESH_PRICE_STEP = 10;
+    public static final int DEFAULT_WEAPON_PRICE_STEP = 25;
+    public static final int DEFAULT_ARMOR_PRICE_STEP = 25;
+    public static final int DEFAULT_ITEM_PRICE_STEP = 10;
 
     @Nonnull
     public static final BuilderCodec<ShopKeeperData> CODEC = BuilderCodec.builder(ShopKeeperData.class, ShopKeeperData::new)

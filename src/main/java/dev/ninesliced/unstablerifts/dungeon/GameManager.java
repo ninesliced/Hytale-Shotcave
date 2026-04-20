@@ -5,12 +5,17 @@ import com.hypixel.hytale.builtin.instances.config.InstanceWorldConfig;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.component.spatial.SpatialResource;
+import com.hypixel.hytale.component.spatial.SpatialStructure;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.math.vector.Transform;
+import com.hypixel.hytale.protocol.packets.entities.EntityUpdates;
 import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.modules.entity.EntityModule;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
+import com.hypixel.hytale.server.core.modules.entity.tracker.EntityTrackerSystems;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
@@ -540,6 +545,7 @@ public final class GameManager {
 
         Store<EntityStore> playerStore = ref.getStore();
         Vector3d destination = new Vector3d(exitPos.x + 0.5, exitPos.y + 1.0, exitPos.z + 0.5);
+        Set<Ref<EntityStore>> trackedBeforeTeleport = captureViewerTrackedEntities(ref, playerStore);
 
         Teleport tp = Teleport.createForPlayer(destination, new Rotation3f());
         CompletableFuture<Void> recoveryFuture = new CompletableFuture<>();
@@ -550,7 +556,7 @@ public final class GameManager {
             World instanceWorld = game.getInstanceWorld();
             if (instanceWorld != null) {
                 instanceWorld.execute(() -> recoverClosestExitPortalTeleport(
-                        game, playerId, recoverySourceRoom, recoveryExitPos));
+                        game, playerId, recoverySourceRoom, recoveryExitPos, trackedBeforeTeleport));
             }
         });
         playerStore.putComponent(ref, Teleport.getComponentType(), tp);
@@ -563,7 +569,8 @@ public final class GameManager {
     private void recoverClosestExitPortalTeleport(@Nonnull Game game,
                                                   @Nonnull UUID playerId,
                                                   @Nonnull RoomData sourceRoom,
-                                                  @Nonnull Vector3i exitPos) {
+                                                  @Nonnull Vector3i exitPos,
+                                                  @Nonnull Set<Ref<EntityStore>> trackedBeforeTeleport) {
         World world = game.getInstanceWorld();
         if (world == null || game.getState() == GameState.COMPLETE) {
             return;
@@ -585,6 +592,13 @@ public final class GameManager {
             return;
         }
 
+        Vector3d destination = new Vector3d(exitPos.x + 0.5, exitPos.y + 1.0, exitPos.z + 0.5);
+        int cleanedCount = resetViewerTrackingForTeleport(ref, store, trackedBeforeTeleport, destination);
+        boolean trackerReset = cleanedCount >= 0;
+        if (cleanedCount < 0) {
+            cleanedCount = 0;
+        }
+
         int visibilityRestoreCount = restoreAlivePartyVisibilityForPlayer(game, world, playerId, playerRef);
 
         refreshDungeonMobCircleEffects(game, store);
@@ -595,7 +609,134 @@ public final class GameManager {
         LOGGER.info("Closest Exit portal recovery completed for player " + playerId
                 + " from room " + sourceRoom.getAnchor()
                 + " to exit " + exitPos
+                + " trackerReset=" + trackerReset
+                + " cleanedEntities=" + cleanedCount
                 + " visibilityRestores=" + visibilityRestoreCount);
+    }
+
+    @Nonnull
+    private Set<Ref<EntityStore>> captureViewerTrackedEntities(@Nonnull Ref<EntityStore> viewerRef,
+                                                               @Nonnull Store<EntityStore> store) {
+        EntityTrackerSystems.EntityViewer viewer = store.getComponent(
+                viewerRef, EntityTrackerSystems.EntityViewer.getComponentType());
+        if (viewer == null) {
+            return new HashSet<>();
+        }
+
+        Set<Ref<EntityStore>> trackedRefs = new HashSet<>(viewer.sent.keySet());
+        trackedRefs.addAll(viewer.visible);
+        trackedRefs.addAll(viewer.updates.keySet());
+        trackedRefs.remove(null);
+        trackedRefs.remove(viewerRef);
+        return trackedRefs;
+    }
+
+    private int resetViewerTrackingForTeleport(@Nonnull Ref<EntityStore> viewerRef,
+                                               @Nonnull Store<EntityStore> store,
+                                               @Nonnull Set<Ref<EntityStore>> trackedBeforeTeleport,
+                                               @Nonnull Vector3d destination) {
+        EntityTrackerSystems.EntityViewer viewer = store.getComponent(
+                viewerRef, EntityTrackerSystems.EntityViewer.getComponentType());
+        if (viewer == null) {
+            return -1;
+        }
+
+        Set<Ref<EntityStore>> trackedRefs = new HashSet<>(trackedBeforeTeleport);
+        trackedRefs.addAll(viewer.sent.keySet());
+        trackedRefs.addAll(viewer.visible);
+        trackedRefs.addAll(viewer.updates.keySet());
+        trackedRefs.remove(null);
+        trackedRefs.remove(viewerRef);
+
+        Set<Ref<EntityStore>> destinationRefs = collectNearbyViewerEntities(
+                viewerRef, store, viewer, destination);
+        Set<Ref<EntityStore>> sourceOnlyRefs = new HashSet<>(trackedRefs);
+        sourceOnlyRefs.removeAll(destinationRefs);
+
+        int selfNetworkId = viewer.sent.removeInt(viewerRef);
+        Map<Ref<EntityStore>, Integer> preservedDestinationSent = new HashMap<>();
+        List<Integer> removedNetworkIds = new ArrayList<>();
+        for (Ref<EntityStore> entityRef : new ArrayList<>(viewer.sent.keySet())) {
+            if (entityRef == null || entityRef == viewerRef || !entityRef.isValid() || entityRef.getStore() != store) {
+                continue;
+            }
+
+            int networkId = viewer.sent.getInt(entityRef);
+            if (destinationRefs.contains(entityRef)) {
+                preservedDestinationSent.put(entityRef, networkId);
+            } else {
+                removedNetworkIds.add(networkId);
+            }
+        }
+        if (!removedNetworkIds.isEmpty()) {
+            EntityUpdates packet = new EntityUpdates();
+            packet.removed = removedNetworkIds.stream().mapToInt(Integer::intValue).toArray();
+            viewer.packetReceiver.writeNoCache(packet);
+        }
+
+        int cleanedCount = 0;
+        for (Ref<EntityStore> entityRef : sourceOnlyRefs) {
+            if (entityRef == null || !entityRef.isValid() || entityRef.getStore() != store) {
+                continue;
+            }
+
+            EntityTrackerSystems.Visible visible = store.getComponent(
+                    entityRef, EntityTrackerSystems.Visible.getComponentType());
+            if (visible == null) {
+                continue;
+            }
+
+            boolean removed = visible.previousVisibleTo.remove(viewerRef) != null;
+            removed |= visible.visibleTo.remove(viewerRef) != null;
+            removed |= visible.newlyVisibleTo.remove(viewerRef) != null;
+            if (removed) {
+                cleanedCount++;
+            }
+        }
+
+        for (Ref<EntityStore> entityRef : destinationRefs) {
+            if (entityRef == null || !entityRef.isValid() || entityRef.getStore() != store) {
+                continue;
+            }
+
+            EntityTrackerSystems.Visible visible = store.getComponent(
+                    entityRef, EntityTrackerSystems.Visible.getComponentType());
+            if (visible != null && visible.previousVisibleTo.remove(viewerRef) != null) {
+                cleanedCount++;
+            }
+        }
+
+        viewer.visible.clear();
+        viewer.visible.addAll(destinationRefs);
+        viewer.updates.keySet().removeIf(ref -> ref == null || ref == viewerRef || !destinationRefs.contains(ref));
+        viewer.sent.clear();
+        viewer.hiddenCount = 0;
+        viewer.lodExcludedCount = 0;
+        if (selfNetworkId != -1) {
+            viewer.sent.put(viewerRef, selfNetworkId);
+        }
+        for (Map.Entry<Ref<EntityStore>, Integer> entry : preservedDestinationSent.entrySet()) {
+            viewer.sent.put(entry.getKey(), entry.getValue());
+        }
+
+        return cleanedCount;
+    }
+
+    @Nonnull
+    private Set<Ref<EntityStore>> collectNearbyViewerEntities(@Nonnull Ref<EntityStore> viewerRef,
+                                                              @Nonnull Store<EntityStore> store,
+                                                              @Nonnull EntityTrackerSystems.EntityViewer viewer,
+                                                              @Nonnull Vector3d destination) {
+        SpatialStructure<Ref<EntityStore>> spatialStructure = store
+                .getResource(EntityModule.get().getNetworkSendableSpatialResourceType())
+                .getSpatialStructure();
+        List<Ref<EntityStore>> nearbyRefs = SpatialResource.getThreadLocalReferenceList();
+        spatialStructure.collect(destination, viewer.viewRadiusBlocks, nearbyRefs);
+
+        Set<Ref<EntityStore>> destinationRefs = new HashSet<>(nearbyRefs);
+        destinationRefs.remove(null);
+        destinationRefs.remove(viewerRef);
+        return destinationRefs;
     }
 
 

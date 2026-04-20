@@ -368,6 +368,7 @@ public class UnstableRifts extends JavaPlugin {
         this.getEntityStoreRegistry().registerSystem(new DamageEffectTickSystem());
         this.getEntityStoreRegistry().registerSystem(new DamageEffectVisualCleanupSystem());
         this.getEntityStoreRegistry().registerSystem(new SummonedNPCDamageEffectSystem());
+        this.getEntityStoreRegistry().registerSystem(new PoisonFluidDamageSystem());
         this.getEntityStoreRegistry().registerSystem(new MeleeDamageEffectSystem());
         this.getEntityStoreRegistry().registerSystem(new ScaledNPCDamageSystem());
         this.getEntityStoreRegistry().registerSystem(new MeleeBlockBreakSystem());
