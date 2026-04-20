@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.1.0 - Level 2 Desert (2026-04-20)
+
+### New Content
+
+- Added a second dungeon level set in a dry industrial zone with tougher enemies and harder fights.
+- Added a new enemy type, the Industrial Hazmat, which is a ranged toxic projectile attacker.
+- Added altar rooms where you can choose between 3 weapons and if you take one, a wave of enemies spawns to fight for it.
+- Added shop npc outside the dungeon to complete missions and buy crates that drop weapons.
+- Fixed enemies disapearing when using portal to get back to last intersection.
+
 ## v1.0.1 - Patch Update (2026-04-17)
 
 ### Bug Fixes

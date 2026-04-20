@@ -83,27 +83,24 @@ _Radioactive barrels - breakable environmental hazards_
 
 A dry industrial zone with tougher enemies and harder fights.
 
-### Layout
+The Desert is the second dungeon level and feels more like enemy-held territory than a ruined forest. It keeps the same dungeon structure as Kweebec, but the pressure is higher and the industrial faction has a much stronger presence.
 
-| Property | Value |
-|----------|-------|
-| Main Path Rooms | 6 |
-| Challenge Rooms | 2 |
-| Treasure Rooms | 0 |
-| Shop Rooms | 1 |
-| Branch Paths | 1 |
-| Rooms per Branch | 2 |
-| Challenge per Branch | 1 |
-| Total Mobs (main) | ~400 |
-| Total Mobs (branches) | ~50-100 |
+### What Makes Desert Different
 
-### Additional Enemy
+- Industrial encounters are much more common here, with heavier pressure from hostile workers and Hazmat-style enemies.
+- The level is tuned to be harsher than Kweebec, so mistakes are punished more quickly.
+- Important rooms can include altar encounters, giving your party a powerful weapon choice before the fight fully starts.
+- The overall pacing is more aggressive, with less downtime between dangerous rooms.
 
-| Enemy | Spawn Weight | Notes |
-|-------|-------------|-------|
-| Industrial Hazmat (Toxic Launcher) | 3 | Ranged toxic projectile attacker |
+### Desert Overview
 
-All Kweebec enemies can also appear in Desert. Desert side paths are longer and include their own challenge rooms.
+| Feature | Description |
+|---------|-------------|
+| Theme | Dry industrial wasteland taken over by the invaders |
+| Combat Feel | Harder, more aggressive, and more industrial-focused |
+| Core Flow | Corridors, challenge rooms, shops, altar encounters, and a boss room |
+| Enemy Mix | Returning Kweebec threats plus stronger industrial pressure |
+| Role In A Run | The difficulty spike after Kweebec |
 
 ---
 
@@ -136,6 +133,36 @@ _A challenge room with mob spawners_
 _A treasure room behind a key door_
 ![Shop Room](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/dungeons/shop_room.png)
 _Shop room with the shopkeeper NPC_
+
+## Challenge Rooms
+
+Challenge rooms are special combat encounters that lock the party in until the objective is finished.
+
+When a challenge starts, the room activates, the doors stay shut, and the challenge HUD tells the party what to do next. These rooms are meant to break the normal corridor flow and force a focused fight or objective push.
+
+### Challenge Objectives
+
+| Objective Type | How It Works |
+|----------------|--------------|
+| Activation Zone | Reach the marked zone inside the room |
+| Mob Clear | Defeat all enemies, or the required percentage of enemies |
+
+Once every objective in the room is complete, the room is marked as cleared, the doors reopen, and the run continues.
+
+## Altar Rooms
+
+Altar rooms are special risk-and-reward encounters found in important room slots.
+
+When your party enters one, the altar spawns 3 Unique-rarity weapon choices on the ground. The first player to pick one claims that reward, and the other altar weapons disappear.
+
+After the choice is made, the room can fully lock and the encounter begins. In other words, altar rooms ask your team to choose the reward first and then survive the fight that comes with it.
+
+### Why Altars Matter
+
+- They guarantee a very strong weapon reward.
+- Only one altar weapon can be kept from that room.
+- They add a high-risk power spike to both Kweebec and Desert runs.
+
 ---
 
 ## Dungeon Generation
@@ -145,7 +172,7 @@ The game builds each run in this order:
 1. Placing the spawn room
 2. Building the main corridor path up to the max room count
 3. Inserting challenge rooms at random positions along the path
-4. Adding treasure rooms (Kweebec only) and shop rooms
+4. Adding treasure rooms, shop rooms, and other important encounters such as altars
 5. Generating branch paths from splitter positions
 6. Placing the boss room at the end of the main path
 7. Connecting rooms with doors based on type assignments
@@ -158,15 +185,11 @@ The game builds each run in this order:
 
 | Property | Kweebec | Desert |
 |----------|---------|--------|
-| Main Path Rooms | 5 | 6 |
-| Challenge Rooms | 2 | 2 |
-| Treasure Rooms | 1 | 0 |
-| Shop Rooms | 1 | 1 |
-| Branch Paths | 2 | 1 |
-| Mobs (main) | ~250 | ~400 |
-| Mobs (branches) | ~60 | ~50-100 |
-| Unique Enemies | 12 types | 13 types (+Hazmat Toxic) |
-| Branch Challenge | No | Yes (1 per branch) |
+| Theme | Corrupted forest ruins | Industrial wasteland |
+| Main Feel | Intro level with mixed enemy pressure | Harder follow-up level with stronger industrial pressure |
+| Special Encounters | Treasure rooms, shops, altars | Challenge-heavy fights, shops, altars |
+| Enemy Focus | DeadWood, wolves, early industrial presence | Returning Kweebec enemies plus stronger industrial control |
+| Difficulty | Lower | Higher |
 
 ---
 
