@@ -14,7 +14,8 @@
           "UnstableRifts.Kweebec.Entrance.*"
         ],
         "corridor": [
-          "UnstableRifts.Kweebec.Room.*"
+          "UnstableRifts.Kweebec.Room.*",
+          "UnstableRifts.Kweebec.Altar.*"
         ],
         "challenge": [
           "UnstableRifts.Kweebec.Challenge.*"
@@ -47,9 +48,6 @@
           "UnstableRifts.Kweebec.Branch.*"
         ]
       },
-      "importantRooms": [
-        "UnstableRifts.Kweebec.Altar.*"
-      ],
       "main": {
         "maxRooms": 6,
         "challengeRooms": {
@@ -110,7 +108,8 @@
           "UnstableRifts.Desert.Entrance.*"
         ],
         "corridor": [
-          "UnstableRifts.Desert.Room.*"
+          "UnstableRifts.Desert.Room.*",
+          "UnstableRifts.Kweebec.Altar.*"
         ],
         "challenge": [
           "UnstableRifts.Desert.Challenge.*"
@@ -143,9 +142,6 @@
           "UnstableRifts.Desert.Branch.*"
         ]
       },
-      "importantRooms": [
-        "UnstableRifts.Desert.Altar.*"
-      ],
       "main": {
         "maxRooms": 6,
         "challengeRooms": {
