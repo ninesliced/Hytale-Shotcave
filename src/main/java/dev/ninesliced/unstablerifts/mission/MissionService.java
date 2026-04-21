@@ -88,6 +88,26 @@ public final class MissionService {
     // ── Progress update ──────────────────────────────────────────
 
     /**
+     * Increments a single progress counter for an online player.
+     * <p>
+     * Intended for mid-run events (room cleared, shop purchase, coin pickup,
+     * armor ability activated). Silently no-ops if the player's entity /
+     * mission component is unavailable (e.g. during login/logout or before
+     * the component has been ensured for the first time).
+     * </p>
+     */
+    public void addProgress(@Nonnull PlayerRef playerRef, @Nonnull MissionType type, int amount) {
+        if (amount <= 0) return;
+        Ref<EntityStore> ref = playerRef.getReference();
+        if (ref == null || !ref.isValid()) return;
+        Store<EntityStore> store = ref.getStore();
+        if (store == null) return;
+        MissionDataComponent data = store.getComponent(ref, MissionDataComponent.getComponentType());
+        if (data == null) return;
+        data.addProgress(type, amount);
+    }
+
+    /**
      * Updates a player's lifetime progress counters after a dungeon run.
      */
     public void updateProgress(@Nonnull PlayerRef playerRef,

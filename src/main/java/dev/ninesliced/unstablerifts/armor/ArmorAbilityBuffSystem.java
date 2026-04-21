@@ -48,6 +48,15 @@ public final class ArmorAbilityBuffSystem {
             Message msg = Message.raw(ability.getDisplayName() + " activated! (" + ability.getDurationSeconds() + "s)")
                     .color(ability.getColorHex()).bold(true);
             playerRef.sendMessage(msg);
+
+            dev.ninesliced.unstablerifts.UnstableRifts plugin =
+                    dev.ninesliced.unstablerifts.UnstableRifts.getInstance();
+            if (plugin != null) {
+                plugin.getMissionService().addProgress(
+                        playerRef,
+                        dev.ninesliced.unstablerifts.mission.MissionType.ACTIVATE_ARMOR_ABILITIES,
+                        1);
+            }
         }
 
         applyBuffEffect(ref, accessor, ability.getDurationSeconds());

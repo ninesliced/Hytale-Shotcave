@@ -92,5 +92,14 @@ public final class AltarService {
                 game.getPartyId(),
                 "Altar Weapon Claimed",
                 pickerName + " took the altar weapon");
+
+        // Credit altar-room completion to every player currently in the instance.
+        for (java.util.UUID playerId : game.getPlayersInInstance()) {
+            com.hypixel.hytale.server.core.universe.PlayerRef pRef =
+                    com.hypixel.hytale.server.core.universe.Universe.get().getPlayer(playerId);
+            if (pRef == null || !pRef.isValid()) continue;
+            plugin.getMissionService().addProgress(
+                    pRef, dev.ninesliced.unstablerifts.mission.MissionType.COMPLETE_ALTAR_ROOMS, 1);
+        }
     }
 }

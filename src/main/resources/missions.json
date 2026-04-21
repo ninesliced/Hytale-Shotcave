@@ -13,7 +13,32 @@
     { "id": "complete_3_dungeons","type": "COMPLETE_DUNGEONS", "target": 3,   "rewardCoins": 15,  "displayName": "Rift Runner",         "description": "Complete 3 dungeons." },
     { "id": "complete_5_dungeons","type": "COMPLETE_DUNGEONS", "target": 5,   "rewardCoins": 30,  "displayName": "Rift Explorer",       "description": "Complete 5 dungeons." },
     { "id": "complete_10_dungeons","type": "COMPLETE_DUNGEONS","target": 10,  "rewardCoins": 60,  "displayName": "Rift Veteran",        "description": "Complete 10 dungeons." },
-    { "id": "complete_20_dungeons","type": "COMPLETE_DUNGEONS","target": 20,  "rewardCoins": 100, "displayName": "Rift Master",         "description": "Complete 20 dungeons." }
+    { "id": "complete_20_dungeons","type": "COMPLETE_DUNGEONS","target": 20,  "rewardCoins": 100, "displayName": "Rift Master",         "description": "Complete 20 dungeons." },
+
+    { "id": "challenge_3_rooms",   "type": "COMPLETE_CHALLENGE_ROOMS", "target": 3,   "rewardCoins": 10,  "displayName": "Challenger",          "description": "Clear 3 challenge rooms." },
+    { "id": "challenge_10_rooms",  "type": "COMPLETE_CHALLENGE_ROOMS", "target": 10,  "rewardCoins": 30,  "displayName": "Trial Seeker",        "description": "Clear 10 challenge rooms." },
+    { "id": "challenge_25_rooms",  "type": "COMPLETE_CHALLENGE_ROOMS", "target": 25,  "rewardCoins": 70,  "displayName": "Trial Champion",      "description": "Clear 25 challenge rooms." },
+
+    { "id": "key_2_rooms",         "type": "COMPLETE_KEY_ROOMS",       "target": 2,   "rewardCoins": 15,  "displayName": "Locksmith",           "description": "Open 2 key rooms." },
+    { "id": "key_5_rooms",         "type": "COMPLETE_KEY_ROOMS",       "target": 5,   "rewardCoins": 40,  "displayName": "Vault Raider",        "description": "Open 5 key rooms." },
+    { "id": "key_10_rooms",        "type": "COMPLETE_KEY_ROOMS",       "target": 10,  "rewardCoins": 80,  "displayName": "Master Thief",        "description": "Open 10 key rooms." },
+
+    { "id": "altar_1_room",        "type": "COMPLETE_ALTAR_ROOMS",     "target": 1,   "rewardCoins": 10,  "displayName": "Altar Initiate",      "description": "Claim 1 altar weapon." },
+    { "id": "altar_3_rooms",       "type": "COMPLETE_ALTAR_ROOMS",     "target": 3,   "rewardCoins": 30,  "displayName": "Altar Devotee",       "description": "Claim 3 altar weapons." },
+    { "id": "altar_5_rooms",       "type": "COMPLETE_ALTAR_ROOMS",     "target": 5,   "rewardCoins": 60,  "displayName": "Altar Keeper",        "description": "Claim 5 altar weapons." },
+
+    { "id": "shop_3_purchases",    "type": "SHOP_PURCHASES",           "target": 3,   "rewardCoins": 10,  "displayName": "Window Shopper",      "description": "Buy 3 items from shops." },
+    { "id": "shop_10_purchases",   "type": "SHOP_PURCHASES",           "target": 10,  "rewardCoins": 30,  "displayName": "Regular Customer",    "description": "Buy 10 items from shops." },
+    { "id": "shop_25_purchases",   "type": "SHOP_PURCHASES",           "target": 25,  "rewardCoins": 70,  "displayName": "Big Spender",         "description": "Buy 25 items from shops." },
+
+    { "id": "coins_100",           "type": "COLLECT_DUNGEON_COINS",    "target": 100, "rewardCoins": 10,  "displayName": "Coin Purse",          "description": "Collect 100 dungeon coins." },
+    { "id": "coins_500",           "type": "COLLECT_DUNGEON_COINS",    "target": 500, "rewardCoins": 30,  "displayName": "Coin Collector",      "description": "Collect 500 dungeon coins." },
+    { "id": "coins_1000",          "type": "COLLECT_DUNGEON_COINS",    "target": 1000,"rewardCoins": 60,  "displayName": "Rift Tycoon",         "description": "Collect 1000 dungeon coins." },
+    { "id": "coins_2500",          "type": "COLLECT_DUNGEON_COINS",    "target": 2500,"rewardCoins": 120, "displayName": "Rift Baron",          "description": "Collect 2500 dungeon coins." },
+
+    { "id": "ability_5",           "type": "ACTIVATE_ARMOR_ABILITIES", "target": 5,   "rewardCoins": 10,  "displayName": "Set Bonus",           "description": "Activate armor abilities 5 times." },
+    { "id": "ability_15",          "type": "ACTIVATE_ARMOR_ABILITIES", "target": 15,  "rewardCoins": 30,  "displayName": "Empowered",           "description": "Activate armor abilities 15 times." },
+    { "id": "ability_30",          "type": "ACTIVATE_ARMOR_ABILITIES", "target": 30,  "rewardCoins": 70,  "displayName": "Unstoppable",         "description": "Activate armor abilities 30 times." }
   ],
   "activeQuestCount": 3,
   "skipCostCoins": 10
