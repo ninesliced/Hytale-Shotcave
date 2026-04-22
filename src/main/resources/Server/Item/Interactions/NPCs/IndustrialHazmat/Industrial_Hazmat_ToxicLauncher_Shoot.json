@@ -19,71 +19,7 @@
       },
       {
         "Type": "Simple",
-        "RunTime": 0.7
-      },
-      {
-        "Type": "Selector",
-        "RunTime": 0.1,
-        "Selector": {
-          "Id": "Horizontal",
-          "Direction": "ToRight",
-          "TestLineOfSight": true,
-          "ExtendTop": 0.4,
-          "ExtendBottom": 0.25,
-          "StartDistance": 0.3,
-          "EndDistance": 16,
-          "Length": 1.5,
-          "RollOffset": 0,
-          "YawStartOffset": -0.75
-        },
-        "Effects": {
-          "Particles": [
-            { "SystemId": "Effect_Poison", "TargetEntityPart": "Entity", "Scale": 0.7 }
-          ],
-          "WorldSoundEventId": "SFX_Effect_Poison_World",
-          "LocalSoundEventId": "SFX_Effect_Poison_Local"
-        },
-        "HitEntity": {
-          "Interactions": [
-            {
-              "Type": "Serial",
-              "Interactions": [
-                {
-                  "Parent": "DamageEntityParent",
-                  "DamageCalculator": {
-                    "Type": "Absolute",
-                    "BaseDamage": { "Poison": 12 },
-                    "RandomPercentageModifier": 0.15
-                  },
-                  "DamageEffects": {
-                    "Knockback": {
-                      "Type": "Point",
-                      "VelocityConfig": {
-                        "AirResistance": 0.97,
-                        "AirResistanceMax": 0.96,
-                        "GroundResistance": 0.94,
-                        "GroundResistanceMax": 0.3,
-                        "Threshold": 3.0
-                      },
-                      "Force": 4,
-                      "VelocityType": "Set"
-                    },
-                    "WorldParticles": [
-                      { "SystemId": "Effect_Poison", "Scale": 1.0 }
-                    ],
-                    "WorldSoundEventId": "SFX_Effect_Poison_World",
-                    "LocalSoundEventId": "SFX_Effect_Poison_Local"
-                  }
-                },
-                {
-                  "Type": "ApplyEffect",
-                  "EffectId": "UnstableRifts_Poison",
-                  "Entity": "Target"
-                }
-              ]
-            }
-          ]
-        }
+        "RunTime": 0.8
       }
     ]
   }

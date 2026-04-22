@@ -468,6 +468,9 @@ public final class GameManager {
 
             if (!hasNextLevelConfig(game)) {
                 game.setVictoryTimestamp(System.currentTimeMillis());
+                // Aggregate kill counts now so they are available when
+                // players exit through the portal (onPlayerLeftParty path).
+                aggregateKillCounts(game);
             }
         });
     }
@@ -1012,19 +1015,7 @@ public final class GameManager {
                 .toList();
 
         // ── Aggregate kill counts from room data for mission tracking ──
-        int totalEnemyKills = 0;
-        int totalBossRoomKills = 0;
-        for (Level level : game.getLevels()) {
-            for (RoomData room : level.getRooms()) {
-                int kills = room.getConfirmedKillCount();
-                totalEnemyKills += kills;
-                if (room.getType() == RoomType.BOSS) {
-                    totalBossRoomKills += kills;
-                }
-            }
-        }
-        game.addTotalKills(totalEnemyKills);
-        game.addBossKills(totalBossRoomKills);
+        aggregateKillCounts(game);
 
         for (UUID playerId : partyMembers) {
             reviveMarkerService.despawnReviveMarker(playerId);
@@ -1236,6 +1227,14 @@ public final class GameManager {
                             inventoryService.deleteSavedInventoryFiles(playerId);
                         }
                         playerStateService.resetPlayerStatus(player, ref, store);
+
+                        // Update mission progress if the dungeon was completed
+                        boolean dungeonCompleted = game.getVictoryTimestamp() > 0;
+                        if (dungeonCompleted) {
+                            plugin.getMissionService().updateProgress(
+                                    playerRef, store, ref,
+                                    game.getTotalKills(), game.getBossKills(), true);
+                        }
 
                         if ((treatAsInInstance || treatAsDisconnected) && returnPoint != null) {
                             try {
@@ -2558,6 +2557,22 @@ public final class GameManager {
         PartyUiPage.refreshOpenPages();
 
         LOGGER.warning("Cleaned up failed dungeon start for party " + game.getPartyId());
+    }
+
+    private void aggregateKillCounts(@Nonnull Game game) {
+        int totalEnemyKills = 0;
+        int totalBossRoomKills = 0;
+        for (Level level : game.getLevels()) {
+            for (RoomData room : level.getRooms()) {
+                int kills = room.getConfirmedKillCount();
+                totalEnemyKills += kills;
+                if (room.getType() == RoomType.BOSS) {
+                    totalBossRoomKills += kills;
+                }
+            }
+        }
+        game.addTotalKills(totalEnemyKills);
+        game.addBossKills(totalBossRoomKills);
     }
 
     private void cleanupCompletedRun(@Nonnull Game game) {

@@ -48,6 +48,30 @@ public final class MissionDataComponent implements Component<EntityStore> {
                 (c, v) -> c.totalDungeonDeaths = v,
                 c -> c.totalDungeonDeaths).add();
 
+        b.append(new KeyedCodec<>("TotalChallengeRoomsCleared", Codec.INTEGER),
+                (c, v) -> c.totalChallengeRoomsCleared = v,
+                c -> c.totalChallengeRoomsCleared).add();
+
+        b.append(new KeyedCodec<>("TotalKeyRoomsCleared", Codec.INTEGER),
+                (c, v) -> c.totalKeyRoomsCleared = v,
+                c -> c.totalKeyRoomsCleared).add();
+
+        b.append(new KeyedCodec<>("TotalAltarRoomsCleared", Codec.INTEGER),
+                (c, v) -> c.totalAltarRoomsCleared = v,
+                c -> c.totalAltarRoomsCleared).add();
+
+        b.append(new KeyedCodec<>("TotalShopPurchases", Codec.INTEGER),
+                (c, v) -> c.totalShopPurchases = v,
+                c -> c.totalShopPurchases).add();
+
+        b.append(new KeyedCodec<>("TotalDungeonCoins", Codec.INTEGER),
+                (c, v) -> c.totalDungeonCoins = v,
+                c -> c.totalDungeonCoins).add();
+
+        b.append(new KeyedCodec<>("TotalArmorAbilitiesUsed", Codec.INTEGER),
+                (c, v) -> c.totalArmorAbilitiesUsed = v,
+                c -> c.totalArmorAbilitiesUsed).add();
+
         // Active quests stored as comma-separated "questId:baseline" entries
         b.append(new KeyedCodec<>("ActiveQuests", Codec.STRING),
                 (c, v) -> c.activeQuests = parseActiveQuests(v),
@@ -62,6 +86,12 @@ public final class MissionDataComponent implements Component<EntityStore> {
     private int totalBossesKilled;
     private int totalDungeonsCompleted;
     private int totalDungeonDeaths;
+    private int totalChallengeRoomsCleared;
+    private int totalKeyRoomsCleared;
+    private int totalAltarRoomsCleared;
+    private int totalShopPurchases;
+    private int totalDungeonCoins;
+    private int totalArmorAbilitiesUsed;
 
     /** Active quest slots. Each entry is a quest pool ID + baseline progress. */
     @Nonnull
@@ -75,6 +105,12 @@ public final class MissionDataComponent implements Component<EntityStore> {
         this.totalBossesKilled = other.totalBossesKilled;
         this.totalDungeonsCompleted = other.totalDungeonsCompleted;
         this.totalDungeonDeaths = other.totalDungeonDeaths;
+        this.totalChallengeRoomsCleared = other.totalChallengeRoomsCleared;
+        this.totalKeyRoomsCleared = other.totalKeyRoomsCleared;
+        this.totalAltarRoomsCleared = other.totalAltarRoomsCleared;
+        this.totalShopPurchases = other.totalShopPurchases;
+        this.totalDungeonCoins = other.totalDungeonCoins;
+        this.totalArmorAbilitiesUsed = other.totalArmorAbilitiesUsed;
         this.activeQuests = new ArrayList<>();
         for (ActiveQuest aq : other.activeQuests) {
             this.activeQuests.add(new ActiveQuest(aq.questId, aq.baseline));
@@ -99,6 +135,12 @@ public final class MissionDataComponent implements Component<EntityStore> {
     public int getTotalBossesKilled() { return totalBossesKilled; }
     public int getTotalDungeonsCompleted() { return totalDungeonsCompleted; }
     public int getTotalDungeonDeaths() { return totalDungeonDeaths; }
+    public int getTotalChallengeRoomsCleared() { return totalChallengeRoomsCleared; }
+    public int getTotalKeyRoomsCleared() { return totalKeyRoomsCleared; }
+    public int getTotalAltarRoomsCleared() { return totalAltarRoomsCleared; }
+    public int getTotalShopPurchases() { return totalShopPurchases; }
+    public int getTotalDungeonCoins() { return totalDungeonCoins; }
+    public int getTotalArmorAbilitiesUsed() { return totalArmorAbilitiesUsed; }
 
     @Nonnull
     public List<ActiveQuest> getActiveQuests() { return activeQuests; }
@@ -109,6 +151,30 @@ public final class MissionDataComponent implements Component<EntityStore> {
     public void addBossesKilled(int count) { this.totalBossesKilled += count; }
     public void addDungeonsCompleted(int count) { this.totalDungeonsCompleted += count; }
     public void addDungeonDeaths(int count) { this.totalDungeonDeaths += count; }
+    public void addChallengeRoomsCleared(int count) { this.totalChallengeRoomsCleared += count; }
+    public void addKeyRoomsCleared(int count) { this.totalKeyRoomsCleared += count; }
+    public void addAltarRoomsCleared(int count) { this.totalAltarRoomsCleared += count; }
+    public void addShopPurchases(int count) { this.totalShopPurchases += count; }
+    public void addDungeonCoins(int count) { this.totalDungeonCoins += count; }
+    public void addArmorAbilitiesUsed(int count) { this.totalArmorAbilitiesUsed += count; }
+
+    /**
+     * Generic progress increment dispatched by mission type.
+     */
+    public void addProgress(@Nonnull MissionType type, int count) {
+        if (count <= 0) return;
+        switch (type) {
+            case KILL_ENEMIES -> totalEnemiesKilled += count;
+            case KILL_BOSSES -> totalBossesKilled += count;
+            case COMPLETE_DUNGEONS -> totalDungeonsCompleted += count;
+            case COMPLETE_CHALLENGE_ROOMS -> totalChallengeRoomsCleared += count;
+            case COMPLETE_KEY_ROOMS -> totalKeyRoomsCleared += count;
+            case COMPLETE_ALTAR_ROOMS -> totalAltarRoomsCleared += count;
+            case SHOP_PURCHASES -> totalShopPurchases += count;
+            case COLLECT_DUNGEON_COINS -> totalDungeonCoins += count;
+            case ACTIVATE_ARMOR_ABILITIES -> totalArmorAbilitiesUsed += count;
+        }
+    }
 
     public void setActiveQuests(@Nonnull List<ActiveQuest> quests) {
         this.activeQuests = new ArrayList<>(quests);
@@ -128,6 +194,12 @@ public final class MissionDataComponent implements Component<EntityStore> {
         this.totalBossesKilled = 0;
         this.totalDungeonsCompleted = 0;
         this.totalDungeonDeaths = 0;
+        this.totalChallengeRoomsCleared = 0;
+        this.totalKeyRoomsCleared = 0;
+        this.totalAltarRoomsCleared = 0;
+        this.totalShopPurchases = 0;
+        this.totalDungeonCoins = 0;
+        this.totalArmorAbilitiesUsed = 0;
         this.activeQuests.clear();
     }
 
@@ -136,6 +208,12 @@ public final class MissionDataComponent implements Component<EntityStore> {
             case KILL_ENEMIES -> totalEnemiesKilled;
             case KILL_BOSSES -> totalBossesKilled;
             case COMPLETE_DUNGEONS -> totalDungeonsCompleted;
+            case COMPLETE_CHALLENGE_ROOMS -> totalChallengeRoomsCleared;
+            case COMPLETE_KEY_ROOMS -> totalKeyRoomsCleared;
+            case COMPLETE_ALTAR_ROOMS -> totalAltarRoomsCleared;
+            case SHOP_PURCHASES -> totalShopPurchases;
+            case COLLECT_DUNGEON_COINS -> totalDungeonCoins;
+            case ACTIVATE_ARMOR_ABILITIES -> totalArmorAbilitiesUsed;
         };
     }
 

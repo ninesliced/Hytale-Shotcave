@@ -79,6 +79,10 @@ public final class CoinCollectionSystem extends EntityTickingSystem<EntityStore>
         if (game != null) {
             newTotal = game.addMoney(quantity);
             totalLabel = "Team Total";
+            unstablerifts.getMissionService().addProgress(
+                    playerRef,
+                    dev.ninesliced.unstablerifts.mission.MissionType.COLLECT_DUNGEON_COINS,
+                    quantity);
         } else {
             newTotal = CoinScoreService.addCoins(playerRef.getUuid(), quantity);
         }

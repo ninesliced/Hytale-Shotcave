@@ -401,6 +401,11 @@ public final class ShopPage extends InteractiveCustomUIPage<ShopPage.ShopEventDa
 
         shopService.removeSoldDisplay(entry, store);
 
+        plugin.getMissionService().addProgress(
+                this.playerRef,
+                dev.ninesliced.unstablerifts.mission.MissionType.SHOP_PURCHASES,
+                1);
+
         try {
             String name = buildItemDisplayName(entry, purchasedItem);
             NotificationUtil.sendNotification(

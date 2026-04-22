@@ -773,6 +773,28 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
             }
             unstablerifts.getDungeonMapService().onRoomCleared(game, room);
             broadcastRoomMessage(unstablerifts, game, room.getUnlockTitle(), room.getUnlockSubtitle());
+            awardRoomClearMissionProgress(unstablerifts, game, room);
+        }
+    }
+
+    /**
+     * Awards per-player mission progress to every party member in the instance
+     * based on the cleared room's type.
+     */
+    private static void awardRoomClearMissionProgress(@Nonnull UnstableRifts unstablerifts,
+                                                      @Nonnull Game game,
+                                                      @Nonnull RoomData room) {
+        dev.ninesliced.unstablerifts.mission.MissionType missionType = switch (room.getType()) {
+            case CHALLENGE -> dev.ninesliced.unstablerifts.mission.MissionType.COMPLETE_CHALLENGE_ROOMS;
+            case TREASURE -> dev.ninesliced.unstablerifts.mission.MissionType.COMPLETE_KEY_ROOMS;
+            default -> null;
+        };
+        if (missionType == null) return;
+
+        for (UUID playerId : game.getPlayersInInstance()) {
+            PlayerRef pRef = Universe.get().getPlayer(playerId);
+            if (pRef == null || !pRef.isValid()) continue;
+            unstablerifts.getMissionService().addProgress(pRef, missionType, 1);
         }
     }
 
@@ -848,6 +870,7 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
                 }
                 unstablerifts.getDungeonMapService().onRoomCleared(game, room);
                 broadcastRoomMessage(unstablerifts, game, room.getUnlockTitle(), room.getUnlockSubtitle());
+                awardRoomClearMissionProgress(unstablerifts, game, room);
             }
         }
     }

@@ -8,7 +8,7 @@
   "MuzzleVelocity": 18,
   "TerminalVelocity": 30,
   "Gravity": 4,
-  "Damage": 0,
+  "Damage": 14,
   "DeathEffectsOnHit": true,
   "HitSoundEventId": "SFX_Effect_Poison_World",
   "MissSoundEventId": "SFX_Effect_Poison_World",
@@ -19,6 +19,7 @@
     "DamageEntities": true,
     "DamageBlocks": false,
     "EntityDamageRadius": 0.75,
+    "EntityDamage": 14,
     "EntityDamageFalloff": 1.0,
     "Knockback": {
       "Type": "Point",
