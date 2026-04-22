@@ -9,7 +9,7 @@ public enum PortalMode {
      */
     NEXT_LEVEL,
     /**
-     * Teleports the player to the nearest ancestor room that contains exit portal markers.
+     * Teleports the player to the nearest ancestor room that contains separator markers.
      */
     CLOSEST_EXIT
 }

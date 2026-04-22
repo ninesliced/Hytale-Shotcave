@@ -71,7 +71,7 @@ Group #PortalConfigRoot {
         }
 
         TextButton #ClosestExitPortalBtn {
-          Text: "CLOSEST EXIT";
+          Text: "CLOSEST SEPARATOR";
           Anchor: (Width: 130, Height: 36, Left: 10);
           Style: @BtnStyle;
         }

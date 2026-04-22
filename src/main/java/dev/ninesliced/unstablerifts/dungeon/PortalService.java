@@ -137,7 +137,7 @@ public final class PortalService {
     }
 
     /**
-     * Walks up the room parent chain until it finds portal exit markers.
+     * Walks up the room parent chain until it finds separator markers.
      * If the resolved room has multiple exits, one is chosen at random.
      */
     @Nullable
