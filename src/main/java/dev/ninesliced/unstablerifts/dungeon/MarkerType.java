@@ -23,11 +23,11 @@ public enum MarkerType {
      */
     MOB_SPAWNER("UnstableRifts_Mob_Spawner"),
     /**
-     * Portal entry — configurable marker for Next Level or Closest Exit behavior.
+     * Portal entry — configurable marker for Next Level or Closest Separator behavior.
      */
     PORTAL("UnstableRifts_Portal"),
     /**
-     * Portal exit — destination marker used by Closest Exit portals.
+     * Portal exit — separator destination marker used by Closest Separator portals.
      */
     PORTAL_EXIT("UnstableRifts_Portal_Exit"),
     /**

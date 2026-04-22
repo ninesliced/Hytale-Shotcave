@@ -123,7 +123,7 @@ public final class PortalInteractionService {
             case NEXT_LEVEL -> plugin.getGameManager().hasNextLevelConfig(game)
                     ? "Advance to Next Level"
                     : "Return to Surface";
-            case CLOSEST_EXIT -> "Closest Exit";
+            case CLOSEST_EXIT -> "Closest Separator";
         };
     }
 
@@ -133,7 +133,7 @@ public final class PortalInteractionService {
             case NEXT_LEVEL -> plugin.getGameManager().hasNextLevelConfig(game)
                     ? "Teleport the party to the next floor"
                     : "Leave the dungeon";
-            case CLOSEST_EXIT -> "Teleport to the nearest unlocked exit";
+            case CLOSEST_EXIT -> "Teleport to the closest separator";
         };
     }
 
