@@ -191,7 +191,107 @@
         "Kweebec_Seedling": 3,
         "Wolf_Radioactive": 5,
         "Industrial_Nosuit": 8,
-        "Industrial_Drone": 4
+        "Industrial_Hazmat": 5,
+        "Industrial_Hazmat_Flamethrower": 2,
+        "Industrial_Hazmat_ToxicLauncher": 2
+      },
+      "nextLevel": "toxic"
+    },
+    {
+      "id": "toxic",
+      "name": "Toxic",
+      "rooms": {
+        "spawn": [
+          "UnstableRifts.Toxic.Entrance.*"
+        ],
+        "corridor": [
+          "UnstableRifts.Toxic.Room.*",
+          "UnstableRifts.Toxic.Altar.*"
+        ],
+        "challenge": [
+          "UnstableRifts.Toxic.Challenge.*"
+        ],
+        "treasure": [
+          "UnstableRifts.Toxic.Treasure.*"
+        ],
+        "shop": [
+          "UnstableRifts.Toxic.Shop.*"
+        ],
+        "wall": [
+          "UnstableRifts.Toxic.Wall.*"
+        ],
+        "boss": [
+          "UnstableRifts.Toxic.Boss.*"
+        ],
+        "keyDoor": [
+          "UnstableRifts.Toxic.Doors.Toxic_Key_Door"
+        ],
+        "activationDoor": [
+          "UnstableRifts.Toxic.Doors.Toxic_Activation_Door"
+        ],
+        "lockDoor": [
+          "UnstableRifts.Toxic.Doors.Toxic_Lock_Door"
+        ],
+        "sealDoor": [
+          "UnstableRifts.Toxic.Doors.Toxic_Sealed_Door"
+        ],
+        "branch": [
+          "UnstableRifts.Toxic.Branch.*"
+        ]
+      },
+      "main": {
+        "maxRooms": 6,
+        "challengeRooms": {
+          "min": 2,
+          "max": 2
+        },
+        "minimumCorridorLength": 1,
+        "mobsToSpawn": {
+          "min": 350,
+          "max": 350
+        },
+        "treasureRooms": {
+          "min": 1,
+          "max": 1
+        },
+        "shopRooms": {
+          "min": 1,
+          "max": 1
+        }
+      },
+      "branch": {
+        "splitterCount": {
+          "min": 2,
+          "max": 2
+        },
+        "maxRooms": 1,
+        "challengeRooms": {
+          "min": 0,
+          "max": 0
+        },
+        "minimumCorridorLength": 0,
+        "mobsToSpawn": {
+          "min": 50,
+          "max": 50
+        }
+      },
+      "mobs": {
+        "Kweebec_DeadWood_Rootling": 5,
+        "Kweebec_DeadWood_Rootling_Sword": 5,
+        "Kweebec_DeadWood_Rootling_Axe": 5,
+        "Kweebec_DeadWood_Rootling_Lance": 5,
+        "Kweebec_DeadWood_Sproutling": 5,
+        "Kweebec_DeadWood_Sproutling_Sword": 5,
+        "Kweebec_DeadWood_Sproutling_Axe": 5,
+        "Kweebec_DeadWood_Sproutling_Lance": 5,
+        "Kweebec_DeadWood_Seedling": 4,
+        "Kweebec_Seedling": 3,
+        "Wolf_Radioactive": 5,
+        "Industrial_Nosuit": 5,
+        "Industrial_Hazmat": 8,
+        "Industrial_Hazmat_Flamethrower": 3,
+        "Industrial_Hazmat_ToxicLauncher": 3,
+        "Industrial_Drone": 3
       },
       "nextLevel": null
     }
