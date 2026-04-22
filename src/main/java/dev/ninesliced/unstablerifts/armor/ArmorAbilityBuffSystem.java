@@ -153,7 +153,7 @@ public final class ArmorAbilityBuffSystem {
         if (!ref.isValid()) return 0.0f;
         ArmorChargeComponent charge = ref.getStore().getComponent(ref, ArmorChargeComponent.getComponentType());
         if (charge == null || !charge.hasActiveBuff()) return 0.0f;
-        return charge.getActiveAbility() == ArmorSetAbility.WARDEN ? 0.25f : 0.0f;
+        return charge.getActiveAbility() == ArmorSetAbility.WARDEN ? 0.75f : 0.0f;
     }
 
     private static void applySpeedBuff(@Nonnull Ref<EntityStore> ref,

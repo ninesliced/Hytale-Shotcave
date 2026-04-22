@@ -1,0 +1,5 @@
+{
+  "Parent": "Industrial_Hazmat",
+  "Model": "NPC/Intelligent/Industrial_Bodyguard/Model/officeguy.blockymodel",
+  "Texture": "NPC/Intelligent/Industrial_Bodyguard/Model/officeguy.png"
+}

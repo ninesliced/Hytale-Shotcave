@@ -1,0 +1,5 @@
+{
+  "Parent": "Industrial_Hazmat",
+  "Model": "NPC/Intelligent/Industrial_CEO/Model/CEO.blockymodel",
+  "Texture": "NPC/Intelligent/Industrial_CEO/Model/ceo.png"
+}

@@ -1,0 +1,12 @@
+{
+  "Type": "Variant",
+  "Reference": "Template_Industrial_Hazmat",
+  "Modify": {
+    "Appearance": "Industrial_CEO",
+    "MemoriesNameOverride": "Industrial_CEO",
+    "TargetGroups": [
+      "Industrial_Hazmat"
+    ],
+    "NameTranslationKey": "bettermobs.npcRoles.Industrial_CEO.name"
+  }
+}

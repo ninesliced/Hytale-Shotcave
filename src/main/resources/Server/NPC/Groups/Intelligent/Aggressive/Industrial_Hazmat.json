@@ -1,5 +1,7 @@
 {
   "IncludeRoles": [
-    "Industrial_Hazmat"
+    "Industrial_Hazmat",
+    "Industrial_Bodyguard",
+    "Industrial_CEO"
   ]
 }
