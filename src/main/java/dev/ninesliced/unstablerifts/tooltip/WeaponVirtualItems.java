@@ -77,6 +77,9 @@ public final class WeaponVirtualItems {
 
         WeaponDefinition def = WeaponDefinitions.getById(baseItemId);
         if (def == null) return null;
+        if (def.category() == WeaponCategory.SUMMONING || def.category() == WeaponCategory.MELEE) {
+            return null;
+        }
 
         WeaponRarity rarity = WeaponRarity.BASIC;
         DamageEffect effect = DamageEffect.NONE;
@@ -231,14 +234,14 @@ public final class WeaponVirtualItems {
             appendStat(sb, "Damage", def.baseDamage(),
                     modBonus(modifiers, WeaponModifierType.WEAPON_DAMAGE));
             appendStatTime(sb, "Speed", def.baseCooldown(),
-                    modBonus(modifiers, WeaponModifierType.ATTACK_SPEED));
+                0.0);
             appendStat(sb, "Knockback", def.baseKnockback(),
                     modBonus(modifiers, WeaponModifierType.KNOCKBACK));
         } else {
             appendStat(sb, "Damage", def.baseDamage(),
                     modBonus(modifiers, WeaponModifierType.WEAPON_DAMAGE));
             appendStatTime(sb, "Speed", def.baseCooldown(),
-                    modBonus(modifiers, WeaponModifierType.ATTACK_SPEED));
+                0.0);
             appendStat(sb, "Range", def.baseRange(),
                     modBonus(modifiers, WeaponModifierType.MAX_RANGE));
 

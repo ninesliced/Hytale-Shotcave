@@ -199,7 +199,7 @@ public final class UnstableRiftsHud extends CustomUIHud {
 
         ui.set("#UnstableRiftsStatSpeedLabel.TextSpans", Message.raw("Speed"));
         buildStatRow(ui, "Speed", "#UnstableRiftsStatSpeedBase", "#UnstableRiftsStatSpeedMod",
-                definition != null ? definition.baseCooldown() : 0, getModBonus(WeaponModifierType.ATTACK_SPEED), true);
+            definition != null ? definition.baseCooldown() : 0, 0.0, true);
 
         if (category == WeaponCategory.MELEE) {
             // Melee: show knockback but hide range, precision, max ammo, pellets

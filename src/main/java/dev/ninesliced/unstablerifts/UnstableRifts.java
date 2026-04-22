@@ -355,6 +355,7 @@ public class UnstableRifts extends JavaPlugin {
         this.getEntityStoreRegistry().registerSystem(
                 new DeathPlayerAddedSystem(componentTypes.playerRefComponentType(), componentTypes.deathComponentType()));
         this.getEntityStoreRegistry().registerSystem(new CreativeFallDamageSystem());
+        this.getEntityStoreRegistry().registerSystem(new ArmorAbilityDamageSystem());
         this.getEntityStoreRegistry().registerSystem(new DungeonLethalDamageSystem());
         this.getEntityStoreRegistry().registerSystem(new PlayerDeathSystem());
         this.getEntityStoreRegistry().registerSystem(new ReviveTickSystem());

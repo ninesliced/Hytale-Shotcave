@@ -17,7 +17,7 @@
   },
   "primary": {
     "id": "UnstableRifts_Kweebec_Launcher",
-    "cooldown": 1.5,
+    "cooldown": 0.5,
     "requireAmmo": true,
     "shotId": "UnstableRifts_Kweebec_Launcher_Shot",
     "reloadId": "UnstableRifts_Kweebec_Launcher_Reload"

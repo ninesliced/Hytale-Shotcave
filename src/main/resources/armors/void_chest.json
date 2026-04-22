@@ -3,7 +3,7 @@
   "displayName": "Void Chestplate",
   "setId": "void",
   "slotType": "CHEST",
-  "setAbility": "PURIFICATION",
+  "setAbility": "CONTAGION",
   "minRarity": "RARE",
   "maxRarity": "UNIQUE",
   "spawnWeight": 10,

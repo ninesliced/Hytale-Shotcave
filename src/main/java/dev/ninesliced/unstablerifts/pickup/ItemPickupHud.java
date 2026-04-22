@@ -239,7 +239,7 @@ public final class ItemPickupHud extends CustomUIHud {
                     getModBonus(WeaponModifierType.WEAPON_DAMAGE), true);
             buildStatRow(ui, 1, "Speed",
                     definition != null ? definition.baseCooldown() : 0,
-                    getModBonus(WeaponModifierType.ATTACK_SPEED), true);
+                    0.0, true);
             buildStatRow(ui, 2, "Range",
                     definition != null ? definition.baseRange() : 0,
                     getModBonus(WeaponModifierType.MAX_RANGE), true);

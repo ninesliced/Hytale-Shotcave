@@ -257,7 +257,7 @@ public final class ChainLightningInteraction extends SimpleInstantInteraction {
             }
             hitPosition = new Vector3d(hitPosition).add(0.0, this.beamHeightOffset, 0.0);
             forkDamageInteraction(context, damageRootInteraction, targetRef, hitPosition);
-            DamageEffectRuntime.apply(commandBuffer, targetRef, DamageEffect.ELECTRICITY, chainRarity);
+            DamageEffectRuntime.apply(commandBuffer, targetRef, DamageEffect.ELECTRICITY, chainRarity, context.getEntity());
         }
     }
 

@@ -100,13 +100,6 @@ public final class DamageEffectTickSystem extends EntityTickingSystem<EntityStor
             return;
         }
 
-        // Purification buff: immediately cleanse any active DoT
-        if (ArmorAbilityBuffSystem.isPurificationActive(ref)) {
-            DamageEffectRuntime.clearVisual(commandBuffer, ref, activeEffect);
-            commandBuffer.removeComponent(ref, DamageEffectComponent.getComponentType());
-            return;
-        }
-
         applyMovementControl(commandBuffer, ref, activeEffect);
 
         int deltaMs = Math.round(dt * 1000.0f);

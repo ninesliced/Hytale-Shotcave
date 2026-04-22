@@ -3,7 +3,7 @@
   "displayName": "Void Gauntlets",
   "setId": "void",
   "slotType": "ARMS",
-  "setAbility": "PURIFICATION",
+  "setAbility": "CONTAGION",
   "minRarity": "RARE",
   "maxRarity": "UNIQUE",
   "spawnWeight": 10,

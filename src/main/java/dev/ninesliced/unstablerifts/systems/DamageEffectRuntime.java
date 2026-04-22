@@ -7,11 +7,15 @@ import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBeha
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.RemovalBehavior;
 import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import dev.ninesliced.unstablerifts.armor.ArmorAbilityBuffSystem;
 import dev.ninesliced.unstablerifts.guns.DamageEffect;
+import dev.ninesliced.unstablerifts.guns.GunItemMetadata;
 import dev.ninesliced.unstablerifts.guns.WeaponRarity;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.concurrent.ThreadLocalRandom;
 
 public final class DamageEffectRuntime {
@@ -37,12 +41,48 @@ public final class DamageEffectRuntime {
                              @Nonnull Ref<EntityStore> target,
                              @Nonnull DamageEffect effect,
                              @Nonnull WeaponRarity rarity) {
+        apply(commandBuffer, target, effect, rarity, null);
+    }
+
+    /**
+     * Applies a damage effect with rarity-scaled duration bonus and optional
+     * armor set bonus from the attacking player.
+     */
+    public static void apply(@Nonnull CommandBuffer<EntityStore> commandBuffer,
+                             @Nonnull Ref<EntityStore> target,
+                             @Nonnull DamageEffect effect,
+                             @Nonnull WeaponRarity rarity,
+                             @Nullable Ref<EntityStore> sourceRef) {
         if (effect == DamageEffect.NONE) {
             return;
         }
 
-        float duration = rollDuration(effect) + rarity.getEffectDurationBonus();
+        float duration = rollDuration(effect)
+                + rarity.getEffectDurationBonus()
+                + getSourceEffectDurationBonus(sourceRef);
         apply(commandBuffer, target, effect, duration, DEFAULT_DAMAGE_PER_TICK);
+    }
+
+    private static float getSourceEffectDurationBonus(@Nullable Ref<EntityStore> sourceRef) {
+        if (sourceRef == null || !sourceRef.isValid()) {
+            return 0.0f;
+        }
+
+        Player player = sourceRef.getStore().getComponent(sourceRef, Player.getComponentType());
+        if (player == null || player.getInventory() == null) {
+            return 0.0f;
+        }
+
+        ItemStack heldItem = player.getInventory().getItemInHand();
+        if (heldItem == null || ItemStack.isEmpty(heldItem)) {
+            return 0.0f;
+        }
+
+        if (GunItemMetadata.getEffect(heldItem) == DamageEffect.NONE) {
+            return 0.0f;
+        }
+
+        return ArmorAbilityBuffSystem.getWeaponEffectDurationBonus(sourceRef);
     }
 
     public static void apply(@Nonnull CommandBuffer<EntityStore> commandBuffer,

@@ -8,7 +8,7 @@
       "Trade": {
         "Output": { "ItemId": "UnstableRifts_Ammo_Item", "Quantity": 1 },
         "Input": [{ "ItemId": "UnstableRifts_Rift_Coin", "Quantity": 5 }],
-        "Stock": 5
+        "Stock": 500
       }
     },
     {
@@ -16,7 +16,7 @@
       "Trade": {
         "Output": { "ItemId": "UnstableRifts_Shop_Crate_T1", "Quantity": 1 },
         "Input": [{ "ItemId": "UnstableRifts_Rift_Coin", "Quantity": 10 }],
-        "Stock": 3
+        "Stock": 300
       }
     },
     {
@@ -24,7 +24,7 @@
       "Trade": {
         "Output": { "ItemId": "UnstableRifts_Shop_Crate_T2", "Quantity": 1 },
         "Input": [{ "ItemId": "UnstableRifts_Rift_Coin", "Quantity": 25 }],
-        "Stock": 2
+        "Stock": 200
       }
     },
     {
@@ -32,7 +32,7 @@
       "Trade": {
         "Output": { "ItemId": "UnstableRifts_Shop_Crate_T3", "Quantity": 1 },
         "Input": [{ "ItemId": "UnstableRifts_Rift_Coin", "Quantity": 50 }],
-        "Stock": 1
+        "Stock": 100
       }
     }
   ]

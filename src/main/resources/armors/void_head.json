@@ -3,7 +3,7 @@
   "displayName": "Void Mask",
   "setId": "void",
   "slotType": "HEAD",
-  "setAbility": "PURIFICATION",
+  "setAbility": "CONTAGION",
   "minRarity": "RARE",
   "maxRarity": "UNIQUE",
   "spawnWeight": 10,

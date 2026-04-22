@@ -74,7 +74,10 @@ public final class GunItemMetadata {
         List<WeaponModifier> mods = new ArrayList<>(arr.size());
         for (BsonValue entry : arr) {
             if (entry.isDocument()) {
-                mods.add(WeaponModifier.fromBsonDocument(entry.asDocument()));
+                WeaponModifier modifier = WeaponModifier.fromBsonDocument(entry.asDocument());
+                if (modifier.type() != WeaponModifierType.ATTACK_SPEED) {
+                    mods.add(modifier);
+                }
             }
         }
         return mods;
@@ -84,7 +87,9 @@ public final class GunItemMetadata {
     public static ItemStack setModifiers(@Nonnull ItemStack stack, @Nonnull List<WeaponModifier> modifiers) {
         BsonArray arr = new BsonArray();
         for (WeaponModifier mod : modifiers) {
-            arr.add(mod.toBsonDocument());
+            if (mod.type() != WeaponModifierType.ATTACK_SPEED) {
+                arr.add(mod.toBsonDocument());
+            }
         }
         return stack.withMetadata(MODIFIERS_KEY, arr);
     }

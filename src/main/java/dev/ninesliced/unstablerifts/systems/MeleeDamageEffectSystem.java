@@ -78,12 +78,10 @@ public final class MeleeDamageEffectSystem extends DamageEventSystem {
         }
 
         // ── Apply DoT effect with rarity-scaled duration ──
-        // Skip DoT if target has Purification buff active
         DamageEffect effect = GunItemMetadata.getEffect(heldItem);
-        if (effect != DamageEffect.NONE && effect.hasDoT()
-                && !ArmorAbilityBuffSystem.isPurificationActive(targetRef)) {
+        if (effect != DamageEffect.NONE && effect.hasDoT()) {
             WeaponRarity rarity = GunItemMetadata.getRarity(heldItem);
-            DamageEffectRuntime.apply(commandBuffer, targetRef, effect, rarity);
+            DamageEffectRuntime.apply(commandBuffer, targetRef, effect, rarity, sourceRef);
 
             // For freezing effects, strip upward knockback so entities don't float
             if (effect == DamageEffect.ICE || effect == DamageEffect.ELECTRICITY) {

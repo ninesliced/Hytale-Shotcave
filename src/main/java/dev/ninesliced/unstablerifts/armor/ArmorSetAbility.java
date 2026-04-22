@@ -7,7 +7,7 @@ public enum ArmorSetAbility {
     BERSERKER("Berserker", 10, "#d4534a"),
     REGENERATION("Regeneration", 10, "#3e9049"),
     GUARDIAN("Guardian", 8, "#2770b7"),
-    PURIFICATION("Purification", 20, "#8b339e"),
+    CONTAGION("Contagion", 10, "#8b339e"),
     SWIFTNESS("Swiftness", 12, "#bb8a2c"),
     WARDEN("Warden", 10, "#bb2f2c");
 

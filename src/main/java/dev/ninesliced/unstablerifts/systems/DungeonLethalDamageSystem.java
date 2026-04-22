@@ -1,25 +1,27 @@
 package dev.ninesliced.unstablerifts.systems;
 
 import com.hypixel.hytale.component.*;
+import com.hypixel.hytale.component.dependency.Dependency;
+import com.hypixel.hytale.component.dependency.Order;
+import com.hypixel.hytale.component.dependency.SystemDependency;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.damage.Damage;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageEventSystem;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageModule;
-import com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.ninesliced.unstablerifts.UnstableRifts;
-import dev.ninesliced.unstablerifts.armor.ArmorAbilityBuffSystem;
 import dev.ninesliced.unstablerifts.dungeon.Game;
 import dev.ninesliced.unstablerifts.dungeon.GameManager;
 import dev.ninesliced.unstablerifts.dungeon.GameState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Set;
 
 /**
  * Prevents lethal damage from entering the engine death pipeline for players
@@ -28,6 +30,10 @@ import javax.annotation.Nullable;
  * state instead.
  */
 public final class DungeonLethalDamageSystem extends DamageEventSystem {
+
+    private static final Set<Dependency<EntityStore>> DEPENDENCIES = Set.of(
+            new SystemDependency<>(Order.AFTER, ArmorAbilityDamageSystem.class)
+    );
 
     private static final Query<EntityStore> QUERY = Query.and(
             Player.getComponentType(),
@@ -46,6 +52,12 @@ public final class DungeonLethalDamageSystem extends DamageEventSystem {
     @Override
     public Query<EntityStore> getQuery() {
         return QUERY;
+    }
+
+    @Nonnull
+    @Override
+    public Set<Dependency<EntityStore>> getDependencies() {
+        return DEPENDENCIES;
     }
 
     @Override
@@ -81,24 +93,6 @@ public final class DungeonLethalDamageSystem extends DamageEventSystem {
 
         Ref<EntityStore> ref = archetypeChunk.getReferenceTo(index);
         if (!ref.isValid()) return;
-
-        // ── Guardian: 50% incoming damage reduction ──
-        float guardianMul = ArmorAbilityBuffSystem.getGuardianReduction(ref);
-        if (guardianMul < 1.0f) {
-            damage.setAmount(damage.getAmount() * guardianMul);
-        }
-
-        // ── Warden: reflect 25% of damage back to attacker ──
-        float wardenReflect = ArmorAbilityBuffSystem.getWardenReflection(ref);
-        if (wardenReflect > 0.0f && damage.getSource() instanceof Damage.EntitySource entitySource) {
-            Ref<EntityStore> attackerRef = entitySource.getRef();
-            if (attackerRef.isValid()) {
-                float reflectedAmount = damage.getAmount() * wardenReflect;
-                Damage reflectedDamage = new Damage(
-                        new Damage.EntitySource(ref), damage.getDamageCauseIndex(), reflectedAmount);
-                DamageSystems.executeDamage(attackerRef, commandBuffer, reflectedDamage);
-            }
-        }
 
         float pendingDamage = Math.round(damage.getAmount());
         float currentHealth = healthStat.get();

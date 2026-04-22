@@ -3,7 +3,7 @@
   "Interactions": [
     {
       "Type": "Simple",
-      "RunTime": 1.065,
+      "RunTime": 0.355,
       "Effects": {
         "ItemAnimationId": "Shoot",
         "ClearAnimationOnFinish": true

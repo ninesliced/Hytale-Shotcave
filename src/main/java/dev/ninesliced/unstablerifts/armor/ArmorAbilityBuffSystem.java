@@ -17,13 +17,14 @@ import java.util.logging.Logger;
 /**
  * Activates and expires armor set ability buffs.
  * Each ability stores its state in the player's {@link ArmorChargeComponent}.
- * Damage/speed modifiers are read from the charge component by the relevant
- * runtime systems (damage pipeline, roll, revive, etc.).
+ * Damage, movement, and effect-duration bonuses are read from the charge
+ * component by the relevant runtime systems.
  */
 public final class ArmorAbilityBuffSystem {
 
     private static final Logger LOGGER = Logger.getLogger(ArmorAbilityBuffSystem.class.getName());
     private static final String EFFECT_ID = "Immune";
+    private static final float CONTAGION_EFFECT_DURATION_BONUS_SECONDS = 2.0f;
 
     private ArmorAbilityBuffSystem() {
     }
@@ -63,18 +64,16 @@ public final class ArmorAbilityBuffSystem {
 
         switch (ability) {
             case BERSERKER -> {
-            } // +40% damage read by UnstableRiftsDamageInteraction/MeleeDamageEffectSystem
+            } // +100% damage read by UnstableRiftsDamageInteraction/MeleeDamageEffectSystem
             case REGENERATION -> {
             } // HP regen ticked in ArmorChargeSystem
             case GUARDIAN -> {
-            } // 50% damage reduction read by DungeonLethalDamageSystem
-            case PURIFICATION -> {
-                accessor.tryRemoveComponent(ref,
-                        dev.ninesliced.unstablerifts.systems.DamageEffectComponent.getComponentType());
-            }
+            } // 80% damage reduction read by DungeonLethalDamageSystem
+            case CONTAGION -> {
+            } // extends weapon DoT durations when the held weapon has an effect
             case SWIFTNESS -> applySpeedBuff(ref, accessor, 1.5f);
             case WARDEN -> {
-            } // +25% spike damage read by DungeonLethalDamageSystem
+            } // full damage immunity + 100% reflection read by DungeonLethalDamageSystem
             default -> {
             }
         }
@@ -126,7 +125,7 @@ public final class ArmorAbilityBuffSystem {
         if (!ref.isValid()) return 1.0f;
         ArmorChargeComponent charge = ref.getStore().getComponent(ref, ArmorChargeComponent.getComponentType());
         if (charge == null || !charge.hasActiveBuff()) return 1.0f;
-        return charge.getActiveAbility() == ArmorSetAbility.BERSERKER ? 1.4f : 1.0f;
+        return charge.getActiveAbility() == ArmorSetAbility.BERSERKER ? 2.0f : 1.0f;
     }
 
     /**
@@ -136,14 +135,16 @@ public final class ArmorAbilityBuffSystem {
         if (!ref.isValid()) return 1.0f;
         ArmorChargeComponent charge = ref.getStore().getComponent(ref, ArmorChargeComponent.getComponentType());
         if (charge == null || !charge.hasActiveBuff()) return 1.0f;
-        return charge.getActiveAbility() == ArmorSetAbility.GUARDIAN ? 0.5f : 1.0f;
+        return charge.getActiveAbility() == ArmorSetAbility.GUARDIAN ? 0.1f : 1.0f;
     }
 
     /**
-     * Returns true if purification buff is active (DoT immunity).
+     * Returns the bonus effect duration applied by the Contagion armor buff.
      */
-    public static boolean isPurificationActive(@Nonnull Ref<EntityStore> ref) {
-        return isBuffActive(ref, ArmorSetAbility.PURIFICATION);
+    public static float getWeaponEffectDurationBonus(@Nonnull Ref<EntityStore> ref) {
+        return isBuffActive(ref, ArmorSetAbility.CONTAGION)
+                ? CONTAGION_EFFECT_DURATION_BONUS_SECONDS
+                : 0.0f;
     }
 
     /**
@@ -153,7 +154,7 @@ public final class ArmorAbilityBuffSystem {
         if (!ref.isValid()) return 0.0f;
         ArmorChargeComponent charge = ref.getStore().getComponent(ref, ArmorChargeComponent.getComponentType());
         if (charge == null || !charge.hasActiveBuff()) return 0.0f;
-        return charge.getActiveAbility() == ArmorSetAbility.WARDEN ? 0.75f : 0.0f;
+        return charge.getActiveAbility() == ArmorSetAbility.WARDEN ? 1.0f : 0.0f;
     }
 
     private static void applySpeedBuff(@Nonnull Ref<EntityStore> ref,

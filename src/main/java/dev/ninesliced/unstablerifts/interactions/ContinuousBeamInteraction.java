@@ -254,26 +254,6 @@ public final class ContinuousBeamInteraction extends ChargingInteraction {
         }
 
         if (firstRun) {
-            ItemStack heldItem = context.getHeldItem();
-            float cooldownScale = 1.0f;
-            if (heldItem != null) {
-                double speedBonus = GunItemMetadata.getModifierBonus(heldItem, WeaponModifierType.ATTACK_SPEED);
-                if (speedBonus > 0.001d) {
-                    CooldownHandler.Cooldown shootCooldown = cooldownHandler.getCooldown("Shoot");
-                    if (shootCooldown != null) {
-                        float baseCooldown = shootCooldown.getCooldown();
-                        float reducedCooldown = (float) (baseCooldown * (1.0d - speedBonus));
-                        if (reducedCooldown < 0.05f) {
-                            reducedCooldown = 0.05f;
-                        }
-                        if (baseCooldown > 0.0f) {
-                            cooldownScale = reducedCooldown / baseCooldown;
-                        }
-                        shootCooldown.setCooldownMax(reducedCooldown);
-                    }
-                }
-            }
-
             if (this.useAmmo) {
                 if (!consumeAmmo(context)) {
                     context.getState().state = InteractionState.Failed;
@@ -285,7 +265,7 @@ public final class ContinuousBeamInteraction extends ChargingInteraction {
             context.getMetaStore().putMetaObject(NEXT_DAMAGE_TIME_KEY, new double[]{0.0d});
             context.getMetaStore().putMetaObject(
                     COMPLETION_COOLDOWN_BONUS_KEY,
-                    new float[]{(float) (this.completionCooldownBonus * cooldownScale)});
+                    new float[]{(float) this.completionCooldownBonus});
             context.getMetaStore().putMetaObject(COMPLETION_COOLDOWN_APPLIED_KEY, new boolean[]{false});
         }
 
@@ -459,7 +439,7 @@ public final class ContinuousBeamInteraction extends ChargingInteraction {
                 applyKnockback(commandBuffer, context.getEntity(), hit.target, knockbackForce);
             }
             if (damageEffect.hasDoT()) {
-                DamageEffectRuntime.apply(commandBuffer, hit.target, damageEffect, rarity);
+                DamageEffectRuntime.apply(commandBuffer, hit.target, damageEffect, rarity, context.getEntity());
             }
             spawnImpactParticle(hit.position, commandBuffer);
             return;

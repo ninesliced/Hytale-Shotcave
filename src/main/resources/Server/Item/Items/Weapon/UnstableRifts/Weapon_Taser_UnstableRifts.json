@@ -14,7 +14,7 @@
       "Shoot": {
         "ThirdPerson": "Characters/Animations/UnstableRifts/Taser_Shoot.blockyanim",
         "FirstPerson": "Characters/Animations/UnstableRifts/Taser_Shoot.blockyanim",
-        "Speed": 2,
+        "Speed": 6,
         "Looping": false
       }
     }

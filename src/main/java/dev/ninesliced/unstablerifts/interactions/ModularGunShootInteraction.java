@@ -244,19 +244,6 @@ public final class ModularGunShootInteraction extends SimpleInteraction {
         if (firstRun) {
             ItemStack heldItem = context.getHeldItem();
 
-            if (heldItem != null) {
-                double speedBonus = GunItemMetadata.getModifierBonus(heldItem, WeaponModifierType.ATTACK_SPEED);
-                if (speedBonus > 0.001) {
-                    CooldownHandler.Cooldown shootCooldown = cooldownHandler.getCooldown("Shoot");
-                    if (shootCooldown != null) {
-                        float baseCd = shootCooldown.getCooldown();
-                        float reducedCd = (float) (baseCd * (1.0 - speedBonus));
-                        if (reducedCd < 0.05f) reducedCd = 0.05f;
-                        shootCooldown.setCooldownMax(reducedCd);
-                    }
-                }
-            }
-
             if (this.useAmmo) {
                 if (heldItem == null) {
                     super.tick0(firstRun, time, type, context, cooldownHandler);
@@ -408,7 +395,7 @@ public final class ModularGunShootInteraction extends SimpleInteraction {
                     applyKnockback(commandBuffer, context.getEntity(), hit.target, effectiveKnockback);
                 }
                 if (effectedTargets != null && pelletEffect.hasDoT() && effectedTargets.add(hit.target.getIndex())) {
-                    DamageEffectRuntime.apply(commandBuffer, hit.target, pelletEffect, weaponRarity);
+                    DamageEffectRuntime.apply(commandBuffer, hit.target, pelletEffect, weaponRarity, context.getEntity());
                 }
                 continue;
             }
