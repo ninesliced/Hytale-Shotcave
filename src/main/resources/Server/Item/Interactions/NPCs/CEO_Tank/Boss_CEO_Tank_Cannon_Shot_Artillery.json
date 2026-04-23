@@ -1,0 +1,34 @@
+{
+  "$Comment": "CEO_Tank artillery shot: long windup, high-arc shell with large AOE. ~2s total.",
+  "Type": "Simple",
+  "RunTime": 1.0,
+  "Effects": {
+    "ItemPlayerAnimationsId": "CEO_Tank_Default",
+    "ItemAnimationId": "CannonShotArtillery",
+    "WorldSoundEventId": "SFX_Light_Melee_T2_Swing",
+    "MovementEffects": { "DisableAll": true }
+  },
+  "Next": {
+    "Type": "Serial",
+    "Interactions": [
+      {
+        "Type": "LaunchProjectile",
+        "ProjectileId": "CEO_Tank_Artillery_Shell",
+        "Effects": {
+          "WorldSoundEventId": "SFX_Goblin_Lobber_Bomb_Death",
+          "CameraEffect": "Boss_Impact_Heavy",
+          "MovementEffects": { "DisableAll": true }
+        }
+      },
+      {
+        "Type": "Simple",
+        "RunTime": 1.0,
+        "Effects": {
+          "ItemPlayerAnimationsId": "CEO_Tank_Default",
+          "ItemAnimationId": "CannonShotArtillery",
+          "MovementEffects": { "DisableAll": true }
+        }
+      }
+    ]
+  }
+}

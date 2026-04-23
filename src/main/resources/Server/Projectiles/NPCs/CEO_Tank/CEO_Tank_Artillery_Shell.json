@@ -1,0 +1,39 @@
+{
+  "$Comment": "CEO_Tank artillery shell - high lob arc, large 8 block AOE.",
+  "Appearance": "Forklift_Radioactive_Barrel",
+  "VerticalCenterShot": -0.25,
+  "HorizontalCenterShot": 0.0,
+  "DepthShot": 5.0,
+  "PitchAdjustShot": true,
+  "SticksVertically": true,
+  "MuzzleVelocity": 32,
+  "TerminalVelocity": 60,
+  "Gravity": 14,
+  "Damage": 0,
+  "DeathEffectsOnHit": true,
+  "BounceSoundEventId": "SFX_Goblin_Lobber_Bomb_Death",
+  "HitSoundEventId": "SFX_Goblin_Lobber_Bomb_Death",
+  "MissSoundEventId": "SFX_Goblin_Lobber_Bomb_Death",
+  "DeathSoundEventId": "SFX_Goblin_Lobber_Bomb_Death",
+  "DeadTimeMiss": 0,
+  "DeadTime": 0,
+  "ExplosionConfig": {
+    "DamageEntities": true,
+    "DamageBlocks": false,
+    "EntityDamageRadius": 8,
+    "EntityDamage": 35,
+    "EntityDamageFalloff": 1.0,
+    "Knockback": {
+      "Type": "Point",
+      "VelocityConfig": {
+        "AirResistance": 0.97,
+        "AirResistanceMax": 0.96,
+        "GroundResistance": 0.94,
+        "GroundResistanceMax": 0.3,
+        "Threshold": 3.0
+      },
+      "Force": 10,
+      "VelocityType": "Set"
+    }
+  }
+}

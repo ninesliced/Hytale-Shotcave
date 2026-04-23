@@ -1,0 +1,156 @@
+{
+  "$Comment": "CEO_Tank turret spin (melee sweep): 4-phase horizontal sweep around the boss. ~1.4s total.",
+  "Type": "Simple",
+  "RunTime": 0.0,
+  "Effects": {
+    "ItemPlayerAnimationsId": "CEO_Tank_Default",
+    "ItemAnimationId": "TurretSpin",
+    "WorldSoundEventId": "SFX_Light_Melee_T2_Swing",
+    "MovementEffects": { "DisableAll": true },
+    "Particles": [
+      { "SystemId": "Boss_Zone_Warning_Effect", "TargetEntityPart": "Entity", "Scale": 3.5 }
+    ]
+  },
+  "Next": {
+    "Type": "Parallel",
+    "Interactions": [
+      {
+        "Interactions": [
+          {
+            "Type": "Serial",
+            "Interactions": [
+              {
+                "$Comment": "Phase 1 (0-0.3s): front sweep",
+                "Type": "Selector",
+                "RunTime": 0.3,
+                "Selector": {
+                  "Id": "Horizontal",
+                  "Direction": "ToLeft",
+                  "TestLineOfSight": false,
+                  "ExtendTop": 3,
+                  "ExtendBottom": 1.5,
+                  "StartDistance": 0.5,
+                  "EndDistance": 7,
+                  "Length": 90,
+                  "RollOffset": 0,
+                  "YawStartOffset": -45
+                },
+                "HitEntity": {
+                  "Interactions": [
+                    {
+                      "Type": "Replace",
+                      "Var": "Spin_Damage",
+                      "DefaultOk": true,
+                      "DefaultValue": { "Interactions": ["Boss_CEO_Tank_Spin_Damage"] }
+                    }
+                  ]
+                }
+              },
+              {
+                "$Comment": "Phase 2 (0.3-0.6s): left sweep",
+                "Type": "Selector",
+                "RunTime": 0.3,
+                "Selector": {
+                  "Id": "Horizontal",
+                  "Direction": "ToLeft",
+                  "TestLineOfSight": false,
+                  "ExtendTop": 3,
+                  "ExtendBottom": 1.5,
+                  "StartDistance": 0.5,
+                  "EndDistance": 7,
+                  "Length": 90,
+                  "RollOffset": 0,
+                  "YawStartOffset": 45
+                },
+                "HitEntity": {
+                  "Interactions": [
+                    {
+                      "Type": "Replace",
+                      "Var": "Spin_Damage",
+                      "DefaultOk": true,
+                      "DefaultValue": { "Interactions": ["Boss_CEO_Tank_Spin_Damage"] }
+                    }
+                  ]
+                }
+              },
+              {
+                "$Comment": "Phase 3 (0.6-0.9s): back sweep",
+                "Type": "Selector",
+                "RunTime": 0.3,
+                "Selector": {
+                  "Id": "Horizontal",
+                  "Direction": "ToLeft",
+                  "TestLineOfSight": false,
+                  "ExtendTop": 3,
+                  "ExtendBottom": 1.5,
+                  "StartDistance": 0.5,
+                  "EndDistance": 7,
+                  "Length": 90,
+                  "RollOffset": 0,
+                  "YawStartOffset": 135
+                },
+                "HitEntity": {
+                  "Interactions": [
+                    {
+                      "Type": "Replace",
+                      "Var": "Spin_Damage",
+                      "DefaultOk": true,
+                      "DefaultValue": { "Interactions": ["Boss_CEO_Tank_Spin_Damage"] }
+                    }
+                  ]
+                }
+              },
+              {
+                "$Comment": "Phase 4 (0.9-1.2s): right sweep back to front",
+                "Type": "Selector",
+                "RunTime": 0.3,
+                "Selector": {
+                  "Id": "Horizontal",
+                  "Direction": "ToLeft",
+                  "TestLineOfSight": false,
+                  "ExtendTop": 3,
+                  "ExtendBottom": 1.5,
+                  "StartDistance": 0.5,
+                  "EndDistance": 7,
+                  "Length": 90,
+                  "RollOffset": 0,
+                  "YawStartOffset": -135
+                },
+                "HitEntity": {
+                  "Interactions": [
+                    {
+                      "Type": "Replace",
+                      "Var": "Spin_Damage",
+                      "DefaultOk": true,
+                      "DefaultValue": { "Interactions": ["Boss_CEO_Tank_Spin_Damage"] }
+                    }
+                  ]
+                },
+                "Next": {
+                  "$Comment": "Recovery",
+                  "Type": "Simple",
+                  "RunTime": 0.2
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "Interactions": [
+          {
+            "Type": "Simple",
+            "RunTime": 0.2,
+            "Effects": {
+              "WorldSoundEventId": "SFX_Unarmed_Swing",
+              "Particles": [
+                { "SystemId": "Boss_Zone_Impact_Effect", "TargetEntityPart": "Entity" }
+              ],
+              "MovementEffects": { "DisableAll": true }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

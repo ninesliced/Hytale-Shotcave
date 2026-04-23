@@ -1,0 +1,77 @@
+{
+  "$Comment": "CEO_Tank turret spin shoot: telegraph ring around boss, then AOE cylinder damage pulse. ~1.8s total.",
+  "Type": "Simple",
+  "RunTime": 0.6,
+  "Effects": {
+    "ItemPlayerAnimationsId": "CEO_Tank_Default",
+    "ItemAnimationId": "TurretSpinShoot",
+    "WorldSoundEventId": "SFX_Light_Melee_T2_Swing",
+    "MovementEffects": { "DisableAll": true },
+    "Particles": [
+      { "SystemId": "Boss_Zone_Warning_Effect", "TargetEntityPart": "Entity", "Scale": 4.5 }
+    ]
+  },
+  "Next": {
+    "Type": "Parallel",
+    "Interactions": [
+      {
+        "Interactions": [
+          {
+            "Type": "Serial",
+            "Interactions": [
+              {
+                "$Comment": "Inner AOE pulse",
+                "Type": "Selector",
+                "RunTime": 0.25,
+                "Selector": { "Id": "AOECircle", "Range": 5 },
+                "HitEntity": {
+                  "Interactions": [
+                    {
+                      "Type": "Replace",
+                      "Var": "Spin_Shoot_Damage",
+                      "DefaultOk": true,
+                      "DefaultValue": { "Interactions": ["Boss_CEO_Tank_Spin_Shoot_Damage"] }
+                    }
+                  ]
+                }
+              },
+              {
+                "$Comment": "Outer AOE pulse (projectile ring sweep)",
+                "Type": "Selector",
+                "RunTime": 0.25,
+                "Selector": { "Id": "AOECircle", "Range": 9 },
+                "HitEntity": {
+                  "Interactions": [
+                    {
+                      "Type": "Replace",
+                      "Var": "Spin_Shoot_Damage",
+                      "DefaultOk": true,
+                      "DefaultValue": { "Interactions": ["Boss_CEO_Tank_Spin_Shoot_Damage"] }
+                    }
+                  ]
+                },
+                "Next": { "Type": "Simple", "RunTime": 0.7 }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "Interactions": [
+          {
+            "Type": "Simple",
+            "RunTime": 0.25,
+            "Effects": {
+              "WorldSoundEventId": "SFX_Goblin_Lobber_Bomb_Death",
+              "CameraEffect": "Boss_Impact_Heavy",
+              "Particles": [
+                { "SystemId": "Boss_Zone_Impact_Effect", "TargetEntityPart": "Entity", "Scale": 3.0 }
+              ],
+              "MovementEffects": { "DisableAll": true }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

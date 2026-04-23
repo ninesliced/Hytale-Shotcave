@@ -1,0 +1,100 @@
+{
+  "Animations": {
+    "CannonShot": {
+      "ThirdPerson": "NPC/Boss/Tank/Animations/cannon_shot.blockyanim",
+      "ThirdPersonMoving": "NPC/Boss/Tank/Animations/cannon_shot.blockyanim",
+      "Speed": 1,
+      "Looping": false
+    },
+    "CannonShotArtillery": {
+      "ThirdPerson": "NPC/Boss/Tank/Animations/cannon_shot_artillery.blockyanim",
+      "ThirdPersonMoving": "NPC/Boss/Tank/Animations/cannon_shot_artillery.blockyanim",
+      "Speed": 1,
+      "Looping": false
+    },
+    "TurretSpin": {
+      "ThirdPerson": "NPC/Boss/Tank/Animations/turret_spin.blockyanim",
+      "ThirdPersonMoving": "NPC/Boss/Tank/Animations/turret_spin.blockyanim",
+      "Speed": 1,
+      "Looping": false
+    },
+    "TurretSpinShoot": {
+      "ThirdPerson": "NPC/Boss/Tank/Animations/turret_spin_shoot.blockyanim",
+      "ThirdPersonMoving": "NPC/Boss/Tank/Animations/turret_spin_shoot.blockyanim",
+      "Speed": 1,
+      "Looping": false
+    },
+    "Dash": {
+      "ThirdPerson": "NPC/Boss/Tank/Animations/move_charge.blockyanim",
+      "ThirdPersonMoving": "NPC/Boss/Tank/Animations/move_charge.blockyanim",
+      "Speed": 1,
+      "Looping": true
+    },
+    "BazookaGrab": {
+      "ThirdPerson": "NPC/Boss/Tank/Animations/bazooka_grab.blockyanim",
+      "ThirdPersonMoving": "NPC/Boss/Tank/Animations/bazooka_grab.blockyanim",
+      "Speed": 1,
+      "Looping": false
+    },
+    "BazookaIdle": {
+      "ThirdPerson": "NPC/Boss/Tank/Animations/bazooka_idle.blockyanim",
+      "ThirdPersonMoving": "NPC/Boss/Tank/Animations/bazooka_idle.blockyanim",
+      "Speed": 1,
+      "Looping": true
+    },
+    "BazookaShoot": {
+      "ThirdPerson": "NPC/Boss/Tank/Animations/bazooka_shoot.blockyanim",
+      "ThirdPersonMoving": "NPC/Boss/Tank/Animations/bazooka_shoot.blockyanim",
+      "Speed": 1,
+      "Looping": false
+    },
+    "BazookaSave": {
+      "ThirdPerson": "NPC/Boss/Tank/Animations/bazooka_save.blockyanim",
+      "ThirdPersonMoving": "NPC/Boss/Tank/Animations/bazooka_save.blockyanim",
+      "Speed": 1,
+      "Looping": false
+    },
+    "MachinegunGrab": {
+      "ThirdPerson": "NPC/Boss/Tank/Animations/machinegun_grab.blockyanim",
+      "ThirdPersonMoving": "NPC/Boss/Tank/Animations/machinegun_grab.blockyanim",
+      "Speed": 1,
+      "Looping": false
+    },
+    "MachinegunIdle": {
+      "ThirdPerson": "NPC/Boss/Tank/Animations/machinegun_idle.blockyanim",
+      "ThirdPersonMoving": "NPC/Boss/Tank/Animations/machinegun_idle.blockyanim",
+      "Speed": 1,
+      "Looping": true
+    },
+    "MachinegunShoot": {
+      "ThirdPerson": "NPC/Boss/Tank/Animations/machinegun_shoot.blockyanim",
+      "ThirdPersonMoving": "NPC/Boss/Tank/Animations/machinegun_shoot.blockyanim",
+      "Speed": 1,
+      "Looping": false
+    },
+    "MachinegunShootMad": {
+      "ThirdPerson": "NPC/Boss/Tank/Animations/machinegun_shoot_mad.blockyanim",
+      "ThirdPersonMoving": "NPC/Boss/Tank/Animations/machinegun_shoot_mad.blockyanim",
+      "Speed": 1,
+      "Looping": false
+    },
+    "MachinegunSave": {
+      "ThirdPerson": "NPC/Boss/Tank/Animations/machinegun_save.blockyanim",
+      "ThirdPersonMoving": "NPC/Boss/Tank/Animations/machinegun_save.blockyanim",
+      "Speed": 1,
+      "Looping": false
+    }
+  },
+  "WiggleWeights": {
+    "Pitch": 2,
+    "PitchDeceleration": 0.1,
+    "Roll": 0.1,
+    "RollDeceleration": 0.1,
+    "X": 3,
+    "XDeceleration": 0.1,
+    "Y": 0.1,
+    "YDeceleration": 0.1,
+    "Z": 0.1,
+    "ZDeceleration": 0.1
+  }
+}

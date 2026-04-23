@@ -1,0 +1,34 @@
+{
+  "$Comment": "CEO_Tank cannon shot: windup anim, launch cannon shell projectile. ~1.3s total.",
+  "Type": "Simple",
+  "RunTime": 0.6,
+  "Effects": {
+    "ItemPlayerAnimationsId": "CEO_Tank_Default",
+    "ItemAnimationId": "CannonShot",
+    "WorldSoundEventId": "SFX_Light_Melee_T2_Swing",
+    "MovementEffects": { "DisableAll": true }
+  },
+  "Next": {
+    "Type": "Serial",
+    "Interactions": [
+      {
+        "Type": "LaunchProjectile",
+        "ProjectileId": "CEO_Tank_Cannon_Shell",
+        "Effects": {
+          "WorldSoundEventId": "SFX_Goblin_Lobber_Bomb_Death",
+          "CameraEffect": "Boss_Impact_Heavy",
+          "MovementEffects": { "DisableAll": true }
+        }
+      },
+      {
+        "Type": "Simple",
+        "RunTime": 0.7,
+        "Effects": {
+          "ItemPlayerAnimationsId": "CEO_Tank_Default",
+          "ItemAnimationId": "CannonShot",
+          "MovementEffects": { "DisableAll": true }
+        }
+      }
+    ]
+  }
+}

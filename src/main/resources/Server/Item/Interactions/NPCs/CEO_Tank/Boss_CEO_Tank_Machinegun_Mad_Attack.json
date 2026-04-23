@@ -1,0 +1,70 @@
+{
+  "$Comment": "CEO_Tank mad machinegun macro (Phase 3): grab → idle → 10 rapid shots at 0.12s → save.",
+  "Type": "Simple",
+  "RunTime": 0.6,
+  "Effects": {
+    "ItemPlayerAnimationsId": "CEO_Tank_Default",
+    "ItemAnimationId": "MachinegunGrab",
+    "WorldSoundEventId": "SFX_Light_Melee_T2_Swing",
+    "MovementEffects": { "DisableAll": true }
+  },
+  "Next": {
+    "Type": "Serial",
+    "Interactions": [
+      {
+        "Type": "Simple",
+        "RunTime": 0.4,
+        "Effects": {
+          "ItemPlayerAnimationsId": "CEO_Tank_Default",
+          "ItemAnimationId": "MachinegunIdle",
+          "MovementEffects": { "DisableAll": true }
+        }
+      },
+      {
+        "$Comment": "10 rapid bullets at 0.12s cadence (mad fire)",
+        "Type": "Repeat",
+        "Repeat": 10,
+        "Effects": {
+          "ItemPlayerAnimationsId": "CEO_Tank_Default",
+          "ItemAnimationId": "MachinegunShootMad",
+          "MovementEffects": { "DisableAll": true }
+        },
+        "ForkInteractions": {
+          "Interactions": [
+            {
+              "Type": "Serial",
+              "Interactions": [
+                {
+                  "Type": "LaunchProjectile",
+                  "ProjectileId": "CEO_Tank_Machinegun_Bullet",
+                  "Effects": {
+                    "WorldSoundEventId": "SFX_Light_Melee_T2_Swing",
+                    "MovementEffects": { "DisableAll": true }
+                  }
+                },
+                {
+                  "Type": "Simple",
+                  "RunTime": 0.12,
+                  "Effects": {
+                    "ItemPlayerAnimationsId": "CEO_Tank_Default",
+                    "ItemAnimationId": "MachinegunShootMad",
+                    "MovementEffects": { "DisableAll": true }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "Type": "Simple",
+        "RunTime": 0.7,
+        "Effects": {
+          "ItemPlayerAnimationsId": "CEO_Tank_Default",
+          "ItemAnimationId": "MachinegunSave",
+          "MovementEffects": { "DisableAll": true }
+        }
+      }
+    ]
+  }
+}

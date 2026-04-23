@@ -1,0 +1,38 @@
+{
+  "$Comment": "CEO_Tank machinegun bullet - fast, flat, low per-shot damage, small AOE.",
+  "Appearance": "UnstableRifts_Toxic_Orb",
+  "VerticalCenterShot": -0.25,
+  "HorizontalCenterShot": 0.0,
+  "DepthShot": 5.0,
+  "PitchAdjustShot": true,
+  "SticksVertically": false,
+  "MuzzleVelocity": 80,
+  "TerminalVelocity": 90,
+  "Gravity": 20,
+  "Damage": 6,
+  "DeathEffectsOnHit": true,
+  "HitSoundEventId": "SFX_Unarmed_Impact",
+  "MissSoundEventId": "SFX_Unarmed_Impact",
+  "DeathSoundEventId": "SFX_Unarmed_Impact",
+  "DeadTimeMiss": 0,
+  "DeadTime": 0,
+  "ExplosionConfig": {
+    "DamageEntities": true,
+    "DamageBlocks": false,
+    "EntityDamageRadius": 0.6,
+    "EntityDamage": 6,
+    "EntityDamageFalloff": 1.0,
+    "Knockback": {
+      "Type": "Point",
+      "VelocityConfig": {
+        "AirResistance": 0.97,
+        "AirResistanceMax": 0.96,
+        "GroundResistance": 0.94,
+        "GroundResistanceMax": 0.3,
+        "Threshold": 3.0
+      },
+      "Force": 1,
+      "VelocityType": "Set"
+    }
+  }
+}

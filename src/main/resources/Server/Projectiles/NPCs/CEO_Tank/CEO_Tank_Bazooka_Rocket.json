@@ -1,0 +1,39 @@
+{
+  "$Comment": "CEO_Tank bazooka rocket - fast flat trajectory, moderate AOE on impact.",
+  "Appearance": "Forklift_Radioactive_Barrel",
+  "VerticalCenterShot": -0.25,
+  "HorizontalCenterShot": 0.0,
+  "DepthShot": 5.0,
+  "PitchAdjustShot": true,
+  "SticksVertically": true,
+  "MuzzleVelocity": 48,
+  "TerminalVelocity": 55,
+  "Gravity": 4,
+  "Damage": 0,
+  "DeathEffectsOnHit": true,
+  "BounceSoundEventId": "SFX_Goblin_Lobber_Bomb_Death",
+  "HitSoundEventId": "SFX_Goblin_Lobber_Bomb_Death",
+  "MissSoundEventId": "SFX_Goblin_Lobber_Bomb_Death",
+  "DeathSoundEventId": "SFX_Goblin_Lobber_Bomb_Death",
+  "DeadTimeMiss": 0,
+  "DeadTime": 0,
+  "ExplosionConfig": {
+    "DamageEntities": true,
+    "DamageBlocks": false,
+    "EntityDamageRadius": 5,
+    "EntityDamage": 40,
+    "EntityDamageFalloff": 1.0,
+    "Knockback": {
+      "Type": "Point",
+      "VelocityConfig": {
+        "AirResistance": 0.97,
+        "AirResistanceMax": 0.96,
+        "GroundResistance": 0.94,
+        "GroundResistanceMax": 0.3,
+        "Threshold": 3.0
+      },
+      "Force": 8,
+      "VelocityType": "Set"
+    }
+  }
+}

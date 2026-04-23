@@ -176,7 +176,7 @@ public final class PlayerInventoryService {
             InventoryComponent.Hotbar hotbarComp = store.getComponent(ref, InventoryComponent.Hotbar.getComponentType());
             if (hotbarComp != null && saveData.activeHotbarSlot >= 0
                     && saveData.activeHotbarSlot < hotbarComp.getInventory().getCapacity()) {
-                hotbarComp.setActiveSlot(saveData.activeHotbarSlot);
+                hotbarComp.setActiveSlot(saveData.activeHotbarSlot, ref, store);
             }
 
             syncInventoryAndSelectedSlots(playerRef, ref, store);
@@ -282,7 +282,7 @@ public final class PlayerInventoryService {
         }
 
         if (hotbarComp.getActiveSlot() != preferredSlot) {
-            hotbarComp.setActiveSlot(preferredSlot);
+            hotbarComp.setActiveSlot(preferredSlot, ref, store);
         }
 
         syncInventoryAndSelectedSlots(playerRef, ref, store);
@@ -347,7 +347,7 @@ public final class PlayerInventoryService {
         InventoryComponent.Hotbar hotbarComp = store.getComponent(ref, InventoryComponent.Hotbar.getComponentType());
         if (hotbarComp != null && snapshot.activeHotbarSlot >= 0
                 && snapshot.activeHotbarSlot < hotbarComp.getInventory().getCapacity()) {
-            hotbarComp.setActiveSlot(snapshot.activeHotbarSlot);
+            hotbarComp.setActiveSlot(snapshot.activeHotbarSlot, ref, store);
         }
 
         PlayerRef playerRef = Universe.get().getPlayer(playerId);

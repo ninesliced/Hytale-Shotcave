@@ -1,0 +1,73 @@
+{
+  "$Comment": "CEO_Tank bazooka macro (Phase 2): grab -> fire 0-damage marker -> idle brace (marker lands, zone telegraphed) -> shoot real rocket -> save weapon.",
+  "Type": "Simple",
+  "RunTime": 0.6,
+  "Effects": {
+    "ItemPlayerAnimationsId": "CEO_Tank_Default",
+    "ItemAnimationId": "BazookaGrab",
+    "WorldSoundEventId": "SFX_Light_Melee_T2_Swing",
+    "MovementEffects": { "DisableAll": true }
+  },
+  "Next": {
+    "Type": "Serial",
+    "Interactions": [
+      {
+        "$Comment": "Fire the 0-damage marker projectile that will spawn a red warning zone at the impact spot.",
+        "Type": "LaunchProjectile",
+        "ProjectileId": "CEO_Tank_Bazooka_Marker",
+        "Effects": {
+          "WorldSoundEventId": "SFX_Light_Melee_T2_Swing",
+          "MovementEffects": { "DisableAll": true }
+        }
+      },
+      {
+        "$Comment": "Idle brace while the marker lands and telegraphs the zone.",
+        "Type": "Simple",
+        "RunTime": 1.0,
+        "Effects": {
+          "ItemPlayerAnimationsId": "CEO_Tank_Default",
+          "ItemAnimationId": "BazookaIdle",
+          "MovementEffects": { "DisableAll": true },
+          "Particles": [
+            { "SystemId": "Boss_Zone_Warning_Effect", "TargetEntityPart": "Entity", "Scale": 1.5 }
+          ]
+        }
+      },
+      {
+        "$Comment": "Shoot rocket",
+        "Type": "Simple",
+        "RunTime": 0.4,
+        "Effects": {
+          "ItemPlayerAnimationsId": "CEO_Tank_Default",
+          "ItemAnimationId": "BazookaShoot",
+          "WorldSoundEventId": "SFX_Goblin_Lobber_Bomb_Death",
+          "CameraEffect": "Boss_Impact_Heavy",
+          "MovementEffects": { "DisableAll": true }
+        },
+        "Next": {
+          "Type": "Serial",
+          "Interactions": [
+            {
+              "Type": "LaunchProjectile",
+              "ProjectileId": "CEO_Tank_Bazooka_Rocket",
+              "Effects": {
+                "WorldSoundEventId": "SFX_Goblin_Lobber_Bomb_Death",
+                "MovementEffects": { "DisableAll": true }
+              }
+            },
+            {
+              "$Comment": "Save/stow animation",
+              "Type": "Simple",
+              "RunTime": 0.8,
+              "Effects": {
+                "ItemPlayerAnimationsId": "CEO_Tank_Default",
+                "ItemAnimationId": "BazookaSave",
+                "MovementEffects": { "DisableAll": true }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

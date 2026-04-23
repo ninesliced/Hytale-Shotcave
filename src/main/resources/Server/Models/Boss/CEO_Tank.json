@@ -1,0 +1,49 @@
+{
+  "Model": "NPC/Boss/Tank/Model/CEO_Tank.blockymodel",
+  "Texture": "NPC/Boss/Tank/Model/ceotank.png",
+  "EyeHeight": 3.5,
+  "HitBox": {
+    "Max": { "X": 2.2, "Y": 5, "Z": 2.2 },
+    "Min": { "X": -2.2, "Y": 0, "Z": -2.2 }
+  },
+  "MinScale": 1,
+  "MaxScale": 1,
+  "Camera": {
+    "PositionOffset": { "X": 0.5, "Y": 1.0, "Z": 6 }
+  },
+  "AnimationSets": {
+    "Idle": {
+      "Animations": [{ "Animation": "NPC/Boss/Tank/Animations/tank_idle.blockyanim", "BlendingDuration": 0.2, "Speed": 1 }]
+    },
+    "Walk": {
+      "Animations": [{ "Animation": "NPC/Boss/Tank/Animations/move_front.blockyanim", "Speed": 1 }]
+    },
+    "WalkBackward": {
+      "Animations": [{ "Animation": "NPC/Boss/Tank/Animations/move_back.blockyanim", "Speed": 1 }]
+    },
+    "Run": {
+      "Animations": [{ "Animation": "NPC/Boss/Tank/Animations/move_front.blockyanim", "Speed": 1.4 }]
+    },
+    "Alerted": {
+      "Animations": [{ "Animation": "NPC/Boss/Tank/Animations/tank_idle.blockyanim", "Looping": false }]
+    },
+    "Fall": {
+      "Animations": [{ "Animation": "NPC/Boss/Tank/Animations/tank_idle.blockyanim", "BlendingDuration": 0.4, "Looping": true }]
+    },
+    "Hurt": {
+      "Animations": [{ "Animation": "NPC/Boss/Tank/Animations/tank_idle.blockyanim", "BlendingDuration": 0.1, "Looping": false }]
+    },
+    "Death": {
+      "Animations": [{ "Animation": "NPC/Boss/Tank/Animations/tank_idle.blockyanim", "Looping": false }]
+    },
+    "Jump": {
+      "Animations": [{ "Animation": "NPC/Boss/Tank/Animations/tank_idle.blockyanim", "BlendingDuration": 0.2, "Looping": true }]
+    },
+    "JumpWalk": {
+      "Animations": [{ "Animation": "NPC/Boss/Tank/Animations/move_front.blockyanim", "BlendingDuration": 0.2, "Looping": false }]
+    },
+    "JumpRun": {
+      "Animations": [{ "Animation": "NPC/Boss/Tank/Animations/move_front.blockyanim", "BlendingDuration": 0.2, "Speed": 1.4, "Looping": false }]
+    }
+  }
+}

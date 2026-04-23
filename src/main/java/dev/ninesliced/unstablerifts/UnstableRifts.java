@@ -5,7 +5,7 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.event.events.ecs.BreakBlockEvent;
 import com.hypixel.hytale.server.core.event.events.ecs.DropItemEvent;
-import com.hypixel.hytale.server.core.event.events.ecs.SwitchActiveSlotEvent;
+import com.hypixel.hytale.server.core.event.events.ecs.InventoryActiveSlotRequestEvent;
 import com.hypixel.hytale.server.core.event.events.ecs.UseBlockEvent;
 import com.hypixel.hytale.server.core.event.events.player.*;
 import com.hypixel.hytale.server.core.io.adapter.PacketAdapters;
@@ -320,7 +320,7 @@ public class UnstableRifts extends JavaPlugin {
 
     private void registerEventTypes() {
         try {
-            this.getEntityStoreRegistry().registerEntityEventType(SwitchActiveSlotEvent.class);
+            this.getEntityStoreRegistry().registerEntityEventType(InventoryActiveSlotRequestEvent.class);
         } catch (IllegalArgumentException e) {
             // Already registered by another plugin
         }

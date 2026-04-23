@@ -8,7 +8,7 @@ import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.EntityEventSystem;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.movement.MovementStatesComponent;
-import com.hypixel.hytale.server.core.event.events.ecs.SwitchActiveSlotEvent;
+import com.hypixel.hytale.server.core.event.events.ecs.InventoryActiveSlotRequestEvent;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -19,10 +19,10 @@ import javax.annotation.Nonnull;
 /**
  * Refreshes UnstableRifts ammo HUD when the active inventory slot changes.
  */
-public final class ActiveSlotHudUpdateSystem extends EntityEventSystem<EntityStore, SwitchActiveSlotEvent> {
+public final class ActiveSlotHudUpdateSystem extends EntityEventSystem<EntityStore, InventoryActiveSlotRequestEvent> {
 
     public ActiveSlotHudUpdateSystem() {
-        super(SwitchActiveSlotEvent.class);
+        super(InventoryActiveSlotRequestEvent.class);
     }
 
     @Override
@@ -35,7 +35,7 @@ public final class ActiveSlotHudUpdateSystem extends EntityEventSystem<EntitySto
                        @Nonnull ArchetypeChunk<EntityStore> chunk,
                        @Nonnull Store<EntityStore> store,
                        @Nonnull CommandBuffer<EntityStore> commandBuffer,
-                       @Nonnull SwitchActiveSlotEvent event) {
+                       @Nonnull InventoryActiveSlotRequestEvent event) {
         Ref<EntityStore> ref = chunk.getReferenceTo(index);
 
         Player player = store.getComponent(ref, Player.getComponentType());

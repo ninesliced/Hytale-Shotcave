@@ -29,18 +29,21 @@ public final class SpawnBossCommand extends AbstractPlayerCommand {
     private static final Map<String, String> BOSS_ALIASES = Map.of(
             "excavator", "Boss_Excavator",
             "forklift", "Boss_Forklift",
-            "zombie_commander", "Boss_Zombie_Commander"
+            "zombie_commander", "Boss_Zombie_Commander",
+            "ceotank", "Boss_CEO_Tank",
+            "ceo_tank", "Boss_CEO_Tank"
     );
 
     private static final Map<String, String> BOSS_DISPLAY_NAMES = Map.of(
             "Boss_Excavator", "Excavator",
             "Boss_Forklift", "Forklift",
-            "Boss_Zombie_Commander", "Zombie Commander"
+            "Boss_Zombie_Commander", "Zombie Commander",
+            "Boss_CEO_Tank", "CEO Tank"
     );
 
     @Nonnull
     private final RequiredArg<String> bossArg = this.withRequiredArg(
-            "boss", "Boss name (excavator, forklift, zombie_commander) or full NPC role id",
+            "boss", "Boss name (excavator, forklift, zombie_commander, ceotank) or full NPC role id",
             ArgTypes.STRING);
 
     public SpawnBossCommand() {
@@ -66,7 +69,7 @@ public final class SpawnBossCommand extends AbstractPlayerCommand {
                            @Nonnull World world) {
         String input = this.bossArg.get(context);
         if (input == null || input.isBlank()) {
-            context.sendMessage(Message.raw("Usage: /ur spawnboss <excavator|forklift|zombie_commander>").color(Color.RED));
+            context.sendMessage(Message.raw("Usage: /ur spawnboss <excavator|forklift|zombie_commander|ceotank>").color(Color.RED));
             return;
         }
 

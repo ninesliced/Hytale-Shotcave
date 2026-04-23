@@ -1,0 +1,29 @@
+{
+  "$Comment": "CEO_Tank bazooka zone marker - 0 damage, arcs to target, spawns red zone warning particle on landing to telegraph the real rocket's impact.",
+  "Appearance": "Forklift_Radioactive_Barrel",
+  "VerticalCenterShot": -0.25,
+  "HorizontalCenterShot": 0.0,
+  "DepthShot": 5.0,
+  "PitchAdjustShot": true,
+  "SticksVertically": true,
+  "MuzzleVelocity": 55,
+  "TerminalVelocity": 60,
+  "Gravity": 4,
+  "Damage": 0,
+  "DeathEffectsOnHit": true,
+  "TimeToLive": 4,
+  "HitSoundEventId": "SFX_Unarmed_Impact",
+  "MissSoundEventId": "SFX_Unarmed_Impact",
+  "DeathSoundEventId": "SFX_Unarmed_Impact",
+  "DeadTimeMiss": 0,
+  "DeadTime": 0,
+  "DeathParticles": {
+    "SystemId": "Boss_Zone_Warning_Effect"
+  },
+  "MissParticles": {
+    "SystemId": "Boss_Zone_Warning_Effect"
+  },
+  "HitParticles": {
+    "SystemId": "Boss_Zone_Warning_Effect"
+  }
+}

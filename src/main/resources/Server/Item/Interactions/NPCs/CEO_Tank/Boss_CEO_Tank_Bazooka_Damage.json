@@ -1,0 +1,22 @@
+{
+  "$Comment": "CEO_Tank bazooka rocket direct impact damage (Phase 2).",
+  "Parent": "DamageEntityParent",
+  "DamageCalculator": {
+    "Type": "Absolute",
+    "BaseDamage": { "Physical": 40 },
+    "RandomPercentageModifier": 0.1
+  },
+  "Effects": { "CameraEffect": "Boss_Impact_Heavy" },
+  "DamageEffects": {
+    "Knockback": {
+      "Force": 2.5,
+      "RelativeX": 0,
+      "RelativeZ": -3,
+      "VelocityY": 2.5,
+      "VelocityType": "Set"
+    },
+    "WorldSoundEventId": "SFX_Mace_T2_Impact",
+    "LocalSoundEventId": "SFX_Mace_T2_Impact",
+    "WorldParticles": [{ "SystemId": "Impact_Mace_Charged", "Scale": 2.0 }]
+  }
+}

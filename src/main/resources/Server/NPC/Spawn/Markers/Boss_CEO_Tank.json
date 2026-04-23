@@ -1,0 +1,13 @@
+{
+  "Model": "NPC_Spawn_Marker",
+  "NPCs": [
+    {
+      "Name": "Boss_CEO_Tank",
+      "Weight": 100,
+      "SpawnAfterGameTime": "P0D"
+    }
+  ],
+  "ExclusionRadius": 18,
+  "MaxDropHeight": 4,
+  "DeactivationDistance": 180
+}
