@@ -77,9 +77,6 @@ public final class WeaponVirtualItems {
 
         WeaponDefinition def = WeaponDefinitions.getById(baseItemId);
         if (def == null) return null;
-        if (def.category() == WeaponCategory.SUMMONING || def.category() == WeaponCategory.MELEE) {
-            return null;
-        }
 
         WeaponRarity rarity = WeaponRarity.BASIC;
         DamageEffect effect = DamageEffect.NONE;

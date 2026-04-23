@@ -3,6 +3,7 @@ package dev.ninesliced.unstablerifts.systems;
 import com.hypixel.hytale.component.*;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.inventory.InventoryComponent;
 import com.hypixel.hytale.server.core.entity.knockback.KnockbackComponent;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.modules.entity.damage.Damage;
@@ -54,10 +55,8 @@ public final class MeleeDamageEffectSystem extends DamageEventSystem {
         Player player = commandBuffer.getComponent(sourceRef, Player.getComponentType());
         if (player == null) return;
 
-        // Get the player's held item
-        if (player.getInventory() == null) return;
-        ItemStack heldItem = player.getInventory().getItemInHand();
-        if (heldItem == null) return;
+        ItemStack heldItem = InventoryComponent.getItemInHand(commandBuffer, sourceRef);
+        if (heldItem == null || ItemStack.isEmpty(heldItem)) return;
 
         // Only process MELEE weapons
         WeaponDefinition definition = WeaponDefinitions.getById(heldItem.getItemId());
@@ -68,14 +67,6 @@ public final class MeleeDamageEffectSystem extends DamageEventSystem {
 
         // Don't apply effects to self
         if (targetRef.equals(sourceRef)) return;
-
-        // ── Scale damage by WEAPON_DAMAGE modifier + Berserker buff ──
-        double dmgBonus = GunItemMetadata.getModifierBonus(heldItem, WeaponModifierType.WEAPON_DAMAGE);
-        float berserkerMul = ArmorAbilityBuffSystem.getDamageMultiplier(sourceRef);
-        float totalMul = (float) (1.0 + dmgBonus) * berserkerMul;
-        if (totalMul != 1.0f) {
-            damage.setAmount(damage.getAmount() * totalMul);
-        }
 
         // ── Apply DoT effect with rarity-scaled duration ──
         DamageEffect effect = GunItemMetadata.getEffect(heldItem);

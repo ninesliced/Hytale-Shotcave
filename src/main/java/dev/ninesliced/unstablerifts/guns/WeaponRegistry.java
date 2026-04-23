@@ -29,6 +29,7 @@ public final class WeaponRegistry {
 
     private static final String PACK_KEY = "ninesliced:UnstableRifts";
     private static final String MANIFEST_FILE = "weapon_registry.json";
+    private static final String CRYSTAL_SWORD_ITEM_ID = "Weapon_Crystal_Sword_UnstableRifts";
     private static final Gson GSON = new Gson();
     private static final Map<String, Function<String, Interaction>> SHARED_FACTORIES = Map.of(
             "UpdateAmmoHud", UpdateAmmoHudInteraction::new,
@@ -92,8 +93,9 @@ public final class WeaponRegistry {
         if (isMelee) {
             // Melee weapons: use vanilla Template_Weapon_Sword interaction chain
             // (Primary combo, Secondary guard, Ability1 vortexstrike).
-            // Damage is customised via InteractionVars on the item JSON.
-            // No custom Root or swing interaction needed.
+            // Crystal sword routes those swing hit entries through child damage
+            // interactions so melee modifiers are applied from held-item metadata.
+            registerMeleeDamageInteractions(wc, interactions, registeredIds);
         } else {
             // Ranged weapons: GunValidate interaction + root
             if (registeredIds.add(p.id)) {
@@ -136,6 +138,60 @@ public final class WeaponRegistry {
                 }
             }
         }
+    }
+
+    private static void registerMeleeDamageInteractions(@Nonnull WeaponConfig wc,
+                                                        @Nonnull List<Interaction> interactions,
+                                                        @Nonnull Set<String> registeredIds) {
+        if (!CRYSTAL_SWORD_ITEM_ID.equals(wc.itemId) || wc.damage == null) {
+            return;
+        }
+
+        registerMeleeDamageInteraction(interactions, registeredIds,
+                "UnstableRifts_Crystal_Sword_Swing_Left_Damage",
+                "Weapon_Sword_Primary_Swing_Left_Damage",
+                18.0f, wc.damage);
+        registerMeleeDamageInteraction(interactions, registeredIds,
+                "UnstableRifts_Crystal_Sword_Swing_Right_Damage",
+                "Weapon_Sword_Primary_Swing_Right_Damage",
+                18.0f, wc.damage);
+        registerMeleeDamageInteraction(interactions, registeredIds,
+                "UnstableRifts_Crystal_Sword_Swing_Down_Damage",
+                "Weapon_Sword_Primary_Swing_Down_Damage",
+                18.0f, wc.damage);
+        registerMeleeDamageInteraction(interactions, registeredIds,
+                "UnstableRifts_Crystal_Sword_Thrust_Damage",
+                "Weapon_Sword_Primary_Thrust_Damage",
+                20.0f, wc.damage);
+        registerMeleeDamageInteraction(interactions, registeredIds,
+                "UnstableRifts_Crystal_Sword_Vortexstrike_Spin_Damage",
+                "Weapon_Sword_Signature_Vortexstrike_Spin_Damage",
+                14.0f, wc.damage);
+        registerMeleeDamageInteraction(interactions, registeredIds,
+                "UnstableRifts_Crystal_Sword_Vortexstrike_Stab_Damage",
+                "Weapon_Sword_Signature_Vortexstrike_Stab_Damage",
+                42.0f, wc.damage);
+    }
+
+    private static void registerMeleeDamageInteraction(@Nonnull List<Interaction> interactions,
+                                                       @Nonnull Set<String> registeredIds,
+                                                       @Nonnull String id,
+                                                       @Nonnull String parentId,
+                                                       float amount,
+                                                       @Nonnull DamageDef damageDef) {
+        if (!registeredIds.add(id)) {
+            return;
+        }
+
+        interactions.add(new UnstableRiftsDamageInteraction(
+                id,
+                parentId,
+                amount,
+                damageDef.type,
+                damageDef.worldSfx,
+                damageDef.localSfx,
+                damageDef.particleId,
+                damageDef.particleYOffset));
     }
 
     private static void registerDefinition(@Nonnull WeaponConfig wc,

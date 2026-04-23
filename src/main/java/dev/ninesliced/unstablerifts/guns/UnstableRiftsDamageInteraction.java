@@ -1,5 +1,6 @@
 package dev.ninesliced.unstablerifts.guns;
 
+import com.hypixel.hytale.assetstore.AssetExtraInfo;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.server.core.asset.type.particle.config.WorldParticle;
@@ -7,6 +8,7 @@ import com.hypixel.hytale.server.core.entity.InteractionContext;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageCause;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler;
+import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.server.DamageEntityInteraction;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.server.combat.DamageCalculator;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.server.combat.DamageEffects;
@@ -45,8 +47,22 @@ public final class UnstableRiftsDamageInteraction extends DamageEntityInteractio
             @Nullable String particleId,
             float particleYOffset
     ) {
+        this(id, null, damage, damageType, worldSfx, localSfx, particleId, particleYOffset);
+    }
+
+    public UnstableRiftsDamageInteraction(
+            @Nonnull String id,
+            @Nullable String parentId,
+            float damage,
+            @Nonnull String damageType,
+            @Nullable String worldSfx,
+            @Nullable String localSfx,
+            @Nullable String particleId,
+            float particleYOffset
+    ) {
         super();
         this.id = id;
+        this.data = new AssetExtraInfo.Data(Interaction.class, id, parentId);
 
         // Build damage calculator (protected fields on DamageCalculator are accessible
         // from UnstableRiftsDamageCalculator inner class)
