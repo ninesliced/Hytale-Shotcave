@@ -29,98 +29,32 @@
     },
     "Swing_Left_Damage": {
       "Interactions": [
-        {
-          "Parent": "Weapon_Sword_Primary_Swing_Left_Damage",
-          "DamageCalculator": {
-            "BaseDamage": {
-              "Physical": 18
-            }
-          },
-          "DamageEffects": {
-            "WorldSoundEventId": "SFX_Sword_T2_Impact",
-            "LocalSoundEventId": "SFX_Sword_T2_Impact"
-          }
-        }
+        "UnstableRifts_Crystal_Sword_Swing_Left_Damage"
       ]
     },
     "Swing_Right_Damage": {
       "Interactions": [
-        {
-          "Parent": "Weapon_Sword_Primary_Swing_Right_Damage",
-          "DamageCalculator": {
-            "BaseDamage": {
-              "Physical": 18
-            }
-          },
-          "DamageEffects": {
-            "WorldSoundEventId": "SFX_Sword_T2_Impact",
-            "LocalSoundEventId": "SFX_Sword_T2_Impact"
-          }
-        }
+        "UnstableRifts_Crystal_Sword_Swing_Right_Damage"
       ]
     },
     "Swing_Down_Damage": {
       "Interactions": [
-        {
-          "Parent": "Weapon_Sword_Primary_Swing_Down_Damage",
-          "DamageCalculator": {
-            "BaseDamage": {
-              "Physical": 18
-            }
-          },
-          "DamageEffects": {
-            "WorldSoundEventId": "SFX_Sword_T2_Impact",
-            "LocalSoundEventId": "SFX_Sword_T2_Impact"
-          }
-        }
+        "UnstableRifts_Crystal_Sword_Swing_Down_Damage"
       ]
     },
     "Thrust_Damage": {
       "Interactions": [
-        {
-          "Parent": "Weapon_Sword_Primary_Thrust_Damage",
-          "DamageCalculator": {
-            "BaseDamage": {
-              "Physical": 20
-            }
-          },
-          "DamageEffects": {
-            "WorldSoundEventId": "SFX_Sword_T2_Impact",
-            "LocalSoundEventId": "SFX_Sword_T2_Impact"
-          }
-        }
+        "UnstableRifts_Crystal_Sword_Thrust_Damage"
       ]
     },
     "Vortexstrike_Spin_Damage": {
       "Interactions": [
-        {
-          "Parent": "Weapon_Sword_Signature_Vortexstrike_Spin_Damage",
-          "DamageCalculator": {
-            "BaseDamage": {
-              "Physical": 14
-            }
-          },
-          "DamageEffects": {
-            "WorldSoundEventId": "SFX_Sword_T2_Impact",
-            "LocalSoundEventId": "SFX_Sword_T2_Impact"
-          }
-        }
+        "UnstableRifts_Crystal_Sword_Vortexstrike_Spin_Damage"
       ]
     },
     "Vortexstrike_Stab_Damage": {
       "Interactions": [
-        {
-          "Parent": "Weapon_Sword_Signature_Vortexstrike_Stab_Damage",
-          "DamageCalculator": {
-            "BaseDamage": {
-              "Physical": 42
-            }
-          },
-          "DamageEffects": {
-            "WorldSoundEventId": "SFX_Sword_T2_Impact",
-            "LocalSoundEventId": "SFX_Sword_T2_Impact"
-          }
-        }
+        "UnstableRifts_Crystal_Sword_Vortexstrike_Stab_Damage"
       ]
     }
   },
