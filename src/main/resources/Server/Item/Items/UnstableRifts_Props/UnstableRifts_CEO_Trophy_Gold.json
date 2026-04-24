@@ -3,7 +3,7 @@
     "Name": "items.UnstableRifts_CEO_Trophy_Gold.name",
     "Description": "items.UnstableRifts_CEO_Trophy_Gold.description"
   },
-  "Icon": "Icons/ItemsGenerated/UnstableRifts_Key_Item.png",
+  "Icon": "Icons/ItemsGenerated/CEO_Trophy_Gold.png",
   "Categories": [
     "Furniture.Containers"
   ],
