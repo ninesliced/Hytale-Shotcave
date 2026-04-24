@@ -1,0 +1,79 @@
+@CardBg = #141922;
+@CardOutline = #2b3646(0.75);
+@TitleColor = #f0d060;
+@BodyColor = #b9c7d6;
+@MetaColor = #8fa4b8;
+@SepColor = #273243;
+
+Group {
+  Anchor: (Top: 6);
+  Background: @CardBg;
+  OutlineColor: @CardOutline;
+  OutlineSize: 1;
+  LayoutMode: Top;
+  Padding: (Horizontal: 12, Vertical: 12);
+
+  Group {
+    Anchor: (Height: 78);
+    LayoutMode: Left;
+
+    AssetImage #MerchantGroupIcon {
+      Anchor: (Width: 64, Height: 64, Top: 2);
+      Visible: true;
+    }
+
+    Group {
+      Anchor: (Left: 10);
+      FlexWeight: 1;
+      LayoutMode: Top;
+
+      Label #MerchantGroupTitle {
+        Text: "GROUP";
+        Anchor: (Height: 22);
+        Style: LabelStyle(
+          FontName: "Secondary",
+          FontSize: 14,
+          TextColor: @TitleColor,
+          RenderBold: true,
+          RenderUppercase: true,
+          HorizontalAlignment: Start,
+          VerticalAlignment: Center
+        );
+      }
+
+      Label #MerchantGroupDesc {
+        Text: "Description";
+        Anchor: (Height: 34, Top: 4);
+        Style: LabelStyle(
+          FontSize: 11,
+          TextColor: @BodyColor,
+          Wrap: true,
+          HorizontalAlignment: Start,
+          VerticalAlignment: Start
+        );
+      }
+
+      Label #MerchantGroupMeta {
+        Text: "Meta";
+        Anchor: (Height: 16, Top: 4);
+        Style: LabelStyle(
+          FontSize: 10,
+          TextColor: @MetaColor,
+          RenderBold: true,
+          HorizontalAlignment: Start,
+          VerticalAlignment: Center
+        );
+      }
+    }
+  }
+
+  Group {
+    Anchor: (Height: 1, Top: 8);
+    Background: @SepColor;
+  }
+
+  Group #MerchantOptionList {
+    Anchor: (Top: 8);
+    LayoutMode: Top;
+  }
+}

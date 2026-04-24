@@ -1,0 +1,89 @@
+@RowBg = #1a212c;
+@RowOutline = #243041(0.7);
+@NameColor = #e8ecf0;
+@PriceColor = #f0d060;
+@BodyColor = #8fa4b8;
+@BuyBtnLabelStyle = LabelStyle(FontSize: 11, TextColor: #e8ecf0, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center);
+@BuyBtnStyle = TextButtonStyle(
+  Default: (Background: #2a5030, LabelStyle: @BuyBtnLabelStyle),
+  Hovered: (Background: #367043, LabelStyle: @BuyBtnLabelStyle),
+  Pressed: (Background: #2a5030, LabelStyle: @BuyBtnLabelStyle)
+);
+@LockedBtnLabelStyle = LabelStyle(FontSize: 11, TextColor: #d6dbe2, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center);
+@LockedBtnStyle = TextButtonStyle(
+  Default: (Background: #444d5c, LabelStyle: @LockedBtnLabelStyle),
+  Hovered: (Background: #444d5c, LabelStyle: @LockedBtnLabelStyle),
+  Pressed: (Background: #444d5c, LabelStyle: @LockedBtnLabelStyle)
+);
+
+Group {
+  Anchor: (Top: 6);
+  Background: @RowBg;
+  OutlineColor: @RowOutline;
+  OutlineSize: 1;
+  LayoutMode: Top;
+  Padding: (Horizontal: 10, Vertical: 8);
+
+  Group {
+    Anchor: (Height: 24);
+    LayoutMode: Left;
+
+    Label #MerchantOptionName {
+      Text: "Option";
+      Anchor: (Height: 24);
+      FlexWeight: 1;
+      Style: LabelStyle(
+        FontName: "Secondary",
+        FontSize: 13,
+        TextColor: @NameColor,
+        RenderBold: true,
+        HorizontalAlignment: Start,
+        VerticalAlignment: Center,
+        ShrinkTextToFit: true,
+        MinShrinkTextToFitFontSize: 10
+      );
+    }
+
+    Label #MerchantOptionPrice {
+      Text: "0 coins";
+      Anchor: (Width: 84, Height: 24, Left: 6);
+      Style: LabelStyle(
+        FontSize: 11,
+        TextColor: @PriceColor,
+        RenderBold: true,
+        HorizontalAlignment: End,
+        VerticalAlignment: Center
+      );
+    }
+
+    Group {
+      Anchor: (Width: 74, Height: 24, Left: 8);
+
+      TextButton #MerchantOptionBuyBtn {
+        Text: "BUY";
+        Anchor: (Left: 0, Top: 0, Right: 0, Bottom: 0);
+        Style: @BuyBtnStyle;
+        Visible: true;
+      }
+
+      TextButton #MerchantOptionLockedBtn {
+        Text: "LOCKED";
+        Anchor: (Left: 0, Top: 0, Right: 0, Bottom: 0);
+        Style: @LockedBtnStyle;
+        Visible: false;
+      }
+    }
+  }
+
+  Label #MerchantOptionDesc {
+    Text: "Description";
+    Anchor: (Height: 28, Top: 4);
+    Style: LabelStyle(
+      FontSize: 11,
+      TextColor: @BodyColor,
+      Wrap: true,
+      HorizontalAlignment: Start,
+      VerticalAlignment: Start
+    );
+  }
+}
