@@ -8,6 +8,7 @@ import dev.ninesliced.unstablerifts.armor.ArmorDefinitions;
 import dev.ninesliced.unstablerifts.armor.ArmorItemMetadata;
 import dev.ninesliced.unstablerifts.armor.ArmorModifier;
 import dev.ninesliced.unstablerifts.guns.*;
+import dev.ninesliced.unstablerifts.hud.HudCompat;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -100,7 +101,7 @@ public final class ItemPickupHudService {
                 crouching, rarity, effect, category, definition, modifiers, isWeapon, baseMaxAmmo, maxAmmo,
                 isArmor, armorDefinition, armorModifiers);
 
-        player.getHudManager().addCustomHud(playerRef, hud);
+        HudCompat.setCustomHud(player, playerRef, HUD_IDENTIFIER, hud);
     }
 
     public static void hide(@Nonnull Player player,
@@ -114,7 +115,7 @@ public final class ItemPickupHudService {
         }
         LAST_STATE.put(uuid, STATE_HIDDEN);
 
-        player.getHudManager().removeCustomHud(playerRef, HUD_IDENTIFIER);
+        HudCompat.hideCustomHud(player, playerRef, HUD_IDENTIFIER);
     }
 
     public static boolean isActive(@Nonnull UUID playerUuid) {

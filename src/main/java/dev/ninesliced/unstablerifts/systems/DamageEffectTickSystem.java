@@ -9,6 +9,7 @@ import com.hypixel.hytale.component.dependency.Order;
 import com.hypixel.hytale.component.dependency.SystemDependency;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
+import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.protocol.ChangeVelocityType;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
@@ -19,7 +20,6 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.npc.systems.NPCVelocityInstructionSystem;
 import dev.ninesliced.unstablerifts.armor.ArmorAbilityBuffSystem;
 import dev.ninesliced.unstablerifts.guns.DamageEffect;
-import org.joml.Vector3d;
 
 import javax.annotation.Nonnull;
 import java.util.Set;

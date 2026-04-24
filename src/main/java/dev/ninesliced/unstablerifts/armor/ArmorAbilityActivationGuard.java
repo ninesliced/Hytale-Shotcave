@@ -15,6 +15,7 @@ import dev.ninesliced.unstablerifts.pickup.ItemPickupConfig;
 import dev.ninesliced.unstablerifts.pickup.ItemPickupHudService;
 import dev.ninesliced.unstablerifts.pickup.ItemPickupTracker;
 import dev.ninesliced.unstablerifts.shop.ShopPromptHudService;
+import dev.ninesliced.unstablerifts.util.VectorConversions;
 import org.joml.Vector3d;
 
 import javax.annotation.Nonnull;
@@ -48,7 +49,10 @@ public final class ArmorAbilityActivationGuard {
             return false;
         }
 
-        Vector3d playerPos = transform.getPosition();
+        Vector3d playerPos = VectorConversions.toJoml(transform.getPosition());
+        if (playerPos == null) {
+            return false;
+        }
         double pickupRadiusSq = ItemPickupConfig.ITEM_PICKUP_RADIUS * ItemPickupConfig.ITEM_PICKUP_RADIUS;
         if (ItemPickupTracker.findClosestFKeyPickup(ref.getStore(), playerPos, pickupRadiusSq) != null) {
             return true;

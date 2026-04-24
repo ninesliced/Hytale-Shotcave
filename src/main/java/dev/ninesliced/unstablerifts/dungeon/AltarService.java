@@ -14,6 +14,7 @@ import dev.ninesliced.unstablerifts.UnstableRifts;
 import dev.ninesliced.unstablerifts.guns.GunItemMetadata;
 import dev.ninesliced.unstablerifts.guns.WeaponLootRoller;
 import dev.ninesliced.unstablerifts.guns.WeaponRarity;
+import dev.ninesliced.unstablerifts.util.VectorConversions;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 
@@ -50,7 +51,7 @@ public final class AltarService {
 
                 Vector3d dropPosition = new Vector3d(pos.x + 0.5, pos.y + 1.0, pos.z + 0.5);
                 Holder<EntityStore> holder = ItemComponent.generateItemDrop(
-                        entityStore, weapon, dropPosition, Rotation3f.ZERO, 0.0f, 0.0f, 0.0f);
+                    entityStore, weapon, VectorConversions.toHytale(dropPosition), Rotation3f.ZERO, 0.0f, 0.0f, 0.0f);
                 if (holder == null) {
                     continue;
                 }

@@ -2,7 +2,6 @@ package dev.ninesliced.unstablerifts.hud;
 
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import dev.ninesliced.unstablerifts.dungeon.Game;
@@ -14,7 +13,7 @@ import javax.annotation.Nonnull;
  * HUD overlay displaying dungeon information:
  * dungeon name, current level, money, keys, game time, and mob count.
  */
-public final class DungeonInfoHud extends CustomUIHud {
+public final class DungeonInfoHud extends UnstableRiftsCustomHud {
 
     public static final String UI_PATH = "Hud/UnstableRifts/DungeonInfo.ui";
     public static final String HUD_ID = "UnstableRiftsDungeon";
@@ -35,7 +34,7 @@ public final class DungeonInfoHud extends CustomUIHud {
                           @Nonnull String gameTime,
                           int mobsAlive,
                           int mobsTotal) {
-        super(playerRef, HUD_ID);
+        super(playerRef);
         this.dungeonName = dungeonName;
         this.levelName = levelName;
         this.money = money;
@@ -76,14 +75,14 @@ public final class DungeonInfoHud extends CustomUIHud {
         if (HudVisibilityService.isHidden(playerRef.getUuid())) {
             return;
         }
-        player.getHudManager().addCustomHud(playerRef, hud);
+        HudCompat.setCustomHud(player, playerRef, HUD_ID, hud);
     }
 
     /**
      * Hides the dungeon info HUD.
      */
     public static void hideHud(@Nonnull Player player, @Nonnull PlayerRef playerRef) {
-        player.getHudManager().removeCustomHud(playerRef, HUD_ID);
+        HudCompat.hideCustomHud(player, playerRef, HUD_ID);
     }
 
     @Override

@@ -18,6 +18,7 @@ import dev.ninesliced.unstablerifts.dungeon.DungeonConstants;
 import dev.ninesliced.unstablerifts.dungeon.Game;
 import dev.ninesliced.unstablerifts.dungeon.GameManager;
 import dev.ninesliced.unstablerifts.dungeon.GameState;
+import dev.ninesliced.unstablerifts.util.VectorConversions;
 import org.joml.Vector3d;
 
 import javax.annotation.Nonnull;
@@ -64,8 +65,11 @@ public final class PlayerDeathSystem extends EntityTickingSystem<EntityStore> {
 
         TransformComponent transform = store.getComponent(ref, TransformComponent.getComponentType());
         Vector3d deathPos = transform != null
-                ? new Vector3d(transform.getPosition())
+            ? VectorConversions.toJoml(transform.getPosition())
                 : new Vector3d(0, 0, 0);
+        if (deathPos == null) {
+            deathPos = new Vector3d(0, 0, 0);
+        }
 
         death.markDead(deathPos);
         gameManager.getReviveMarkerService().spawnReviveMarker(commandBuffer, store, ref, playerRef.getUuid(), deathPos);

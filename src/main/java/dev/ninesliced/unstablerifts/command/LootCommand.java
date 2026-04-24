@@ -5,6 +5,7 @@ import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.vector.Rotation3f;
+import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.AbstractCommand;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
@@ -18,7 +19,6 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.ninesliced.unstablerifts.guns.GunItemMetadata;
 import dev.ninesliced.unstablerifts.guns.WeaponLootRoller;
 import dev.ninesliced.unstablerifts.guns.WeaponRarity;
-import org.joml.Vector3d;
 
 import javax.annotation.Nonnull;
 import java.awt.*;

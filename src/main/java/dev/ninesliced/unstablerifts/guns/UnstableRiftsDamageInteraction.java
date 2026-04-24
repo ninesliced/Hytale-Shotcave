@@ -3,6 +3,7 @@ package dev.ninesliced.unstablerifts.guns;
 import com.hypixel.hytale.assetstore.AssetExtraInfo;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.protocol.InteractionType;
+import com.hypixel.hytale.protocol.Vector3f;
 import com.hypixel.hytale.server.core.asset.type.particle.config.WorldParticle;
 import com.hypixel.hytale.server.core.entity.InteractionContext;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
@@ -77,7 +78,7 @@ public final class UnstableRiftsDamageInteraction extends DamageEntityInteractio
                             null,
                             1.0f,
                             particleYOffset != 0.0f
-                                    ? new org.joml.Vector3f(0.0f, particleYOffset, 0.0f)
+                                ? new Vector3f(0.0f, particleYOffset, 0.0f)
                                     : null,
                             null
                     )

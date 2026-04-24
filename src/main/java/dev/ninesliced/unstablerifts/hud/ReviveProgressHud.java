@@ -2,7 +2,6 @@ package dev.ninesliced.unstablerifts.hud;
 
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 import com.hypixel.hytale.server.core.ui.Anchor;
 import com.hypixel.hytale.server.core.ui.Value;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
@@ -15,7 +14,7 @@ import javax.annotation.Nonnull;
  * HUD overlay shown to alive players while they are reviving a dead teammate.
  * Displays a progress bar and time text.
  */
-public final class ReviveProgressHud extends CustomUIHud {
+public final class ReviveProgressHud extends UnstableRiftsCustomHud {
 
     public static final String UI_PATH = "Hud/UnstableRifts/ReviveProgress.ui";
     public static final String HUD_ID = "UnstableRiftsReviveProgress";
@@ -30,7 +29,7 @@ public final class ReviveProgressHud extends CustomUIHud {
     public ReviveProgressHud(@Nonnull PlayerRef playerRef,
                              @Nonnull String targetName,
                              float progress) {
-        super(playerRef, HUD_ID);
+        super(playerRef);
         this.targetName = targetName;
         this.progress = progress;
     }
@@ -40,11 +39,11 @@ public final class ReviveProgressHud extends CustomUIHud {
         if (HudVisibilityService.isHidden(playerRef.getUuid())) {
             return;
         }
-        player.getHudManager().addCustomHud(playerRef, hud);
+        HudCompat.setCustomHud(player, playerRef, HUD_ID, hud);
     }
 
     public static void hideHud(@Nonnull Player player, @Nonnull PlayerRef playerRef) {
-        player.getHudManager().removeCustomHud(playerRef, HUD_ID);
+        HudCompat.hideCustomHud(player, playerRef, HUD_ID);
     }
 
     @Override

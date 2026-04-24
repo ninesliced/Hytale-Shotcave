@@ -8,6 +8,7 @@ import com.hypixel.hytale.server.core.modules.entity.item.ItemComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.ninesliced.unstablerifts.UnstableRifts;
 import dev.ninesliced.unstablerifts.shop.ShopDisplayItemComponent;
+import dev.ninesliced.unstablerifts.util.VectorConversions;
 import org.joml.Vector3d;
 
 import javax.annotation.Nonnull;
@@ -177,7 +178,7 @@ public final class ItemPickupTracker {
             if (transform == null) {
                 return null;
             }
-            return transform.getPosition();
+            return VectorConversions.toJoml(transform.getPosition());
         }
 
         @Nullable

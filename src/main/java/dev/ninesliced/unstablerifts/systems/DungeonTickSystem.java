@@ -25,6 +25,7 @@ import dev.ninesliced.unstablerifts.hud.PartyStatusHud;
 import dev.ninesliced.unstablerifts.hud.PortalPromptHudService;
 import dev.ninesliced.unstablerifts.party.PartyManager;
 import dev.ninesliced.unstablerifts.player.PlayerEventNotifier;
+import dev.ninesliced.unstablerifts.util.VectorConversions;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 
@@ -261,7 +262,10 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
             TransformComponent transform = playerEntityRef.getStore().getComponent(
                     playerEntityRef, TransformComponent.getComponentType());
             if (transform != null) {
-                playerPositions.add(new Vector3d(transform.getPosition()));
+                Vector3d playerPos = VectorConversions.toJoml(transform.getPosition());
+                if (playerPos != null) {
+                    playerPositions.add(playerPos);
+                }
             }
         }
 
@@ -281,7 +285,10 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
                     continue;
                 }
 
-                Vector3d npcPos = transform.getPosition();
+                Vector3d npcPos = VectorConversions.toJoml(transform.getPosition());
+                if (npcPos == null) {
+                    continue;
+                }
                 if (!isNearAnyPlayer(npcPos, playerPositions)) {
                     continue;
                 }
@@ -485,7 +492,8 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
         TransformComponent transform = store.getComponent(ref, TransformComponent.getComponentType());
         if (transform == null) return;
 
-        Vector3d pos = transform.getPosition();
+        Vector3d pos = VectorConversions.toJoml(transform.getPosition());
+        if (pos == null) return;
         int px = (int) Math.floor(pos.x);
         int py = (int) Math.floor(pos.y);
         int pz = (int) Math.floor(pos.z);
@@ -532,7 +540,7 @@ public final class DungeonTickSystem extends EntityTickingSystem<EntityStore> {
         }
 
         PortalInteractionService.PortalPrompt prompt = unstablerifts.getPortalInteractionService()
-                .resolvePrompt(game, playerRef.getUuid(), transform.getPosition());
+            .resolvePrompt(game, playerRef.getUuid(), VectorConversions.toJoml(transform.getPosition()));
         if (prompt == null) {
             PortalPromptHudService.hide(player, playerRef);
             return;

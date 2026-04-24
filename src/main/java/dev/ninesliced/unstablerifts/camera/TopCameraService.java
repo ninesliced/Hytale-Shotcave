@@ -4,7 +4,6 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.*;
 import com.hypixel.hytale.protocol.packets.camera.SetServerCamera;
-import org.joml.Vector3f;
 import com.hypixel.hytale.protocol.packets.setup.ClientFeature;
 import com.hypixel.hytale.protocol.packets.setup.UpdateFeatures;
 import com.hypixel.hytale.server.core.entity.entities.player.movement.MovementManager;
@@ -181,7 +180,7 @@ public class TopCameraService {
         cameraSettings.rotationType = RotationType.Custom;
         cameraSettings.rotation = new Direction(yaw, -0.9F, 0.0F);
         cameraSettings.mouseInputType = MouseInputType.LookAtPlane;
-        cameraSettings.planeNormal = new org.joml.Vector3f(0.0F, 1.0F, 0.0F);
+        cameraSettings.planeNormal = new Vector3f(0.0F, 1.0F, 0.0F);
         playerRef.getPacketHandler().writeNoCache(new SetServerCamera(ClientCameraView.Custom, true, cameraSettings));
     }
 

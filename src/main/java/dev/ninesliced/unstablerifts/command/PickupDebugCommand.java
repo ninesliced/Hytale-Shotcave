@@ -15,6 +15,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.ninesliced.unstablerifts.logging.UnstableRiftsLog;
 import dev.ninesliced.unstablerifts.pickup.ItemPickupConfig;
 import dev.ninesliced.unstablerifts.pickup.ItemPickupTracker;
+import dev.ninesliced.unstablerifts.util.VectorConversions;
 import org.joml.Vector3d;
 
 import javax.annotation.Nonnull;
@@ -59,7 +60,7 @@ public class PickupDebugCommand extends AbstractCommandCollection {
             boolean nearbyOnly) {
 
         TransformComponent playerTransform = store.getComponent(playerRef, TransformComponent.getComponentType());
-        Vector3d playerPos = (playerTransform != null) ? playerTransform.getPosition() : null;
+        Vector3d playerPos = playerTransform != null ? VectorConversions.toJoml(playerTransform.getPosition()) : null;
 
         Collection<ItemPickupTracker.TrackedItem> all = ItemPickupTracker.getAll();
         if (all.isEmpty()) {
@@ -282,7 +283,7 @@ public class PickupDebugCommand extends AbstractCommandCollection {
                 context.sendMessage(Message.raw("Pruned " + pruned + " stale entries. Remaining: " + sizeAfter + ".")
                         .color(Color.GREEN));
                 LOGGER.at(Level.INFO).log("[PickupDebug] %s pruned %d stale entries (remaining: %d)",
-                        context.sender().getUsername(), pruned, sizeAfter);
+                    context.sender().getDisplayName(), pruned, sizeAfter);
             } else {
                 context.sendMessage(Message.raw("No stale entries to prune. Total: " + sizeAfter + ".")
                         .color(Color.GRAY));
@@ -314,7 +315,7 @@ public class PickupDebugCommand extends AbstractCommandCollection {
             ItemPickupTracker.clear();
             context.sendMessage(Message.raw("Cleared all " + sizeBefore + " tracked entries.").color(Color.YELLOW));
             LOGGER.at(Level.INFO).log("[PickupDebug] %s cleared all %d tracked entries",
-                    context.sender().getUsername(), sizeBefore);
+                    context.sender().getDisplayName(), sizeBefore);
         }
     }
 }

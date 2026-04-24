@@ -23,6 +23,7 @@ import dev.ninesliced.unstablerifts.dungeon.GameManager;
 import dev.ninesliced.unstablerifts.dungeon.GameState;
 import dev.ninesliced.unstablerifts.hud.DeathCountdownHud;
 import dev.ninesliced.unstablerifts.hud.ReviveProgressHud;
+import dev.ninesliced.unstablerifts.util.VectorConversions;
 import org.joml.Vector3d;
 
 import javax.annotation.Nonnull;
@@ -198,7 +199,10 @@ public final class ReviveTickSystem extends EntityTickingSystem<EntityStore> {
         TransformComponent transform = store.getComponent(ref, TransformComponent.getComponentType());
         if (transform == null) return;
 
-        Vector3d myPos = transform.getPosition();
+        Vector3d myPos = VectorConversions.toJoml(transform.getPosition());
+        if (myPos == null) {
+            return;
+        }
 
         DeadPlayerInfo nearest = findNearestDeadPlayer(myPos, playerRef.getUuid(), game, gameManager);
         if (nearest == null) {
@@ -271,12 +275,15 @@ public final class ReviveTickSystem extends EntityTickingSystem<EntityStore> {
         if (deadInfo.ref != null && deadInfo.ref.isValid()) {
             TransformComponent transform = deadInfo.ref.getStore().getComponent(deadInfo.ref, TransformComponent.getComponentType());
             if (revivePosition != null) {
-                Rotation3f rotation = transform != null ? transform.getRotation().clone() : new Rotation3f();
+            var rotation = transform != null ? transform.getRotation().clone() : new Rotation3f();
+            var teleportPosition = VectorConversions.toHytale(revivePosition);
+            if (teleportPosition != null) {
                 commandBuffer.addComponent(
                         deadInfo.ref,
                         Teleport.getComponentType(),
-                        Teleport.createForPlayer(revivePosition, rotation)
+                Teleport.createForPlayer(teleportPosition, rotation)
                 );
+            }
             }
             setHealthToMax(deadInfo.ref.getStore(), deadInfo.ref);
         }

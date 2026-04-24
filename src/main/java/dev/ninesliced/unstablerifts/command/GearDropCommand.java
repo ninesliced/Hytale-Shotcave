@@ -5,6 +5,7 @@ import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.vector.Rotation3f;
+import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.CommandSender;
@@ -30,7 +31,6 @@ import dev.ninesliced.unstablerifts.guns.WeaponDefinition;
 import dev.ninesliced.unstablerifts.guns.WeaponDefinitions;
 import dev.ninesliced.unstablerifts.guns.WeaponLootRoller;
 import dev.ninesliced.unstablerifts.guns.WeaponRarity;
-import org.joml.Vector3d;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -292,11 +292,6 @@ final class GearDropCommand {
                             @Nonnull SuggestionResult result) {
             suggestMatching(this.suggestions.get(), textAlreadyEntered, result);
         }
-
-        @Override
-        public int getSuggestionValueCount() {
-            return this.suggestions.get().size();
-        }
     }
 
     private static final class RarityArgumentType extends SingleArgumentType<WeaponRarity> {
@@ -322,11 +317,6 @@ final class GearDropCommand {
                             int numParametersTyped,
                             @Nonnull SuggestionResult result) {
             suggestMatching(RARITY_SUGGESTIONS, textAlreadyEntered, result);
-        }
-
-        @Override
-        public int getSuggestionValueCount() {
-            return RARITY_SUGGESTIONS.size();
         }
     }
 

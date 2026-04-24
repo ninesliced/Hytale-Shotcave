@@ -4,7 +4,6 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
@@ -24,7 +23,7 @@ import java.util.Locale;
 /**
  * Top-center boss fight HUD showing the active boss name and health bar.
  */
-public final class BossFightHud extends CustomUIHud {
+public final class BossFightHud extends UnstableRiftsCustomHud {
 
     public static final String UI_PATH = "Hud/UnstableRifts/BossFight.ui";
     public static final String HUD_ID = "UnstableRiftsBossFight";
@@ -40,7 +39,7 @@ public final class BossFightHud extends CustomUIHud {
                          @Nonnull String bossName,
                          float currentHealth,
                          float maxHealth) {
-        super(playerRef, HUD_ID);
+        super(playerRef);
         this.bossName = bossName;
         this.currentHealth = Math.max(0f, currentHealth);
         this.maxHealth = Math.max(1f, maxHealth);
@@ -59,11 +58,11 @@ public final class BossFightHud extends CustomUIHud {
         if (HudVisibilityService.isHidden(playerRef.getUuid())) {
             return;
         }
-        player.getHudManager().addCustomHud(playerRef, hud);
+        HudCompat.setCustomHud(player, playerRef, HUD_ID, hud);
     }
 
     public static void hideHud(@Nonnull Player player, @Nonnull PlayerRef playerRef) {
-        player.getHudManager().removeCustomHud(playerRef, HUD_ID);
+        HudCompat.hideCustomHud(player, playerRef, HUD_ID);
     }
 
     private static void setHealthBarWidth(@Nonnull UICommandBuilder ui, int width) {

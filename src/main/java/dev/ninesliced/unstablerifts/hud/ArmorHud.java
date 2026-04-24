@@ -1,7 +1,6 @@
 package dev.ninesliced.unstablerifts.hud;
 
 import com.hypixel.hytale.server.core.Message;
-import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 import com.hypixel.hytale.server.core.ui.Anchor;
 import com.hypixel.hytale.server.core.ui.Value;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
@@ -20,7 +19,7 @@ import java.util.List;
  * Compact mode shows set name, piece count, quick stat summary, and ability charge.
  * Expanded mode (crouching) adds full stat rows, modifiers, and set bonus details.
  */
-public final class ArmorHud extends CustomUIHud {
+public final class ArmorHud extends UnstableRiftsCustomHud {
     public static final String UI_PATH = "Hud/UnstableRifts/ArmorHud.ui";
     public static final String HUD_ID = "UnstableRifts_Armor";
 
@@ -63,7 +62,7 @@ public final class ArmorHud extends CustomUIHud {
                     @Nonnull ArmorSetAbility ability, float chargeProgress, boolean abilityActive,
                     boolean crouching,
                     @Nonnull List<ArmorModifier> allModifiers) {
-        super(playerRef, HUD_ID);
+        super(playerRef);
         this.bestSetId = bestSetId;
         this.bestSetCount = bestSetCount;
         this.setTotalPieces = setTotalPieces;

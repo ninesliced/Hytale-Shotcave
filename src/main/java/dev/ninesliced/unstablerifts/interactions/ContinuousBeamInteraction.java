@@ -7,6 +7,10 @@ import com.hypixel.hytale.codec.validation.Validators;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.spatial.SpatialResource;
+import com.hypixel.hytale.math.vector.Vector2d;
+import com.hypixel.hytale.math.vector.Vector3d;
+import com.hypixel.hytale.math.vector.Vector3i;
+import com.hypixel.hytale.math.vector.Vector4d;
 import com.hypixel.hytale.protocol.*;
 import com.hypixel.hytale.server.core.entity.Entity;
 import com.hypixel.hytale.server.core.entity.EntityUtils;
@@ -37,10 +41,6 @@ import com.hypixel.hytale.server.core.util.TargetUtil;
 import dev.ninesliced.unstablerifts.guns.*;
 import dev.ninesliced.unstablerifts.hud.AmmoHudService;
 import dev.ninesliced.unstablerifts.systems.DamageEffectRuntime;
-import org.joml.Vector2d;
-import org.joml.Vector3d;
-import org.joml.Vector3i;
-import org.joml.Vector4d;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -493,7 +493,7 @@ public final class ContinuousBeamInteraction extends ChargingInteraction {
             return position;
         }
 
-        float yaw = headRotation.getRotation().yaw();
+        float yaw = headRotation.getRotation().getYaw();
         double sinYaw = Math.sin(yaw);
         double cosYaw = Math.cos(yaw);
         double offsetX = sinYaw * this.muzzleForwardOffset + cosYaw * this.muzzleRightOffset;
@@ -510,14 +510,14 @@ public final class ContinuousBeamInteraction extends ChargingInteraction {
             return new Vector3d(0.0d, 0.0d, 1.0d);
         }
 
-        float yaw = headRotation.getRotation().yaw();
-        float pitch = headRotation.getRotation().pitch();
+        float yaw = headRotation.getRotation().getYaw();
+        float pitch = headRotation.getRotation().getPitch();
         double horizontal = Math.cos(pitch);
         Vector3d direction = new Vector3d(
                 horizontal * -Math.sin(yaw),
                 Math.sin(pitch),
                 horizontal * -Math.cos(yaw));
-        if (direction.lengthSquared() <= EPSILON) {
+        if (direction.squaredLength() <= EPSILON) {
             return new Vector3d(0.0d, 0.0d, 1.0d);
         }
         return direction;
@@ -534,7 +534,7 @@ public final class ContinuousBeamInteraction extends ChargingInteraction {
         final double[] entityHitDistanceSq = new double[]{Double.MAX_VALUE};
 
         Vector2d minMax = new Vector2d();
-        Vector3d searchCenter = new Vector3d(from).fma((double) effectiveRange * 0.5d, direction);
+        Vector3d searchCenter = new Vector3d(from).addScaled(direction, (double) effectiveRange * 0.5d);
         Selector.selectNearbyEntities(commandBuffer, searchCenter, (double) effectiveRange * 0.6d, candidate -> {
             if (!candidate.isValid()) {
                 return;
@@ -569,7 +569,7 @@ public final class ContinuousBeamInteraction extends ChargingInteraction {
             double hitX = from.x + direction.x * hitDistance;
             double hitY = from.y + direction.y * hitDistance;
             double hitZ = from.z + direction.z * hitDistance;
-            double hitDistanceSq = from.distanceSquared(hitX, hitY, hitZ);
+            double hitDistanceSq = from.distanceSquaredTo(hitX, hitY, hitZ);
             if (hitDistanceSq >= entityHitDistanceSq[0]) {
                 return;
             }
@@ -593,7 +593,7 @@ public final class ContinuousBeamInteraction extends ChargingInteraction {
 
         if (block != null) {
             Vector3d blockHitPos = new Vector3d((double) block.x + 0.5d, (double) block.y + 0.5d, (double) block.z + 0.5d);
-            double blockDistanceSq = from.distanceSquared(blockHitPos);
+            double blockDistanceSq = from.distanceSquaredTo(blockHitPos);
             if (entityHitRef[0] == null || blockDistanceSq < entityHitDistanceSq[0]) {
                 return new ShotHit(blockHitPos, null, new BlockPosition(block.x, block.y, block.z));
             }
@@ -603,7 +603,7 @@ public final class ContinuousBeamInteraction extends ChargingInteraction {
             return new ShotHit(entityHitPos[0], entityHitRef[0], null);
         }
 
-        return new ShotHit(new Vector3d(from).fma(effectiveRange, direction), null, null);
+        return new ShotHit(new Vector3d(from).addScaled(direction, effectiveRange), null, null);
     }
 
     private void forkHitInteraction(@Nonnull InteractionContext context,
@@ -646,8 +646,8 @@ public final class ContinuousBeamInteraction extends ChargingInteraction {
             return;
         }
 
-        Vector3d delta = new Vector3d(to).sub(from);
-        double distance = from.distance(to);
+        Vector3d delta = new Vector3d(to).subtract(from);
+        double distance = from.distanceTo(to);
         if (distance <= EPSILON) {
             spawnBeamParticle(new Vector3d(from), 0.0f, 0.0f, commandBuffer, beamR, beamG, beamB);
             return;
@@ -659,7 +659,7 @@ public final class ContinuousBeamInteraction extends ChargingInteraction {
         int steps = Math.max(1, (int) Math.ceil(distance / this.beamStepDistance));
         for (int i = 0; i <= steps; i++) {
             double t = (double) i / (double) steps;
-            Vector3d point = new Vector3d(from).fma(t, delta);
+            Vector3d point = new Vector3d(from).addScaled(delta, t);
             spawnBeamParticle(point, yaw, pitch, commandBuffer, beamR, beamG, beamB);
         }
     }
@@ -731,21 +731,21 @@ public final class ContinuousBeamInteraction extends ChargingInteraction {
             return;
         }
 
-        Vector3d direction = new Vector3d(targetTransform.getPosition()).sub(attackerTransform.getPosition());
+        Vector3d direction = new Vector3d(targetTransform.getPosition()).subtract(attackerTransform.getPosition());
         direction.y = 0.0d;
-        if (direction.lengthSquared() <= EPSILON) {
+        if (direction.squaredLength() <= EPSILON) {
             HeadRotation attackerHeadRotation = commandBuffer.getComponent(attacker, HeadRotation.getComponentType());
             if (attackerHeadRotation == null) {
                 return;
             }
 
             direction = new Vector3d(0.0d, 0.0d, -1.0d);
-            direction.rotateY(attackerHeadRotation.getRotation().yaw());
+            direction.rotateY(attackerHeadRotation.getRotation().getYaw());
         } else {
             direction.normalize();
         }
 
-        direction.mul(force);
+        direction.scale(force);
         direction.y = Math.min(0.45d, 0.12d * force + 0.05d);
 
         KnockbackComponent knockback = commandBuffer.getComponent(target, KnockbackComponent.getComponentType());

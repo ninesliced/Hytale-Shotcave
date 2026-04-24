@@ -19,6 +19,7 @@ import com.hypixel.hytale.server.npc.NPCPlugin;
 import dev.ninesliced.unstablerifts.guns.DamageEffect;
 import dev.ninesliced.unstablerifts.guns.GunItemMetadata;
 import dev.ninesliced.unstablerifts.systems.SummonedEffectComponent;
+import dev.ninesliced.unstablerifts.util.VectorConversions;
 import org.joml.Vector3d;
 
 import javax.annotation.Nonnull;
@@ -107,7 +108,7 @@ public final class SpawnNPCAtImpactInteraction extends SimpleInstantInteraction 
         position.add(spawnOffsetX, spawnOffsetY, spawnOffsetZ);
         commandBuffer.run(store -> {
             var spawnPosition = new Vector3d(position.x, position.y, position.z);
-            var result = NPCPlugin.get().spawnNPC(store, entityId, null, spawnPosition, Rotation3f.ZERO);
+            var result = NPCPlugin.get().spawnNPC(store, entityId, null, VectorConversions.toHytale(spawnPosition), Rotation3f.ZERO);
             if (result != null && effectOrdinal > 0) {
                 Ref<EntityStore> npcRef = result.left();
                 if (npcRef != null && npcRef.isValid()) {
@@ -126,7 +127,7 @@ public final class SpawnNPCAtImpactInteraction extends SimpleInstantInteraction 
         if (chain != null) {
             InteractionChainData chainData = chain.getChainData();
             if (chainData != null && chainData.hitLocation != null) {
-                return new SpawnPosition(chainData.hitLocation.x(), chainData.hitLocation.y(), chainData.hitLocation.z());
+                return new SpawnPosition(chainData.hitLocation.x, chainData.hitLocation.y, chainData.hitLocation.z);
             }
         }
 

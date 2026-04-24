@@ -74,7 +74,7 @@ public final class GivePartyPortalCommand extends AbstractPlayerCommand {
         byte activeSlot = hotbarComp.getActiveSlot();
         if (activeSlot < 0) {
             activeSlot = 0;
-            hotbarComp.setActiveSlot(activeSlot, ref, store);
+            hotbarComp.setActiveSlot(activeSlot);
             playerRef.getPacketHandler().writeNoCache(new SetActiveSlot(-1, activeSlot));
         }
 

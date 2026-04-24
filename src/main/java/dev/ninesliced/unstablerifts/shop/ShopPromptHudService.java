@@ -2,6 +2,7 @@ package dev.ninesliced.unstablerifts.shop;
 
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import dev.ninesliced.unstablerifts.hud.HudCompat;
 import dev.ninesliced.unstablerifts.hud.HudVisibilityService;
 
 import javax.annotation.Nonnull;
@@ -38,7 +39,7 @@ public final class ShopPromptHudService {
         LAST_STATE.put(uuid, state);
 
         ShopPromptHud hud = new ShopPromptHud(playerRef, title, detail);
-        player.getHudManager().addCustomHud(playerRef, hud);
+        HudCompat.setCustomHud(player, playerRef, HUD_IDENTIFIER, hud);
     }
 
     public static void hide(@Nonnull Player player, @Nonnull PlayerRef playerRef) {
@@ -49,7 +50,7 @@ public final class ShopPromptHudService {
         }
         LAST_STATE.put(uuid, STATE_HIDDEN);
 
-        player.getHudManager().removeCustomHud(playerRef, HUD_IDENTIFIER);
+        HudCompat.hideCustomHud(player, playerRef, HUD_IDENTIFIER);
     }
 
     public static void clear(@Nonnull PlayerRef playerRef) {

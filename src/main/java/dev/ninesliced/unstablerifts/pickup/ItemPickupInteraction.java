@@ -4,6 +4,7 @@ import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.RemoveReason;
+import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.protocol.InteractionState;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.protocol.packets.inventory.UpdatePlayerInventory;
@@ -28,7 +29,6 @@ import dev.ninesliced.unstablerifts.armor.ArmorSetTracker;
 import dev.ninesliced.unstablerifts.inventory.InventoryLockService;
 import dev.ninesliced.unstablerifts.shop.ShopDisplayItemComponent;
 import dev.ninesliced.unstablerifts.systems.DeathComponent;
-import org.joml.Vector3d;
 
 import javax.annotation.Nonnull;
 

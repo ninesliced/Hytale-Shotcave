@@ -28,6 +28,7 @@ import dev.ninesliced.unstablerifts.UnstableRifts;
 import dev.ninesliced.unstablerifts.dungeon.Game;
 import dev.ninesliced.unstablerifts.dungeon.GameManager;
 import dev.ninesliced.unstablerifts.dungeon.GameState;
+import dev.ninesliced.unstablerifts.util.VectorConversions;
 import org.joml.Vector3d;
 
 import javax.annotation.Nonnull;
@@ -117,7 +118,10 @@ public final class PoisonFluidDamageSystem extends EntityTickingSystem<EntitySto
             return;
         }
 
-        Vector3d pos = transform.getPosition();
+        Vector3d pos = VectorConversions.toJoml(transform.getPosition());
+        if (pos == null) {
+            return;
+        }
         if (!isInPoisonBlock(store, pos)) {
             return;
         }

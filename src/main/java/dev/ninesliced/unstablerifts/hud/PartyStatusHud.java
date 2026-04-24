@@ -7,7 +7,6 @@ import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffec
 import com.hypixel.hytale.server.core.entity.effect.ActiveEntityEffect;
 import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
@@ -30,7 +29,7 @@ import java.util.UUID;
 /**
  * HUD overlay displaying party member names, health bars, and one active effect.
  */
-public final class PartyStatusHud extends CustomUIHud {
+public final class PartyStatusHud extends UnstableRiftsCustomHud {
 
     public static final String UI_PATH = "Hud/UnstableRifts/PartyStatus.ui";
     public static final String HUD_ID = "UnstableRiftsParty";
@@ -50,7 +49,7 @@ public final class PartyStatusHud extends CustomUIHud {
     private final List<MemberStatus> members;
 
     public PartyStatusHud(@Nonnull PlayerRef playerRef, @Nonnull List<MemberStatus> members) {
-        super(playerRef, HUD_ID);
+        super(playerRef);
         this.members = members;
     }
 
@@ -61,14 +60,14 @@ public final class PartyStatusHud extends CustomUIHud {
         if (HudVisibilityService.isHidden(playerRef.getUuid())) {
             return;
         }
-        player.getHudManager().addCustomHud(playerRef, hud);
+        HudCompat.setCustomHud(player, playerRef, HUD_ID, hud);
     }
 
     /**
      * Hides the party status HUD.
      */
     public static void hideHud(@Nonnull Player player, @Nonnull PlayerRef playerRef) {
-        player.getHudManager().removeCustomHud(playerRef, HUD_ID);
+        HudCompat.hideCustomHud(player, playerRef, HUD_ID);
     }
 
     private static void setHealthBarWidth(@Nonnull UICommandBuilder ui, @Nonnull String selector, int width) {

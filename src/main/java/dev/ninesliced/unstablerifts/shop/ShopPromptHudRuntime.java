@@ -14,6 +14,7 @@ import dev.ninesliced.unstablerifts.dungeon.Level;
 import dev.ninesliced.unstablerifts.pickup.ItemPickupConfig;
 import dev.ninesliced.unstablerifts.pickup.ItemPickupTracker;
 import dev.ninesliced.unstablerifts.player.OnlinePlayers;
+import dev.ninesliced.unstablerifts.util.VectorConversions;
 import org.joml.Vector3d;
 
 import javax.annotation.Nonnull;
@@ -92,7 +93,10 @@ public final class ShopPromptHudRuntime {
                         ref, TransformComponent.getComponentType());
                 if (transform == null) return;
 
-                Vector3d playerPos = transform.getPosition();
+                Vector3d playerPos = VectorConversions.toJoml(transform.getPosition());
+                if (playerPos == null) {
+                    return;
+                }
                 Level level = game.getCurrentLevel();
                 if (level != null) {
                     DoorService.NearbyKeyDoor nearbyDoor = plugin.getDoorService().findNearbyKeyDoor(

@@ -13,6 +13,7 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.npc.NPCPlugin;
 import com.hypixel.hytale.server.npc.entities.NPCEntity;
+import dev.ninesliced.unstablerifts.util.VectorConversions;
 import org.joml.Vector3d;
 
 import javax.annotation.Nonnull;
@@ -159,7 +160,7 @@ public final class RiftMerchantService {
 
                 npcPlugin.validateSpawnableRole(MERCHANT_ROLE);
                 npcPlugin.prepareRoleBuilderInfo(roleIndex);
-                var result = npcPlugin.spawnNPC(store, MERCHANT_ROLE, null, spawnPos, Rotation3f.ZERO);
+                var result = npcPlugin.spawnNPC(store, MERCHANT_ROLE, null, VectorConversions.toHytale(spawnPos), Rotation3f.ZERO);
                 if (result != null) {
                     spawnedMerchants.put(key, result.first());
                 }
@@ -186,7 +187,8 @@ public final class RiftMerchantService {
                 if (npc == null || npc.getRoleIndex() != targetRoleIndex) continue;
                 TransformComponent transform = archetypeChunk.getComponent(i, transformType);
                 if (transform == null) continue;
-                Vector3d pos = transform.getPosition();
+                Vector3d pos = VectorConversions.toJoml(transform.getPosition());
+                if (pos == null) continue;
                 if (pos.distanceSquared(center) <= radiusSq) {
                     found[0] = archetypeChunk.getReferenceTo(i);
                     return;

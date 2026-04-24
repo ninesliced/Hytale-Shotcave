@@ -17,10 +17,11 @@ import dev.ninesliced.unstablerifts.UnstableRifts;
 import dev.ninesliced.unstablerifts.dungeon.DoorService;
 import dev.ninesliced.unstablerifts.dungeon.Game;
 import dev.ninesliced.unstablerifts.dungeon.Level;
-import org.joml.Vector3i;
+import dev.ninesliced.unstablerifts.util.VectorConversions;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import org.joml.Vector3i;
 
 /**
  * Handles right-click interaction on KEY-mode locked door blocks.
@@ -43,7 +44,7 @@ public final class LockedDoorUseSystem extends EntityEventSystem<EntityStore, Us
                        @Nonnull Store<EntityStore> store,
                        @Nonnull CommandBuffer<EntityStore> commandBuffer,
                        @Nonnull UseBlockEvent.Pre event) {
-        Vector3i targetBlock = event.getTargetBlock();
+        Vector3i targetBlock = VectorConversions.toJoml(event.getTargetBlock());
         if (targetBlock == null) {
             return;
         }

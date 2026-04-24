@@ -75,12 +75,12 @@ public final class HudVisibilityService {
         ShopPromptHudService.hide(player, playerRef);
 
         // MultiHud-based overlays
-        player.getHudManager().removeCustomHud(playerRef, ChallengeHud.HUD_ID);
-        player.getHudManager().removeCustomHud(playerRef, PartyStatusHud.HUD_ID);
-        player.getHudManager().removeCustomHud(playerRef, DungeonInfoHud.HUD_ID);
-        player.getHudManager().removeCustomHud(playerRef, BossFightHud.HUD_ID);
-        player.getHudManager().removeCustomHud(playerRef, DeathCountdownHud.HUD_ID);
-        player.getHudManager().removeCustomHud(playerRef, ReviveProgressHud.HUD_ID);
+        ChallengeHud.hideHud(player, playerRef);
+        PartyStatusHud.hideHud(player, playerRef);
+        DungeonInfoHud.hideHud(player, playerRef);
+        BossFightHud.hideHud(player, playerRef);
+        DeathCountdownHud.hideHud(player, playerRef);
+        ReviveProgressHud.hideHud(player, playerRef);
 
         // Native HUD component
         player.getHudManager().hideHudComponents(playerRef, HudComponent.AmmoIndicator);
@@ -91,5 +91,6 @@ public final class HudVisibilityService {
      */
     public static void clear(@Nonnull UUID uuid) {
         HIDDEN_PLAYERS.remove(uuid);
+        HudCompat.clear(uuid);
     }
 }

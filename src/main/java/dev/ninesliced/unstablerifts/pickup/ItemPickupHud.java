@@ -1,7 +1,6 @@
 package dev.ninesliced.unstablerifts.pickup;
 
 import com.hypixel.hytale.server.core.Message;
-import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import dev.ninesliced.unstablerifts.armor.ArmorDefinition;
@@ -9,6 +8,7 @@ import dev.ninesliced.unstablerifts.armor.ArmorModifier;
 import dev.ninesliced.unstablerifts.armor.ArmorModifierType;
 import dev.ninesliced.unstablerifts.armor.ArmorSetAbility;
 import dev.ninesliced.unstablerifts.guns.*;
+import dev.ninesliced.unstablerifts.hud.UnstableRiftsCustomHud;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -19,7 +19,7 @@ import java.util.List;
  * color, effect label, F-key collect prompt, "crouch for details" hint, and an
  * expandable stats panel when crouching.
  */
-public final class ItemPickupHud extends CustomUIHud {
+public final class ItemPickupHud extends UnstableRiftsCustomHud {
 
     public static final String UI_PATH = "Hud/UnstableRifts/CratePickupHud.ui";
     public static final String HUD_ID = "UnstableRifts_ItemPickup";
@@ -66,7 +66,7 @@ public final class ItemPickupHud extends CustomUIHud {
                          boolean isArmor,
                          @Nullable ArmorDefinition armorDefinition,
                          @Nonnull List<ArmorModifier> armorModifiers) {
-        super(playerRef, HUD_ID);
+        super(playerRef);
         this.itemDisplayName = itemDisplayName;
         this.itemIconPath = itemIconPath;
         this.itemQuantity = Math.max(0, itemQuantity);

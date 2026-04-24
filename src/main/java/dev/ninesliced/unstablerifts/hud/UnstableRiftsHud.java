@@ -1,7 +1,6 @@
 package dev.ninesliced.unstablerifts.hud;
 
 import com.hypixel.hytale.server.core.Message;
-import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 import com.hypixel.hytale.server.core.ui.Anchor;
 import com.hypixel.hytale.server.core.ui.Value;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
@@ -12,7 +11,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public final class UnstableRiftsHud extends CustomUIHud {
+public final class UnstableRiftsHud extends UnstableRiftsCustomHud {
     public static final String UI_PATH = "Hud/UnstableRifts/AmmoHud.ui";
     public static final String HUD_ID = "UnstableRifts_Ammo";
 
@@ -50,7 +49,7 @@ public final class UnstableRiftsHud extends CustomUIHud {
                             @Nonnull List<WeaponModifier> modifiers, @Nullable String weaponName,
                             @Nullable String weaponIconPath,
                             boolean crouching) {
-        super(playerRef, HUD_ID);
+        super(playerRef);
         this.ammo = Math.max(0, ammo);
         this.baseMaxAmmo = Math.max(1, baseMaxAmmo);
         this.maxAmmo = Math.max(1, maxAmmo);

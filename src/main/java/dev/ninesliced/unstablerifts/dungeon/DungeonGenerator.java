@@ -589,7 +589,7 @@ public class DungeonGenerator {
 
             IPrefabBuffer buffer = new SpawnerFilteredBuffer(rawBuffer, pastePos.y);
             Store<EntityStore> store = world.getEntityStore().getStore();
-            PrefabUtil.paste(buffer, world, pastePos, toEngineRotation(rot),
+                PrefabUtil.paste(buffer, world, dev.ninesliced.unstablerifts.util.VectorConversions.toHytale(pastePos), toEngineRotation(rot),
                     true, random, 0, false, false, true, store);
 
             for (BlockLocal block : doorData.blocks) {
@@ -1869,7 +1869,7 @@ public class DungeonGenerator {
         Holder<EntityStore> holder = ItemComponent.generateItemDrop(
                 store,
                 new ItemStack(KEY_ITEM_ID, 1),
-                dropPos,
+            dev.ninesliced.unstablerifts.util.VectorConversions.toHytale(dropPos),
                 Rotation3f.ZERO,
                 0.0f,
                 0.0f,
@@ -1895,7 +1895,7 @@ public class DungeonGenerator {
         }
 
         IPrefabBuffer buffer = new SpawnerFilteredBuffer(rawBuffer, pastePos.y);
-        PrefabUtil.paste(buffer, context.world(), pastePos, toEngineRotation(rot),
+        PrefabUtil.paste(buffer, context.world(), dev.ninesliced.unstablerifts.util.VectorConversions.toHytale(pastePos), toEngineRotation(rot),
                 true, context.random(), 0, false, false, true, context.store());
 
         for (BlockLocal block : data.blocks) {
@@ -2350,6 +2350,11 @@ public class DungeonGenerator {
                         : supportValue;
                 blockConsumer.accept(x, y, z, blockId, holder, adjustedSupportValue, rotation, filler, call, fluidId, fluidLevel);
             }, entityConsumer, childConsumer, t);
+        }
+
+        @Override
+        public void release() {
+            delegate.release();
         }
 
         private boolean shouldPasteAsDecoSupport(int blockId) {

@@ -18,6 +18,7 @@ import dev.ninesliced.unstablerifts.logging.UnstableRiftsLog;
 import dev.ninesliced.unstablerifts.pickup.ItemPickupConfig;
 import dev.ninesliced.unstablerifts.pickup.ItemPickupTracker;
 import dev.ninesliced.unstablerifts.systems.DeathComponent;
+import dev.ninesliced.unstablerifts.util.VectorConversions;
 import org.joml.Vector3d;
 
 import javax.annotation.Nonnull;
@@ -142,7 +143,10 @@ public final class CoinCollectionSystem extends EntityTickingSystem<EntityStore>
             return;
         }
 
-        Vector3d playerPos = playerTransform.getPosition();
+        Vector3d playerPos = VectorConversions.toJoml(playerTransform.getPosition());
+        if (playerPos == null) {
+            return;
+        }
 
         double collectRadius = ItemPickupConfig.getCoinCollectRadius(playerRef.getUuid());
         double collectRadiusSq = collectRadius * collectRadius;

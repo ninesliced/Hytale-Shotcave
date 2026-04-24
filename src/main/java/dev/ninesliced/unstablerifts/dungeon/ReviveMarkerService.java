@@ -12,6 +12,7 @@ import com.hypixel.hytale.server.core.modules.entity.component.*;
 import com.hypixel.hytale.server.core.modules.entity.player.PlayerSkinComponent;
 import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import dev.ninesliced.unstablerifts.util.VectorConversions;
 import org.joml.Vector3d;
 
 import javax.annotation.Nonnull;
@@ -45,7 +46,7 @@ public final class ReviveMarkerService {
         PlayerSkinComponent playerSkinComponent = store.getComponent(deadPlayerRef, PlayerSkinComponent.getComponentType());
         TransformComponent deadPlayerTransform = store.getComponent(deadPlayerRef, TransformComponent.getComponentType());
         holder.addComponent(TransformComponent.getComponentType(),
-                new TransformComponent(new Vector3d(position),
+            new TransformComponent(VectorConversions.toHytale(position),
                         deadPlayerTransform != null ? deadPlayerTransform.getRotation().clone() : Rotation3f.ZERO));
         holder.addComponent(UUIDComponent.getComponentType(), UUIDComponent.randomUUID());
         holder.addComponent(NetworkId.getComponentType(), new NetworkId(store.getExternalData().takeNextNetworkId()));
@@ -98,7 +99,7 @@ public final class ReviveMarkerService {
             return null;
         }
         TransformComponent transform = markerRef.getStore().getComponent(markerRef, TransformComponent.getComponentType());
-        return transform != null ? new Vector3d(transform.getPosition()) : null;
+        return transform != null ? VectorConversions.toJoml(transform.getPosition()) : null;
     }
 
     public void clear() {

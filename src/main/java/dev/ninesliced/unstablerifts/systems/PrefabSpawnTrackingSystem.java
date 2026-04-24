@@ -16,6 +16,7 @@ import dev.ninesliced.unstablerifts.dungeon.Game;
 import dev.ninesliced.unstablerifts.dungeon.GameManager;
 import dev.ninesliced.unstablerifts.dungeon.Level;
 import dev.ninesliced.unstablerifts.dungeon.RoomData;
+import dev.ninesliced.unstablerifts.util.VectorConversions;
 import org.joml.Vector3d;
 
 import javax.annotation.Nonnull;
@@ -69,7 +70,12 @@ public final class PrefabSpawnTrackingSystem extends EntityTickingSystem<EntityS
             return;
         }
 
-        RoomData room = findRoomForMarker(level, markerTransform.getPosition());
+        Vector3d markerPosition = VectorConversions.toJoml(markerTransform.getPosition());
+        if (markerPosition == null) {
+            return;
+        }
+
+        RoomData room = findRoomForMarker(level, markerPosition);
         if (room == null) {
             return;
         }

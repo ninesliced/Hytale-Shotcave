@@ -90,7 +90,7 @@ public final class AmmoHudService {
                             rarity, effect, category, definition, modifiers, displayName, iconPath, crouching);
 
                     player.getHudManager().showHudComponents(playerRef, HudComponent.AmmoIndicator);
-                    player.getHudManager().addCustomHud(playerRef, hud);
+                    HudCompat.setCustomHud(player, playerRef, HUD_IDENTIFIER, hud);
                 }
                 // Weapon is shown — also update armor HUD (always visible)
                 if (ref != null) {
@@ -120,7 +120,7 @@ public final class AmmoHudService {
         LAST_STATE.put(uuid, STATE_HIDDEN);
 
         player.getHudManager().hideHudComponents(playerRef, HudComponent.AmmoIndicator);
-        player.getHudManager().removeCustomHud(playerRef, HUD_IDENTIFIER);
+        HudCompat.hideCustomHud(player, playerRef, HUD_IDENTIFIER);
     }
 
     public static void clear(@Nonnull PlayerRef playerRef) {
@@ -244,7 +244,7 @@ public final class AmmoHudService {
                 allModifiers);
 
         player.getHudManager().showHudComponents(playerRef, HudComponent.AmmoIndicator);
-        player.getHudManager().addCustomHud(playerRef, hud);
+        HudCompat.setCustomHud(player, playerRef, ARMOR_HUD_IDENTIFIER, hud);
     }
 
     static void hideArmorHud(@Nonnull Player player, @Nonnull PlayerRef playerRef) {
@@ -255,7 +255,7 @@ public final class AmmoHudService {
         }
         LAST_ARMOR_STATE.put(uuid, STATE_HIDDEN);
 
-        player.getHudManager().removeCustomHud(playerRef, ARMOR_HUD_IDENTIFIER);
+        HudCompat.hideCustomHud(player, playerRef, ARMOR_HUD_IDENTIFIER);
 
         Long weaponState = LAST_STATE.get(uuid);
         if (weaponState != null && weaponState == STATE_HIDDEN) {

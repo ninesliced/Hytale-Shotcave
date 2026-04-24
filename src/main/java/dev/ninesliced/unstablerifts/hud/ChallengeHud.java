@@ -2,7 +2,6 @@ package dev.ninesliced.unstablerifts.hud;
 
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 import com.hypixel.hytale.server.core.ui.Anchor;
 import com.hypixel.hytale.server.core.ui.Value;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
@@ -16,7 +15,7 @@ import java.util.List;
 /**
  * HUD overlay displaying active challenge objectives with completion checkboxes.
  */
-public final class ChallengeHud extends CustomUIHud {
+public final class ChallengeHud extends UnstableRiftsCustomHud {
 
     public static final String UI_PATH = "Hud/UnstableRifts/Challenge.ui";
     public static final String HUD_ID = "UnstableRiftsChallenge";
@@ -36,7 +35,7 @@ public final class ChallengeHud extends CustomUIHud {
                         @Nonnull List<ChallengeObjective> objectives,
                         @Nonnull String mobCounterText,
                         boolean hasMobClear) {
-        super(playerRef, HUD_ID);
+        super(playerRef);
         this.objectives = objectives;
         this.mobCounterText = mobCounterText;
         this.hasMobClear = hasMobClear;
@@ -66,11 +65,11 @@ public final class ChallengeHud extends CustomUIHud {
         if (HudVisibilityService.isHidden(playerRef.getUuid())) {
             return;
         }
-        player.getHudManager().addCustomHud(playerRef, hud);
+        HudCompat.setCustomHud(player, playerRef, HUD_ID, hud);
     }
 
     public static void hideHud(@Nonnull Player player, @Nonnull PlayerRef playerRef) {
-        player.getHudManager().removeCustomHud(playerRef, HUD_ID);
+        HudCompat.hideCustomHud(player, playerRef, HUD_ID);
     }
 
     private static void setPanelHeight(@Nonnull UICommandBuilder ui, int height) {

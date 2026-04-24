@@ -12,6 +12,7 @@ import com.hypixel.hytale.server.npc.NPCPlugin;
 import com.hypixel.hytale.server.npc.entities.NPCEntity;
 import com.hypixel.hytale.server.npc.movement.controllers.MotionControllerFly;
 import dev.ninesliced.unstablerifts.systems.KweebecScaleHelper;
+import dev.ninesliced.unstablerifts.util.VectorConversions;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 
@@ -223,7 +224,7 @@ public final class MobSpawningService {
                                       @Nonnull RoomData room) {
         try {
             var mobResult = NPCPlugin.get().spawnNPC(
-                    store, mobId, null, position, new Rotation3f(0.0f, MOB_SPAWN_YAW, 0.0f));
+                store, mobId, null, VectorConversions.toHytale(position), new Rotation3f(0.0f, MOB_SPAWN_YAW, 0.0f));
             Ref<EntityStore> mobRef = mobResult != null ? mobResult.first() : null;
             if (mobRef != null) {
                 KweebecScaleHelper.applyScale(store, mobRef, mobId);
@@ -255,8 +256,8 @@ public final class MobSpawningService {
         if (npc.getRole().getActiveMotionController() instanceof MotionControllerFly) {
             TransformComponent transform = store.getComponent(mobRef, TransformComponent.getComponentType());
             if (transform != null) {
-                Vector3d pos = transform.getPosition();
-                transform.setPosition(new Vector3d(pos.x, pos.y + FLY_SPAWN_ELEVATION, pos.z));
+                com.hypixel.hytale.math.vector.Vector3d pos = transform.getPosition();
+                transform.setPosition(new com.hypixel.hytale.math.vector.Vector3d(pos.x, pos.y + FLY_SPAWN_ELEVATION, pos.z));
             }
         }
     }

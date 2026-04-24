@@ -2,6 +2,8 @@ package dev.ninesliced.unstablerifts.guns;
 
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.math.vector.Vector3d;
+import com.hypixel.hytale.math.vector.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.entity.Entity;
 import com.hypixel.hytale.server.core.entity.EntityUtils;
@@ -16,8 +18,6 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.TargetUtil;
 import com.hypixel.hytale.math.util.ChunkUtil;
 import dev.ninesliced.unstablerifts.crate.DestructibleBlockConfig;
-import org.joml.Vector3d;
-import org.joml.Vector3i;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -162,7 +162,7 @@ public final class AimAssistHelper {
 
             if (blockingBlock != null) {
                 Vector3d blockCenter = new Vector3d(blockingBlock.x + 0.5, blockingBlock.y + 0.5, blockingBlock.z + 0.5);
-                double blockDistSq = muzzle.distanceSquared(blockCenter);
+                double blockDistSq = muzzle.distanceSquaredTo(blockCenter);
                 double targetDistSq = dist * dist;
                 if (blockDistSq + 1.0E-6 < targetDistSq) {
                     continue;
@@ -188,7 +188,7 @@ public final class AimAssistHelper {
             blendedHorizZ /= blendedHorizLen;
 
             Vector3d out = new Vector3d(blendedHorizX * targetHorizLen, dirY, blendedHorizZ * targetHorizLen);
-            if (out.lengthSquared() > 1.0E-8) {
+            if (out.squaredLength() > 1.0E-8) {
                 out.normalize();
                 return out;
             }
@@ -261,7 +261,7 @@ public final class AimAssistHelper {
             blendedHorizZ /= blendedHorizLen;
 
             Vector3d out = new Vector3d(blendedHorizX * targetHorizLen, dirY, blendedHorizZ * targetHorizLen);
-            if (out.lengthSquared() > 1.0E-8) {
+            if (out.squaredLength() > 1.0E-8) {
                 out.normalize();
                 return out;
             }
@@ -372,7 +372,7 @@ public final class AimAssistHelper {
                         (int) Math.ceil(dist));
                 if (blockingBlock != null) {
                     Vector3d bc = new Vector3d(blockingBlock.x + 0.5, blockingBlock.y + 0.5, blockingBlock.z + 0.5);
-                    double blockDistSq = muzzle.distanceSquared(bc);
+                    double blockDistSq = muzzle.distanceSquaredTo(bc);
                     double targetDistSq = dist * dist;
                     // If blocking block is closer AND is not in the same position as a destructible block target
                     if (blockDistSq + 1.0E-6 < targetDistSq) {
@@ -397,7 +397,7 @@ public final class AimAssistHelper {
             bz /= bLen;
 
             Vector3d out = new Vector3d(bx * targetHorizLen, dirY, bz * targetHorizLen);
-            if (out.lengthSquared() > 1.0E-8) {
+            if (out.squaredLength() > 1.0E-8) {
                 out.normalize();
                 return out;
             }
@@ -413,7 +413,7 @@ public final class AimAssistHelper {
                                                                       double range) {
         List<BlockCandidate> candidates = new ArrayList<>();
         Vector3d normalizedLook = new Vector3d(rawDirection);
-        if (normalizedLook.lengthSquared() < 1.0E-8) {
+        if (normalizedLook.squaredLength() < 1.0E-8) {
             return candidates;
         }
 
@@ -478,23 +478,14 @@ public final class AimAssistHelper {
     private static Vector3d rotateSampleDirection(@Nonnull Vector3d baseDirection,
                                                   double yawOffsetDegrees,
                                                   double pitchOffsetDegrees) {
-        Vector3d rotated = new Vector3d(baseDirection);
-
-        if (Math.abs(yawOffsetDegrees) > 1.0E-6) {
-            rotated.rotateAxis(Math.toRadians(yawOffsetDegrees), 0.0, 1.0, 0.0);
-        }
-
-        if (Math.abs(pitchOffsetDegrees) > 1.0E-6) {
-            Vector3d rightAxis = new Vector3d(rotated).cross(0.0, 1.0, 0.0);
-            if (rightAxis.lengthSquared() <= 1.0E-8) {
-                rightAxis.set(1.0, 0.0, 0.0);
-            } else {
-                rightAxis.normalize();
-            }
-            rotated.rotateAxis(Math.toRadians(pitchOffsetDegrees), rightAxis.x, rightAxis.y, rightAxis.z);
-        }
-
-        if (rotated.lengthSquared() > 1.0E-8) {
+        double yaw = Math.atan2(-baseDirection.x, -baseDirection.z) + Math.toRadians(yawOffsetDegrees);
+        double pitch = Math.asin(Math.max(-1.0, Math.min(1.0, baseDirection.y))) + Math.toRadians(pitchOffsetDegrees);
+        double horizontal = Math.cos(pitch);
+        Vector3d rotated = new Vector3d(
+                horizontal * -Math.sin(yaw),
+                Math.sin(pitch),
+                horizontal * -Math.cos(yaw));
+        if (rotated.squaredLength() > 1.0E-8) {
             rotated.normalize();
         }
         return rotated;

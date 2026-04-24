@@ -17,6 +17,7 @@ import dev.ninesliced.unstablerifts.logging.UnstableRiftsLog;
 import dev.ninesliced.unstablerifts.player.OnlinePlayers;
 import dev.ninesliced.unstablerifts.systems.DeathComponent;
 import dev.ninesliced.unstablerifts.systems.ReviveInteractionPacketHandler;
+import dev.ninesliced.unstablerifts.util.VectorConversions;
 import org.joml.Vector3d;
 
 import javax.annotation.Nonnull;
@@ -122,7 +123,11 @@ public final class RevivePromptHudRuntime {
                     return;
                 }
 
-                Vector3d myPos = transform.getPosition();
+                Vector3d myPos = VectorConversions.toJoml(transform.getPosition());
+                if (myPos == null) {
+                    RevivePromptHudService.hide(player, playerRef);
+                    return;
+                }
                 String nearestName = null;
                 double nearestDistSq = Double.MAX_VALUE;
                 boolean interactionActive = ReviveInteractionPacketHandler.isInteractionActive(
@@ -148,7 +153,8 @@ public final class RevivePromptHudRuntime {
                         continue;
                     }
 
-                    Vector3d revivePos = gameManager.getReviveMarkerService().getReviveMarkerPosition(deadUuid);
+                    Vector3d revivePos = VectorConversions.toJoml(
+                            gameManager.getReviveMarkerService().getReviveMarkerPosition(deadUuid));
                     if (revivePos == null) {
                         continue;
                     }

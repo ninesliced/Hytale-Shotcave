@@ -11,6 +11,7 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.ninesliced.unstablerifts.UnstableRifts;
 import dev.ninesliced.unstablerifts.player.OnlinePlayers;
+import dev.ninesliced.unstablerifts.util.VectorConversions;
 import org.joml.Vector3d;
 
 import javax.annotation.Nonnull;
@@ -106,7 +107,10 @@ public final class ItemPickupHudRuntime {
                     crouching = movementStates.getMovementStates().crouching;
                 }
 
-                Vector3d playerPos = playerTransform.getPosition();
+                Vector3d playerPos = VectorConversions.toJoml(playerTransform.getPosition());
+                if (playerPos == null) {
+                    return;
+                }
                 double radiusSq = ItemPickupConfig.HUD_PROXIMITY_RADIUS
                         * ItemPickupConfig.HUD_PROXIMITY_RADIUS;
 

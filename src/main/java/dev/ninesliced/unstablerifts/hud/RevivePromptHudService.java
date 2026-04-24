@@ -31,7 +31,7 @@ public final class RevivePromptHudService {
         LAST_STATE.put(uuid, state);
 
         RevivePromptHud hud = new RevivePromptHud(playerRef, targetName);
-        player.getHudManager().addCustomHud(playerRef, hud);
+        HudCompat.setCustomHud(player, playerRef, HUD_IDENTIFIER, hud);
     }
 
     public static void hide(@Nonnull Player player, @Nonnull PlayerRef playerRef) {
@@ -42,7 +42,7 @@ public final class RevivePromptHudService {
         }
         LAST_STATE.put(uuid, STATE_HIDDEN);
 
-        player.getHudManager().removeCustomHud(playerRef, HUD_IDENTIFIER);
+        HudCompat.hideCustomHud(player, playerRef, HUD_IDENTIFIER);
     }
 
     public static void clear(@Nonnull PlayerRef playerRef) {

@@ -8,6 +8,10 @@ import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.spatial.SpatialResource;
 import com.hypixel.hytale.logger.HytaleLogger;
+import com.hypixel.hytale.math.vector.Vector2d;
+import com.hypixel.hytale.math.vector.Vector3d;
+import com.hypixel.hytale.math.vector.Vector3i;
+import com.hypixel.hytale.math.vector.Vector4d;
 import com.hypixel.hytale.protocol.*;
 import com.hypixel.hytale.server.core.entity.Entity;
 import com.hypixel.hytale.server.core.entity.EntityUtils;
@@ -38,10 +42,6 @@ import dev.ninesliced.unstablerifts.UnstableRifts;
 import dev.ninesliced.unstablerifts.dungeon.Game;
 import dev.ninesliced.unstablerifts.dungeon.GameState;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
-import org.joml.Vector2d;
-import org.joml.Vector3d;
-import org.joml.Vector3i;
-import org.joml.Vector4d;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -431,7 +431,7 @@ public final class ModularGunShootInteraction extends SimpleInteraction {
         if (hasForward || hasRight) {
             HeadRotation headRotation = commandBuffer.getComponent(ref, HeadRotation.getComponentType());
             if (headRotation != null) {
-                float yaw = headRotation.getRotation().yaw();
+                float yaw = headRotation.getRotation().getYaw();
                 double sinYaw = Math.sin(yaw);
                 double cosYaw = Math.cos(yaw);
                 // Forward: (sinYaw, cosYaw), Right: (cosYaw, -sinYaw)
@@ -458,8 +458,8 @@ public final class ModularGunShootInteraction extends SimpleInteraction {
             return new Vector3d(0.0, 0.0, 1.0);
         }
 
-        float yaw = headRotation.getRotation().yaw();
-        float pitch = headRotation.getRotation().pitch();
+        float yaw = headRotation.getRotation().getYaw();
+        float pitch = headRotation.getRotation().getPitch();
         double horizontal = Math.cos(pitch);
         Vector3d direction = new Vector3d(
                 horizontal * -Math.sin(yaw),
@@ -477,7 +477,7 @@ public final class ModularGunShootInteraction extends SimpleInteraction {
             direction.x += random.nextDouble(-spreadRadians, spreadRadians);
             direction.y += random.nextDouble(-spreadRadians, spreadRadians);
             direction.z += random.nextDouble(-spreadRadians, spreadRadians);
-            if (direction.lengthSquared() > 0.000001) {
+            if (direction.squaredLength() > 0.000001) {
                 direction.normalize();
             }
         }
@@ -495,7 +495,7 @@ public final class ModularGunShootInteraction extends SimpleInteraction {
         final double[] entityHitDistanceSq = new double[]{Double.MAX_VALUE};
 
         Vector2d minMax = new Vector2d();
-        Vector3d searchCenter = new Vector3d(from).fma((double) effectiveRange * 0.5, direction);
+        Vector3d searchCenter = new Vector3d(from).addScaled(direction, (double) effectiveRange * 0.5);
         Selector.selectNearbyEntities(commandBuffer, searchCenter, (double) effectiveRange * 0.6, candidate -> {
             if (!candidate.isValid()) {
                 return;
@@ -529,7 +529,7 @@ public final class ModularGunShootInteraction extends SimpleInteraction {
             double hitX = from.x + direction.x * t;
             double hitY = from.y + direction.y * t;
             double hitZ = from.z + direction.z * t;
-            double hitDistanceSq = from.distanceSquared(hitX, hitY, hitZ);
+            double hitDistanceSq = from.distanceSquaredTo(hitX, hitY, hitZ);
             if (hitDistanceSq >= entityHitDistanceSq[0]) {
                 return;
             }
@@ -553,7 +553,7 @@ public final class ModularGunShootInteraction extends SimpleInteraction {
 
         if (block != null) {
             Vector3d blockHitPos = new Vector3d((double) block.x + 0.5, (double) block.y + 0.5, (double) block.z + 0.5);
-            double blockDistanceSq = from.distanceSquared(blockHitPos);
+            double blockDistanceSq = from.distanceSquaredTo(blockHitPos);
             if (entityHitRef[0] == null || blockDistanceSq < entityHitDistanceSq[0]) {
                 BlockPosition raw = new BlockPosition(block.x, block.y, block.z);
                 return new ShotHit(blockHitPos, null, raw);
@@ -564,7 +564,7 @@ public final class ModularGunShootInteraction extends SimpleInteraction {
             return new ShotHit(entityHitPos[0], entityHitRef[0], null);
         }
 
-        Vector3d miss = new Vector3d(from).fma(effectiveRange, direction);
+        Vector3d miss = new Vector3d(from).addScaled(direction, effectiveRange);
         return new ShotHit(miss, null, null);
     }
 
@@ -602,8 +602,8 @@ public final class ModularGunShootInteraction extends SimpleInteraction {
                             @Nonnull Vector3d to,
                             @Nonnull CommandBuffer<EntityStore> commandBuffer,
                             int trailR, int trailG, int trailB) {
-        Vector3d delta = new Vector3d(to).sub(from);
-        double distance = from.distance(to);
+        Vector3d delta = new Vector3d(to).subtract(from);
+        double distance = from.distanceTo(to);
         if (distance <= 0.001) {
             spawnTrailParticle(new Vector3d(from), 0.0f, 0.0f, commandBuffer, trailR, trailG, trailB);
             return;
@@ -616,7 +616,7 @@ public final class ModularGunShootInteraction extends SimpleInteraction {
         int steps = Math.max(1, (int) Math.ceil(distance / this.trailStepDistance));
         for (int i = 0; i <= steps; i++) {
             double t = (double) i / (double) steps;
-            Vector3d point = new Vector3d(from).fma(t, delta);
+            Vector3d point = new Vector3d(from).addScaled(delta, t);
             spawnTrailParticle(point, yaw, pitch, commandBuffer, trailR, trailG, trailB);
         }
     }
@@ -690,21 +690,21 @@ public final class ModularGunShootInteraction extends SimpleInteraction {
             return;
         }
 
-        Vector3d direction = new Vector3d(targetTransform.getPosition()).sub(attackerTransform.getPosition());
+        Vector3d direction = new Vector3d(targetTransform.getPosition()).subtract(attackerTransform.getPosition());
         direction.y = 0.0;
-        if (direction.lengthSquared() <= 0.000001) {
+        if (direction.squaredLength() <= 0.000001) {
             HeadRotation attackerHeadRotation = commandBuffer.getComponent(attacker, HeadRotation.getComponentType());
             if (attackerHeadRotation == null) {
                 return;
             }
 
             direction = new Vector3d(0.0, 0.0, -1.0);
-            direction.rotateY(attackerHeadRotation.getRotation().yaw());
+            direction.rotateY(attackerHeadRotation.getRotation().getYaw());
         } else {
             direction.normalize();
         }
 
-        direction.mul(force);
+        direction.scale(force);
         direction.y = Math.min(0.45, 0.12 * force + 0.05);
 
         KnockbackComponent knockback = commandBuffer.getComponent(target, KnockbackComponent.getComponentType());

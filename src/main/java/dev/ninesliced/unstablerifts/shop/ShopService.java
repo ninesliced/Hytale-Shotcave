@@ -28,6 +28,7 @@ import dev.ninesliced.unstablerifts.dungeon.RoomData;
 import dev.ninesliced.unstablerifts.dungeon.RoomType;
 import dev.ninesliced.unstablerifts.guns.*;
 import dev.ninesliced.unstablerifts.pickup.ItemPickupTracker;
+import dev.ninesliced.unstablerifts.util.VectorConversions;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 import org.bson.BsonDocument;
@@ -529,7 +530,7 @@ public final class ShopService {
         Vector3d spawnPos = new Vector3d(keeperPos.x + 0.5, keeperPos.y + 1.0, keeperPos.z + 0.5);
         Rotation3f spawnRotation = new Rotation3f(0.0f, room.getShopKeeperYaw(), 0.0f);
         try {
-            var result = npcPlugin.spawnNPC(store, mobId, null, spawnPos, spawnRotation);
+            var result = npcPlugin.spawnNPC(store, mobId, null, VectorConversions.toHytale(spawnPos), spawnRotation);
             Ref<EntityStore> keeperRef = result != null ? result.first() : null;
             if (keeperRef == null || !keeperRef.isValid()) {
                 LOGGER.warning("Failed to spawn shopkeeper '" + mobId + "' for shop room "
@@ -631,7 +632,10 @@ public final class ShopService {
                     continue;
                 }
 
-                Vector3d pos = transform.getPosition();
+                Vector3d pos = VectorConversions.toJoml(transform.getPosition());
+                if (pos == null) {
+                    continue;
+                }
                 if (!isNearAnyShopSlot(pos, room)) {
                     continue;
                 }
@@ -699,7 +703,7 @@ public final class ShopService {
                                               int slotIndex) {
         Vector3d spawnPos = new Vector3d(slotPos.x + 0.5, slotPos.y + 0.2, slotPos.z + 0.5);
         Holder<EntityStore> holder = ItemComponent.generateItemDrop(
-                store, itemStack, spawnPos, Rotation3f.ZERO, 0.0f, 0.0f, 0.0f);
+            store, itemStack, VectorConversions.toHytale(spawnPos), Rotation3f.ZERO, 0.0f, 0.0f, 0.0f);
         if (holder == null) {
             return null;
         }

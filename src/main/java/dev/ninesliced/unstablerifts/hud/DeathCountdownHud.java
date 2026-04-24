@@ -2,7 +2,6 @@ package dev.ninesliced.unstablerifts.hud;
 
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import dev.ninesliced.unstablerifts.dungeon.DungeonConstants;
@@ -13,7 +12,7 @@ import javax.annotation.Nonnull;
  * HUD overlay shown to dead players during the 30s revive window.
  * Displays a countdown timer and hint text.
  */
-public final class DeathCountdownHud extends CustomUIHud {
+public final class DeathCountdownHud extends UnstableRiftsCustomHud {
 
     public static final String UI_PATH = "Hud/UnstableRifts/DeathCountdown.ui";
     public static final String HUD_ID = "UnstableRiftsDeathCountdown";
@@ -26,7 +25,7 @@ public final class DeathCountdownHud extends CustomUIHud {
                              int remainingSeconds,
                              boolean beingRevived,
                              float reviveProgress) {
-        super(playerRef, HUD_ID);
+        super(playerRef);
         this.remainingSeconds = remainingSeconds;
         this.beingRevived = beingRevived;
         this.reviveProgress = reviveProgress;
@@ -37,11 +36,11 @@ public final class DeathCountdownHud extends CustomUIHud {
         if (HudVisibilityService.isHidden(playerRef.getUuid())) {
             return;
         }
-        player.getHudManager().addCustomHud(playerRef, hud);
+        HudCompat.setCustomHud(player, playerRef, HUD_ID, hud);
     }
 
     public static void hideHud(@Nonnull Player player, @Nonnull PlayerRef playerRef) {
-        player.getHudManager().removeCustomHud(playerRef, HUD_ID);
+        HudCompat.hideCustomHud(player, playerRef, HUD_ID);
     }
 
     @Override

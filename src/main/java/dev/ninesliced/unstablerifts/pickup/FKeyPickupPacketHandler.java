@@ -40,6 +40,7 @@ import dev.ninesliced.unstablerifts.network.UnstableRiftsPacketIds;
 import dev.ninesliced.unstablerifts.shop.ShopPage;
 import dev.ninesliced.unstablerifts.shop.ShopService;
 import dev.ninesliced.unstablerifts.systems.DeathComponent;
+import dev.ninesliced.unstablerifts.util.VectorConversions;
 import org.joml.Vector3d;
 
 import javax.annotation.Nonnull;
@@ -84,7 +85,10 @@ public final class FKeyPickupPacketHandler implements PlayerPacketWatcher {
             return;
         }
 
-        Vector3d playerPos = playerTransform.getPosition();
+        Vector3d playerPos = VectorConversions.toJoml(playerTransform.getPosition());
+        if (playerPos == null) {
+            return;
+        }
 
         // Portals now require explicit confirmation with the interaction key.
         if (tryUsePortal(playerRef, playerPos)) {
@@ -302,7 +306,10 @@ public final class FKeyPickupPacketHandler implements PlayerPacketWatcher {
         if (transform == null) {
             return;
         }
-        Vector3d pos = transform.getPosition();
+        Vector3d pos = VectorConversions.toJoml(transform.getPosition());
+        if (pos == null) {
+            return;
+        }
         RoomData room = level.findRoomAt((int) Math.floor(pos.x),
                 (int) Math.floor(pos.y),
                 (int) Math.floor(pos.z));

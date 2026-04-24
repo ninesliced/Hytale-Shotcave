@@ -23,6 +23,7 @@ import dev.ninesliced.unstablerifts.systems.DeathComponent;
 import dev.ninesliced.unstablerifts.systems.DeathStateController;
 import dev.ninesliced.unstablerifts.tooltip.ArmorVirtualItems;
 import dev.ninesliced.unstablerifts.tooltip.WeaponVirtualItems;
+import dev.ninesliced.unstablerifts.util.VectorConversions;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 
@@ -542,7 +543,7 @@ public final class GameManager {
 
         Store<EntityStore> playerStore = ref.getStore();
         Vector3d destination = new Vector3d(exitPos.x + 0.5, exitPos.y + 1.0, exitPos.z + 0.5);
-        Teleport tp = Teleport.createForPlayer(destination, Rotation3f.NaN);
+        Teleport tp = Teleport.createForPlayer(VectorConversions.toHytale(destination), Rotation3f.NaN);
         playerStore.addComponent(ref, Teleport.getComponentType(), tp);
 
         LOGGER.info("Closest Separator portal teleported player " + playerId
@@ -670,7 +671,7 @@ public final class GameManager {
             if (ref == null || !ref.isValid()) continue;
 
             Store<EntityStore> playerStore = ref.getStore();
-            Teleport tp = Teleport.createForPlayer(position, Rotation3f.NaN);
+            Teleport tp = Teleport.createForPlayer(VectorConversions.toHytale(position), Rotation3f.NaN);
             playerStore.addComponent(ref, Teleport.getComponentType(), tp);
         }
     }
@@ -1376,7 +1377,7 @@ public final class GameManager {
             boolean queuedTeleport = false;
             Vector3d savedPosition = game.removeDisconnectedPosition(playerId);
             if (savedPosition != null) {
-                Teleport tp = Teleport.createForPlayer(savedPosition, new Rotation3f());
+                Teleport tp = Teleport.createForPlayer(VectorConversions.toHytale(savedPosition), new Rotation3f());
                 store.putComponent(ref, Teleport.getComponentType(), tp);
                 queuedTeleport = true;
             } else {
@@ -1386,7 +1387,7 @@ public final class GameManager {
                     if (entrance != null) {
                         Vector3i anchor = entrance.getAnchor();
                         Vector3d spawnPos = new Vector3d(anchor.x + 0.5, anchor.y + 1.0, anchor.z + 0.5);
-                        Teleport tp = Teleport.createForPlayer(spawnPos, new Rotation3f());
+                        Teleport tp = Teleport.createForPlayer(VectorConversions.toHytale(spawnPos), new Rotation3f());
                         store.putComponent(ref, Teleport.getComponentType(), tp);
                         queuedTeleport = true;
                     }
@@ -1673,7 +1674,7 @@ public final class GameManager {
 
         Vector3d savedPosition = game.removeDisconnectedPosition(playerId);
         if (savedPosition != null) {
-            Teleport tp = Teleport.createForPlayer(savedPosition, new Rotation3f());
+            Teleport tp = Teleport.createForPlayer(VectorConversions.toHytale(savedPosition), new Rotation3f());
             store.putComponent(ref, Teleport.getComponentType(), tp);
             queuedTeleport = true;
         } else {
@@ -1683,7 +1684,7 @@ public final class GameManager {
                 if (entrance != null) {
                     Vector3i anchor = entrance.getAnchor();
                     Vector3d spawnPos = new Vector3d(anchor.x + 0.5, anchor.y + 1.0, anchor.z + 0.5);
-                    Teleport tp = Teleport.createForPlayer(spawnPos, new Rotation3f());
+                    Teleport tp = Teleport.createForPlayer(VectorConversions.toHytale(spawnPos), new Rotation3f());
                     store.putComponent(ref, Teleport.getComponentType(), tp);
                     queuedTeleport = true;
                 }
@@ -1782,8 +1783,10 @@ public final class GameManager {
                 Store<EntityStore> storePos = refPos.getStore();
                 TransformComponent transform = storePos.getComponent(refPos, TransformComponent.getComponentType());
                 if (transform != null) {
-                    game.putDisconnectedPosition(playerRef.getUuid(),
-                            new Vector3d(transform.getPosition()));
+                    Vector3d disconnectedPosition = VectorConversions.toJoml(transform.getPosition());
+                    if (disconnectedPosition != null) {
+                        game.putDisconnectedPosition(playerRef.getUuid(), disconnectedPosition);
+                    }
                 }
             }
         }

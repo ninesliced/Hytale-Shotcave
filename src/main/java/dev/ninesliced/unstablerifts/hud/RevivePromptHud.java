@@ -1,13 +1,12 @@
 package dev.ninesliced.unstablerifts.hud;
 
 import com.hypixel.hytale.server.core.Message;
-import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 
 import javax.annotation.Nonnull;
 
-public final class RevivePromptHud extends CustomUIHud {
+public final class RevivePromptHud extends UnstableRiftsCustomHud {
 
     public static final String UI_PATH = "Hud/UnstableRifts/RevivePrompt.ui";
     public static final String HUD_ID = "UnstableRifts_RevivePrompt";
@@ -15,7 +14,7 @@ public final class RevivePromptHud extends CustomUIHud {
     private final String targetName;
 
     public RevivePromptHud(@Nonnull PlayerRef playerRef, @Nonnull String targetName) {
-        super(playerRef, HUD_ID);
+        super(playerRef);
         this.targetName = targetName;
     }
 
