@@ -54,6 +54,20 @@ public final class RiftMerchantTrophies {
         return null;
     }
 
+    @Nullable
+    public static BossTrophySet bossForMobId(@Nullable String mobId) {
+        if (mobId == null || mobId.isBlank()) {
+            return null;
+        }
+
+        for (BossTrophySet boss : BossTrophySet.values()) {
+            if (mobId.startsWith(boss.bossKey())) {
+                return boss;
+            }
+        }
+        return null;
+    }
+
     public static long resolveDailyCycle(@Nonnull Instant gameTime) {
         long daysSinceEpoch = Duration.between(WorldTimeResource.ZERO_YEAR, gameTime).toDays();
         if (gameTime.atZone(ZoneOffset.UTC).getHour() < TROPHY_RESTOCK_HOUR) {
