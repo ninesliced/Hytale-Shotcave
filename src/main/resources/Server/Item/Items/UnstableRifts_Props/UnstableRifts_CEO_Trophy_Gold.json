@@ -1,7 +1,7 @@
 {
   "TranslationProperties": {
-    "Name": "items.UnstableRifts_CEO_Trophy_Gold.name",
-    "Description": "items.UnstableRifts_CEO_Trophy_Gold.description"
+    "Name": "server.items.UnstableRifts_CEO_Trophy_Gold.name",
+    "Description": "server.items.UnstableRifts_CEO_Trophy_Gold.description"
   },
   "Icon": "Icons/ItemsGenerated/CEO_Trophy_Gold.png",
   "Categories": [

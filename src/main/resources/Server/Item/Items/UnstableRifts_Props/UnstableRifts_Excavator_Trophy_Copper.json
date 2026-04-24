@@ -1,7 +1,7 @@
 {
   "TranslationProperties": {
-    "Name": "items.UnstableRifts_Excavator_Trophy_Copper.name",
-    "Description": "items.UnstableRifts_Excavator_Trophy_Copper.description"
+    "Name": "server.items.UnstableRifts_Excavator_Trophy_Copper.name",
+    "Description": "server.items.UnstableRifts_Excavator_Trophy_Copper.description"
   },
   "Icon": "Icons/ItemsGenerated/Excavator_Trophy_Copper.png",
   "Categories": [
