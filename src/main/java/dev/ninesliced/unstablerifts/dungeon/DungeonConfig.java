@@ -44,6 +44,9 @@ public class DungeonConfig {
     @SerializedName("shopKeeperMobId")
     private String shopKeeperMobId = "";
 
+    @SerializedName("lock")
+    private boolean lock = false;
+
     // ────────────────────────────────────────────────
     //  Static helpers — config file management
     // ────────────────────────────────────────────────
@@ -54,21 +57,32 @@ public class DungeonConfig {
         try {
             Files.createDirectories(dataDirectory);
             if (Files.exists(configPath)) {
+                DungeonConfig existing = load(configPath);
+                if (existing.isLocked()) {
+                    return configPath;
+                }
+                writeDefaultConfig(configPath);
+                LOGGER.at(Level.INFO).log("Refreshed unlocked dungeon config at %s",
+                        configPath.toAbsolutePath());
                 return configPath;
             }
-            try (InputStream is = DungeonConfig.class.getClassLoader().getResourceAsStream(FILE_NAME)) {
-                if (is != null) {
-                    Files.copy(is, configPath, StandardCopyOption.REPLACE_EXISTING);
-                } else {
-                    Files.writeString(configPath, PRETTY_GSON.toJson(new DungeonConfig()), StandardCharsets.UTF_8);
-                }
-            }
+            writeDefaultConfig(configPath);
             LOGGER.at(Level.INFO).log("Created default dungeon config at %s", configPath.toAbsolutePath());
         } catch (IOException e) {
             LOGGER.at(Level.WARNING).withCause(e).log("Failed to ensure dungeon config at %s",
                     configPath.toAbsolutePath());
         }
         return configPath;
+    }
+
+    private static void writeDefaultConfig(@Nonnull Path configPath) throws IOException {
+        try (InputStream is = DungeonConfig.class.getClassLoader().getResourceAsStream(FILE_NAME)) {
+            if (is != null) {
+                Files.copy(is, configPath, StandardCopyOption.REPLACE_EXISTING);
+            } else {
+                Files.writeString(configPath, PRETTY_GSON.toJson(new DungeonConfig()), StandardCharsets.UTF_8);
+            }
+        }
     }
 
     @Nonnull
@@ -251,6 +265,10 @@ public class DungeonConfig {
     @Nonnull
     public String getShopKeeperMobId() {
         return shopKeeperMobId != null ? shopKeeperMobId : "";
+    }
+
+    public boolean isLocked() {
+        return lock;
     }
 
     @Nonnull
