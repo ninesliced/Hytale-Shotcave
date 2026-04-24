@@ -1,0 +1,56 @@
+{
+  "TranslationProperties": {
+    "Name": "items.UnstableRifts_Forklift_Trophy_Copper.name",
+    "Description": "items.UnstableRifts_Forklift_Trophy_Copper.description"
+  },
+  "Icon": "Icons/ItemsGenerated/UnstableRifts_Key_Item.png",
+  "Categories": [
+    "Furniture.Containers"
+  ],
+  "BlockType": {
+    "Material": "Solid",
+    "DrawType": "Model",
+    "Opacity": "Transparent",
+    "Group": "Props",
+    "CustomModel": "Items/Throphy/Forklift Trophy/Forklift Trophy.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "Items/Throphy/Forklift Trophy/Forklifttrophy_Copper.png",
+        "Weight": 1
+      }
+    ],
+    "CustomModelScale": 1,
+    "HitboxType": "UnstableRifts_Trophy",
+    "VariantRotation": "NESW",
+    "Flags": {},
+    "Gathering": {
+      "Soft": {
+        "DropList": "Drop_UnstableRifts_Forklift_Trophy_Copper",
+        "WeaponBreakable": true
+      }
+    },
+    "BlockParticleSetId": "Stone",
+    "ParticleColor": "#8f6b45",
+    "BlockSoundSetId": "Metal",
+    "Support": {
+      "Down": [
+        {
+          "FaceType": "Full"
+        }
+      ]
+    }
+  },
+  "PlayerAnimationsId": "Block",
+  "Quality": "Common",
+  "MaxStack": 1,
+  "Tags": {
+    "Type": ["UnstableRifts", "Trophy"],
+    "Boss": ["Forklift"],
+    "Rarity": ["Copper"]
+  },
+  "ItemEntity": {
+    "ParticleSystemId": null
+  },
+  "ItemSoundSetId": "ISS_Items_Metal",
+  "DropOnDeath": false
+}

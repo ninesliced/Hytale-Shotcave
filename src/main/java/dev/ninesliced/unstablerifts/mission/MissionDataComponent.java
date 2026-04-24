@@ -10,7 +10,9 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Persistent ECS component storing a player's lifetime progress counters and
@@ -72,6 +74,14 @@ public final class MissionDataComponent implements Component<EntityStore> {
                 (c, v) -> c.totalArmorAbilitiesUsed = v,
                 c -> c.totalArmorAbilitiesUsed).add();
 
+        b.append(new KeyedCodec<>("BossCompletionCounts", Codec.STRING, true),
+            (c, v) -> c.bossCompletionCounts = parseIntMap(v),
+            c -> serializeIntMap(c.bossCompletionCounts)).add();
+
+        b.append(new KeyedCodec<>("MerchantPurchaseCycles", Codec.STRING, true),
+            (c, v) -> c.merchantPurchaseCycles = parseLongMap(v),
+            c -> serializeLongMap(c.merchantPurchaseCycles)).add();
+
         // Active quests stored as comma-separated "questId:baseline" entries
         b.append(new KeyedCodec<>("ActiveQuests", Codec.STRING),
                 (c, v) -> c.activeQuests = parseActiveQuests(v),
@@ -92,6 +102,10 @@ public final class MissionDataComponent implements Component<EntityStore> {
     private int totalShopPurchases;
     private int totalDungeonCoins;
     private int totalArmorAbilitiesUsed;
+    @Nonnull
+    private Map<String, Integer> bossCompletionCounts = new HashMap<>();
+    @Nonnull
+    private Map<String, Long> merchantPurchaseCycles = new HashMap<>();
 
     /** Active quest slots. Each entry is a quest pool ID + baseline progress. */
     @Nonnull
@@ -111,6 +125,8 @@ public final class MissionDataComponent implements Component<EntityStore> {
         this.totalShopPurchases = other.totalShopPurchases;
         this.totalDungeonCoins = other.totalDungeonCoins;
         this.totalArmorAbilitiesUsed = other.totalArmorAbilitiesUsed;
+        this.bossCompletionCounts = new HashMap<>(other.bossCompletionCounts);
+        this.merchantPurchaseCycles = new HashMap<>(other.merchantPurchaseCycles);
         this.activeQuests = new ArrayList<>();
         for (ActiveQuest aq : other.activeQuests) {
             this.activeQuests.add(new ActiveQuest(aq.questId, aq.baseline));
@@ -141,6 +157,8 @@ public final class MissionDataComponent implements Component<EntityStore> {
     public int getTotalShopPurchases() { return totalShopPurchases; }
     public int getTotalDungeonCoins() { return totalDungeonCoins; }
     public int getTotalArmorAbilitiesUsed() { return totalArmorAbilitiesUsed; }
+    public int getBossCompletionCount(@Nonnull String bossKey) { return bossCompletionCounts.getOrDefault(bossKey, 0); }
+    public long getMerchantPurchaseCycle(@Nonnull String offerId) { return merchantPurchaseCycles.getOrDefault(offerId, -1L); }
 
     @Nonnull
     public List<ActiveQuest> getActiveQuests() { return activeQuests; }
@@ -157,6 +175,14 @@ public final class MissionDataComponent implements Component<EntityStore> {
     public void addShopPurchases(int count) { this.totalShopPurchases += count; }
     public void addDungeonCoins(int count) { this.totalDungeonCoins += count; }
     public void addArmorAbilitiesUsed(int count) { this.totalArmorAbilitiesUsed += count; }
+    public void addBossCompletion(@Nonnull String bossKey, int count) {
+        if (count <= 0 || bossKey.isBlank()) return;
+        bossCompletionCounts.merge(bossKey, count, Integer::sum);
+    }
+    public void setMerchantPurchaseCycle(@Nonnull String offerId, long cycle) {
+        if (offerId.isBlank()) return;
+        merchantPurchaseCycles.put(offerId, cycle);
+    }
 
     /**
      * Generic progress increment dispatched by mission type.
@@ -200,6 +226,8 @@ public final class MissionDataComponent implements Component<EntityStore> {
         this.totalShopPurchases = 0;
         this.totalDungeonCoins = 0;
         this.totalArmorAbilitiesUsed = 0;
+        this.bossCompletionCounts.clear();
+        this.merchantPurchaseCycles.clear();
         this.activeQuests.clear();
     }
 
@@ -265,6 +293,64 @@ public final class MissionDataComponent implements Component<EntityStore> {
             if (i > 0) sb.append(',');
             ActiveQuest aq = quests.get(i);
             sb.append(aq.questId).append(':').append(aq.baseline);
+        }
+        return sb.toString();
+    }
+
+    @Nonnull
+    private static Map<String, Integer> parseIntMap(@Nullable String raw) {
+        Map<String, Integer> result = new HashMap<>();
+        if (raw == null || raw.isEmpty()) return result;
+        String[] parts = raw.split(",");
+        for (String part : parts) {
+            int sep = part.lastIndexOf(':');
+            if (sep <= 0 || sep >= part.length() - 1) continue;
+            try {
+                result.put(part.substring(0, sep), Integer.parseInt(part.substring(sep + 1)));
+            } catch (NumberFormatException ignored) {
+            }
+        }
+        return result;
+    }
+
+    @Nonnull
+    private static Map<String, Long> parseLongMap(@Nullable String raw) {
+        Map<String, Long> result = new HashMap<>();
+        if (raw == null || raw.isEmpty()) return result;
+        String[] parts = raw.split(",");
+        for (String part : parts) {
+            int sep = part.lastIndexOf(':');
+            if (sep <= 0 || sep >= part.length() - 1) continue;
+            try {
+                result.put(part.substring(0, sep), Long.parseLong(part.substring(sep + 1)));
+            } catch (NumberFormatException ignored) {
+            }
+        }
+        return result;
+    }
+
+    @Nonnull
+    private static String serializeIntMap(@Nonnull Map<String, Integer> map) {
+        if (map.isEmpty()) return "";
+        StringBuilder sb = new StringBuilder();
+        boolean first = true;
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            if (!first) sb.append(',');
+            sb.append(entry.getKey()).append(':').append(entry.getValue());
+            first = false;
+        }
+        return sb.toString();
+    }
+
+    @Nonnull
+    private static String serializeLongMap(@Nonnull Map<String, Long> map) {
+        if (map.isEmpty()) return "";
+        StringBuilder sb = new StringBuilder();
+        boolean first = true;
+        for (Map.Entry<String, Long> entry : map.entrySet()) {
+            if (!first) sb.append(',');
+            sb.append(entry.getKey()).append(':').append(entry.getValue());
+            first = false;
         }
         return sb.toString();
     }

@@ -1,0 +1,56 @@
+{
+  "TranslationProperties": {
+    "Name": "items.UnstableRifts_Excavator_Trophy_Silver.name",
+    "Description": "items.UnstableRifts_Excavator_Trophy_Silver.description"
+  },
+  "Icon": "Icons/ItemsGenerated/UnstableRifts_Key_Item.png",
+  "Categories": [
+    "Furniture.Containers"
+  ],
+  "BlockType": {
+    "Material": "Solid",
+    "DrawType": "Model",
+    "Opacity": "Transparent",
+    "Group": "Props",
+    "CustomModel": "Items/Throphy/Excavator Trophy/Excavator Trophy.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "Items/Throphy/Excavator Trophy/Trophy_Excavator_Silver.png",
+        "Weight": 1
+      }
+    ],
+    "CustomModelScale": 1,
+    "HitboxType": "UnstableRifts_Trophy",
+    "VariantRotation": "NESW",
+    "Flags": {},
+    "Gathering": {
+      "Soft": {
+        "DropList": "Drop_UnstableRifts_Excavator_Trophy_Silver",
+        "WeaponBreakable": true
+      }
+    },
+    "BlockParticleSetId": "Stone",
+    "ParticleColor": "#b7c0c9",
+    "BlockSoundSetId": "Metal",
+    "Support": {
+      "Down": [
+        {
+          "FaceType": "Full"
+        }
+      ]
+    }
+  },
+  "PlayerAnimationsId": "Block",
+  "Quality": "Uncommon",
+  "MaxStack": 1,
+  "Tags": {
+    "Type": ["UnstableRifts", "Trophy"],
+    "Boss": ["Excavator"],
+    "Rarity": ["Silver"]
+  },
+  "ItemEntity": {
+    "ParticleSystemId": "Drop_Uncommon"
+  },
+  "ItemSoundSetId": "ISS_Items_Metal",
+  "DropOnDeath": false
+}
