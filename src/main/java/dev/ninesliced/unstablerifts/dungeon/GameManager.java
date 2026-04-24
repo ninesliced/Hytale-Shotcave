@@ -15,6 +15,8 @@ import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.ninesliced.unstablerifts.UnstableRifts;
+import dev.ninesliced.unstablerifts.mission.MissionDataComponent;
+import dev.ninesliced.unstablerifts.mission.RiftMerchantTrophies;
 import dev.ninesliced.unstablerifts.party.PartyManager;
 import dev.ninesliced.unstablerifts.party.PartyUiPage;
 import dev.ninesliced.unstablerifts.player.OnlinePlayers;
@@ -452,6 +454,7 @@ public final class GameManager {
             if (bossRoom != null) {
                 plugin.getPortalService().spawnPortal(bossRoom, world);
             }
+            awardBossTrophyCompletions(game);
             game.setPortalsActive(true);
             game.setPortalsActivatedAt(System.currentTimeMillis());
             LOGGER.info("Boss portal activated for party " + game.getPartyId()
@@ -502,6 +505,37 @@ public final class GameManager {
                 PlayerEventNotifier.showEventTitle(playerRef, "Returning to the surface...", true);
             }
             onPlayerLeftParty(game.getPartyId(), playerId);
+        }
+    }
+
+    private void awardBossTrophyCompletions(@Nonnull Game game) {
+        RiftMerchantTrophies.BossTrophySet bossSet = RiftMerchantTrophies.bossForLevelIndex(game.getCurrentLevelIndex());
+        if (bossSet == null) {
+            return;
+        }
+
+        for (Map.Entry<UUID, UUID> entry : playerToParty.entrySet()) {
+            if (!entry.getValue().equals(game.getPartyId())) {
+                continue;
+            }
+
+            PlayerRef playerRef = Universe.get().getPlayer(entry.getKey());
+            if (playerRef == null) {
+                continue;
+            }
+
+            Ref<EntityStore> ref = playerRef.getReference();
+            if (ref == null || !ref.isValid()) {
+                continue;
+            }
+
+            Store<EntityStore> store = ref.getStore();
+            MissionDataComponent data = store.ensureAndGetComponent(ref, MissionDataComponent.getComponentType());
+            if (data == null) {
+                continue;
+            }
+
+            data.addBossCompletion(bossSet.bossKey(), 1);
         }
     }
 

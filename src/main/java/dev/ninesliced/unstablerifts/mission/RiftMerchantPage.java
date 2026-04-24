@@ -1,6 +1,5 @@
 package dev.ninesliced.unstablerifts.mission;
 
-import com.hypixel.hytale.builtin.adventure.shop.barter.BarterPage;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
@@ -177,7 +176,7 @@ public final class RiftMerchantPage extends InteractiveCustomUIPage<RiftMerchant
                 Player player = store.getComponent(ref, Player.getComponentType());
                 if (player != null) {
                     player.getPageManager().openCustomPage(
-                            ref, store, new BarterPage(playerRef, shopId));
+                            ref, store, new RiftMerchantShopPage(playerRef, playerEntityRef, shopId));
                 }
                 return;
             }
