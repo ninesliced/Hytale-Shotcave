@@ -77,6 +77,10 @@
       "TypeHint": "String",
       "Description": "NPC weapon list (empty = fists)"
     },
+    "DefaultHotbarSlot": {
+      "Value": 0,
+      "Description": "Default hotbar slot to equip"
+    },
     "AttackSequence": {
       "Value": "Component_Instruction_Attack_Sequence_Industrial_Hazmat",
       "Description": "Melee attack sequence"
@@ -184,6 +188,23 @@
     "Compute": "MaxHealth"
   },
   "Instructions": [
+    {
+      "Continue": true,
+      "Sensor": {
+        "Type": "Any",
+        "Once": true
+      },
+      "Actions": [
+        {
+          "Type": "Inventory",
+          "Operation": "EquipHotbar",
+          "UseTarget": false,
+          "Slot": {
+            "Compute": "DefaultHotbarSlot"
+          }
+        }
+      ]
+    },
     {
       "Continue": true,
       "Sensor": {
