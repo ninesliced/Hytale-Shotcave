@@ -7,37 +7,51 @@ draft: false
 
 # Dungeon Levels
 
-Each run builds a fresh dungeon layout. Rooms connect with corridors, side paths, locked doors, and special rooms. No two runs are exactly the same.
+Every run through Unstable Rifts builds a fresh route across 3 dungeon floors: Kweebec, Desert, and Toxic. The shape changes every time, but each floor keeps its own theme, enemy pressure, and boss at the end.
+
+You still move through corridors, challenge rooms, side branches, treasure doors, shops, altars, and a final boss room. What changes as you go deeper is the mood of the floor and the kind of pressure your party has to handle.
 
 ![Dungeon Generation Example](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/dungeons/dungeon_generation.png)
-_Example of level 1 possible rooms_
+_A possible floor layout during dungeon generation_
 ![Dungeon Map View](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/dungeons/dungeon_map.png)
 _In-game dungeon map showing explored rooms_
 
 ---
 
+## Run Structure
+
+| Floor | Theme | Boss | What Changes Here |
+|-------|-------|------|-------------------|
+| Level 1: Kweebec | Corrupted forest ruins | Forklift | Mixed DeadWood pressure, wolves, and the first industrial enemies |
+| Level 2: Desert | Dry industrial wasteland | Excavator | Heavier industrial presence, nastier ranged pressure, harsher fights |
+| Level 3: Toxic | Poisoned industrial core | CEO Tank | Final floor, biggest enemy density, drones, and the strongest regular crate tier |
+
+---
+
 ## Level 1: Kweebec
 
-A corrupted forest full of DeadWood enemies and radioactive wildlife.
+A corrupted forest village that acts as the opening floor of a run. Kweebec is the easiest place to learn how rooms connect, how side branches work, and how DeadWood packs behave, but it is still dangerous enough to punish a sloppy party.
+
 ![Kweebec Entrance](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/dungeons/kweebec_entrance.png)
 _The Kweebec level entrance room_
 ![Kweebec Combat](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/dungeons/kweebec_combat.png)
 _Fighting DeadWood mobs in the Kweebec level_
 
-### Layout
+### At A Glance
 
 | Property | Value |
 |----------|-------|
-| Main Path Rooms | 5 |
+| Boss | Forklift |
+| Main Path Rooms Before Boss | 5 |
 | Challenge Rooms | 2 |
 | Treasure Rooms | 1 |
 | Shop Rooms | 1 |
 | Branch Paths | 2 |
 | Rooms per Branch | 1 |
-| Total Mobs (main) | ~250 |
-| Total Mobs (branches) | ~60 |
+| Total Mobs On Main Path | ~250 |
+| Total Mobs On Branches | ~60 |
 
-### Mob Pool
+### Common Enemies
 
 | Enemy | Spawn Weight | Notes |
 |-------|-------------|-------|
@@ -56,9 +70,9 @@ _Fighting DeadWood mobs in the Kweebec level_
 
 **Total Weight:** 65. Bigger weight means that enemy appears more often.
 
-### Decorative Props
+### Atmosphere And Props
 
-The Kweebec level includes themed environmental props:
+Kweebec is the most ruined-looking floor in the run. Most rooms feel like a broken village that has already lost the fight.
 
 | Block | Description |
 |-------|-------------|
@@ -77,30 +91,104 @@ The Kweebec level includes themed environmental props:
 _Ruined Kweebec furniture props in a dungeon room_
 ![Radioactive Barrels](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/props/radioactive_barrels.png)
 _Radioactive barrels - breakable environmental hazards_
+
 ---
 
 ## Level 2: Desert
 
-A dry industrial zone with tougher enemies and harder fights.
+A dry industrial war zone that marks the first real difficulty jump in a run. Desert keeps the same room structure as Kweebec, but the enemy mix leans much harder into industrial control, ranged hazards, and aggressive room pressure.
 
-The Desert is the second dungeon level and feels more like enemy-held territory than a ruined forest. It keeps the same dungeon structure as Kweebec, but the pressure is higher and the industrial faction has a much stronger presence.
+The floor still contains treasure rooms, safe shop rooms, and altar encounters, but there is much less downtime between dangerous fights.
+
+### At A Glance
+
+| Property | Value |
+|----------|-------|
+| Boss | Excavator |
+| Main Path Rooms Before Boss | 5 |
+| Challenge Rooms | 2 |
+| Treasure Rooms | 1 |
+| Shop Rooms | 1 |
+| Branch Paths | 2 |
+| Rooms per Branch | 1 |
+| Total Mobs On Main Path | ~300 |
+| Total Mobs On Branches | ~80 |
+
+### Common Enemies
+
+| Enemy | Spawn Weight | Notes |
+|-------|-------------|-------|
+| DeadWood Rootling | 5 | Returning melee enemy |
+| DeadWood Rootling (Sword) | 5 | Armed variant |
+| DeadWood Rootling (Axe) | 5 | Armed variant |
+| DeadWood Rootling (Lance) | 5 | Armed variant |
+| DeadWood Sproutling | 5 | Faster melee enemy |
+| DeadWood Sproutling (Sword) | 5 | Armed variant |
+| DeadWood Sproutling (Axe) | 5 | Armed variant |
+| DeadWood Sproutling (Lance) | 5 | Armed variant |
+| DeadWood Seedling | 4 | Heavier DeadWood body |
+| Kweebec Seedling | 3 | Explosive runner |
+| Radioactive Wolf | 5 | Fast flanking threat |
+| Industrial Nosuit | 8 | Common industrial pressure |
+| Industrial Hazmat | 5 | Melee bruiser |
+| Industrial Hazmat (Flamethrower) | 2 | Close-range ranged pressure |
+| Industrial Hazmat (Toxic Launcher) | 2 | Mid-range toxic projectile threat |
 
 ### What Makes Desert Different
 
-- Industrial encounters are much more common here, with heavier pressure from hostile workers and Hazmat-style enemies.
-- The level is tuned to be harsher than Kweebec, so mistakes are punished more quickly.
-- Important rooms can include altar encounters, giving your party a powerful weapon choice before the fight fully starts.
-- The overall pacing is more aggressive, with less downtime between dangerous rooms.
+- Industrial enemies stop feeling like rare interruptions and start feeling like the main force on the floor.
+- Altars are more dangerous here because the follow-up wave can include multiple ranged Hazmat variants.
+- Better loot starts showing up more consistently, especially from the stronger crate tiers deeper in the run.
 
-### Desert Overview
+---
 
-| Feature | Description |
-|---------|-------------|
-| Theme | Dry industrial wasteland taken over by the invaders |
-| Combat Feel | Harder, more aggressive, and more industrial-focused |
-| Core Flow | Corridors, challenge rooms, shops, altar encounters, and a boss room |
-| Enemy Mix | Returning Kweebec threats plus stronger industrial pressure |
-| Role In A Run | The difficulty spike after Kweebec |
+## Level 3: Toxic
+
+A poisoned industrial core and the final floor of the current run. Toxic keeps the same overall structure as the earlier floors, but it pushes the industrial faction to the front completely and introduces the most dangerous regular-room pressure in the game.
+
+This is where level 3 crates begin to matter, where Industrial Drones start joining fights, and where the run ends against the CEO Tank.
+
+### At A Glance
+
+| Property | Value |
+|----------|-------|
+| Boss | CEO Tank |
+| Main Path Rooms Before Boss | 5 |
+| Challenge Rooms | 2 |
+| Treasure Rooms | 1 |
+| Shop Rooms | 1 |
+| Branch Paths | 2 |
+| Rooms per Branch | 1 |
+| Total Mobs On Main Path | ~350 |
+| Total Mobs On Branches | ~100 |
+
+### Common Enemies
+
+| Enemy | Spawn Weight | Notes |
+|-------|-------------|-------|
+| DeadWood Rootling | 2 | Rare returning melee enemy |
+| DeadWood Rootling (Sword) | 2 | Armed variant |
+| DeadWood Rootling (Axe) | 2 | Armed variant |
+| DeadWood Rootling (Lance) | 2 | Armed variant |
+| DeadWood Sproutling | 2 | Rare fast melee enemy |
+| DeadWood Sproutling (Sword) | 2 | Armed variant |
+| DeadWood Sproutling (Axe) | 2 | Armed variant |
+| DeadWood Sproutling (Lance) | 2 | Armed variant |
+| DeadWood Seedling | 2 | Heavy DeadWood body |
+| Kweebec Seedling | 1 | Rare explosive runner |
+| Radioactive Wolf | 5 | Fast flanking threat |
+| Industrial Nosuit | 5 | Frontline industrial pressure |
+| Industrial Hazmat | 8 | Common melee industrial enemy |
+| Industrial Hazmat (Flamethrower) | 3 | Fire zone control |
+| Industrial Hazmat (Toxic Launcher) | 3 | Toxic ranged pressure |
+| Industrial Drone | 3 | Flying enemy that throws radioactive barrels |
+
+### What Makes Toxic Different
+
+- It is the most industrial-heavy floor in the run, with DeadWood reduced to a background threat instead of the main enemy group.
+- Industrial Drones add vertical pressure and explosive barrel throws that force more movement.
+- Level 3 crates can roll the full weapon pool and all 6 armor sets, including Void and Warden.
+- The floor ends with the CEO Tank, the largest and longest boss fight in the current dungeon path.
 
 ---
 
@@ -136,9 +224,9 @@ _Shop room with the shopkeeper NPC_
 
 ## Challenge Rooms
 
-Challenge rooms are special combat encounters that lock the party in until the objective is finished.
+Challenge rooms are set-piece encounters that lock the party in until the objective is finished.
 
-When a challenge starts, the room activates, the doors stay shut, and the challenge HUD tells the party what to do next. These rooms are meant to break the normal corridor flow and force a focused fight or objective push.
+When one starts, the room activates, the doors stay shut, and the challenge HUD tells the party what to do next. They are meant to interrupt normal corridor flow and force a focused objective or survival push.
 
 ### Challenge Objectives
 
@@ -151,23 +239,23 @@ Once every objective in the room is complete, the room is marked as cleared, the
 
 ## Altar Rooms
 
-Altar rooms are special risk-and-reward encounters found in important room slots.
+Altar rooms are risk-and-reward encounters that can appear on every floor.
 
-When your party enters one, the altar spawns 3 Unique-rarity weapon choices on the ground. The first player to pick one claims that reward, and the other altar weapons disappear.
+When your party enters one, the altar spawns 3 Unique-rarity weapon choices on the ground. The first player to pick one claims the reward, and the other altar weapons disappear.
 
-After the choice is made, the room can fully lock and the encounter begins. In other words, altar rooms ask your team to choose the reward first and then survive the fight that comes with it.
+After the choice is made, the room can fully lock and the encounter begins. In practice, altar rooms ask your team to choose the reward first and then survive the wave that comes with it.
 
 ### Why Altars Matter
 
 - They guarantee a very strong weapon reward.
 - Only one altar weapon can be kept from that room.
-- They add a high-risk power spike to both Kweebec and Desert runs.
+- They add a high-risk power spike to Kweebec, Desert, and Toxic runs.
 
 ---
 
 ## Dungeon Generation
 
-The game builds each run in this order:
+The game builds each floor in this order:
 
 1. Placing the spawn room
 2. Building the main corridor path up to the max room count
@@ -178,18 +266,22 @@ The game builds each run in this order:
 7. Connecting rooms with doors based on type assignments
 8. Spawning enemies using the level's weight table
 
-> **Note:** Side paths are usually shorter and have fewer enemies, but they can still include challenge rooms.
+> **Note:** Side paths are shorter and lighter than the main route, but they still matter for keys, loot, and extra combat.
+
+After a floor boss dies, the run moves forward to the next floor until the party reaches Toxic and defeats the CEO Tank.
+
 ---
 
 ## Level Comparison
 
-| Property | Kweebec | Desert |
-|----------|---------|--------|
-| Theme | Corrupted forest ruins | Industrial wasteland |
-| Main Feel | Intro level with mixed enemy pressure | Harder follow-up level with stronger industrial pressure |
-| Special Encounters | Treasure rooms, shops, altars | Challenge-heavy fights, shops, altars |
-| Enemy Focus | DeadWood, wolves, early industrial presence | Returning Kweebec enemies plus stronger industrial control |
-| Difficulty | Lower | Higher |
+| Property | Kweebec | Desert | Toxic |
+|----------|---------|--------|-------|
+| Theme | Corrupted forest ruins | Dry industrial wasteland | Poisoned industrial core |
+| Boss | Forklift | Excavator | CEO Tank |
+| Main Feel | Opening floor with mixed enemy pressure | Bigger industrial push and harsher room fights | Final floor with the densest enemy pressure |
+| Best Loot Hook | Early altars and first build upgrades | Better crate quality and more dangerous altars | Level 3 crates and final-floor boss clear |
+| Enemy Focus | DeadWood, wolves, early industrial presence | Strong industrial control with Hazmat support | Industrial-heavy roster with Drones and ranged hazards |
+| Difficulty | Lower | Medium | High |
 
 ---
 

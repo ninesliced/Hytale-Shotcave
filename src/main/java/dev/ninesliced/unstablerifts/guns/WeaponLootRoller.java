@@ -226,7 +226,7 @@ public final class WeaponLootRoller {
 
         if (eligible.isEmpty()) {
             // Last resort: use the global pool
-            return rollRandom();
+            return rollRandom(rarity);
         }
 
         WeaponDefinition def = eligible.get(rng.nextInt(eligible.size()));
