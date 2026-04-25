@@ -431,12 +431,17 @@ public final class ShopService {
                 ? WeaponRarity.BASIC : WeaponRarity.fromString(slot.minRarity());
         WeaponRarity maxRarity = slot.maxRarity().isBlank()
                 ? WeaponRarity.LEGENDARY : WeaponRarity.fromString(slot.maxRarity());
+        WeaponRarity rolledRarity = rollRarityInRange(minRarity, maxRarity);
 
         if (!slot.weapons().isEmpty()) {
             List<String> whitelist = expandWeaponEntries(slot.weapons());
-            return WeaponLootRoller.rollFromCrate(minRarity, maxRarity, whitelist);
+            if (!whitelist.isEmpty()) {
+                return WeaponLootRoller.rollFromCrate(minRarity, maxRarity, whitelist);
+            }
+            LOGGER.warning("Shop slot " + slot.position() + " has weapon entries but none resolved to known definitions; "
+                    + "falling back to ranged random roll within rarity bounds " + minRarity + "-" + maxRarity + ".");
         }
-        return WeaponLootRoller.rollRandom(null);
+        return WeaponLootRoller.rollRandom(rolledRarity);
     }
 
     @Nonnull
@@ -445,12 +450,24 @@ public final class ShopService {
                 ? WeaponRarity.BASIC : WeaponRarity.fromString(slot.minRarity());
         WeaponRarity maxRarity = slot.maxRarity().isBlank()
                 ? WeaponRarity.LEGENDARY : WeaponRarity.fromString(slot.maxRarity());
+        WeaponRarity rolledRarity = rollRarityInRange(minRarity, maxRarity);
 
         if (!slot.armors().isEmpty()) {
             List<String> whitelist = expandArmorEntries(slot.armors());
-            return ArmorLootRoller.rollFromCrate(minRarity, maxRarity, whitelist);
+            if (!whitelist.isEmpty()) {
+                return ArmorLootRoller.rollFromCrate(minRarity, maxRarity, whitelist);
+            }
+            LOGGER.warning("Shop slot " + slot.position() + " has armor entries but none resolved to known definitions; "
+                    + "falling back to random armor roll within rarity bounds " + minRarity + "-" + maxRarity + ".");
         }
-        return ArmorLootRoller.rollRandom(null);
+        return ArmorLootRoller.rollRandom(rolledRarity);
+    }
+
+    @Nonnull
+    private static WeaponRarity rollRarityInRange(@Nonnull WeaponRarity minRarity,
+                                                  @Nonnull WeaponRarity maxRarity) {
+        WeaponRarity rolled = WeaponRarity.roll(minRarity);
+        return rolled.ordinal() > maxRarity.ordinal() ? maxRarity : rolled;
     }
 
     /**

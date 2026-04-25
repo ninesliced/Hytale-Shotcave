@@ -509,7 +509,7 @@ public final class GameManager {
     }
 
     private void awardBossTrophyCompletions(@Nonnull Game game) {
-        RiftMerchantTrophies.BossTrophySet bossSet = RiftMerchantTrophies.bossForLevelIndex(game.getCurrentLevelIndex());
+        RiftMerchantTrophies.BossTrophySet bossSet = resolveDefeatedBossForTrophy(game);
         if (bossSet == null) {
             return;
         }
@@ -537,6 +537,29 @@ public final class GameManager {
 
             data.addBossCompletion(bossSet.bossKey(), 1);
         }
+    }
+
+    @Nullable
+    private RiftMerchantTrophies.BossTrophySet resolveDefeatedBossForTrophy(@Nonnull Game game) {
+        Level level = game.getCurrentLevel();
+        RoomData bossRoom = level != null ? level.getBossRoom() : null;
+        if (bossRoom != null) {
+            for (String mobId : bossRoom.getMobsToSpawn()) {
+                RiftMerchantTrophies.BossTrophySet bossSet = RiftMerchantTrophies.bossForMobId(mobId);
+                if (bossSet != null) {
+                    return bossSet;
+                }
+            }
+
+            for (RoomData.PinnedMobSpawn pinnedMobSpawn : bossRoom.getPinnedMobSpawns()) {
+                RiftMerchantTrophies.BossTrophySet bossSet = RiftMerchantTrophies.bossForMobId(pinnedMobSpawn.mobId());
+                if (bossSet != null) {
+                    return bossSet;
+                }
+            }
+        }
+
+        return RiftMerchantTrophies.bossForLevelIndex(game.getCurrentLevelIndex());
     }
 
     /**

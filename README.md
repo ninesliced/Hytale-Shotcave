@@ -2,9 +2,11 @@
 
 **Turn Hytale into a top-down co-op roguelike shooter with dungeon runs, guns, armor sets, bosses, and a mission to save the Kweebecs from total invasion.**
 
----
+***
 
-<a href="https://zap-hosting.com/ninesliced?voucher=ninesliced"><img src="https://media.forgecdn.net/attachments/1538/710/zap-hosting-collaboration-banner-png.png" alt="ZAP-Hosting Gameserver and Webhosting"></a>
+# <span style="color:#e03e2d">Please install the MultipleHUD mod if you have other mods adding HUDs</span>
+
+***
 
 ## What Is This?
 
@@ -12,7 +14,17 @@ Unstable Rifts is a Hytale server mod that transforms the game into a replayable
 
 Instead of a simple one-off dungeon, each run throws your party into a generated combat route filled with enemies, branching rooms, loot crates, shops, and a boss at the end. You fight with a full set of ranged weapons, melee options, elemental effects, and armor builds while trying to survive long enough to push deeper.
 
-It is built to be easy to understand for new players, but strong on replayability once you start chasing better drops, stronger builds, and cleaner runs with friends.
+The current run path now pushes through Kweebec, Desert, and Toxic, ending on the CEO Tank. Between runs, the Rift Merchant adds missions, Rift Coin rewards, weapon crates, and boss trophies for longer-term progression.
+
+It is built to be easy to understand for new players, but strong on replayability once you start chasing better drops, stronger builds, cleaner runs, and more merchant progression with friends.
+
+## What Is In 1.2.0?
+
+- A third dungeon floor: **Toxic**
+- A new final boss: **CEO Tank**
+- A full three-boss run path: **Forklift**, **Excavator**, and **CEO Tank**
+- Expanded outside-dungeon progression through **missions**, **Rift Coins**, and **boss trophies**
+- New room content on the late floors, including the new Toxic room set
 
 ## Story
 
@@ -28,10 +40,11 @@ Your job is to enter the unstable rifts left by the invaders, clear their strong
 
 1. **Top-down shooter combat** with guns, melee weapons, elemental effects, and fast room-to-room fights.
 2. **19 weapons with very different feel**, from pistols and rifles to muskets, blunderbusses, tasers, and summoning weapons.
-3. **Generated dungeon routes** with main paths, side branches, challenge rooms, shops, treasure rooms, and boss encounters.
+3. **Generated dungeon routes** across 3 floors, with main paths, side branches, challenge rooms, altar rooms, shops, treasure rooms, and boss encounters.
 4. **Co-op replayability** built around party play, shared coins, revives, reconnect support, and loot progression.
-5. **Armor build variety** through multiple sets, set bonuses, and different stat profiles.
-6. **Roguelike pacing** where each run gives you better loot, tougher enemies, and a strong reason to go again.
+5. **Between-run progression** through Rift Merchant missions, Rift Coins, weapon crates, and boss trophies.
+6. **Armor build variety** through multiple sets, set bonuses, and different stat profiles.
+7. **Roguelike pacing** where each run gives you better loot, tougher enemies, and a strong reason to go again.
 
 ## How Do I Start Playing?
 
@@ -46,17 +59,22 @@ Once your party is ready, invite friends, open the party interface, and start th
 ## What Can You Do In A Run?
 
 - Explore a generated dungeon with branching paths.
-- Fight Industrial enemies, infected DeadWood, wildlife, and bosses.
+- Fight Industrial enemies, infected DeadWood, wildlife, and 3 different floor bosses.
 - Break crates for guns, armor, ammo, healing, and coins.
 - Buy upgrades in safe shop rooms.
+- Take altar rewards and survive the fight that follows.
 - Revive teammates when things go wrong.
-- Beat the boss and push back the invasion one rift at a time.
+- Beat the boss of each floor and push all the way to Toxic and the CEO Tank.
 
 ## Screenshots
 
 ### Gameplay Overview
 
 ![Gameplay Overview](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/general/gameplay_overview.png)
+
+# Custom Weapons
+
+![all guns](https://media.forgecdn.net/attachments/1630/800/all_the_guns-png.png)
 
 ### Starting A Party
 
@@ -86,6 +104,7 @@ For the full command list, see the [wiki command page](https://wiki.hytalemoddin
 - [Lore](https://wiki.hytalemodding.dev/mod/unstable-rifts/lore)
 - [Weapons](https://wiki.hytalemodding.dev/mod/unstable-rifts/weapons-1)
 - [Dungeon Levels](https://wiki.hytalemodding.dev/mod/unstable-rifts/dungeon-levels-1)
+- [Shops](https://wiki.hytalemodding.dev/mod/unstable-rifts/shops-1)
 - [Party System](https://wiki.hytalemodding.dev/mod/unstable-rifts/party-system-1)
 
 ## Installation
@@ -110,3 +129,7 @@ The mod ships with its own assets, so players can jump in and start using the ne
 ---
 
 _Want the full breakdown of systems, commands, and progression?_ Start with the [wiki](https://wiki.hytalemodding.dev/mod/unstable-rifts).
+
+---
+
+[![ZAP-Hosting Gameserver and Webhosting](https://media.forgecdn.net/attachments/1538/710/zap-hosting-collaboration-banner-png.png)](https://zap-hosting.com/ninesliced?voucher=ninesliced)

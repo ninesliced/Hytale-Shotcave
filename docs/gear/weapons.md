@@ -51,10 +51,10 @@ _Blunderbuss_
 | Rifle | LASER | 18 | 1.0s | 1.0s | 140 | 40 | 2.4 | 1 | <span class="rarity-basic">Basic</span> - <span class="rarity-unique">Unique</span> | 8 |
 | Blitzer Crystal | LASER | 8 | 3.0s | 1.4s | 50 | 35 | 0 | 1 | <span class="rarity-basic">Basic</span> - <span class="rarity-unique">Unique</span> | 10 |
 | Blunderbuss | LASER | 8 | 1.1s | 1.3s | 60 | 24 | 14.0 | 8 | <span class="rarity-basic">Basic</span> - <span class="rarity-uncommon">Uncommon</span> | 15 |
-| Taser | LASER | 10 | 0.8s | 1.0s | 80 | 30 | 0 | 1 | <span class="rarity-epic">Epic</span> | 5 |
+| Taser | LASER | 10 | 0.27s | 0.9s | 80 | 30 | 0 | 1 | <span class="rarity-epic">Epic</span> - <span class="rarity-unique">Unique</span> | 5 |
 | Voidlance | BULLET | - | 1.2s | 1.4s | 100 | 40 | 0 | 1 | <span class="rarity-epic">Epic</span> | 5 |
 | Corrupted Shotgun | LASER | 5 | 2.2s | 2.2s | 60 | 20 | 34.0 | 32 | <span class="rarity-epic">Epic</span> - <span class="rarity-unique">Unique</span> | 3 |
-| Kweebec Launcher | SUMMON | - | 1.5s | 3.0s | 50 | 30 | 0 | 1 | <span class="rarity-epic">Epic</span> | 15 |
+| Kweebec Launcher | SUMMON | - | 0.5s | 2.5s | 50 | 30 | 0 | 1 | <span class="rarity-epic">Epic</span> - <span class="rarity-unique">Unique</span> | 15 |
 
 > [!NOTE]
 > **Crystal Sword** is always available as starting equipment. It uses no ammo and has a built-in knockback of 1.5.
@@ -134,8 +134,11 @@ Weapons with a locked element always apply that effect on hit:
 
 _Taser - chains to nearby enemies_
 
+The Taser fires **chain lightning** instead of a normal projectile. A shot can hit the initial target and keep jumping through nearby enemies, up to **5 total targets** within **5 blocks** per jump.
 
-The Taser shoots electricity that jumps to nearby enemies. It is a rare drop (Epic+).
+It is locked to **Electricity** and starts at **Epic** rarity.
+
+**Loot Spots:** Level 1 crates, Level 3 crates, all 3 Rift Merchant weapon crates, and the Kweebec or Desert dungeon shop weapon pools.
 
 ### Voidlance
 
@@ -159,7 +162,11 @@ One of the strongest spread weapons in the game. It fires 32 pellets with both <
 
 _Kweebec Launcher - summons a friendly Kweebec_
 
-This weapon summons a friendly Kweebec instead of shooting bullets. The summon has 36 HP, deals 12 damage, and lasts 600 ticks. Drops at Epic rarity.
+This weapon launches a summon orb that spawns a **friendly Kweebec Seedling** instead of firing bullets. The summon has **36 HP**, deals **12 damage**, and uses a base **600 life** value from the weapon definition.
+
+It starts at **Epic** rarity and has a much higher spawn weight than the Taser whenever it is in an eligible loot pool.
+
+**Loot Spots:** Level 2 crates, Level 3 crates, Large 2x2 crates, all 3 Rift Merchant weapon crates, and the Kweebec or Desert dungeon shop weapon pools.
 
 ---
 

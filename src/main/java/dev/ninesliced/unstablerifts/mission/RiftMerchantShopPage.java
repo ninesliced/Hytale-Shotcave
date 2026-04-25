@@ -45,7 +45,8 @@ import java.util.Random;
 public final class RiftMerchantShopPage extends InteractiveCustomUIPage<RiftMerchantShopPage.ShopEventData> {
 
     private static final String LAYOUT_PATH = "Pages/UnstableRifts/ShopPage.ui";
-    private static final String ITEM_TEMPLATE = "Pages/UnstableRifts/ShopEntry.ui";
+    private static final String GROUP_TEMPLATE = "Pages/UnstableRifts/RiftMerchantShopGroup.ui";
+    private static final String OPTION_TEMPLATE = "Pages/UnstableRifts/RiftMerchantShopOption.ui";
     private static final String ITEM_LIST_PATH = "#ShopItemList";
 
     @Nonnull
@@ -101,38 +102,54 @@ public final class RiftMerchantShopPage extends InteractiveCustomUIPage<RiftMerc
                                 @Nonnull Store<EntityStore> store) {
         ui.clear(ITEM_LIST_PATH);
 
-        int playerCoins = countPlayerCoins(store);
         List<MerchantOffer> offers = getOffers(store);
+        List<MerchantGroupView> groups = buildGroupViews(offers);
 
-        for (int displayIndex = 0; displayIndex < offers.size(); displayIndex++) {
-            MerchantOffer offer = offers.get(displayIndex);
-            String itemPath = ITEM_LIST_PATH + "[" + displayIndex + "]";
+        for (int groupIndex = 0; groupIndex < groups.size(); groupIndex++) {
+            MerchantGroupView group = groups.get(groupIndex);
+            String groupPath = ITEM_LIST_PATH + "[" + groupIndex + "]";
+            String optionListPath = groupPath + " #MerchantOptionList";
 
-            ui.append(ITEM_LIST_PATH, ITEM_TEMPLATE);
-            ui.set(itemPath + " #ShopEntryName.TextSpans", Message.raw(offer.displayName()).color(offer.displayColor()));
-            ui.set(itemPath + " #ShopEntryPrice.TextSpans", Message.raw(buildPriceLabel(offer)));
-            ui.set(itemPath + " #ShopEntryType.TextSpans", Message.raw(buildTypeLabel(offer)).color(offer.displayColor()));
-            ui.set(itemPath + " #ShopEntryDetails #ShopDetailText.TextSpans", Message.raw(buildDetailText(offer, playerCoins)));
+            ui.append(ITEM_LIST_PATH, GROUP_TEMPLATE);
+            ui.set(groupPath + " #MerchantGroupTitle.TextSpans", Message.raw(group.title()).color(group.accentColor()));
+            ui.set(groupPath + " #MerchantGroupDesc.TextSpans", Message.raw(group.description()));
 
-            String iconPath = ItemIconResolver.resolveIconPath(offer.outputItemId());
-            if (iconPath != null) {
-                ui.set(itemPath + " #ShopEntryDetails #ShopDetailIcon.AssetPath", iconPath);
-                ui.set(itemPath + " #ShopEntryDetails #ShopDetailIcon.Visible", true);
-            } else {
-                ui.set(itemPath + " #ShopEntryDetails #ShopDetailIcon.Visible", false);
+            boolean hasMeta = !group.meta().isBlank();
+            ui.set(groupPath + " #MerchantGroupMeta.Visible", hasMeta);
+            if (hasMeta) {
+                ui.set(groupPath + " #MerchantGroupMeta.TextSpans", Message.raw(group.meta()).color(group.accentColor()));
             }
 
-            boolean canPurchase = offer.canPurchase();
-            ui.set(itemPath + " #ShopEntryBuyBtn.Visible", canPurchase);
-            if (canPurchase) {
-                events.addEventBinding(
-                        CustomUIEventBindingType.Activating,
-                        itemPath + " #ShopEntryBuyBtn",
-                        new EventData()
-                                .put(ShopEventData.KEY_ACTION, "BUY")
-                                .put(ShopEventData.KEY_INDEX, String.valueOf(displayIndex)),
-                        false
-                );
+            String iconPath = ItemIconResolver.resolveIconPath(group.iconItemId());
+            if (iconPath != null) {
+                ui.set(groupPath + " #MerchantGroupIcon.AssetPath", iconPath);
+                ui.set(groupPath + " #MerchantGroupIcon.Visible", true);
+            } else {
+                ui.set(groupPath + " #MerchantGroupIcon.Visible", false);
+            }
+
+            for (int optionIndex = 0; optionIndex < group.options().size(); optionIndex++) {
+                MerchantOptionView option = group.options().get(optionIndex);
+                String optionPath = optionListPath + "[" + optionIndex + "]";
+
+                ui.append(optionListPath, OPTION_TEMPLATE);
+                ui.set(optionPath + " #MerchantOptionName.TextSpans", Message.raw(option.title()).color(option.titleColor()));
+                ui.set(optionPath + " #MerchantOptionPrice.TextSpans", Message.raw(option.priceLabel()));
+                ui.set(optionPath + " #MerchantOptionDesc.TextSpans", Message.raw(option.description()));
+                ui.set(optionPath + " #MerchantOptionBuyBtn.Visible", option.buyVisible());
+                ui.set(optionPath + " #MerchantOptionLockedBtn.Visible", option.lockedVisible());
+                ui.set(optionPath + " #MerchantOptionLockedBtn.Text", option.lockedLabel());
+
+                if (option.buyVisible()) {
+                    events.addEventBinding(
+                            CustomUIEventBindingType.Activating,
+                            optionPath + " #MerchantOptionBuyBtn",
+                            new EventData()
+                                    .put(ShopEventData.KEY_ACTION, "BUY")
+                                    .put(ShopEventData.KEY_INDEX, String.valueOf(option.purchaseIndex())),
+                            false
+                    );
+                }
             }
         }
     }
@@ -318,48 +335,201 @@ public final class RiftMerchantShopPage extends InteractiveCustomUIPage<RiftMerc
     }
 
     @Nonnull
-    private String buildPriceLabel(@Nonnull MerchantOffer offer) {
-        if (!offer.tradeValid()) {
-            return "INVALID";
-        }
-        if (offer.isLocked()) {
-            return "LOCKED";
-        }
-        return offer.price() + " coins";
-    }
+    private List<MerchantGroupView> buildGroupViews(@Nonnull List<MerchantOffer> offers) {
+        List<IndexedOffer> supplies = new ArrayList<>();
+        List<IndexedOffer> crates = new ArrayList<>();
+        List<IndexedOffer> baseSingles = new ArrayList<>();
+        List<IndexedOffer> forkliftTrophies = new ArrayList<>();
+        List<IndexedOffer> excavatorTrophies = new ArrayList<>();
+        List<IndexedOffer> ceoTrophies = new ArrayList<>();
 
-    @Nonnull
-    private String buildTypeLabel(@Nonnull MerchantOffer offer) {
-        return switch (offer.kind()) {
-            case BASE -> "MERCHANT STOCK";
-            case TROPHY -> offer.trophyDefinition().boss().displayName().toUpperCase() + " TROPHY";
-        };
-    }
+        for (int offerIndex = 0; offerIndex < offers.size(); offerIndex++) {
+            MerchantOffer offer = offers.get(offerIndex);
+            IndexedOffer indexedOffer = new IndexedOffer(offerIndex, offer);
 
-    @Nonnull
-    private String buildDetailText(@Nonnull MerchantOffer offer, int playerCoins) {
-        if (!offer.tradeValid()) {
-            return "This offer references a missing item asset.";
-        }
+            if (offer.kind() == OfferKind.BASE) {
+                switch (offer.outputItemId()) {
+                    case "UnstableRifts_Ammo_Item" -> supplies.add(indexedOffer);
+                    case "UnstableRifts_Shop_Crate_T1", "UnstableRifts_Shop_Crate_T2", "UnstableRifts_Shop_Crate_T3" -> crates.add(indexedOffer);
+                    default -> baseSingles.add(indexedOffer);
+                }
+                continue;
+            }
 
-        StringBuilder sb = new StringBuilder();
-        if (offer.kind() == OfferKind.BASE) {
-            sb.append(getBaseOfferDescription(offer.outputItemId()));
-        } else if (offer.trophyDefinition() != null) {
-            RiftMerchantTrophies.TrophyDefinition trophy = offer.trophyDefinition();
-            sb.append("Placeable boss trophy decoration.");
-            sb.append("\nRarity: ").append(trophy.rarity().itemSuffix());
-            sb.append("\nUnlocks at ").append(trophy.requiredCompletions()).append(" clears");
-            sb.append("\nProgress: ").append(offer.completionCount()).append(" / ").append(trophy.requiredCompletions());
-            if (offer.isLocked()) {
-                sb.append("\nStatus: Locked");
-            } else {
-                sb.append("\nStatus: Available");
+            if (offer.trophyDefinition() == null) {
+                continue;
+            }
+
+            switch (offer.trophyDefinition().boss()) {
+                case FORKLIFT -> forkliftTrophies.add(indexedOffer);
+                case EXCAVATOR -> excavatorTrophies.add(indexedOffer);
+                case CEO -> ceoTrophies.add(indexedOffer);
             }
         }
 
-        sb.append("\nOwned coins: ").append(playerCoins).append(" / ").append(offer.price());
-        return sb.toString();
+        List<MerchantGroupView> groups = new ArrayList<>();
+        if (!supplies.isEmpty()) {
+            groups.add(buildBaseGroup(
+                    "FIELD SUPPLIES",
+                    "Quick utility purchases for the next run.",
+                    "Always available",
+                    supplies,
+                    false
+            ));
+        }
+
+        if (!crates.isEmpty()) {
+            groups.add(buildBaseGroup(
+                    "WEAPON CRATES",
+                    "Choose the exact crate tier you want instead of waiting for rotation.",
+                    "All tiers stay available",
+                    crates,
+                    true
+            ));
+        }
+
+        for (IndexedOffer offer : baseSingles) {
+            groups.add(buildBaseSingleGroup(offer));
+        }
+
+        if (!forkliftTrophies.isEmpty()) {
+            groups.add(buildTrophyGroup("FORKLIFT TROPHY", forkliftTrophies));
+        }
+        if (!excavatorTrophies.isEmpty()) {
+            groups.add(buildTrophyGroup("EXCAVATOR TROPHY", excavatorTrophies));
+        }
+        if (!ceoTrophies.isEmpty()) {
+            groups.add(buildTrophyGroup("CEO TROPHY", ceoTrophies));
+        }
+        return groups;
+    }
+
+    @Nonnull
+    private MerchantGroupView buildBaseGroup(@Nonnull String title,
+                                             @Nonnull String description,
+                                             @Nonnull String meta,
+                                             @Nonnull List<IndexedOffer> offers,
+                                             boolean sortByPrice) {
+        List<IndexedOffer> sortedOffers = new ArrayList<>(offers);
+        if (sortByPrice) {
+            sortedOffers.sort((left, right) -> Integer.compare(left.offer().price(), right.offer().price()));
+        }
+
+        List<MerchantOptionView> options = new ArrayList<>(sortedOffers.size());
+        for (IndexedOffer offer : sortedOffers) {
+            options.add(buildBaseOption(offer, sortByPrice));
+        }
+
+        return new MerchantGroupView(
+                title,
+                description,
+                meta,
+                resolveGroupIconItem(sortedOffers),
+                resolveGroupAccent(sortedOffers),
+                options
+        );
+    }
+
+    @Nonnull
+    private MerchantGroupView buildBaseSingleGroup(@Nonnull IndexedOffer indexedOffer) {
+        MerchantOffer offer = indexedOffer.offer();
+        List<IndexedOffer> offers = List.of(indexedOffer);
+        List<MerchantOptionView> options = List.of(buildBaseOption(indexedOffer, false));
+        return new MerchantGroupView(
+                offer.displayName().toUpperCase(),
+                getBaseOfferDescription(offer.outputItemId()),
+                "Merchant stock",
+                offer.outputItemId(),
+                offer.displayColor(),
+                options
+        );
+    }
+
+    @Nonnull
+    private MerchantGroupView buildTrophyGroup(@Nonnull String title,
+                                               @Nonnull List<IndexedOffer> offers) {
+        List<IndexedOffer> sortedOffers = new ArrayList<>(offers);
+        sortedOffers.sort((left, right) -> Integer.compare(
+                left.offer().trophyDefinition().sortOrder(),
+                right.offer().trophyDefinition().sortOrder()
+        ));
+
+        List<MerchantOptionView> options = new ArrayList<>(sortedOffers.size());
+        for (IndexedOffer offer : sortedOffers) {
+            options.add(buildTrophyOption(offer));
+        }
+
+        int clears = sortedOffers.get(0).offer().completionCount();
+        return new MerchantGroupView(
+                title,
+                "Choose the rarity you want to place in your base.",
+                "Boss clears: " + clears,
+                resolveGroupIconItem(sortedOffers),
+                resolveGroupAccent(sortedOffers),
+                options
+        );
+    }
+
+    @Nonnull
+    private MerchantOptionView buildBaseOption(@Nonnull IndexedOffer indexedOffer,
+                                               boolean compactCrateTitles) {
+        MerchantOffer offer = indexedOffer.offer();
+        String description = offer.tradeValid()
+                ? getBaseOfferDescription(offer.outputItemId())
+                : "This offer references a missing item asset.";
+
+        return new MerchantOptionView(
+                indexedOffer.purchaseIndex(),
+                compactCrateTitles ? getBaseVariantTitle(offer.outputItemId()) : offer.displayName(),
+                buildOptionPriceLabel(offer),
+                description,
+                offer.displayColor(),
+                offer.canPurchase(),
+                !offer.canPurchase(),
+                offer.tradeValid() ? "LOCKED" : "INVALID"
+        );
+    }
+
+    @Nonnull
+    private MerchantOptionView buildTrophyOption(@Nonnull IndexedOffer indexedOffer) {
+        MerchantOffer offer = indexedOffer.offer();
+        RiftMerchantTrophies.TrophyDefinition trophy = offer.trophyDefinition();
+        String description;
+        if (!offer.tradeValid()) {
+            description = "This trophy references a missing item asset.";
+        } else if (offer.isLocked()) {
+            description = "Unlocks at " + trophy.requiredCompletions() + " clears. Progress: "
+                    + offer.completionCount() + " / " + trophy.requiredCompletions() + ".";
+        } else {
+            description = "Unlocked at " + trophy.requiredCompletions() + " clears. Placeable boss trophy decoration.";
+        }
+
+        return new MerchantOptionView(
+                indexedOffer.purchaseIndex(),
+                trophy.rarity().itemSuffix(),
+                buildOptionPriceLabel(offer),
+                description,
+                offer.displayColor(),
+                offer.canPurchase(),
+                !offer.canPurchase(),
+                offer.tradeValid() ? "LOCKED" : "INVALID"
+        );
+    }
+
+    @Nonnull
+    private String buildOptionPriceLabel(@Nonnull MerchantOffer offer) {
+        return offer.tradeValid() ? offer.price() + " coins" : "INVALID";
+    }
+
+    @Nonnull
+    private String getBaseVariantTitle(@Nonnull String itemId) {
+        return switch (itemId) {
+            case "UnstableRifts_Ammo_Item" -> "Ammo Refill";
+            case "UnstableRifts_Shop_Crate_T1" -> "Standard";
+            case "UnstableRifts_Shop_Crate_T2" -> "Advanced";
+            case "UnstableRifts_Shop_Crate_T3" -> "Elite";
+            default -> MerchantOffer.resolveBaseDisplayName(itemId);
+        };
     }
 
     @Nonnull
@@ -371,6 +541,38 @@ public final class RiftMerchantShopPage extends InteractiveCustomUIPage<RiftMerc
             case "UnstableRifts_Shop_Crate_T3" -> "Contains a random weapon from the legendary to unique pool.";
             default -> "Merchant stock item.";
         };
+    }
+
+    @Nonnull
+    private String resolveGroupIconItem(@Nonnull List<IndexedOffer> offers) {
+        for (int index = offers.size() - 1; index >= 0; index--) {
+            MerchantOffer offer = offers.get(index).offer();
+            if (offer.tradeValid() && !offer.isLocked()) {
+                return offer.outputItemId();
+            }
+        }
+        for (IndexedOffer offer : offers) {
+            if (offer.offer().tradeValid()) {
+                return offer.offer().outputItemId();
+            }
+        }
+        return offers.get(0).offer().outputItemId();
+    }
+
+    @Nonnull
+    private Color resolveGroupAccent(@Nonnull List<IndexedOffer> offers) {
+        for (int index = offers.size() - 1; index >= 0; index--) {
+            MerchantOffer offer = offers.get(index).offer();
+            if (offer.tradeValid() && !offer.isLocked()) {
+                return offer.displayColor();
+            }
+        }
+        for (IndexedOffer offer : offers) {
+            if (offer.offer().tradeValid()) {
+                return offer.offer().displayColor();
+            }
+        }
+        return java.awt.Color.WHITE;
     }
 
     private void refreshShopPage(@Nonnull Ref<EntityStore> ref,
@@ -407,6 +609,28 @@ public final class RiftMerchantShopPage extends InteractiveCustomUIPage<RiftMerc
     private enum OfferKind {
         BASE,
         TROPHY
+    }
+
+    private record IndexedOffer(int purchaseIndex,
+                                @Nonnull MerchantOffer offer) {
+    }
+
+    private record MerchantGroupView(@Nonnull String title,
+                                     @Nonnull String description,
+                                     @Nonnull String meta,
+                                     @Nonnull String iconItemId,
+                                     @Nonnull Color accentColor,
+                                     @Nonnull List<MerchantOptionView> options) {
+    }
+
+    private record MerchantOptionView(int purchaseIndex,
+                                      @Nonnull String title,
+                                      @Nonnull String priceLabel,
+                                      @Nonnull String description,
+                                      @Nonnull Color titleColor,
+                                      boolean buyVisible,
+                                      boolean lockedVisible,
+                                      @Nonnull String lockedLabel) {
     }
 
     private record MerchantOffer(@Nonnull OfferKind kind,

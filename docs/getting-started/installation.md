@@ -44,6 +44,7 @@ Controls the dungeon structure.
 
 | Setting | Description |
 |---------|-------------|
+| `lock` | When `true`, keeps your edited `dungeon.json`; when `false`, startup refreshes it from the bundled default |
 | `dungeonName` | Display name for the dungeon |
 | `maxPartySize` | Maximum players per party (default: 4) |
 | `startEquipment` | Item IDs given to each player at run start |
