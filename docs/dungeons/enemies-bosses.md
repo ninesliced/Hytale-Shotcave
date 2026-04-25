@@ -167,9 +167,9 @@ A ranged industrial enemy that becomes part of the normal mob pool in Desert and
 
 ### Industrial Drone
 
-![Industrial Drone](../../img/enemies/industrial_drone_placeholder.svg)
+![Industrial Drone](https://github.com/ninesliced/UnstableRifts/blob/main/img/enemies/industrial_drone.png?raw=true)
 
-_Industrial Drone - placeholder image_
+_Industrial Drone_
 
 A flying industrial support enemy that starts defining the Toxic floor. Drones attack from above, throw radioactive barrels, and can dash into better angles when the party tries to hide behind terrain.
 
@@ -230,9 +230,9 @@ The Forklift moves a lot and is hard to keep in one place.
 
 The Desert boss. Excavator is bigger than Forklift, covers more area with melee sweeps, and mixes movement attacks with ranged debris pressure.
 
-![Boss Excavator](../../img/bosses/excavator_placeholder.svg)
+![Boss Excavator](https://github.com/ninesliced/UnstableRifts/blob/main/img/bosses/excavator.png?raw=true)
 
-_Boss Excavator - placeholder image_
+_Boss Excavator_
 
 | Stat | Value |
 |------|-------|
@@ -260,9 +260,9 @@ Excavator is the boss that teaches the party to stop hugging the same angle. If 
 
 The Toxic boss and the final fight of the current run. CEO Tank is a full multi-phase boss built around long-range pressure, artillery-style zoning, and a much longer health bar than the earlier bosses.
 
-![Boss CEO Tank](../../img/bosses/ceo_tank_placeholder.svg)
+![Boss CEO Tank](https://github.com/ninesliced/UnstableRifts/blob/main/img/bosses/ceo_tank.png?raw=true)
 
-_Boss CEO Tank - placeholder image_
+_Boss CEO Tank_
 
 | Stat | Value |
 |------|-------|
