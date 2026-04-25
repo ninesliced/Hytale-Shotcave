@@ -1,5 +1,24 @@
 # Changelog
 
+## v1.2.0 - Level 3 Toxic (2026-04-26)
+
+### New Content
+
+- Added the third dungeon floor, **Toxic**, as the new final stage of a full run.
+- Added the **CEO Tank** as the new final boss, completing the current three-boss path of Forklift, Excavator, and CEO Tank.
+- Added the new Toxic room set, including late-run corridors, challenge rooms, altar rooms, treasure rooms, shop rooms, and the Toxic boss room.
+- Added the **Industrial Drone** to the late-run enemy roster.
+- Expanded the outside-dungeon progression loop with **Rift Merchant missions**, **Rift Coin rewards**, and **boss trophies**.
+- Added new Rift Merchant trophy rewards for Forklift, Excavator, and CEO clears.
+
+### Gameplay
+
+- Full clears now progress through **Kweebec**, **Desert**, and **Toxic**.
+- Late-run loot progression now reaches level 3 crates, including the top-end armor pool.
+- Mission progression now supports long-term goals beyond simple run clears, including boss kills, room objectives, shop purchases, coin collection, and armor ability use.
+
+- Fixed teleport issues inside the dungeons and enemies disappearing when using the portal to return to the last intersection.
+
 ## v1.1.0 - Level 2 Desert (2026-04-20)
 
 ### New Content

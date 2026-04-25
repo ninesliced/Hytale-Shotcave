@@ -7,14 +7,25 @@ draft: false
 
 # Enemies and Bosses
 
-You will fight many enemy types in the dungeon, plus one boss. Each enemy has different behavior and drops.
+Enemy pressure changes a lot as a run goes deeper. Kweebec opens with DeadWood swarms and wildlife, Desert pushes much harder on industrial troops, and Toxic finishes the run with Drones, ranged Hazmat variants, and the CEO Tank.
 
+Each floor ends with its own boss, and every major enemy family behaves a little differently in a fight. This page is the quick reference for what you are actually up against.
+
+---
+
+## Enemy Progression
+
+| Floor | Main Pressure | Boss |
+|-------|---------------|------|
+| Kweebec | DeadWood packs, wolves, light industrial support | Forklift |
+| Desert | Mixed DeadWood and industrial control | Excavator |
+| Toxic | Heavy industrial roster, ranged Hazmats, Drones | CEO Tank |
 
 ---
 
 ## DeadWood Enemies
 
-DeadWood are corrupted tree enemies and make up most fights. They come in different sizes and weapon variants.
+DeadWood are corrupted Kweebec enemies and they make up most early fights. Even on later floors they still show up often enough to punish overconfidence, especially when they arrive alongside industrial enemies.
 
 ### Rootlings
 
@@ -22,7 +33,7 @@ DeadWood are corrupted tree enemies and make up most fights. They come in differ
 
 _DeadWood Rootling - the most common enemy type_
 
-Medium-sized DeadWood. The most common enemy type.
+Medium-sized DeadWood and the most common melee body in the early floors.
 
 | Variant | Weapon | Spawn Weight |
 |---------|--------|-------------|
@@ -40,7 +51,7 @@ Medium-sized DeadWood. The most common enemy type.
 
 _DeadWood Sproutling - smaller and faster than Rootlings_
 
-Smaller, faster DeadWood. Same variants as Rootlings.
+Smaller and faster than Rootlings. They pressure the backline well when mixed into larger packs.
 
 | Variant | Weapon | Spawn Weight |
 |---------|--------|-------------|
@@ -55,7 +66,7 @@ Smaller, faster DeadWood. Same variants as Rootlings.
 
 _DeadWood Seedling - larger DeadWood with more health_
 
-Smaller DeadWood. Less common than Rootlings and Sproutlings.
+Smaller DeadWood less common than Rootlings and Sproutlings.
 
 | Variant | Spawn Weight |
 |---------|-------------|
@@ -79,7 +90,7 @@ Smaller DeadWood. Less common than Rootlings and Sproutlings.
 
 _Radioactive Wolf - fast pack hunter_
 
-Fast pack hunters that can close distance quickly. One of the more dangerous regular enemies.
+Fast pack hunters that close distance quickly and punish anyone who drifts away from the group.
 
 | Stat | Value |
 |------|-------|
@@ -98,13 +109,15 @@ Fast pack hunters that can close distance quickly. One of the more dangerous reg
 
 ## Industrial Enemies
 
+Industrial enemies become the dominant threat from Desert onward. They hit harder, hold range better, and usually create more room pressure than the DeadWood they fight beside.
+
 ### Nosuit
 
 ![Industrial Nosuit](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/enemies/industrial_nosuit.png)
 
 _Industrial Nosuit - unarmored worker enemy_
 
-Unarmored industrial workers. Rarer but tougher than DeadWood.
+Unarmored industrial workers. They are the most basic industrial body, but they show up often enough that they become the glue holding mixed enemy packs together.
 
 | Stat | Value |
 |------|-------|
@@ -119,11 +132,11 @@ Unarmored industrial workers. Rarer but tougher than DeadWood.
 
 _Industrial Hazmat - close range industrial enemy_
 
-A close-range industrial enemy that attacks with his fist.
+The core Hazmat enemy. It wants to stay close and keep pressure on the party while ranged variants make the room worse.
 
 | Stat | Value |
 |------|-------|
-| Spawn Weight | 3 (Desert only) |
+| Spawn Weight | 5 in Desert, 8 in Toxic |
 | Attack Type | Melee |
 
 ### Hazmat (FlameThrower)
@@ -132,11 +145,11 @@ A close-range industrial enemy that attacks with his fist.
 
 _Industrial Hazmat (FlameThrower) - ranged industrial enemy_
 
-A close-range industrial enemy that attacks with a flamethrower.
+A Hazmat variant that floods nearby space with flame damage. It is especially dangerous in narrow corridors and during challenge waves.
 
 | Stat | Value |
 |------|-------|
-| Spawn Weight | 3 (Desert only) |
+| Spawn Weight | 2 in Desert, 3 in Toxic |
 | Attack Type | Ranged flames projectile |
 
 ### Hazmat (Toxic Launcher)
@@ -145,12 +158,31 @@ A close-range industrial enemy that attacks with a flamethrower.
 
 _Industrial Hazmat (Toxic Launcher) - ranged industrial enemy_
 
-A ranged industrial enemy exclusive to the Desert level. Fires toxic projectiles from a distance.
+A ranged industrial enemy that becomes part of the normal mob pool in Desert and Toxic. It forces movement by throwing toxic shots into longer lanes.
 
 | Stat | Value |
 |------|-------|
-| Spawn Weight | 3 (Desert only) |
+| Spawn Weight | 2 in Desert, 3 in Toxic |
 | Attack Type | Ranged toxic projectile |
+
+### Industrial Drone
+
+![Industrial Drone](../../img/enemies/industrial_drone_placeholder.svg)
+
+_Industrial Drone - placeholder image_
+
+A flying industrial support enemy that starts defining the Toxic floor. Drones attack from above, throw radioactive barrels, and can dash into better angles when the party tries to hide behind terrain.
+
+| Stat | Value |
+|------|-------|
+| Health | 80 HP |
+| Speed | 8.0 |
+| View Range | 30 blocks |
+| Alert Range | 54 blocks |
+| Attack Range | 15 blocks |
+| Spawn Weight | 3 in Toxic |
+
+> **Note:** Industrial Drones can also appear in some altar and challenge encounters before Toxic, but Toxic is the first floor where they become part of the regular room identity.
 
 ### Industrial Drops
 
@@ -162,9 +194,9 @@ A ranged industrial enemy exclusive to the Desert level. Fires toxic projectiles
 
 ---
 
-## Boss
+## Bosses
 
-The dungeon ends with a boss fight. The boss room is always the last room on the main path.
+Each floor ends with a boss fight. Defeating the boss moves the run forward and also contributes to the Rift Merchant trophy unlocks outside the dungeon.
 
 ### Boss: Forklift
 
@@ -194,13 +226,76 @@ _Boss Forklift_
 
 The Forklift moves a lot and is hard to keep in one place.
 
-#### Drops
+### Boss: Excavator
+
+The Desert boss. Excavator is bigger than Forklift, covers more area with melee sweeps, and mixes movement attacks with ranged debris pressure.
+
+![Boss Excavator](../../img/bosses/excavator_placeholder.svg)
+
+_Boss Excavator - placeholder image_
+
+| Stat | Value |
+|------|-------|
+| Floor | Desert |
+| Health | 3,000 HP |
+| Speed | 7.0 |
+| Alert Range | 30 blocks |
+| Preferred Combat Range | 2.5 - 5 blocks |
+
+#### Attack Patterns
+
+| Attack | Description |
+|--------|-------------|
+| Smash Attack | Heavy close-range slam |
+| Big Arm Attack | Wide sweep with strong area pressure |
+| Small Arm Attack | Faster close-range follow-up hit |
+| Spin Attack | Rotating melee attack around the boss |
+| Leap Attack | Gap-closing jump into the party |
+| Dash Attack | Straight-line burst to punish spacing |
+| Dirt Throw | Ranged debris attack |
+
+Excavator is the boss that teaches the party to stop hugging the same angle. If everyone stacks too tightly, the melee sweeps and spin attacks get much worse.
+
+### Boss: CEO Tank
+
+The Toxic boss and the final fight of the current run. CEO Tank is a full multi-phase boss built around long-range pressure, artillery-style zoning, and a much longer health bar than the earlier bosses.
+
+![Boss CEO Tank](../../img/bosses/ceo_tank_placeholder.svg)
+
+_Boss CEO Tank - placeholder image_
+
+| Stat | Value |
+|------|-------|
+| Floor | Toxic |
+| Health | 6,000 HP |
+| Speed | 5.0 |
+| Alert Range | 32 blocks |
+| Fight Type | 3-phase boss encounter |
+
+#### Attack Patterns
+
+| Attack | Description |
+|--------|-------------|
+| Cannon Shot | Core ranged tank shell |
+| Artillery Shot | Long-range bombardment pressure |
+| Turret Spin | Rotating close-range threat |
+| Turret Spin Shoot | Rotating fire pattern while moving the turret |
+| Dash Attack | Sudden reposition and collision pressure |
+| Bazooka Barrage | Added in later phases for heavier area denial |
+| Machinegun Attack | Sustained bullet pressure in phase 3 |
+| Mad Machinegun | More aggressive machinegun pattern in the final phase |
+
+CEO Tank escalates as its health drops. The early phase leans on cannon, artillery, turret pressure, and dashes. Later phases add bazooka and machinegun patterns, making the arena steadily harder to control.
+
+#### Boss Rewards
 
 | Drop | Chance | Amount |
 |------|--------|--------|
 | Coins | 100% | 8-14 |
 | Ammo | 70% | 1 |
 | Healing | 55% | 1 |
+
+Every boss also feeds the Rift Merchant trophy track tied to its floor.
 
 ---
 
@@ -228,16 +323,21 @@ _Friendly Kweebec Seedling - summoned by the Kweebec Launcher_
 
 ## Enemy Comparison Table
 
-| Enemy | Health | Damage | Coin Drop | Drop Rate | Level |
-|-------|--------|--------|-----------|-----------|-------|
-| DeadWood Rootling | - | Varies by variant | 1-3 | 45% | 1, 2 |
-| DeadWood Sproutling | - | Varies by variant | 1-3 | 45% | 1, 2 |
-| DeadWood Seedling | - | - | 1-3 | 45% | 1, 2 |
-| Kweebec Seedling | - | Explosive | 1-3 | 45% | 1, 2 |
-| Radioactive Wolf | 103 | 27 | 1-3 | 50% | 1, 2 |
-| Industrial Nosuit | - | - | 1-4 | 55% | 1, 2 |
-| Industrial Hazmat | - | Toxic projectile | 1-4 | 55% | 2 only |
-| Boss Forklift | 2,500 | 15 (x6 dash) | 8-14 | 100% | Boss |
+| Enemy | Health | Main Threat | Floor |
+|-------|--------|-------------|-------|
+| DeadWood Rootling | - | Basic melee pressure | 1 - 3 |
+| DeadWood Sproutling | - | Fast melee pressure | 1 - 3 |
+| DeadWood Seedling | - | Heavier frontline body | 1 - 3 |
+| Kweebec Seedling | - | Explosive rush | 1 - 3 |
+| Radioactive Wolf | 103 | Fast pack attack | 1 - 3 |
+| Industrial Nosuit | - | Reliable industrial pressure | 1 - 3 |
+| Industrial Hazmat | - | Melee bruiser | 2 - 3 |
+| Industrial Hazmat (Flamethrower) | - | Area denial at close-to-mid range | 2 - 3 |
+| Industrial Hazmat (Toxic Launcher) | - | Toxic projectile pressure | 2 - 3 |
+| Industrial Drone | 80 | Flying barrel throws and dashes | 3 |
+| Forklift | 2,500 | Fast charges and melee sweeps | Boss |
+| Excavator | 3,000 | Heavy melee area control | Boss |
+| CEO Tank | 6,000 | Multi-phase artillery and turret pressure | Boss |
 
 ---
 

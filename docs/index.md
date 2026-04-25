@@ -11,7 +11,7 @@ draft: false
 
 |  |  |
 |---|---|
-| **Version** | 1.0.0 |
+| **Version** | 1.2.0 |
 | **Authors** | Theobosse, Paralaxe |
 | **Builds by** | Palomote72 |
 | **NPC Design by** | That_Worm, TheCommando315 |
@@ -22,9 +22,9 @@ draft: false
 | **Players** | 1 - 4 (Co-op) |
 | **Weapons** | 19 |
 | **Armor Sets** | 6 (24 pieces) |
-| **Dungeon Levels** | 1 |
-| **Bosses** | 1 |
-| **Enemies** | 14+ types |
+| **Dungeon Levels** | 3 |
+| **Bosses** | 3 |
+| **Enemies** | 19+ variants |
 | **Website** | [curseforge.com](https://www.curseforge.com/hytale/mods/unstable-rifts) |
 
 ![Gameplay Overview](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/general/gameplay_overview.png)
@@ -48,7 +48,7 @@ Many Kweebecs have been captured, enslaved, or infected by an unknown plague tha
 
 You can begin by finding an Ancient Party Portal in a Kweebec village, crafting your own portal, or opening the party menu with `/ur party ui`.
 
-From there, create or join a party, invite friends, and start the dungeon run together.
+From there, create or join a party, invite friends, and start the dungeon run together. A full clear now pushes through Kweebec, Desert, and Toxic before ending at the CEO Tank.
 
 ## Wiki Pages
 
@@ -86,21 +86,21 @@ All armor sets, what they do, and which one fits your playstyle.
 
 #### [Loot and Crates](unstable-rifts/loot-and-crates-1)
 
-Crate types, loot chances, and what gear you can get from each one.
+Crate types, level 3 loot progression, merchant weapon crates, and boss trophies.
 
 ### Dungeons and Combat
 
 #### [Dungeon Levels](unstable-rifts/dungeon-levels-1)
 
-Level flow, room types, and what to expect as you go deeper.
+All 3 dungeon floors, room flow, and what changes as a run gets deeper.
 
 #### [Enemies and Bosses](unstable-rifts/enemies-and-bosses-1)
 
-Enemy and boss overview with clear, practical combat info.
+The current enemy roster, Industrial Drones, and all 3 floor bosses.
 
 #### [Shops](unstable-rifts/shops-1)
 
-How shops work, what you can buy, and when to spend your coins.
+In-dungeon shopping, Rift Merchant missions, and trophy unlocks.
 
 ### Systems
 
@@ -112,4 +112,4 @@ How to play with friends: invites, party rules, and reconnect behavior.
 
 What each HUD element means during a run.
 ---
-Unstable Rifts v1.0.0 - by Theobosse and Paralaxe - [curseforge.com](https://www.curseforge.com)
+Unstable Rifts v1.2.0 - by Theobosse and Paralaxe - [curseforge.com](https://www.curseforge.com)

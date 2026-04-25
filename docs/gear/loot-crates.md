@@ -9,7 +9,7 @@ draft: false
 
 Most crates in Unstable Rifts are breakable loot boxes found in dungeon rooms. Break them to get weapons, armor, ammo, healing, and coins. Better crates show up deeper in the run.
 
-There are also 3 special **weapon crates** sold outside the dungeon by the Rift Merchant. These merchant crates do not drop armor, healing, ammo, or coins. They exist purely to roll random weapons.
+There are also outside-dungeon reward items sold by the Rift Merchant. The biggest ones are 3 special **weapon crates**, but the merchant also handles ammo refills and boss trophies for long-term collectors.
 
 ![Standard Crate](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/crates/crate.png)
 _Standard Crate_
@@ -45,9 +45,9 @@ Found in Kweebec. Similar to Standard crates, but with a wider rarity range and 
 | Armor Rarity | <span class="rarity-basic">Basic</span> - <span class="rarity-unique">Unique</span> |
 | Coins | 1-3 |
 
-**Weapon Pool:** All 19 weapons including Corrupted Shotgun, Taser, Voidlance, Kweebec Launcher, and all Elemental Blunderbusses
+**Weapon Pool:** 17 weapons. Includes Taser and Voidlance, but not Corrupted Shotgun or Kweebec Launcher.
 
-**Armor Pool:** Crystal Set, Vine Set
+**Armor Pool:** Crystal Set, Bone Set
 
 ---
 
@@ -63,7 +63,7 @@ Found in mid-run rooms. Better drop rates and better minimum rarity.
 
 **Weapon Pool:** 17 weapons (excludes Taser and Voidlance)
 
-**Armor Pool:** Crystal Set, Vine Set, Shale Set, Bone Set
+**Armor Pool:** Shale Set, Void Set
 
 ---
 
@@ -79,9 +79,9 @@ The best regular crate. Found late in the run with the best drop rates.
 
 **Weapon Pool:** All 19 weapons
 
-**Armor Pool:** All 6 sets - Crystal, Vine, Shale, Bone, Void, Warden
+**Armor Pool:** Vine Set, Warden Set
 
-> **Note:** Level 3 crates are the only regular crates that can drop Void and Warden armor.
+> **Note:** Level 2 crates are the regular Void source. Level 3 crates are the regular Warden source.
 ---
 
 ## Rift Merchant Weapon Crates
@@ -92,9 +92,9 @@ They are different from normal dungeon crates in one important way: they are **w
 
 | Crate | Cost | Stock | Rarity Range | Notes |
 |-------|------|-------|--------------|-------|
-| Standard Weapon Crate | 10 Rift Coins | 3 | <span class="rarity-basic">Basic</span> - <span class="rarity-rare">Rare</span> | Good early weapon roll |
-| Advanced Weapon Crate | 25 Rift Coins | 2 | <span class="rarity-uncommon">Uncommon</span> - <span class="rarity-legendary">Legendary</span> | Strong mid-to-late weapon roll |
-| Elite Weapon Crate | 50 Rift Coins | 1 | <span class="rarity-legendary">Legendary</span> - <span class="rarity-unique">Unique</span> | Best weapon crate sold by the merchant |
+| Standard Weapon Crate | 10 Rift Coins | 300 | <span class="rarity-basic">Basic</span> - <span class="rarity-rare">Rare</span> | Good early weapon roll |
+| Advanced Weapon Crate | 25 Rift Coins | 200 | <span class="rarity-uncommon">Uncommon</span> - <span class="rarity-legendary">Legendary</span> | Strong mid-to-late weapon roll |
+| Elite Weapon Crate | 50 Rift Coins | 100 | <span class="rarity-legendary">Legendary</span> - <span class="rarity-unique">Unique</span> | Best weapon crate sold by the merchant |
 
 ### Standard Weapon Crate
 
@@ -103,7 +103,7 @@ The cheapest Rift Merchant crate. It gives one random weapon and is meant to be 
 | Property | Value |
 |----------|-------|
 | Cost | 10 Rift Coins |
-| Stock | 3 per merchant refresh |
+| Stock | 300 per merchant refresh |
 | Weapon Rarity | <span class="rarity-basic">Basic</span> - <span class="rarity-rare">Rare</span> |
 | Other Loot | None |
 
@@ -116,7 +116,7 @@ A more expensive merchant crate with a much stronger minimum rarity.
 | Property | Value |
 |----------|-------|
 | Cost | 25 Rift Coins |
-| Stock | 2 per merchant refresh |
+| Stock | 200 per merchant refresh |
 | Weapon Rarity | <span class="rarity-uncommon">Uncommon</span> - <span class="rarity-legendary">Legendary</span> |
 | Other Loot | None |
 
@@ -129,11 +129,23 @@ The premium merchant crate. It is the best outside-dungeon weapon roll and focus
 | Property | Value |
 |----------|-------|
 | Cost | 50 Rift Coins |
-| Stock | 1 per merchant refresh |
+| Stock | 100 per merchant refresh |
 | Weapon Rarity | <span class="rarity-legendary">Legendary</span> - <span class="rarity-unique">Unique</span> |
 | Other Loot | None |
 
 **Weapon Pool:** 18 weapons (all except the base Blunderbuss)
+
+## Rift Merchant Trophies
+
+Outside the dungeon, the Rift Merchant also sells placeable boss trophies once you have cleared the right boss enough times.
+
+| Trophy Family | Boss | Unlock Starts At | Best Version |
+|---------------|------|------------------|--------------|
+| Forklift Trophy | Forklift | 1 clear | Mythril |
+| Excavator Trophy | Excavator | 1 clear | Mythril |
+| CEO Trophy | CEO Tank | 1 clear | Mythril |
+
+Trophy tiers unlock at 1, 3, 7, and 15 clears of that boss. Each tier costs Rift Coins, with higher versions becoming more expensive and more decorative.
 
 ---
 
@@ -155,12 +167,13 @@ As you go deeper, crate quality improves:
 
 | Progression | Available Crates | Best Possible Rarity | Armor Sets Available |
 |-------------|-----------------|---------------------|---------------------|
-| Early Rooms | Standard, Level 1 | <span class="rarity-unique">Unique</span> | Crystal, Vine |
-| Mid Rooms | Level 2, Large | <span class="rarity-epic">Epic</span> | Crystal, Vine, Shale, Bone |
+| Early Rooms | Standard, Level 1 | <span class="rarity-unique">Unique</span> | Crystal, Vine, Bone |
+| Mid Rooms | Level 2, Large | <span class="rarity-epic">Epic</span> | Crystal, Vine, Shale, Bone, Void |
+| Late Rooms | Level 3, Large | <span class="rarity-unique">Unique</span> | Crystal, Vine, Shale, Bone, Warden |
 
-> **Tip:** Look for Level 3 crates if you want Void or Warden armor. Large 2x2 crates are also great for coins and weapon rolls.
+> **Tip:** Look for Level 2 crates if you want Void armor and Level 3 crates if you want Warden armor. Large 2x2 crates are still the most flexible mixed pool for Crystal, Vine, Shale, and Bone pieces.
 
-Outside the dungeon, the Rift Merchant gives you another progression path through Standard, Advanced, and Elite Weapon Crates bought with Rift Coins.
+Outside the dungeon, the Rift Merchant gives you another progression path through Standard, Advanced, and Elite Weapon Crates, plus decorative boss trophies unlocked through repeat clears.
 ---
 
 ## Related Pages

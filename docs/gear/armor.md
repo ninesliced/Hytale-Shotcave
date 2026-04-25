@@ -7,30 +7,50 @@ draft: false
 
 # Armor Sets
 
-Unstable Rifts has 6 armor sets, each with 4 pieces (Head, Chest, Arms, Legs). Wearing all 4 pieces of one set activates a set bonus ability.
+Unstable Rifts has 6 armor sets, each with 4 pieces. Equipping a full 4/4 matching set unlocks that set's armor ability and starts charging the armor meter.
+
+When the meter reaches 100%, press **F** to activate the set buff. Using the buff empties the bar and starts the charge cycle again.
+
+---
+
+## How Armor Abilities Work
+
+1. Equip all 4 pieces from the same set.
+2. Wait for the armor ability bar to charge to full.
+3. Press **F** when the ability is ready.
+4. The buff runs for a short timed window, then the bar starts charging again.
+
+Every set uses the same charge loop, but the active effect and duration depend on the set.
 
 ---
 
 ## Set Abilities Overview
 
-| Set | Ability | Effect | Rarity Range | Weight |
-|-----|---------|--------|-------------|--------|
-| Crystal | BERSERKER | Increased damage output when low on health | Basic - Legendary | 15 |
-| Vine | REGENERATION | Passive health regeneration over time | Basic - Legendary | 15 |
-| Shale | GUARDIAN | Damage absorption shield that blocks incoming hits | Uncommon - Unique | 12 |
-| Bone | SWIFTNESS | Increased movement speed | Uncommon - Unique | 12 |
-| Void | PURIFICATION | Immune to negative status effects | Rare - Unique | 10 |
-| Warden | WARDEN | Reflects damage back to attackers + high knockback | Rare - Unique | 10 |
+| Set | Ability | Active Effect | Duration | Rarity Range | Main Loot Spots |
+|-----|---------|---------------|----------|--------------|-----------------|
+| Crystal | BERSERKER | +100% damage while active | 10s | Basic - Legendary | Standard crates, Level 1 crates, Large 2x2 crates |
+| Vine | REGENERATION | Heals you back toward full HP over the buff | 10s | Basic - Legendary | Standard crates, Level 3 crates, Large 2x2 crates |
+| Shale | GUARDIAN | 90% incoming damage reduction | 8s | Uncommon - Unique | Level 2 crates, Large 2x2 crates |
+| Bone | SWIFTNESS | +50% movement speed | 12s | Uncommon - Unique | Level 1 crates, Large 2x2 crates |
+| Void | CONTAGION | +2s to weapon effect duration on effect weapons | 10s | Rare - Unique | Level 2 crates |
+| Warden | WARDEN | Full damage immunity and 100% reflection | 10s | Rare - Unique | Level 3 crates |
 
-> **Tip:** Mix and match pieces from different sets if you need the individual stats, but you'll lose the set bonus. Full sets are always stronger when synergized with the right weapons.
+> **Tip:** Mix-and-match armor still works for raw stats, but the real payoff comes from finishing a 4/4 set and using the charged ability well.
+
+> **Note:** The crate routes above are the reliable farm spots. Dungeon armor shop rolls can also add extra chances at sets outside their main crate floor.
 
 ---
 
 ## Crystal Set
 
-A versatile starting set with balanced stats and the Berserker ability for aggressive play.
+A versatile early set with balanced stats and the Berserker buff for aggressive pushes.
 ![Crystal Armor Set](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/armor/crystal_set.png)
 _Crystal Armor - full set_
+
+**Ability:** Berserker grants **10 seconds of double damage** once the armor bar is fully charged.
+
+**Loot Spots:** Standard crates, Level 1 crates, and Large 2x2 crates.
+
 | Piece | Protection | Knockback | Close Dmg Reduction | Far Dmg Reduction | Spike Dmg | Life Boost | Speed Boost |
 |-------|-----------|-----------|--------------------|--------------------|-----------|------------|-------------|
 | Crystal Helmet | 6 | 0 | 0% | 4% | 0 | 0 | 0% |
@@ -43,9 +63,14 @@ _Crystal Armor - full set_
 
 ## Vine Set
 
-A durable set with the highest base protection at lower tiers and passive health regeneration.
+A durable sustain set that trades damage spikes for a strong timed heal.
 ![Vine Armor Set](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/armor/vine_set.png)
 _Vine Armor - full set_
+
+**Ability:** Regeneration heals you over **10 seconds**, enough to refill your full max HP if you stay alive through the whole buff.
+
+**Loot Spots:** Standard crates, Level 3 crates, and Large 2x2 crates.
+
 | Piece | Protection | Knockback | Close Dmg Reduction | Far Dmg Reduction | Spike Dmg | Life Boost | Speed Boost |
 |-------|-----------|-----------|--------------------|--------------------|-----------|------------|-------------|
 | Vine Crown | 8 | 0 | 0% | 5% | 0 | 0 | 0% |
@@ -58,9 +83,14 @@ _Vine Armor - full set_
 
 ## Shale Set
 
-A tank set with outstanding protection and the Guardian damage shield.
+A tank set with outstanding protection and the strongest defensive active buff.
 ![Shale Armor Set](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/armor/shale_set.png)
 _Shale Armor - full set_
+
+**Ability:** Guardian gives **8 seconds of 90% damage reduction**, making it the best panic button when the room gets dangerous.
+
+**Loot Spots:** Level 2 crates and Large 2x2 crates.
+
 | Piece | Protection | Knockback | Close Dmg Reduction | Far Dmg Reduction | Spike Dmg | Life Boost | Speed Boost |
 |-------|-----------|-----------|--------------------|--------------------|-----------|------------|-------------|
 | Shale Helmet | 10 | 0 | 0% | 7% | 0 | 0 | 0% |
@@ -73,9 +103,14 @@ _Shale Armor - full set_
 
 ## Bone Set
 
-A lightweight set built for speed. Low protection but the highest speed bonus and Swiftness ability.
+A lightweight mobility set built for repositioning, kiting, and fast objective play.
 ![Bone Armor Set](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/armor/bone_set.png)
 _Bone Armor - full set_
+
+**Ability:** Swiftness gives **12 seconds of +50% movement speed**, which is great for challenge rooms, revives, and fast boss repositioning.
+
+**Loot Spots:** Level 1 crates and Large 2x2 crates.
+
 | Piece | Protection | Knockback | Close Dmg Reduction | Far Dmg Reduction | Spike Dmg | Life Boost | Speed Boost |
 |-------|-----------|-----------|--------------------|--------------------|-----------|------------|-------------|
 | Bone Visor | 7 | 0 | 0% | 5% | 0 | 0 | 0% |
@@ -88,9 +123,14 @@ _Bone Armor - full set_
 
 ## Void Set
 
-An end-game set with the strongest defensive stats and immunity to status effects.
+A late-game effect build set that works best with elemental and status-based weapons.
 ![Void Armor Set](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/armor/void_set.png)
 _Void Armor - full set_
+
+**Ability:** Contagion adds **+2 seconds** to your weapon effect durations while the buff is active, but only if your held weapon actually has an effect to extend.
+
+**Loot Spots:** Level 2 crates.
+
 | Piece | Protection | Knockback | Close Dmg Reduction | Far Dmg Reduction | Spike Dmg | Life Boost | Speed Boost |
 |-------|-----------|-----------|--------------------|--------------------|-----------|------------|-------------|
 | Void Mask | 12 | 0 | 0% | 8% | 0 | 0 | 0% |
@@ -103,9 +143,14 @@ _Void Armor - full set_
 
 ## Warden Set
 
-A unique combat set focused on knockback and spike damage. Reflects damage back to melee attackers.
+A high-risk counterattack set built around surviving a short window and punishing anyone who hits you.
 ![Warden Armor Set](https://raw.githubusercontent.com/ninesliced/UnstableRifts/refs/heads/main/img/armor/warden_set.png)
 _Warden Armor - full set_
+
+**Ability:** Warden grants **10 seconds of full damage immunity** and reflects **100% of incoming damage** back to the attacker.
+
+**Loot Spots:** Level 3 crates.
+
 | Piece | Protection | Knockback | Close Dmg Reduction | Far Dmg Reduction | Spike Dmg | Life Boost | Speed Boost |
 |-------|-----------|-----------|--------------------|--------------------|-----------|------------|-------------|
 | Warden Helmet | 10 | 2.5 | 4% | 4% | 8 | 10 | 0% |
