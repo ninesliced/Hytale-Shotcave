@@ -37,6 +37,7 @@ public final class DeathStateController {
 
         commandBuffer.ensureComponent(ref, Invulnerable.getComponentType());
         commandBuffer.ensureComponent(ref, Intangible.getComponentType());
+        GhostPlayerAppearanceController.apply(commandBuffer, store, ref);
 
         InteractionManager interactionManager = store.getComponent(
                 ref, InteractionModule.get().getInteractionManagerComponent());
@@ -51,6 +52,7 @@ public final class DeathStateController {
             return;
         }
 
+        GhostPlayerAppearanceController.restore(commandBuffer, commandBuffer.getStore(), ref);
         commandBuffer.tryRemoveComponent(ref, Frozen.getComponentType());
         commandBuffer.tryRemoveComponent(ref, Invulnerable.getComponentType());
         commandBuffer.tryRemoveComponent(ref, Intangible.getComponentType());
@@ -71,6 +73,7 @@ public final class DeathStateController {
 
         store.ensureComponent(ref, Invulnerable.getComponentType());
         store.ensureComponent(ref, Intangible.getComponentType());
+        GhostPlayerAppearanceController.apply(store, ref);
 
         InteractionManager interactionManager = store.getComponent(
                 ref, InteractionModule.get().getInteractionManagerComponent());
@@ -89,6 +92,12 @@ public final class DeathStateController {
                              @Nonnull Ref<EntityStore> ref) {
         if (!ref.isValid()) {
             return;
+        }
+
+        if (commandBuffer != null) {
+            GhostPlayerAppearanceController.restore(commandBuffer, store, ref);
+        } else {
+            GhostPlayerAppearanceController.restore(store, ref);
         }
 
         if (commandBuffer != null) {

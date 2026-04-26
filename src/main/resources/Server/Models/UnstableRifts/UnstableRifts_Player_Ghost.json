@@ -1,0 +1,8 @@
+{
+  "Parent": "Player",
+  "Model": "Characters/Ghost/Playerghost.blockymodel",
+  "Texture": "Characters/Ghost/playerghost.png",
+  "DefaultAttachments": [],
+  "MinScale": 1,
+  "MaxScale": 1
+}

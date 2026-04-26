@@ -23,6 +23,7 @@ import dev.ninesliced.unstablerifts.player.OnlinePlayers;
 import dev.ninesliced.unstablerifts.player.PlayerEventNotifier;
 import dev.ninesliced.unstablerifts.systems.DeathComponent;
 import dev.ninesliced.unstablerifts.systems.DeathStateController;
+import dev.ninesliced.unstablerifts.systems.GhostPlayerAppearanceController;
 import dev.ninesliced.unstablerifts.tooltip.ArmorVirtualItems;
 import dev.ninesliced.unstablerifts.tooltip.WeaponVirtualItems;
 import dev.ninesliced.unstablerifts.util.VectorConversions;
@@ -1095,6 +1096,7 @@ public final class GameManager {
                 if (player != null && !player.wasRemoved()) {
                     playerStateService.hideDungeonHuds(player, playerRef);
                 }
+                GhostPlayerAppearanceController.restore(store, ref);
             });
         } else {
             plugin.getCameraService().cancelDeferredEnable(playerRef);

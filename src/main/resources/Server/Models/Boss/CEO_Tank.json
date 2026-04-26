@@ -34,7 +34,7 @@
       "Animations": [{ "Animation": "NPC/Boss/Tank/Animations/tank_idle.blockyanim", "BlendingDuration": 0.1, "Looping": false }]
     },
     "Death": {
-      "Animations": [{ "Animation": "NPC/Boss/Tank/Animations/tank_idle.blockyanim", "Looping": false }]
+      "Animations": [{ "Animation": "NPC/Boss/Tank/Animations/tank_die.blockyanim", "Looping": false }]
     },
     "Jump": {
       "Animations": [{ "Animation": "NPC/Boss/Tank/Animations/tank_idle.blockyanim", "BlendingDuration": 0.2, "Looping": true }]
