@@ -134,6 +134,7 @@ public final class ReviveTickSystem extends EntityTickingSystem<EntityStore> {
         Ref<EntityStore> ref = archetypeChunk.getReferenceTo(index);
         if (ref.isValid()) {
             DeathStateController.apply(commandBuffer, store, ref, false);
+            gameManager.getPlayerStateService().applyDungeonMovementSettings(ref, store, playerRef);
         }
 
         if (death.isGhost()) {

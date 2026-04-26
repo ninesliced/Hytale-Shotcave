@@ -70,8 +70,9 @@ public final class PlayerDeathSystem extends EntityTickingSystem<EntityStore> {
         death.markDead(deathPos);
         gameManager.getReviveMarkerService().spawnReviveMarker(commandBuffer, store, ref, playerRef.getUuid(), deathPos);
         DeathStateController.apply(commandBuffer, store, ref, false);
+        gameManager.getPlayerStateService().applyDungeonMovementSettings(ref, store, playerRef);
         game.addDeadPlayer(playerRef.getUuid());
-        gameManager.hideDeadPlayerFromParty(playerRef.getUuid(), game.getPartyId());
+        gameManager.showPlayerToParty(playerRef.getUuid(), game.getPartyId());
         gameManager.getInventoryService().saveAndClearDeathInventory(player, playerRef);
 
         if (game.areAllPlayersDead()) {

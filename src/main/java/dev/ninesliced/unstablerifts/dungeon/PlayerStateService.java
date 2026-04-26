@@ -22,6 +22,7 @@ import dev.ninesliced.unstablerifts.hud.*;
 import dev.ninesliced.unstablerifts.systems.DeathComponent;
 import dev.ninesliced.unstablerifts.systems.DeathMovementController;
 import dev.ninesliced.unstablerifts.systems.DeathStateController;
+import dev.ninesliced.unstablerifts.systems.GhostPlayerAppearanceController;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,6 +36,8 @@ import java.util.logging.Logger;
 public final class PlayerStateService {
 
     private static final Logger LOGGER = Logger.getLogger(PlayerStateService.class.getName());
+    private static final float DUNGEON_BASE_SPEED = 10.0f;
+    private static final float DEFAULT_SPRINT_MULTIPLIER = 1.65f;
 
     /**
      * Resets player health, stamina, death state, interaction manager, movement,
@@ -70,6 +73,11 @@ public final class PlayerStateService {
             }
 
             DeathStateController.clear(commandBuffer, store, ref);
+            if (commandBuffer != null) {
+                GhostPlayerAppearanceController.restore(commandBuffer, store, ref);
+            } else {
+                GhostPlayerAppearanceController.restore(store, ref);
+            }
 
             EntityStatMap statMap = store.getComponent(ref, EntityStatMap.getComponentType());
             if (statMap != null) {
@@ -123,8 +131,24 @@ public final class PlayerStateService {
 
         MovementSettings s = movementManager.getSettings();
 
-        // Core speed: ~80% faster base, fast-paced dungeon crawler
-        s.baseSpeed = 10.0f;
+        // Core speed: fast-paced dungeon crawler.
+        s.baseSpeed = DUNGEON_BASE_SPEED;
+
+        // Top-down dungeons should not slow players down because they are walking,
+        // crouching, in ghost form, or recovering from revive. Normalize every
+        // ground movement state to the sprint multiplier so dead/ghost/revived
+        // players keep the same dungeon movement speed as active players.
+        float dungeonSpeedMultiplier = Math.max(s.forwardSprintSpeedMultiplier, DEFAULT_SPRINT_MULTIPLIER);
+        s.forwardWalkSpeedMultiplier = dungeonSpeedMultiplier;
+        s.backwardWalkSpeedMultiplier = dungeonSpeedMultiplier;
+        s.strafeWalkSpeedMultiplier = dungeonSpeedMultiplier;
+        s.forwardRunSpeedMultiplier = dungeonSpeedMultiplier;
+        s.backwardRunSpeedMultiplier = dungeonSpeedMultiplier;
+        s.strafeRunSpeedMultiplier = dungeonSpeedMultiplier;
+        s.forwardCrouchSpeedMultiplier = dungeonSpeedMultiplier;
+        s.backwardCrouchSpeedMultiplier = dungeonSpeedMultiplier;
+        s.strafeCrouchSpeedMultiplier = dungeonSpeedMultiplier;
+        s.forwardSprintSpeedMultiplier = dungeonSpeedMultiplier;
 
         // Acceleration: snappy direction changes
         s.acceleration = 0.22f;

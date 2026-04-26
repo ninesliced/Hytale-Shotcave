@@ -6,7 +6,7 @@
   },
   "IsPvpEnabled": false,
   "IsSpawningNPC": true,
-  "GameTime": "0001-01-01T07:00:00Z",
+  "GameTime": "0001-01-01T12:00:00Z",
   "UUID": {
     "$binary": "AAAAAAAAAAAAAAAAAAAAAA==",
     "$type": "04"

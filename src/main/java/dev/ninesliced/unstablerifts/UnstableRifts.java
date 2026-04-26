@@ -266,6 +266,10 @@ public class UnstableRifts extends JavaPlugin {
                 this.getEntityStoreRegistry().registerComponent(DeathComponent.class, DeathComponent::new);
         DeathComponent.setComponentType(deathComponentType);
 
+        ComponentType<EntityStore, GhostPlayerAppearanceComponent> ghostPlayerAppearanceComponentType =
+            this.getEntityStoreRegistry().registerComponent(GhostPlayerAppearanceComponent.class, GhostPlayerAppearanceComponent::new);
+        GhostPlayerAppearanceComponent.setComponentType(ghostPlayerAppearanceComponentType);
+
         ComponentType<EntityStore, RollComponent> rollComponentType =
                 this.getEntityStoreRegistry().registerComponent(RollComponent.class, RollComponent::new);
         RollComponent.setComponentType(rollComponentType);
