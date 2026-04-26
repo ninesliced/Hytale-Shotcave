@@ -114,7 +114,7 @@ public final class GhostPlayerAppearanceController {
             return;
         }
 
-        PlayerSkinUpdate update = new PlayerSkinUpdate(null);
+        PlayerSkinUpdate update = new PlayerSkinUpdate((PlayerSkin) null);
         for (EntityTrackerSystems.EntityViewer viewer : visible.visibleTo.values()) {
             try {
                 viewer.queueUpdate(ref, update);
